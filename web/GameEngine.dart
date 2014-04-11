@@ -7,10 +7,10 @@ import 'package:box2d/box2d_browser.dart';
 class GameEngine {
   static const double WIDTH = 800.0;
   static const double HEIGHT = 600.0;
-  
+
   static const double CARD_WIDTH = 45.0;
   static const double CARD_HEIGHT = 2.5;
-  
+
   static const double ZERO_GRAVITY = 0.0;
   static const double NORMAL_GRAVITY = -9.8;
 
@@ -61,11 +61,11 @@ class GameEngine {
 
   void addCard(double x, double y, double angle) {
     PolygonShape cs = new PolygonShape();
-    cs.setAsBox(CARD_WIDTH/2, CARD_HEIGHT/2);
+    cs.setAsBox(CARD_WIDTH / 2, CARD_HEIGHT / 2);
 
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
-    fd.density = 0.025/CARD_WIDTH*CARD_HEIGHT;
+    fd.density = 0.025 / CARD_WIDTH * CARD_HEIGHT;
     fd.restitution = 0.1;
 
     BodyDef def = new BodyDef();
