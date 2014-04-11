@@ -16,14 +16,7 @@ class GameEngine {
   static const double CARD_HEIGHT = 0.025;
 
   static const double ZERO_GRAVITY = 0.0;
-<<<<<<< HEAD
   static const double NORMAL_GRAVITY = -10.0;
-=======
-
-  static const double NORMAL_GRAVITY = -10.0;
-
-//-9.8 * 2.5;
->>>>>>> 20223d5ccdc46e78472bdae5f4e2819afbb83429
 
   num lastStepTime = 0;
 
@@ -87,23 +80,17 @@ class GameEngine {
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
     fd.density = 1.0;
-<<<<<<< HEAD
     fd.friction=0.5;
-=======
     fd.friction = 0.99;
->>>>>>> 20223d5ccdc46e78472bdae5f4e2819afbb83429
     fd.restitution = 0.2;
 
     BodyDef def = new BodyDef();
     def.type = getBodyType(physicsEnabled);
     def.position = new Vector2(x, y);
     def.angularDamping = 10.5;
-<<<<<<< HEAD
     //def.linearVelocity = new Vector2(0.0, 2.0);
     def.bullet = true;
-=======
 //  def.bullet = true;
->>>>>>> 20223d5ccdc46e78472bdae5f4e2819afbb83429
     def.angle = angle;
 
     Body card = world.createBody(def);
