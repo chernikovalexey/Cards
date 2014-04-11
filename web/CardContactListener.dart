@@ -7,12 +7,9 @@ class CardContactListener extends ContactListener {
   GameEngine e;
   List<Body> contactingBodies = new List<Body>();
 
-  bool canPut = true;
-
   @override
   void endContact(Contact contact) {
     if (!e.physicsEnabled) {
-      canPut = true;
       contactingBodies.remove(contact.fixtureB.body);
     }
   }
@@ -32,7 +29,6 @@ class CardContactListener extends ContactListener {
   @override
   void beginContact(Contact contact) {
     if (!e.physicsEnabled) {
-      canPut = false;
       contactingBodies.add(contact.fixtureB.body);
     }
   }

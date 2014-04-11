@@ -151,8 +151,7 @@ class GameEngine {
       if (!isRewinding) bobbin = new Bobbin();
     }
 
-    //print(contactListener.canPut);
-    if (Input.isMouseLeftClicked && contactListener.canPut) {
+    if (Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty) {
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
     }
 
