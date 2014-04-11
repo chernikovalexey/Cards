@@ -1,5 +1,4 @@
 import 'dart:html';
-import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
 import "Input.dart";
 import "BoundedCard.dart";
@@ -15,6 +14,8 @@ class GameEngine {
   static const double NORMAL_GRAVITY = -9.8 * 2.5;
 
   num lastStepTime = 0;
+
+  bool physicsEnabled = false;
 
   World world;
   CanvasRenderingContext2D g;
@@ -39,56 +40,68 @@ class GameEngine {
 
     debugDraw = new CanvasDraw(viewport, g);
 
-// Have the world draw itself for debugging purposes.
+    // Have the world draw itself for debugging purposes.
     world.debugDraw = debugDraw;
   }
 
   void initializeWorld() {
     world = new World(new Vector2(0.0, NORMAL_GRAVITY), true,
-    new DefaultWorldPool());
+        new DefaultWorldPool());
 
-// Create the ground.
+    // Create the ground.
     PolygonShape sd = new PolygonShape();
     sd.setAsBox(WIDTH / 2, 10.0 / 2);
+
+    FixtureDef fd = new FixtureDef();
+    fd.shape = sd;
+    fd.friction = 0.99;
 
     BodyDef bd = new BodyDef();
     bd.position = new Vector2(WIDTH / 2, 5.0);
 
     Body ground = world.createBody(bd);
-    ground.createFixtureFromShape(sd);
+    ground.createFixture(fd);
 
     bcard = new BoundedCard(this);
   }
 
-  void addCard(double x, double y, double angle) {
+  Body addCard(double x, double y, double angle) {
     PolygonShape cs = new PolygonShape();
     cs.setAsBox(CARD_WIDTH / 2, CARD_HEIGHT / 2);
 
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
-    fd.density = 2 * CARD_WIDTH * CARD_HEIGHT;
-//fd.friction=0.99;
-//fd.restitution = 0.0001;
+    fd.density = 0.05 * CARD_WIDTH * CARD_HEIGHT;
+    //fd.friction=0.99;
+    //fd.restitution = 0.0001;
 
     BodyDef def = new BodyDef();
-    def.type = BodyType.STATIC;
+    def.type = getBodyType(physicsEnabled);
     def.position = new Vector2(x, y);
-    def.linearVelocity = new Vector2(0.0, -HEIGHT*4);
+    def.angularDamping = 10.5;
+    def.linearVelocity = new Vector2(0.0, -HEIGHT * 4);
     def.bullet = true;
     def.angle = angle;
-    
+
     Body card = world.createBody(def);
     card.createFixture(fd);
 
     cards.add(card);
+    
+    return card;
   }
 
-  void applyPhysics() {
-    for(Body body in cards) {
-      body.type = BodyType.DYNAMIC;
-    }    
+  int getBodyType(bool activeness) {
+    return activeness ? BodyType.DYNAMIC : BodyType.STATIC;
   }
-  
+
+  void togglePhysics(bool active) {
+    physicsEnabled = active;
+    for (Body body in cards) {
+      body.type = getBodyType(active);
+    }
+  }
+
   void run() {
     window.animationFrame.then(step);
   }

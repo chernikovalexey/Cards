@@ -2,10 +2,16 @@ canvas {
     border: 1px solid black;
 }
 
+.buttons {
+  text-align: center;
+  margin-bottom: 8px
+}
+
 .game-box {
     width: 800px;
     height: 600px;
-    margin: 0 auto
+    margin: 0 auto;
+    -webkit-user-select: none
 }
 
 .caption {

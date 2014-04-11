@@ -6,10 +6,10 @@ void main() {
   CanvasElement canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
 
-  window.onMouseMove.listen(Input.onMouseMove);
-  window.onMouseDown.listen(Input.onMouseDown);
-  window.onMouseUp.listen(Input.onMouseUp);
-  window.onMouseWheel.listen(Input.onMouseWheel);
+  canvas.onMouseMove.listen(Input.onMouseMove);
+  canvas.onMouseDown.listen(Input.onMouseDown);
+  canvas.onMouseUp.listen(Input.onMouseUp);
+  canvas.onMouseWheel.listen(Input.onMouseWheel);
 
   var r = canvas.getBoundingClientRect();
   Input.canvasX = r.left;
@@ -20,7 +20,8 @@ void main() {
   GameEngine engine = new GameEngine(g);
   engine.run();
 
-  querySelector('#apply-physics').addEventListener("click", (event) {
-    engine.applyPhysics();
-  }, false);
+  querySelector('#apply-physics').addEventListener("click", (event) =>
+      engine.togglePhysics(true), false);
+  querySelector('#disable-physics').addEventListener("click", (event) =>
+      engine.togglePhysics(false), false);
 }
