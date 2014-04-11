@@ -28,8 +28,9 @@ class GameEngine {
   }
 
   void initializeCanvas() {
-    Vector2 extents = new Vector2(WIDTH / 2.0, HEIGHT / 2.0);
-    viewport = new CanvasViewportTransform(extents, extents);
+    viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
+        0.0, HEIGHT));
+    viewport.yFlip = true;
     viewport.scale = 1.0;
 
     debugDraw = new CanvasDraw(viewport, g);
@@ -41,15 +42,21 @@ class GameEngine {
   void initializeWorld() {
     world = new World(new Vector2(0.0, NORMAL_GRAVITY), true,
         new DefaultWorldPool());
-    
+
     // Create the ground.
     PolygonShape sd = new PolygonShape();
-    sd.setAsBox(WIDTH/2, 20.0/2);
+    sd.setAsBox(20.0, 20.0 / 2);
 
     BodyDef bd = new BodyDef();
-    bd.position = new Vector2(0.0, -HEIGHT/2);
+    bd.position = new Vector2(100.0, 20.0);
     Body ground = world.createBody(bd);
     ground.createFixtureFromShape(sd);
+
+    addCard(-20, 40, Math.PI / 8);
+  }
+
+  void addCard(num x, num y, num angle) {
+    PolygonShape card = new PolygonShape();
   }
 
   void run() {
