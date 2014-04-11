@@ -107,7 +107,7 @@ class GameEngine {
   void update(num delta) {
     card.update();
 
-    if(Input.isMouseDown) {
+    if(Input.isMouseClicked) {
       addCard(Input.mouseX, Input.mouseY, 0.0);      
     }
   }
