@@ -6,7 +6,7 @@ import 'GameEngine.dart';
 
 class BoundedCard {
   Body b;
-  Body boundedBox;
+  bool canPut = true;
 
   GameEngine e;
 
@@ -16,6 +16,7 @@ class BoundedCard {
     BodyDef bd = new BodyDef();
     bd.type = BodyType.DYNAMIC;
     bd.position = new Vector2(0.0, 0.0);
+    bd.bullet = true;
 
     FixtureDef fd = new FixtureDef();
 

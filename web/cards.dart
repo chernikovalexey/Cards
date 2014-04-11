@@ -24,5 +24,16 @@ void main() {
   querySelector('#apply-physics').addEventListener("click", (event) =>
       engine.togglePhysics(true), false);
   querySelector('#disable-physics').addEventListener("click", (event) =>
-      engine.togglePhysics(false), false);
+      engine.rewind(), false);
+
+
+
+  for(var x in querySelectorAll("input")) x.addEventListener("change",
+      (event) =>
+        engine.restart(
+             double.parse((querySelector("#density") as InputElement).value),
+             double.parse((querySelector("#friction") as InputElement).value),
+             double.parse((querySelector("#restitution") as InputElement).value)
+        ));
+
 }

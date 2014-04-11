@@ -1,9 +1,10 @@
 import 'dart:html';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
-import 'Input.dart';
-import 'BoundedCard.dart';
-import 'CardContactListener.dart';
+import "Input.dart";
+import "BoundedCard.dart";
+import "Bobbin.dart";
+import "CardContactListener.dart";
 
 class GameEngine {
   static const double SCALE = 85.0;
@@ -27,6 +28,12 @@ class GameEngine {
 
   Body from, to;
   List<Body> cards = new List<Body>();
+  Bobbin bobbin;
+  bool isRewinding = false;
+
+
+
+  int cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
 
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
@@ -83,9 +90,9 @@ class GameEngine {
 
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
-    fd.density = 1.0;
-    fd.friction = 0.5;
-    fd.restitution = 0.04;
+    fd.density = cardDensity;
+    fd.friction = cardFriction;
+    fd.restitution = cardRestitution;
 
     BodyDef def = new BodyDef();
     def.type = getBodyType(physicsEnabled);
@@ -108,6 +115,9 @@ class GameEngine {
 
   void togglePhysics(bool active) {
     physicsEnabled = active;
+    if(physicsEnabled) {
+      bobbin = new Bobbin();
+    }
     for (Body body in cards) {
       body.type = getBodyType(active);
     }
@@ -123,6 +133,8 @@ class GameEngine {
     world.step(1.0 / 60.0, 100, 100);
     update(delta);
 
+
+
     g.setFillColorRgb(0, 0, 0);
     g.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
 
@@ -134,6 +146,14 @@ class GameEngine {
 
   void update(num delta) {
     bcard.update();
+    if(physicsEnabled)
+      bobbin.enterFrame(cards);
+
+    if(isRewinding) {
+      isRewinding = bobbin.previousFrame(cards);
+      if(!isRewinding)
+        bobbin = new Bobbin();
+    }
 
     print(contactListener.canPut);
     if (Input.isMouseLeftClicked && contactListener.canPut) {
@@ -154,4 +174,31 @@ class GameEngine {
 
     Input.update();
   }
+
+  void restart(double d, double f, double r) {
+    cardDensity = d;
+    cardRestitution = r;
+    cardFriction = f;
+
+    for(var x in cards) {
+      world.destroyBody(x);
+    }
+    cards = new List<Body>();
+
+    for(int i=0;i<13;i++) {
+      int x = i * 0.8;
+      int y = -i * 0.8;
+      addCard(x,y,0);
+    }
+
+    togglePhysics(true);
+  }
+
+
+
+  void rewind() {
+    togglePhysics(false);
+    isRewinding = true;
+  }
 }
+
