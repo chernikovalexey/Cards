@@ -1,5 +1,3 @@
-library engine;
-
 import 'dart:html';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
@@ -14,7 +12,7 @@ class GameEngine {
   static const double CARD_HEIGHT = 2.5;
 
   static const double ZERO_GRAVITY = 0.0;
-  static const double NORMAL_GRAVITY = -9.8;
+  static const double NORMAL_GRAVITY = -9.8 * 2.5;
 
   num lastStepTime = 0;
 
@@ -22,7 +20,7 @@ class GameEngine {
   CanvasRenderingContext2D g;
   ViewportTransform viewport;
   DebugDraw debugDraw;
-  BoundedCard card;
+  BoundedCard bcard;
 
   List<Body> bodies = new List<Body>();
 
@@ -59,8 +57,7 @@ class GameEngine {
     Body ground = world.createBody(bd);
     ground.createFixtureFromShape(sd);
 
-    addCard(40.0, 120.0, Math.PI / 8);
-    card = new BoundedCard(this);
+    bcard = new BoundedCard(this);
   }
 
   void addCard(double x, double y, double angle) {
@@ -69,13 +66,15 @@ class GameEngine {
 
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
-    fd.density = 0.025 / CARD_WIDTH * CARD_HEIGHT;
-    fd.restitution = 0.1;
+    fd.density = 2 * CARD_WIDTH * CARD_HEIGHT;
+    //fd.friction=0.99;
+    //fd.restitution = 0.0001;
 
     BodyDef def = new BodyDef();
     def.type = BodyType.DYNAMIC;
     def.position = new Vector2(x, y);
-    def.linearVelocity = new Vector2(0.0, -100.0);
+    def.linearVelocity = new Vector2(0.0, -HEIGHT*4);
+    def.bullet = true;
     def.angle = angle;
 
     Body card = world.createBody(def);
@@ -90,9 +89,9 @@ class GameEngine {
 
   void step(num time) {
     num delta = time - this.lastStepTime;
-
-    update(delta);
+   
     world.step(1 / 60, 10, 10);
+    update(delta);
 
     g.setFillColorRgb(0, 0, 0);
     g.fillRect(0, 0, 800, 800);
@@ -100,15 +99,16 @@ class GameEngine {
     world.drawDebugData();
 
     this.lastStepTime = time;
-
     run();
   }
 
   void update(num delta) {
-    card.update();
+    bcard.update();
 
-    if(Input.isMouseClicked) {
-      addCard(Input.mouseX, Input.mouseY, 0.0);      
+    if (Input.isMouseClicked) {
+      addCard(Input.mouseX, Input.mouseY, 0.0);
     }
+    
+    Input.update();
   }
 }

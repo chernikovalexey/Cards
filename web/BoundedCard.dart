@@ -9,7 +9,7 @@ class BoundedCard {
 
   BoundedCard(GameEngine e) {
     BodyDef bd = new BodyDef();
-    bd.type = BodyType.DYNAMIC;
+    bd.type = BodyType.STATIC;
     bd.position = new Vector2(0.0, 0.0);
 
     FixtureDef fd = new FixtureDef();
@@ -23,6 +23,8 @@ class BoundedCard {
   }
 
   void update() {
-    b.setTransform(new Vector2(Input.mouseX, Input.mouseY), 0.0);
+    double angle = b.angle;
+    angle += Input.wheelDirection * Math.PI / 12;
+    b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
   }
 }

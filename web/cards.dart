@@ -1,8 +1,6 @@
-library cards;
-
 import 'dart:html';
 import 'GameEngine.dart';
-import "Input.dart";
+import 'Input.dart';
 
 void main() {
     CanvasElement canvas = (querySelector("#graphics") as CanvasElement);
@@ -11,11 +9,13 @@ void main() {
     window.onMouseMove.listen(Input.onMouseMove);
     window.onMouseDown.listen(Input.onMouseDown);
     window.onMouseUp.listen(Input.onMouseUp);
-
+    window.onMouseWheel.listen(Input.onMouseWheel);
+    
     var r = canvas.getBoundingClientRect();
     Input.canvasX = r.left;
     Input.canvasY = r.top;
     Input.canvasWidth = r.width;
     Input.canvasHeight = r.height;
+    
     new GameEngine(g).run();
 }
