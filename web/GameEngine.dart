@@ -31,9 +31,7 @@ class GameEngine {
   Bobbin bobbin;
   bool isRewinding = false;
 
-
-
-  int cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
+  double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
 
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
@@ -115,7 +113,7 @@ class GameEngine {
 
   void togglePhysics(bool active) {
     physicsEnabled = active;
-    if(physicsEnabled) {
+    if (physicsEnabled) {
       bobbin = new Bobbin();
     }
     for (Body body in cards) {
@@ -146,16 +144,14 @@ class GameEngine {
 
   void update(num delta) {
     bcard.update();
-    if(physicsEnabled)
-      bobbin.enterFrame(cards);
+    if (physicsEnabled) bobbin.enterFrame(cards);
 
-    if(isRewinding) {
+    if (isRewinding) {
       isRewinding = bobbin.previousFrame(cards);
-      if(!isRewinding)
-        bobbin = new Bobbin();
+      if (!isRewinding) bobbin = new Bobbin();
     }
 
-    print(contactListener.canPut);
+    //print(contactListener.canPut);
     if (Input.isMouseLeftClicked && contactListener.canPut) {
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
     }
@@ -166,7 +162,7 @@ class GameEngine {
       cardsToDelete.addAll(contactListener.contactingBodies);
       contactListener.contactingBodies.clear();
       for (Body contacting in cardsToDelete) {
-        if(cards.contains(contacting)) {
+        if (cards.contains(contacting)) {
           world.destroyBody(contacting);
         }
       }
@@ -180,25 +176,22 @@ class GameEngine {
     cardRestitution = r;
     cardFriction = f;
 
-    for(var x in cards) {
+    for (var x in cards) {
       world.destroyBody(x);
     }
     cards = new List<Body>();
 
-    for(int i=0;i<13;i++) {
-      int x = i * 0.8;
-      int y = -i * 0.8;
-      addCard(x,y,0);
+    for (int i = 0; i < 13; i++) {
+      double x = i * 0.8;
+      double y = -i * 0.8;
+      addCard(x, y, 0);
     }
 
     togglePhysics(true);
   }
-
-
 
   void rewind() {
     togglePhysics(false);
     isRewinding = true;
   }
 }
-

@@ -26,14 +26,8 @@ void main() {
   querySelector('#disable-physics').addEventListener("click", (event) =>
       engine.rewind(), false);
 
-
-
-  for(var x in querySelectorAll("input")) x.addEventListener("change",
-      (event) =>
-        engine.restart(
-             double.parse((querySelector("#density") as InputElement).value),
-             double.parse((querySelector("#friction") as InputElement).value),
-             double.parse((querySelector("#restitution") as InputElement).value)
-        ));
-
+  for (var x in querySelectorAll("input")) x.addEventListener("change", (event)
+      => engine.restart(double.parse((querySelector("#density") as InputElement).value
+      ), double.parse((querySelector("#friction") as InputElement).value),
+      double.parse((querySelector("#restitution") as InputElement).value)));
 }

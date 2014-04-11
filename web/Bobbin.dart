@@ -1,5 +1,4 @@
 import "dart:html";
-
 import 'package:box2d/box2d_browser.dart';
 
 class Bobbin {
@@ -8,8 +7,6 @@ class Bobbin {
   int nFrame = 1;
 
   Bobbin() {
-
-
   }
 
   void enterFrame(List<Body> cards) {
@@ -23,7 +20,7 @@ class Bobbin {
       frame.add(new Transform(b.position.clone(), b.angle));
     }
 
-    if (numAsleep < cards.length)list.add(frame);
+    if (numAsleep < cards.length) list.add(frame);
     print(list.length);
   }
 
@@ -31,7 +28,7 @@ class Bobbin {
     if (list.length == 0) return false;
     List<Transform> frame = list.last;
     list.remove(frame);
-    for (int i = 0;i < frame.length;i++) {
+    for (int i = 0; i < frame.length; i++) {
       Body b = cards[i];
       b.setTransform(frame[i].pos, frame[i].angle);
     }

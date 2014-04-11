@@ -1,21 +1,26 @@
 <!DOCTYPE html>
-
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Cards</title>
-    <link rel="stylesheet" href="cards.css">
-  </head>
-  <body>
-    <h1>Cards</h1>
-    
-    <p>Hello world from Dart!</p>
-    
-    <div id="sample_container_id">
-      <p id="sample_text_id">Click me!</p>
-    </div>
-
+<head>
+    <link rel="stylesheet" type="text/css" href="cards.css"/>
+    <title>Cards!</title>
     <script type="application/dart" src="cards.dart"></script>
-    <script src="packages/browser/dart.js"></script>
-  </body>
+</head>
+<body>
+    <div class="game-box">
+        <!--<div class="caption">Cards</div>-->
+        <div class="buttons">
+          <button id="apply-physics">Apply physics</button>
+          <button id="disable-physics">Rewind physics</button>
+          <button id="clear-window">Clear window</button>
+        </div>
+        <div>
+            <canvas width="800" height="600" id="graphics"></canvas>
+        </div>
+        <div>
+            <input type="number" id="density" value="1" step="0.05">
+            <input type="number" id="friction" value="0.5" step="0.05">
+            <input type="number" id="restitution" value="0.04" step="0.01">
+        </div>
+    </div>
+</body>
 </html>
