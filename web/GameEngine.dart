@@ -39,15 +39,15 @@ class GameEngine {
 
     debugDraw = new CanvasDraw(viewport, g);
 
-    // Have the world draw itself for debugging purposes.
+// Have the world draw itself for debugging purposes.
     world.debugDraw = debugDraw;
   }
 
   void initializeWorld() {
     world = new World(new Vector2(0.0, NORMAL_GRAVITY), true,
-        new DefaultWorldPool());
+    new DefaultWorldPool());
 
-    // Create the ground.
+// Create the ground.
     PolygonShape sd = new PolygonShape();
     sd.setAsBox(WIDTH / 2, 10.0 / 2);
 
@@ -67,8 +67,8 @@ class GameEngine {
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
     fd.density = 2 * CARD_WIDTH * CARD_HEIGHT;
-    //fd.friction=0.99;
-    //fd.restitution = 0.0001;
+//fd.friction=0.99;
+//fd.restitution = 0.0001;
 
     BodyDef def = new BodyDef();
     def.type = BodyType.DYNAMIC;
@@ -89,7 +89,7 @@ class GameEngine {
 
   void step(num time) {
     num delta = time - this.lastStepTime;
-   
+
     world.step(1 / 60, 10, 10);
     update(delta);
 
@@ -108,7 +108,7 @@ class GameEngine {
     if (Input.isMouseClicked) {
       addCard(Input.mouseX, Input.mouseY, 0.0);
     }
-    
+
     Input.update();
   }
 }

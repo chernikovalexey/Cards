@@ -12,14 +12,19 @@ class BoundedCard {
     bd.type = BodyType.STATIC;
     bd.position = new Vector2(0.0, 0.0);
 
+
     FixtureDef fd = new FixtureDef();
+
     PolygonShape sd = new PolygonShape();
     sd.setAsBox(GameEngine.CARD_WIDTH / 2, GameEngine.CARD_HEIGHT / 2);
     fd.shape = sd;
-    fd.density = 25.0;
+    fd.isSensor = true;
 
     b = e.world.createBody(bd);
     b.createFixture(fd);
+
+
+
   }
 
   void update() {
@@ -27,4 +32,6 @@ class BoundedCard {
     angle += Input.wheelDirection * Math.PI / 12;
     b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
   }
+
+
 }
