@@ -1,0 +1,8 @@
+name: Cards
+version: 0.1.0
+author: Twopeople
+description: Cards Game.
+dependencies:
+  box2d: any
+  browser: any
+  vector_math: any
