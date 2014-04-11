@@ -3,6 +3,8 @@ library engine;
 import 'dart:html';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
+import "Input.dart";
+import "BoundedCard.dart";
 
 class GameEngine {
   static const double WIDTH = 800.0;
@@ -20,6 +22,7 @@ class GameEngine {
   CanvasRenderingContext2D g;
   ViewportTransform viewport;
   DebugDraw debugDraw;
+  BoundedCard card;
 
   List<Body> bodies = new List<Body>();
 
@@ -57,6 +60,7 @@ class GameEngine {
     ground.createFixtureFromShape(sd);
 
     addCard(40.0, 120.0, Math.PI / 8);
+    card = new BoundedCard(this);
   }
 
   void addCard(double x, double y, double angle) {
@@ -87,6 +91,7 @@ class GameEngine {
   void step(num time) {
     num delta = time - this.lastStepTime;
 
+    update(delta);
     world.step(1 / 60, 10, 10);
 
     g.setFillColorRgb(0, 0, 0);
@@ -97,5 +102,12 @@ class GameEngine {
     this.lastStepTime = time;
 
     run();
+  }
+
+  void update(num delta) {
+    card.update();
+    //card.setTransform(new Vector2(Input.mouseX, Input.mouseY), 0.0);
+//card.position.x = Input.mouseX;
+//card.position.y = Input.mouseY; //= new Vector2(Input.mouseX, Input.mouseY)
   }
 }

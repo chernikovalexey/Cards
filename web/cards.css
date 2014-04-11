@@ -1,3 +1,7 @@
+canvas {
+    border: 1px solid black;
+}
+
 .game-box {
     width: 800px;
     height: 600px;
