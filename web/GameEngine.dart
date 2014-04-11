@@ -65,7 +65,7 @@ class GameEngine {
 
     FixtureDef fd = new FixtureDef();
     fd.shape = sd;
-    fd.friction = 0.99;
+    fd.friction = 0.7;
 
     BodyDef bd = new BodyDef();
     bd.position = new Vector2(0.0, -HEIGHT * 0.99);
@@ -83,8 +83,8 @@ class GameEngine {
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
     fd.density = 1.0;
-    fd.friction = 0.99;
-    fd.restitution = 0.2;
+    fd.friction = 0.5;
+    fd.restitution = 0.04;
 
     BodyDef def = new BodyDef();
     def.type = getBodyType(physicsEnabled);
