@@ -125,7 +125,7 @@ class GameEngine {
   void update(num delta) {
     bcard.update();
 
-    if (Input.isMouseClicked) {
+    if (Input.isMouseClicked && bcard.canPut) {
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
     }
 

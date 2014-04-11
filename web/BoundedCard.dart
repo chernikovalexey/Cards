@@ -8,7 +8,7 @@ import "CardContactListener.dart";
 class BoundedCard {
   Body b;
   Body boundedBox;
-
+  bool canPut;
 
   GameEngine e;
 
@@ -36,12 +36,6 @@ class BoundedCard {
     double angle = b.angle;
     angle += Input.wheelDirection * Math.PI / 12;
     b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
-
     //e.addCard(this.b.position.x, this.b.position.y, angle);
-  }
-
-  void alert() {
-    print("alert");
-    b.userData = Colors.darkRed;
   }
 }

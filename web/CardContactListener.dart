@@ -9,7 +9,11 @@ class CardContactListener extends ContactListener {
   GameEngine e;
 
   void endContact(Contact contact) {
+      if(!e.physicsEnabled) {
+        e.bcard.canPut = true;
+      }
   }
+
 
   void preSolve(Contact contact, Manifold oldManifold) {
   }
@@ -23,7 +27,7 @@ class CardContactListener extends ContactListener {
 
   void beginContact(Contact contact) {
     if(!e.physicsEnabled) {
-      e.bcard.alert();
+      e.bcard.canPut = false;;
     }
   }
 
