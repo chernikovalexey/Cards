@@ -22,7 +22,7 @@ class GameEngine {
   DebugDraw debugDraw;
   BoundedCard bcard;
 
-  List<Body> bodies = new List<Body>();
+  List<Body> cards = new List<Body>();
 
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
@@ -71,18 +71,24 @@ class GameEngine {
 //fd.restitution = 0.0001;
 
     BodyDef def = new BodyDef();
-    def.type = BodyType.DYNAMIC;
+    def.type = BodyType.STATIC;
     def.position = new Vector2(x, y);
     def.linearVelocity = new Vector2(0.0, -HEIGHT*4);
     def.bullet = true;
     def.angle = angle;
-
+    
     Body card = world.createBody(def);
     card.createFixture(fd);
 
-    bodies.add(card);
+    cards.add(card);
   }
 
+  void applyPhysics() {
+    for(Body body in cards) {
+      body.type = BodyType.DYNAMIC;
+    }    
+  }
+  
   void run() {
     window.animationFrame.then(step);
   }
