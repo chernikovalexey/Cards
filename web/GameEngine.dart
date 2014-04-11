@@ -131,8 +131,6 @@ class GameEngine {
     world.step(1.0 / 60.0, 100, 100);
     update(delta);
 
-
-
     g.setFillColorRgb(0, 0, 0);
     g.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
 
@@ -183,7 +181,7 @@ class GameEngine {
     for (int i = 0; i < 13; i++) {
       double x = i * 0.8;
       double y = -i * 0.8;
-      addCard(x, y, 0);
+      addCard(x, y, 0.0);
     }
 
     togglePhysics(true);
