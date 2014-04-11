@@ -10,6 +10,7 @@ void main() {
   canvas.onMouseDown.listen(Input.onMouseDown);
   canvas.onMouseUp.listen(Input.onMouseUp);
   canvas.onMouseWheel.listen(Input.onMouseWheel);
+  canvas.onContextMenu.listen(Input.onContextMenu);
 
   var r = canvas.getBoundingClientRect();
   Input.canvasX = r.left;

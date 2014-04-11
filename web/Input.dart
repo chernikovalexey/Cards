@@ -3,15 +3,14 @@ import "GameEngine.dart";
 
 class Input {
   static num canvasX, canvasY;
-
   static num canvasWidth, canvasHeight;
 
   static num mouseX = 0.0, mouseY = 0.0;
 
-  static bool isMouseDown = false;
-
-  static bool isMouseClicked = false;
-
+  static bool isMouseLeftDown = false;
+  static bool isMouseLeftClicked = false;
+  static bool isMouseRightDown = false;
+  static bool isMouseRightClicked = false;
   static int wheelDirection = 0;
 
   Input() {
@@ -23,13 +22,26 @@ class Input {
   }
 
   static void onMouseDown(MouseEvent event) {
-    isMouseClicked = true;
-    isMouseDown = true;
+    bool isLeft = event.which == 1;
+    bool isRight = event.which == 3;
+    isMouseLeftClicked = isLeft;
+    isMouseLeftDown = isLeft;
+    isMouseRightClicked = isRight;
+    isMouseRightDown = isRight;
   }
 
   static void onMouseUp(MouseEvent event) {
-    isMouseClicked = false;
-    isMouseDown = false;
+    if (event.which == 1) {
+      isMouseLeftClicked = false;
+      isMouseLeftDown = false;
+    } else if (event.which == 3) {
+      isMouseRightDown = false;
+      isMouseRightClicked = false;
+    }
+  }
+
+  static void onContextMenu(MouseEvent event) {
+    event.preventDefault();
   }
 
   static void onMouseWheel(WheelEvent event) {
@@ -37,7 +49,8 @@ class Input {
   }
 
   static void update() {
-    isMouseClicked = false;
+    isMouseLeftClicked = false;
+    isMouseRightClicked = false;
     wheelDirection = 0;
   }
 }

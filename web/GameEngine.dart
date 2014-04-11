@@ -1,8 +1,9 @@
 import 'dart:html';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
-import "Input.dart";
-import "BoundedCard.dart";
+import 'Input.dart';
+import 'BoundedCard.dart';
+import 'CardContactListener.dart';
 
 class GameEngine {
   static const double SCALE = 85.0;
@@ -18,10 +19,13 @@ class GameEngine {
   bool physicsEnabled = false;
 
   World world;
+  CardContactListener contactListener;
   CanvasRenderingContext2D g;
   ViewportTransform viewport;
   DebugDraw debugDraw;
   BoundedCard bcard;
+
+  Body from, to;
   List<Body> cards = new List<Body>();
 
   GameEngine(CanvasRenderingContext2D g) {
@@ -41,22 +45,36 @@ class GameEngine {
   }
 
   void initializeWorld() {
-    world = new World(new Vector2(0.0, GRAVITY), true, new DefaultWorldPool());
+    this.contactListener = new CardContactListener(this);
+    this.world = new World(new Vector2(0.0, GRAVITY), true,
+        new DefaultWorldPool());
 
+    world.contactListener = contactListener;
+
+    createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
+
+    this.bcard = new BoundedCard(this);
+    this.from = createPolygonShape(100.0 / SCALE, -HEIGHT + 50 / SCALE + HEIGHT
+        * 0.02, 50.0 / SCALE, 50.0 / SCALE);
+    this.to = createPolygonShape(WIDTH - 100 / SCALE, -HEIGHT / 2 + 75 / SCALE,
+        50.0 / SCALE, 50.0 / SCALE);
+  }
+
+  Body createPolygonShape(double x, double y, double width, double height) {
     PolygonShape sd = new PolygonShape();
-    sd.setAsBox(WIDTH, HEIGHT * 0.01);
+    sd.setAsBox(width, height);
 
     FixtureDef fd = new FixtureDef();
     fd.shape = sd;
     fd.friction = 0.7;
 
     BodyDef bd = new BodyDef();
-    bd.position = new Vector2(0.0, -HEIGHT * 0.99);
+    bd.position = new Vector2(x, y);
 
-    Body ground = world.createBody(bd);
-    ground.createFixture(fd);
+    Body body = world.createBody(bd);
+    body.createFixture(fd);
 
-    bcard = new BoundedCard(this);
+    return body;
   }
 
   Body addCard(double x, double y, double angle) {
@@ -117,8 +135,21 @@ class GameEngine {
   void update(num delta) {
     bcard.update();
 
-    if (Input.isMouseClicked && bcard.canPut) {
+    print(contactListener.canPut);
+    if (Input.isMouseLeftClicked && contactListener.canPut) {
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
+    }
+
+    if (contactListener.contactingBodies.isNotEmpty &&
+        Input.isMouseRightClicked) {
+      List<Body> cardsToDelete = new List<Body>();
+      cardsToDelete.addAll(contactListener.contactingBodies);
+      contactListener.contactingBodies.clear();
+      for (Body contacting in cardsToDelete) {
+        if(cards.contains(contacting)) {
+          world.destroyBody(contacting);
+        }
+      }
     }
 
     Input.update();
