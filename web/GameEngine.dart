@@ -12,7 +12,7 @@ class GameEngine {
   static const double CARD_HEIGHT = 2.5;
 
   static const double ZERO_GRAVITY = 0.0;
-  static const double NORMAL_GRAVITY = -9.8 * 2.5;
+  static const double NORMAL_GRAVITY = -10.0;
 
   num lastStepTime = 0;
 
@@ -55,7 +55,7 @@ class GameEngine {
 
     FixtureDef fd = new FixtureDef();
     fd.shape = sd;
-    fd.friction = 0.99;
+    fd.friction = 1.0;
 
     BodyDef bd = new BodyDef();
     bd.position = new Vector2(WIDTH / 2, 5.0);
@@ -72,15 +72,15 @@ class GameEngine {
 
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
-    fd.density = 0.05 * CARD_WIDTH * CARD_HEIGHT;
-    //fd.friction=0.99;
-    //fd.restitution = 0.0001;
+    fd.density = 1.0;
+    fd.friction=0.5;
+    fd.restitution = 0.2;
 
     BodyDef def = new BodyDef();
     def.type = getBodyType(physicsEnabled);
     def.position = new Vector2(x, y);
     def.angularDamping = 10.5;
-    def.linearVelocity = new Vector2(0.0, -HEIGHT * 4);
+    //def.linearVelocity = new Vector2(0.0, 2.0);
     def.bullet = true;
     def.angle = angle;
 
