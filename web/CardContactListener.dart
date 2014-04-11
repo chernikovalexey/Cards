@@ -19,11 +19,10 @@ class CardContactListener extends ContactListener {
 
   CardContactListener(GameEngine e) {
     this.e = e;
-    print("card listener");
   }
 
   void beginContact(Contact contact) {
-    if(e.bcard == contact.fixtureA.body) {
+    if(!e.physicsEnabled) {
       e.bcard.alert();
     }
   }

@@ -16,7 +16,7 @@ class BoundedCard {
     this.e = e;
 
     BodyDef bd = new BodyDef();
-    bd.type = BodyType.STATIC;
+    bd.type = BodyType.DYNAMIC;
     bd.position = new Vector2(0.0, 0.0);
 
     FixtureDef fd = new FixtureDef();
@@ -37,8 +37,7 @@ class BoundedCard {
     angle += Input.wheelDirection * Math.PI / 12;
     b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
 
-    var card = e.addCard(this.b.position.x, this.b.position.y, angle);
-    card.type = BodyType.DYNAMIC;
+    //e.addCard(this.b.position.x, this.b.position.y, angle);
   }
 
   void alert() {
