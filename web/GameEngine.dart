@@ -106,7 +106,7 @@ class GameEngine {
     bcard.update();
 
     if (Input.isMouseClicked) {
-      addCard(Input.mouseX, Input.mouseY, 0.0);
+      addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
     }
 
     Input.update();
