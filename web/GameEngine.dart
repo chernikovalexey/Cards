@@ -7,7 +7,10 @@ import 'package:box2d/box2d_browser.dart';
 class GameEngine {
   static const double WIDTH = 800.0;
   static const double HEIGHT = 600.0;
-
+  
+  static const double CARD_WIDTH = 45.0;
+  static const double CARD_HEIGHT = 2.5;
+  
   static const double ZERO_GRAVITY = 0.0;
   static const double NORMAL_GRAVITY = -9.8;
 
@@ -45,18 +48,36 @@ class GameEngine {
 
     // Create the ground.
     PolygonShape sd = new PolygonShape();
-    sd.setAsBox(20.0, 20.0 / 2);
+    sd.setAsBox(WIDTH / 2, 10.0 / 2);
 
     BodyDef bd = new BodyDef();
-    bd.position = new Vector2(100.0, 20.0);
+    bd.position = new Vector2(WIDTH / 2, 5.0);
+
     Body ground = world.createBody(bd);
     ground.createFixtureFromShape(sd);
 
-    addCard(-20, 40, Math.PI / 8);
+    addCard(40.0, 120.0, Math.PI / 8);
   }
 
-  void addCard(num x, num y, num angle) {
-    PolygonShape card = new PolygonShape();
+  void addCard(double x, double y, double angle) {
+    PolygonShape cs = new PolygonShape();
+    cs.setAsBox(CARD_WIDTH/2, CARD_HEIGHT/2);
+
+    FixtureDef fd = new FixtureDef();
+    fd.shape = cs;
+    fd.density = 0.025/CARD_WIDTH*CARD_HEIGHT;
+    fd.restitution = 0.1;
+
+    BodyDef def = new BodyDef();
+    def.type = BodyType.DYNAMIC;
+    def.position = new Vector2(x, y);
+    def.linearVelocity = new Vector2(0.0, -100.0);
+    def.angle = angle;
+
+    Body card = world.createBody(def);
+    card.createFixture(fd);
+
+    bodies.add(card);
   }
 
   void run() {
