@@ -5,36 +5,23 @@ import "Input.dart";
 import "BoundedCard.dart";
 
 class GameEngine {
-  static const double SCALE = 100.0;
+  static const double SCALE = 85.0;
 
   static const double WIDTH = 800.0 / SCALE;
-
   static const double HEIGHT = 600.0 / SCALE;
+  static const double CARD_WIDTH = 45.0 / SCALE;
+  static const double CARD_HEIGHT = 2.5 / SCALE;
 
-  static const double CARD_WIDTH = 0.45;
-
-  static const double CARD_HEIGHT = 0.025;
-
-  static const double ZERO_GRAVITY = 0.0;
-
-  static const double NORMAL_GRAVITY = -10.0;
-
-//-9.8 * 2.5;
+  static const double GRAVITY = -10.0;
 
   num lastStepTime = 0;
-
   bool physicsEnabled = false;
 
   World world;
-
   CanvasRenderingContext2D g;
-
   ViewportTransform viewport;
-
   DebugDraw debugDraw;
-
   BoundedCard bcard;
-
   List<Body> cards = new List<Body>();
 
   GameEngine(CanvasRenderingContext2D g) {
@@ -45,21 +32,17 @@ class GameEngine {
   }
 
   void initializeCanvas() {
-    viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(0.0, HEIGHT));
-    viewport.yFlip = true;
+    viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
+        0.0, HEIGHT));
     viewport.scale = SCALE;
 
     debugDraw = new CanvasDraw(viewport, g);
-
-// Have the world draw itself for debugging purposes.
     world.debugDraw = debugDraw;
   }
 
   void initializeWorld() {
-    world = new World(new Vector2(0.0, NORMAL_GRAVITY), true, new DefaultWorldPool());
+    world = new World(new Vector2(0.0, GRAVITY), true, new DefaultWorldPool());
 
-
-// Create the ground.
     PolygonShape sd = new PolygonShape();
     sd.setAsBox(WIDTH, HEIGHT * 0.01);
 
@@ -90,12 +73,11 @@ class GameEngine {
     def.type = getBodyType(physicsEnabled);
     def.position = new Vector2(x, y);
     def.angularDamping = 10.5;
-//  def.bullet = true;
+    def.bullet = true;
     def.angle = angle;
 
     Body card = world.createBody(def);
     card.createFixture(fd);
-
 
     cards.add(card);
 
@@ -124,7 +106,7 @@ class GameEngine {
     update(delta);
 
     g.setFillColorRgb(0, 0, 0);
-    g.fillRect(0, 0, 800, 800);
+    g.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
 
     world.drawDebugData();
 

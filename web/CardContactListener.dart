@@ -8,16 +8,18 @@ import "CardContactListener.dart";
 class CardContactListener extends ContactListener {
   GameEngine e;
 
+  @override
   void endContact(Contact contact) {
-      if(!e.physicsEnabled) {
-        e.bcard.canPut = true;
-      }
+    if (!e.physicsEnabled) {
+      e.bcard.canPut = true;
+    }
   }
 
-
+  @override
   void preSolve(Contact contact, Manifold oldManifold) {
   }
 
+  @override
   void postSolve(Contact contact, ContactImpulse impulse) {
   }
 
@@ -25,11 +27,10 @@ class CardContactListener extends ContactListener {
     this.e = e;
   }
 
+  @override
   void beginContact(Contact contact) {
-    if(!e.physicsEnabled) {
-      e.bcard.canPut = false;;
+    if (!e.physicsEnabled) {
+      e.bcard.canPut = false;
     }
   }
-
-
 }
