@@ -1,22 +1,25 @@
 import "dart:html";
+import "GameEngine.dart";
 
 class Input {
   static num canvasX, canvasY;
+
   static num canvasWidth, canvasHeight;
 
   static num mouseX = 0.0, mouseY = 0.0;
 
   static bool isMouseDown = false;
+
   static bool isMouseClicked = false;
-  
+
   static int wheelDirection = 0;
 
   Input() {
   }
 
   static void onMouseMove(MouseEvent event) {
-    mouseX = (event.clientX - canvasX);
-    mouseY = canvasHeight - (event.clientY - canvasY);
+    mouseX = (event.clientX - canvasX) / GameEngine.SCALE;
+    mouseY = -(event.clientY - canvasY) / GameEngine.SCALE;
   }
 
   static void onMouseDown(MouseEvent event) {

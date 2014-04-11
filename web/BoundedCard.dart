@@ -8,7 +8,7 @@ import "CardContactListener.dart";
 class BoundedCard {
   Body b;
   Body boundedBox;
-  bool canPut;
+  bool canPut = true;
 
   GameEngine e;
 
