@@ -13,7 +13,7 @@ class Bobbin {
     nFrame++;
     if (nFrame % 2 == 0) return;
 
-    List<Body> frame = new List();
+    List<Transform> frame = new List();
     int numAsleep = 0;
     for (Body b in cards) {
       if (!b.awake) numAsleep++;
