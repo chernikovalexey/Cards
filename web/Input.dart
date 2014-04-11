@@ -1,11 +1,11 @@
 import "dart:html";
 
 class Input {
-  static num canvasX,canvasY;
+  static num canvasX, canvasY;
   static num canvasWidth, canvasHeight;
 
   static num mouseX = 0.0, mouseY = 0.0;
-  static bool isMouseDown;
+  static bool isMouseDown = false;
 
   Input() {
   }

@@ -106,8 +106,9 @@ class GameEngine {
 
   void update(num delta) {
     card.update();
-    //card.setTransform(new Vector2(Input.mouseX, Input.mouseY), 0.0);
-//card.position.x = Input.mouseX;
-//card.position.y = Input.mouseY; //= new Vector2(Input.mouseX, Input.mouseY)
+
+    if(Input.isMouseDown) {
+      addCard(Input.mouseX, Input.mouseY, 0.0);      
+    }
   }
 }
