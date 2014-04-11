@@ -3,11 +3,18 @@ import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
 import "Input.dart";
 import "GameEngine.dart";
+import "CardContactListener.dart";
 
 class BoundedCard {
   Body b;
+  Body boundedBox;
+
+
+  GameEngine e;
 
   BoundedCard(GameEngine e) {
+    this.e = e;
+
     BodyDef bd = new BodyDef();
     bd.type = BodyType.STATIC;
     bd.position = new Vector2(0.0, 0.0);
@@ -21,11 +28,21 @@ class BoundedCard {
 
     b = e.world.createBody(bd);
     b.createFixture(fd);
+    b.userData = Colors.white;
+    e.world.contactListener = new CardContactListener(e);
   }
 
   void update() {
     double angle = b.angle;
     angle += Input.wheelDirection * Math.PI / 12;
     b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
+
+    var card = e.addCard(this.b.position.x, this.b.position.y, angle);
+    card.type = BodyType.DYNAMIC;
+  }
+
+  void alert() {
+    print("alert");
+    b.userData = Colors.darkRed;
   }
 }
