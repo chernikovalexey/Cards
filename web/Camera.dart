@@ -33,8 +33,7 @@ class Camera {
 
     void update() {
         move();
-
-
+        print(currentZoom);
         if (!zoomAnimation.isFinished) {
             double zoom = zoomAnimation.next();
             currentZoom = zoom;

@@ -5,19 +5,20 @@ import "Input.dart";
 import "BoundedCard.dart";
 import "Bobbin.dart";
 import "CardContactListener.dart";
-import "Camera.dart";
+import 'Camera.dart';
 
 class GameEngine {
-
     static const double SCALE = 85.0;
 
-    static const double WIDTH = 800.0 / SCALE;
+    static double scale = SCALE;
 
-    static const double HEIGHT = 600.0 / SCALE;
+    static double WIDTH = 800.0 / scale;
 
-    static const double CARD_WIDTH = 45.0 / SCALE;
+    static double HEIGHT = 600.0 / scale;
 
-    static const double CARD_HEIGHT = 2.5 / SCALE;
+    static double CARD_WIDTH = 45.0 / scale;
+
+    static double CARD_HEIGHT = 2.5 / scale;
 
     static const double GRAVITY = -10.0;
 
@@ -37,21 +38,22 @@ class GameEngine {
 
     BoundedCard bcard;
 
-    Camera camera;
-
     Body from, to;
 
     List<Body> cards = new List<Body>();
 
     Bobbin bobbin;
 
+    Camera camera;
+
     bool isRewinding = false;
 
     double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
 
-    double currentZoom = 1.0;
+    double currentZoom = 1;
 
-    GameEngine(CanvasRenderingContext2D g) {
+    GameEngine(CanvasRenderingContext2D g)
+    {
         this.g = g;
         camera = new Camera(this);
 
@@ -59,32 +61,31 @@ class GameEngine {
         initializeCanvas();
     }
 
-    void initializeCanvas() {
-        viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
-            0.0, HEIGHT));
-        viewport.scale = SCALE;
+    void initializeCanvas()
+    {
+        viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(0.0, HEIGHT));
+        viewport.scale = scale;
 
         debugDraw = new CanvasDraw(viewport, g);
         world.debugDraw = debugDraw;
     }
 
-    void initializeWorld() {
+    void initializeWorld()
+    {
         this.contactListener = new CardContactListener(this);
-        this.world = new World(new Vector2(0.0, GRAVITY), true,
-        new DefaultWorldPool());
+        this.world = new World(new Vector2(0.0, GRAVITY), true, new DefaultWorldPool());
 
         world.contactListener = contactListener;
 
         createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
 
         this.bcard = new BoundedCard(this);
-        this.from = createPolygonShape(100.0 / SCALE, -HEIGHT + 50 / SCALE + HEIGHT
-        * 0.02, 50.0 / SCALE, 50.0 / SCALE);
-        this.to = createPolygonShape(WIDTH - 100 / SCALE, -HEIGHT / 2 + 75 / SCALE,
-        50.0 / SCALE, 50.0 / SCALE);
+        this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT * 0.02, 50.0 / scale, 50.0 / scale);
+        this.to = createPolygonShape(WIDTH - 100 / scale, -HEIGHT / 2 + 75 / scale, 50.0 / scale, 50.0 / scale);
     }
 
-    Body createPolygonShape(double x, double y, double width, double height) {
+    Body createPolygonShape(double x, double y, double width, double height)
+    {
         PolygonShape sd = new PolygonShape();
         sd.setAsBox(width, height);
 
@@ -101,9 +102,10 @@ class GameEngine {
         return body;
     }
 
-    Body addCard(double x, double y, double angle) {
+    Body addCard(double x, double y, double angle, [double zoom = 1])
+    {
         PolygonShape cs = new PolygonShape();
-        cs.setAsBox(CARD_WIDTH / 2, CARD_HEIGHT / 2);
+        cs.setAsBox(CARD_WIDTH / 2 * zoom, CARD_HEIGHT / 2 * zoom);
 
         FixtureDef fd = new FixtureDef();
         fd.shape = cs;
@@ -126,11 +128,13 @@ class GameEngine {
         return card;
     }
 
-    int getBodyType(bool activeness) {
+    int getBodyType(bool activeness)
+    {
         return activeness ? BodyType.DYNAMIC : BodyType.STATIC;
     }
 
-    void togglePhysics(bool active) {
+    void togglePhysics(bool active)
+    {
         physicsEnabled = active;
         if (physicsEnabled) {
             bobbin = new Bobbin();
@@ -140,18 +144,20 @@ class GameEngine {
         }
     }
 
-    void run() {
+    void run()
+    {
         window.animationFrame.then(step);
     }
 
-    void step(num time) {
+    void step(num time)
+    {
         num delta = time - this.lastStepTime;
 
         world.step(1.0 / 60.0, 100, 100);
         update(delta);
 
         g.setFillColorRgb(0, 0, 0);
-        g.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
+        g.fillRect(0, 0, WIDTH * scale, HEIGHT * scale);
 
         world.drawDebugData();
 
@@ -159,8 +165,12 @@ class GameEngine {
         run();
     }
 
-    void update(num delta) {
+    void update(num delta)
+    {
         bcard.update();
+
+        camera.update();
+
         if (physicsEnabled) bobbin.enterFrame(cards);
 
         if (isRewinding) {
@@ -168,12 +178,15 @@ class GameEngine {
             if (!isRewinding) bobbin = new Bobbin();
         }
 
-        if (Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty) {
+//print(contactListener.canPut);
+        if (Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty && !physicsEnabled) {
             addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
         }
 
-        if (contactListener.contactingBodies.isNotEmpty &&
-        Input.isMouseRightClicked) {
+        if (Input.minusDown)zoom(false); else
+            if (Input.plusDown)zoom(true);
+
+        if (contactListener.contactingBodies.isNotEmpty && Input.isMouseRightClicked) {
             List<Body> cardsToDelete = new List<Body>();
             cardsToDelete.addAll(contactListener.contactingBodies);
             contactListener.contactingBodies.clear();
@@ -187,7 +200,8 @@ class GameEngine {
         Input.update();
     }
 
-    void restart(double d, double f, double r) {
+    void restart(double d, double f, double r)
+    {
         cardDensity = d;
         cardRestitution = r;
         cardFriction = f;
@@ -200,28 +214,37 @@ class GameEngine {
         for (int i = 0; i < 13; i++) {
             double x = i * 0.8;
             double y = -i * 0.8;
-            addCard(x, y, 0.0);
+            addCard(x, y, 0);
         }
 
         togglePhysics(true);
     }
 
-    void rewind() {
+    void rewind()
+    {
         togglePhysics(false);
         isRewinding = true;
     }
 
-    void zoom(bool zoomIn) {
+    void removeCard(Body c)
+    {
+        world.destroyBody(c);
+        cards.remove(c);
+    }
+
+    void zoom(bool zoomIn)
+    {
         double newZoom;
         if (zoomIn) {
-            newZoom = (currentZoom + 0.2 < 3) ? currentZoom + 0.2 : currentZoom;
+            newZoom = currentZoom < 3 ? currentZoom + 0.2 : currentZoom;
+
         } else {
-            newZoom = (currentZoom - 0.2 > 1) ? currentZoom - 0.2 : currentZoom;
+            newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
         }
 
+        camera.beginZoom(newZoom, currentZoom);
+        currentZoom = newZoom;
 
-        this.camera.beginZoom(newZoom, currentZoom);
-        newZoom = currentZoom;
     }
 }
 

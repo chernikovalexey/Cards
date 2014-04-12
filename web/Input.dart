@@ -39,8 +39,8 @@ class Input {
     }
 
   static void onMouseMove(MouseEvent event) {
-    mouseX = (event.clientX - canvasX) / GameEngine.scale + camera.offsetX;
-    mouseY = -(event.clientY - canvasY) / GameEngine.scale + camera.offsetY;
+    mouseX = (event.clientX - canvasX) / GameEngine.scale + camera.offsetX / GameEngine.scale;
+    mouseY = -(event.clientY - canvasY) / GameEngine.scale - camera.offsetY / GameEngine.scale;
   }
 
   static void onMouseDown(MouseEvent event) {
