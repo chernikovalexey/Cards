@@ -3,7 +3,7 @@ import 'package:box2d/box2d_browser.dart';
 import "EnergySprite.dart";
 
 class Sprite {
-    double energy;
+    double energy = 0.0;
     bool isInner = false;
 
     Color3 color;

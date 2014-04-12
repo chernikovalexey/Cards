@@ -2,6 +2,7 @@ import "Sprite.dart";
 import "dart:html";
 import "GameEngine.dart";
 import 'package:box2d/box2d_browser.dart';
+import "dart:math" as Math;
 
 
 class EnergySprite extends Sprite {
@@ -20,7 +21,6 @@ class EnergySprite extends Sprite {
     Body from;
 
     EnergySprite(World w) {
-        activate(null);
         if (GLOW_COLORS.length == 0) {
             GLOW_COLORS.add(new Color3.fromRGB(255, 255, 0));
             GLOW_COLORS.add(new Color3.fromRGB(255, 220, 0));
@@ -30,56 +30,69 @@ class EnergySprite extends Sprite {
         this.color = new Color3.fromRGB(255, 250, 200);
     }
 
-    void glow(CanvasDraw g, Body b, double w, double h, int color) {
-        double x = (b.fixtureList.shape as PolygonShape).getVertex(0).x;
-        double y = (b.fixtureList.shape as PolygonShape).getVertex(0).y;
-
-        double cx = x; //+ w / 2;
-        double cy = y;// + h / 2;
+    void glow(CanvasDraw g, Body b, double w, double h, int state) {
+        if (from == null) return;
 
 
+        PolygonShape shape = (b.fixtureList.shape as PolygonShape);
+
+        PolygonShape shape1 = shape.clone();
+
+        //todo: test!
+        if (from.position.distanceTo(shape1.vertices[1]) < from.position.distanceTo(shape1.vertices[1])) {
+            shape1.vertices[1].x -= GameEngine.CARD_WIDTH * (1 - energy);
+            shape1.vertices[2].x -= GameEngine.CARD_WIDTH * (1 - energy);
+        } else {
+            shape1.vertices[0].x += GameEngine.CARD_WIDTH * (1 - energy);
+            shape1.vertices[3].x += GameEngine.CARD_WIDTH * (1 - energy);
+        }
+
+        for (Vector2 v in shape1.vertices) {
+            v.x += v.x * (0.1 * state / 3);
+            v.y += v.y * (0.4 * state / 3);
+        }
 
         FixtureDef fd = new FixtureDef();
-        PolygonShape ps = new PolygonShape();
+        fd.shape = shape1;
 
-        ps.setAsBox(w, h);
-        fd.shape = ps;
+
         Fixture f = new Fixture();
         f.create(null, fd);
 
-        Transform tf = new Transform();
-        tf.setFrom(b.originTransform);
-        tf.position.x = cx;
-        tf.position.y = cy;
 
-
-        drawShape(f, tf, GLOW_COLORS[color]);
+        drawShape(f, b.originTransform, GLOW_COLORS[0]);
     }
 
     void glowEffect(CanvasDraw g, Body b, int n) {
-        if (n >= 2)
-            glow(g, b, (GameEngine.CARD_WIDTH /2 + 0.004) * energy, GameEngine.CARD_HEIGHT / 2 + .004, 2);
-
-        if (n >= 1)
-            glow(g, b, GameEngine.CARD_WIDTH / 2 + 0.002, GameEngine.CARD_HEIGHT / 2 + .002, 1);
-
-        glow(g, b, GameEngine.CARD_WIDTH / 2 * energy , GameEngine.CARD_HEIGHT / 2 , 0);
+        glow(g, b, GameEngine.CARD_WIDTH / 2 * energy, GameEngine.CARD_HEIGHT / 2, n);
     }
 
     void activate(Body from) {
+        this.from = from;
         active = true;
-        energy = 0.5;
+    }
+
+    void deactivate(Body from) {
+        this.from = from;
+        active = false;
     }
 
     @override
+
     void render(CanvasDraw g, Body b) {
         super.render(g, b);
 
         frame++;
 
-        if(!active) return;
+        if (!active && energy <= 0) return;
 
-        if (frame % 10 == 0) {
+        if (active && energy < .9) {
+            energy += 0.1;
+        } else if (!active && energy >= .1) {
+            energy -= 0.1;
+        }
+
+        if (frame % 12 == 0) {
             if (glowBorders == 2 || glowBorders == 0)
                 glowAdd *= -1;
             glowBorders += glowAdd;

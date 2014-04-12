@@ -53,6 +53,7 @@ class GameEngine {
     this.g = g;
     camera = new Camera(this);
 
+
     initializeWorld();
     initializeCanvas();
     preloadLevels();

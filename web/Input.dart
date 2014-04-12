@@ -39,9 +39,9 @@ class Input {
     if (prevMouseX != mouseX) prevMouseX = mouseX;
     if (prevMouseY != mouseY) prevMouseY = mouseY;
 
-    mouseX = (event.client.x - canvasX) / GameEngine.scale + camera.offsetX /
+    mouseX = (event.client.x - canvasX) / GameEngine.scale + camera.pxOffsetX /
         GameEngine.scale;
-    mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.offsetY /
+    mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.pxOffsetY /
         GameEngine.scale;
   }
 
