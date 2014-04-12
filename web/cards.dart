@@ -11,6 +11,8 @@ void main() {
   canvas.onMouseUp.listen(Input.onMouseUp);
   canvas.onMouseWheel.listen(Input.onMouseWheel);
   canvas.onContextMenu.listen(Input.onContextMenu);
+  window.onKeyDown.listen(Input.onKeyDown);
+  window.onKeyUp.listen(Input.onKeyUp);
 
   var r = canvas.getBoundingClientRect();
   Input.canvasX = r.left;
@@ -25,6 +27,9 @@ void main() {
       engine.togglePhysics(true), false);
   querySelector('#disable-physics').addEventListener("click", (event) =>
       engine.rewind(), false);
+  querySelector("#zoom-in").addEventListener("click", (event)=> engine.zoom(true));
+  querySelector("#zoom-out").addEventListener("click", (event)=> engine.zoom(false));
+
 
   for (var x in querySelectorAll("input")) x.addEventListener("change", (event)
       => engine.restart(double.parse((querySelector("#density") as InputElement).value
