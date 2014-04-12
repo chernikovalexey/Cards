@@ -34,10 +34,8 @@ class EnergySprite extends Sprite {
         double x = (b.fixtureList.shape as PolygonShape).getVertex(0).x;
         double y = (b.fixtureList.shape as PolygonShape).getVertex(0).y;
 
-        double cx = x + w / 2;
-        double cy = y + h / 2;
-
-        print(cx.toString()+" " + cy.toString());
+        double cx = x; //+ w / 2;
+        double cy = y;// + h / 2;
 
 
 
