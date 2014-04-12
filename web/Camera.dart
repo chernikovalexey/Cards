@@ -48,7 +48,7 @@ class Camera {
   void updateEngine(double zoom) {
     e.viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
         offsetX, GameEngine.HEIGHT - offsetY));
-    e.scale = e.viewport.scale = GameEngine.SCALE * zoom;
+    GameEngine.scale = e.viewport.scale = GameEngine.SCALE * zoom;
 
     e.debugDraw = new CanvasDraw(e.viewport, e.g);
     e.world.debugDraw = e.debugDraw;
@@ -60,8 +60,8 @@ class Camera {
     if (Input.keys['space'].down) {
       e.setCanvasCursor('-webkit-grab');
 
-      double dx = Input.getMouseDeltaX() * e.scale;
-      double dy = Input.getMouseDeltaY() * e.scale;
+      double dx = Input.getMouseDeltaX() * GameEngine.scale;
+      double dy = Input.getMouseDeltaY() * GameEngine.scale;
 
       if (Input.isMouseLeftDown) {
         if (dx != 0.0) {
