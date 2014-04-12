@@ -1,5 +1,6 @@
 import "dart:html";
 import "GameEngine.dart";
+import "Camera.dart";
 
 class Input {
   static final LEFT = 37;
