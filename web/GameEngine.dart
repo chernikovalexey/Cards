@@ -17,8 +17,8 @@ class GameEngine {
   static double CARD_HEIGHT = 2.5 / SCALE;
   static const double GRAVITY = -10.0;
 
-  num lastStepTime = 0;
   double scale = SCALE;
+  num lastStepTime = 0;
   bool physicsEnabled = false;
 
   World world;
