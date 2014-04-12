@@ -80,6 +80,7 @@ class EnergySprite extends Sprite {
     @override
 
     void render(CanvasDraw g, Body b) {
+        if(isHidden) return;
         super.render(g, b);
 
         frame++;

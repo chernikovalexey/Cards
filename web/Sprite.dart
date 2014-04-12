@@ -5,6 +5,7 @@ import "EnergySprite.dart";
 class Sprite {
     double energy = 0.0;
     bool isInner = false;
+    bool isHidden = false;
 
     Color3 color;
 
@@ -19,6 +20,8 @@ class Sprite {
     }
 
     void render(CanvasDraw g, Body b) {
+        if(isHidden) return;
+
         canvasDraw = g;
         Transform tf = new Transform();
         tf.setFrom(b.originTransform);
