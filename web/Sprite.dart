@@ -1,6 +1,6 @@
 import "dart:html";
 import 'package:box2d/box2d_browser.dart';
-
+import "EnergySprite.dart";
 
 class Sprite {
     double energy;
@@ -70,10 +70,13 @@ class Sprite {
     }
 
 
-    static Sprite card() {
+    static Sprite card(World w) {
+        return new EnergySprite(w);
+    }
+
+    static Sprite innerEnergy() {
         Sprite s = new Sprite();
-        s.energy = 0.0;
-        s.color = new Color3.fromRGB(255, 0, 0);
+        s.color = new Color3.fromRGB(255,242,0);
         return s;
     }
 

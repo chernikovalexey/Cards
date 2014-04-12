@@ -121,7 +121,7 @@ class GameEngine {
 
     Body card = world.createBody(def);
     card.createFixture(fd);
-    card.userData = Sprite.card();
+    card.userData = Sprite.card(world);
 
     cards.add(card);
 
