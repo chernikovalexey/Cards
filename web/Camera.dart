@@ -2,30 +2,32 @@ import "dart:html";
 import 'package:box2d/box2d_browser.dart';
 import "GameEngine.dart";
 import "Input.dart";
+import 'Sprite.dart';
 import "DoubleAnimation.dart";
 import "dart:math" as Math;
 
 class Camera {
   static final int FRAME_COUNT = 20;
 
-  bool hasBounds=false;
-  
+  bool hasBounds = false;
+
   double finalZoom = 1.0;
   double startZoom = 1.0;
   double currentZoom = 1.0;
-  double targetOffsetX = 0.0, targetOffsetY = 0.0, pxOffsetX = 0.0, pxOffsetY = 0.0;
-  double bx1,by1,bx2,by2;
+  double targetOffsetX = 0.0, targetOffsetY = 0.0, pxOffsetX = 0.0, pxOffsetY =
+      0.0;
+  double bx1, by1, bx2, by2;
   double get offsetX => pxOffsetX / GameEngine.scale;
   double get offsetY => -pxOffsetY / GameEngine.scale;
 
   set offsetX(double offset) {
-      this.pxOffsetX = offset * GameEngine.scale;
-      updateEngine(currentZoom);
+    this.pxOffsetX = offset * GameEngine.scale;
+    updateEngine(currentZoom);
   }
 
   set offsetY(double offset) {
-      this.pxOffsetY = -offset * GameEngine.scale;
-      updateEngine(currentZoom);
+    this.pxOffsetY = -offset * GameEngine.scale;
+    updateEngine(currentZoom);
   }
 
   DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, FRAME_COUNT);
@@ -46,18 +48,18 @@ class Camera {
   }
 
   void update(num delta) {
-      (querySelector("#c") as DivElement).text = offsetX.toString() + " "+ offsetY.toString();
-    pxOffsetX = xAnim.next();
+    (querySelector("#c") as DivElement).text = offsetX.toString() + " " +
+        offsetY.toString();
+    pxOffsetX = xAnim.next(); 
     pxOffsetY = yAnim.next();
 
     move();
-    
-    if(hasBounds) {
-      if(offsetX < bx1) offsetX = bx1;
-      if(offsetX+GameEngine.WIDTH > bx2) offsetX = bx2-GameEngine.WIDTH;
-      if(offsetY-GameEngine.HEIGHT < by1) offsetY = by1+GameEngine.HEIGHT;
-      if(offsetY > by2)offsetY=by2;
-      print(offsetY-GameEngine.HEIGHT);
+
+    if (hasBounds) {
+      if (offsetX < bx1) offsetX = bx1;
+      if (offsetX + GameEngine.WIDTH > bx2) offsetX = bx2 - GameEngine.WIDTH;
+      if (offsetY - GameEngine.HEIGHT < by1) offsetY = by1 + GameEngine.HEIGHT;
+      if (offsetY > by2) offsetY = by2;
     }
 
     if (!zoomAnimation.isFinished) {
@@ -70,15 +72,19 @@ class Camera {
   }
 
   void setBounds(double bx1, double by1, double bx2, double by2) {
-    this.hasBounds=true;
-    this.bx1=bx1;
-    this.bx2=bx2;
-    this.by1=by1;
-    this.by2=by2;
+    this.hasBounds = true;
+    this.bx1 = bx1;
+    this.bx2 = bx2;
+    this.by1 = by1;
+    this.by2 = by2;
   }
 
   void updateEngine(double zoom) {
-      //e.viewport.setCamera(offsetX, offsetY, zoom);
+    xAnim.setStart(pxOffsetX);
+    xAnim.setEnd(targetOffsetX);
+    yAnim.setStart(pxOffsetY);
+    yAnim.setEnd(targetOffsetY);
+
     e.viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
         pxOffsetX, GameEngine.HEIGHT - pxOffsetY));
     GameEngine.scale = e.viewport.scale = GameEngine.SCALE * zoom;
@@ -107,9 +113,11 @@ class Camera {
           updated = true;
         }
       }
+      
+      (e.bcard.b.userData as Sprite).isHidden = true;
+    } else {
+      (e.bcard.b.userData as Sprite).isHidden = false;
     }
-
-
 
     if (Input.keys['w'].down) {
       targetOffsetY -= speed;
@@ -132,11 +140,6 @@ class Camera {
     }
 
     if (updated) {
-      xAnim.setStart(pxOffsetX);
-      xAnim.setEnd(targetOffsetX);
-      yAnim.setStart(pxOffsetY);
-      yAnim.setEnd(targetOffsetY);
-
       updateEngine(currentZoom);
     }
   }

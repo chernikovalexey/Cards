@@ -227,7 +227,7 @@ class GameEngine {
     g.setFillColorRgb(0, 0, 0);
     g.fillRect(0, 0, WIDTH * scale, HEIGHT * scale);
 
-    world.drawDebugData();
+    //world.drawDebugData();
     render();
 
     this.lastStepTime = time;
