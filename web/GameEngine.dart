@@ -121,7 +121,7 @@ class GameEngine {
     double w = l['width'].toDouble() / scale;
     double h = l['height'].toDouble() / scale;
     
-    camera.setBounds(x*scale,y*scale,x*scale + w*scale,y*scale + h*scale);
+    camera.setBounds(x,y,x + w,y + h);
 
     createPolygonShape(x, y, 10.0 / scale, 10.0 / scale);
     createPolygonShape(x + w, y, 10.0 / scale, 10.0 / scale);

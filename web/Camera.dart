@@ -8,11 +8,13 @@ import "dart:math" as Math;
 class Camera {
   static final int FRAME_COUNT = 20;
 
+  bool hasBounds=false;
+  
   double finalZoom = 1.0;
   double startZoom = 1.0;
   double currentZoom = 1.0;
   double targetOffsetX = 0.0, targetOffsetY = 0.0, pxOffsetX = 0.0, pxOffsetY = 0.0;
-
+  double bx1,by1,bx2,by2;
   double get offsetX => pxOffsetX / GameEngine.scale;
   double get offsetY => -pxOffsetY / GameEngine.scale;
 
@@ -49,6 +51,14 @@ class Camera {
     pxOffsetY = yAnim.next();
 
     move();
+    
+    if(hasBounds) {
+      if(offsetX < bx1) offsetX = bx1;
+      if(offsetX+GameEngine.WIDTH > bx2) offsetX = bx2-GameEngine.WIDTH;
+      if(offsetY-GameEngine.HEIGHT < by1) offsetY = by1+GameEngine.HEIGHT;
+      if(offsetY > by2)offsetY=by2;
+      print(offsetY-GameEngine.HEIGHT);
+    }
 
     if (!zoomAnimation.isFinished) {
       double zoom = zoomAnimation.next();
@@ -59,8 +69,12 @@ class Camera {
     }
   }
 
-  void setBounds(double x, double y, double w, double h) {
-
+  void setBounds(double bx1, double by1, double bx2, double by2) {
+    this.hasBounds=true;
+    this.bx1=bx1;
+    this.bx2=bx2;
+    this.by1=by1;
+    this.by2=by2;
   }
 
   void updateEngine(double zoom) {
