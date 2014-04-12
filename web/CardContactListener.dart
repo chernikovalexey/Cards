@@ -28,7 +28,7 @@ class CardContactListener extends ContactListener {
 
   @override
   void beginContact(Contact contact) {
-    if (!e.physicsEnabled) {
+    if (!e.physicsEnabled && !contact.fixtureB.body.userData.isInner) {
       contactingBodies.add(contact.fixtureB.body);
     }
   }
