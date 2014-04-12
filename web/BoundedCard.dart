@@ -26,7 +26,7 @@ class BoundedCard {
 
     b = e.world.createBody(bd);
     b.createFixture(fd);
-    b.userData = Sprite.card();
+    b.userData = Sprite.card(e.world);
   }
 
   void update() {

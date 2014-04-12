@@ -1,6 +1,6 @@
 import "dart:html";
 import 'package:box2d/box2d_browser.dart';
-
+import "EnergySprite.dart";
 
 class Sprite {
   double energy;
@@ -24,10 +24,22 @@ class Sprite {
     drawShape(b.fixtureList, tf, color);
   }
 
+<<<<<<< HEAD
   void drawShape(Fixture fixture, Transform xf, Color3 color) {
     switch (fixture.type) {
       case ShapeType.CIRCLE:
         final CircleShape circle = fixture.shape;
+=======
+    static Sprite card(World w) {
+        return new EnergySprite(w);
+    }
+
+    static Sprite innerEnergy() {
+        Sprite s = new Sprite();
+        s.color = new Color3.fromRGB(255,242,0);
+        return s;
+    }
+>>>>>>> 5d767ed2f51bc8d299d7ee193420b16a1df35d74
 
         // Vector2 center = Mul(xf, circle.p);
         Transform.mulToOut(xf, circle.position, center);

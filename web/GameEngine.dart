@@ -141,9 +141,13 @@ class GameEngine {
 
     Body card = world.createBody(def);
     card.createFixture(fd);
+<<<<<<< HEAD
     Sprite sprite = Sprite.card();
     sprite.color.x -= offset++;
     card.userData = sprite;
+=======
+    card.userData = Sprite.card(world);
+>>>>>>> 5d767ed2f51bc8d299d7ee193420b16a1df35d74
 
     cards.add(card);
 
