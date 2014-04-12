@@ -2,15 +2,20 @@ import 'dart:html';
 import 'GameEngine.dart';
 import 'Input.dart';
 
+CanvasElement canvas;
+
 void main() {
-  CanvasElement canvas = (querySelector("#graphics") as CanvasElement);
+  canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
 
   canvas.onMouseMove.listen(Input.onMouseMove);
   canvas.onMouseDown.listen(Input.onMouseDown);
-  canvas.onMouseUp.listen(Input.onMouseUp);
+
+  // release the mouse no matter where it currently is
+  window.onMouseUp.listen(Input.onMouseUp);
   canvas.onMouseWheel.listen(Input.onMouseWheel);
   canvas.onContextMenu.listen(Input.onContextMenu);
+
   window.onKeyDown.listen(Input.onKeyDown);
   window.onKeyUp.listen(Input.onKeyUp);
 
@@ -27,8 +32,10 @@ void main() {
       engine.togglePhysics(true), false);
   querySelector('#disable-physics').addEventListener("click", (event) =>
       engine.rewind(), false);
-  querySelector("#zoom-in").addEventListener("click", (event)=> engine.zoom(true));
-  querySelector("#zoom-out").addEventListener("click", (event)=> engine.zoom(false));
+  querySelector("#zoom-in").addEventListener("click", (event) => engine.zoom(
+      true));
+  querySelector("#zoom-out").addEventListener("click", (event) => engine.zoom(
+      false));
 
 
   for (var x in querySelectorAll("input")) x.addEventListener("change", (event)

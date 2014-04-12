@@ -1,40 +1,46 @@
 import "dart:math" as Math;
 
 class DoubleAnimation {
-    bool isFinished = false;
+  bool isFinished = false;
 
-    int frame = 0;
+  int frame = 0;
 
-    int numFrames;
+  int numFrames;
 
-    double start, end;
-    double lastDelta;
-    double lastValue;
+  double start, end;
+  double lastDelta;
+  double lastValue;
 
-    DoubleAnimation(double start, double end, int numFrames)
-    {
-        this.start = start;
-        this.end = end;
-        this.lastDelta = 0.0;
-        this.lastValue = start;
-        if (start == end) isFinished = true;
-        this.numFrames = numFrames;
-    }
+  DoubleAnimation(double start, double end, int numFrames) {
+    this.start = start;
+    this.end = end;
+    this.lastDelta = 0.0;
+    this.lastValue = start;
+    if (start == end) isFinished = true;
+    this.numFrames = numFrames;
+  }
 
-    double next()
-    {
-        if (isFinished) return end;
-        double val = start + (end - start) * Math.sin(frame / numFrames * Math.PI / 2);
-        lastDelta = val - lastValue;
-        lastValue = val;
-        frame++;
-        isFinished = frame == numFrames;
-        return val;
-    }
+  double next() {
+    if (isFinished) return end;
+    double val = start + (end - start) * Math.sin(frame / numFrames * Math.PI /
+        2);
+    lastDelta = val - lastValue;
+    lastValue = val;
+    frame++;
+    isFinished = frame == numFrames;
+    return val;
+  }
 
-    void modify(double newEnd, int newFrameCount)
-    {
-        end = newEnd;
-        numFrames = newFrameCount;
-    }
+  void setStart(double start) {
+    this.start=start;
+  }
+  
+  void setEnd(double end) {
+    this.end=end;
+  }
+  
+  void modify(double newEnd, int newFrameCount) {
+    end = newEnd;
+    numFrames = newFrameCount;
+  }
 }

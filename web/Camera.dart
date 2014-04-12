@@ -6,63 +6,104 @@ import "DoubleAnimation.dart";
 import "dart:math" as Math;
 
 class Camera {
-    static final int FRAME_COUNT = 20;
+  static final int FRAME_COUNT = 20;
 
-    double finalZoom = 1.0;
+  double finalZoom = 1.0;
+  double startZoom = 1.0;
+  double currentZoom = 1.0;
+  double targetOffsetX = 0.0, targetOffsetY = 0.0, offsetX = 0.0, offsetY = 0.0;
 
-    double startZoom = 1.0;
+  DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, FRAME_COUNT);
+  DoubleAnimation xAnim = new DoubleAnimation(0.0, 0.0, FRAME_COUNT);
+  DoubleAnimation yAnim = new DoubleAnimation(0.0, 0.0, FRAME_COUNT);
 
-    double currentZoom = 1.0;
+  GameEngine e;
 
-    num offsetX = 0.0, offsetY = 0.0;
+  Camera(GameEngine e) {
+    this.e = e;
+    Input.setCamera(this);
+  }
 
-    DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, FRAME_COUNT);
+  void beginZoom(double finalZoom, double currentZoom) {
+    this.finalZoom = finalZoom;
+    this.startZoom = currentZoom;
+    zoomAnimation = new DoubleAnimation(currentZoom, finalZoom, FRAME_COUNT);
+  }
 
-    GameEngine e;
+  void update(num delta) {
+    offsetX = xAnim.next();
+    offsetY = yAnim.next();
 
-    Camera(GameEngine e) {
-        this.e = e;
-        Input.setCamera(this);
+    move();
+
+    if (!zoomAnimation.isFinished) {
+      double zoom = zoomAnimation.next();
+      currentZoom = zoom;
+      updateEngine(zoom);
+
+      if (!zoomAnimation.isFinished) currentZoom = finalZoom;
     }
+  }
 
-    void beginZoom(double finalZoom, double currentZoom) {
-        this.finalZoom = finalZoom;
-        this.startZoom = currentZoom;
-        zoomAnimation = new DoubleAnimation(currentZoom, finalZoom, FRAME_COUNT);
-    }
+  void updateEngine(double zoom) {
+    e.viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
+        offsetX, GameEngine.HEIGHT - offsetY));
+    e.scale = e.viewport.scale = GameEngine.SCALE * zoom;
 
-    void update() {
-        move();
-        print(currentZoom);
-        if (!zoomAnimation.isFinished) {
-            double zoom = zoomAnimation.next();
-            currentZoom = zoom;
-            updateEngine(zoom);
-            if (!zoomAnimation.isFinished) currentZoom = finalZoom;
+    e.debugDraw = new CanvasDraw(e.viewport, e.g);
+    e.world.debugDraw = e.debugDraw;
+  }
+
+  void move() {
+    bool updated = false;
+
+    if (Input.keys['space'].down) {
+      e.setCanvasCursor('-webkit-grab');
+
+      double dx = Input.getMouseDeltaX() * e.scale;
+      double dy = Input.getMouseDeltaY() * e.scale;
+
+      if (Input.isMouseLeftDown) {
+        if (dx != 0.0) {
+          targetOffsetX -= dx;
+          updated = true;
         }
+        if (dy != 0.0) {
+          targetOffsetY -= dy;
+          updated = true;
+        }
+      }
     }
 
-    void updateEngine(double zoom) {
-        e.viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(offsetX, GameEngine.HEIGHT - offsetY));
-        GameEngine.scale = e.viewport.scale = GameEngine.SCALE * zoom;
+    double speed = 5.5;
 
-        e.debugDraw = new CanvasDraw(e.viewport, e.g);
-        e.world.debugDraw = e.debugDraw;
+    if (Input.keys['w'].down) {
+      targetOffsetY -= speed;
+      updated = true;
     }
 
-
-    void move() {
-        if(Input.leftArrowDown)
-            offsetX-=10;
-        else if(Input.rightArrowDown)
-            offsetX+=10;
-        else if(Input.upArrowDown)
-            offsetY-=10;
-        else if(Input.downArrowDown)
-            offsetY+=10;
-
-        if(Input.leftArrowDown || Input.rightArrowDown || Input.upArrowDown || Input.downArrowDown)
-            updateEngine(currentZoom);
-
+    if (Input.keys['a'].down) {
+      targetOffsetX -= speed;
+      updated = true;
     }
+
+    if (Input.keys['s'].down) {
+      targetOffsetY += speed;
+      updated = true;
+    }
+
+    if (Input.keys['d'].down) {
+      targetOffsetX += speed;
+      updated = true;
+    }
+
+    if (updated) {
+      xAnim.setStart(offsetX);
+      xAnim.setEnd(targetOffsetX);
+      yAnim.setStart(offsetY);
+      yAnim.setEnd(targetOffsetY);
+
+      updateEngine(currentZoom);
+    }
+  }
 }

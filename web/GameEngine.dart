@@ -1,6 +1,7 @@
 import 'dart:html';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
+import 'cards.dart';
 import "Input.dart";
 import "BoundedCard.dart";
 import "Bobbin.dart";
@@ -8,243 +9,235 @@ import "CardContactListener.dart";
 import 'Camera.dart';
 
 class GameEngine {
-    static const double SCALE = 85.0;
+  static const double SCALE = 85.0;
 
-    static double scale = SCALE;
+  static double WIDTH = 800.0 / SCALE;
+  static double HEIGHT = 600.0 / SCALE;
+  static double CARD_WIDTH = 45.0 / SCALE;
+  static double CARD_HEIGHT = 2.5 / SCALE;
+  static const double GRAVITY = -10.0;
 
-    static double WIDTH = 800.0 / scale;
+  num lastStepTime = 0;
+  double scale = SCALE;
+  bool physicsEnabled = false;
 
-    static double HEIGHT = 600.0 / scale;
+  World world;
+  CardContactListener contactListener;
+  CanvasRenderingContext2D g;
+  ViewportTransform viewport;
+  DebugDraw debugDraw;
+  BoundedCard bcard;
+  Bobbin bobbin;
+  Camera camera;
 
-    static double CARD_WIDTH = 45.0 / scale;
+  Body from, to;
+  List<Body> cards = new List<Body>();
 
-    static double CARD_HEIGHT = 2.5 / scale;
+  bool isRewinding = false;
+  double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
+  double currentZoom = 1.0;
 
-    static const double GRAVITY = -10.0;
+  GameEngine(CanvasRenderingContext2D g) {
+    this.g = g;
+    camera = new Camera(this);
 
-    num lastStepTime = 0;
+    initializeWorld();
+    initializeCanvas();
+  }
 
-    bool physicsEnabled = false;
+  void initializeCanvas() {
+    viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
+        0.0, HEIGHT));
+    viewport.scale = scale;
 
-    World world;
+    debugDraw = new CanvasDraw(viewport, g);
+    world.debugDraw = debugDraw;
+  }
 
-    CardContactListener contactListener;
+  void initializeWorld() {
+    this.contactListener = new CardContactListener(this);
+    this.world = new World(new Vector2(0.0, GRAVITY), true,
+        new DefaultWorldPool());
+    this.bobbin = new Bobbin(() {});
 
-    CanvasRenderingContext2D g;
+    world.contactListener = contactListener;
 
-    ViewportTransform viewport;
+    createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
 
-    DebugDraw debugDraw;
+    this.bcard = new BoundedCard(this);
+    this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT
+        * 0.02, 50.0 / scale, 50.0 / scale);
+    this.to = createPolygonShape(WIDTH - 100 / scale, -HEIGHT / 2 + 75 / scale,
+        50.0 / scale, 50.0 / scale);
+  }
 
-    BoundedCard bcard;
+  Body createPolygonShape(double x, double y, double width, double height) {
+    PolygonShape sd = new PolygonShape();
+    sd.setAsBox(width, height);
 
-    Body from, to;
+    FixtureDef fd = new FixtureDef();
+    fd.shape = sd;
+    fd.friction = 0.7;
 
-    List<Body> cards = new List<Body>();
+    BodyDef bd = new BodyDef();
+    bd.position = new Vector2(x, y);
 
-    Bobbin bobbin;
+    Body body = world.createBody(bd);
+    body.createFixture(fd);
 
-    Camera camera;
+    return body;
+  }
 
-    bool isRewinding = false;
+  Body addCard(double x, double y, double angle, [double zoom = 1.0]) {
+    PolygonShape cs = new PolygonShape();
+    cs.setAsBox(CARD_WIDTH / 2 * zoom, CARD_HEIGHT / 2 * zoom);
 
-    double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
+    FixtureDef fd = new FixtureDef();
+    fd.shape = cs;
+    fd.density = cardDensity;
+    fd.friction = cardFriction;
+    fd.restitution = cardRestitution;
 
-    double currentZoom = 1;
+    BodyDef def = new BodyDef();
+    def.type = getBodyType(physicsEnabled);
+    def.position = new Vector2(x, y);
+    def.angularDamping = 10.5;
+    def.bullet = true;
+    def.angle = angle;
 
-    GameEngine(CanvasRenderingContext2D g)
-    {
-        this.g = g;
-        camera = new Camera(this);
+    Body card = world.createBody(def);
+    card.createFixture(fd);
 
-        initializeWorld();
-        initializeCanvas();
+    cards.add(card);
+
+    return card;
+  }
+
+  int getBodyType(bool activeness) {
+    return activeness ? BodyType.DYNAMIC : BodyType.STATIC;
+  }
+
+  void togglePhysics(bool active) {
+    physicsEnabled = active;
+    if (physicsEnabled) {
+      bobbin.clear();
+    }
+    for (Body body in cards) {
+      body.type = getBodyType(active);
+    }
+  }
+
+  void setCanvasCursor(String cursor) {
+    canvas.style.cursor = cursor;
+  }
+
+  void run() {
+    window.animationFrame.then(step);
+  }
+
+  void step(num time) {
+    num delta = time - this.lastStepTime;
+
+    world.step(1.0 / 60.0, 100, 100);
+    update(delta);
+
+    g.setFillColorRgb(0, 0, 0);
+    g.fillRect(0, 0, WIDTH * scale, HEIGHT * scale);
+
+    world.drawDebugData();
+
+    this.lastStepTime = time;
+    run();
+  }
+
+  bool canPut() {
+    return !Input.keys['z'].down && !Input.isAltDown &&
+        !Input.keys['space'].down && Input.isMouseLeftClicked &&
+        contactListener.contactingBodies.isEmpty && !physicsEnabled;
+  }
+
+  void update(num delta) {
+    setCanvasCursor('none');
+
+    bcard.update();
+    camera.update(delta);
+
+    if (physicsEnabled) {
+      bobbin.enterFrame(cards);
     }
 
-    void initializeCanvas()
-    {
-        viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(0.0, HEIGHT));
-        viewport.scale = scale;
-
-        debugDraw = new CanvasDraw(viewport, g);
-        world.debugDraw = debugDraw;
+    if (Input.keys['z'].down && !Input.isAltDown) {
+      setCanvasCursor('-webkit-zoom-in');
+      if (Input.isMouseLeftClicked) zoom(true);
+    }
+    if (Input.isAltDown) {
+      setCanvasCursor('-webkit-zoom-out');
+      if (Input.isMouseLeftClicked) zoom(false);
     }
 
-    void initializeWorld()
-    {
-        this.contactListener = new CardContactListener(this);
-        this.world = new World(new Vector2(0.0, GRAVITY), true, new DefaultWorldPool());
-
-        world.contactListener = contactListener;
-
-        createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
-
-        this.bcard = new BoundedCard(this);
-        this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT * 0.02, 50.0 / scale, 50.0 / scale);
-        this.to = createPolygonShape(WIDTH - 100 / scale, -HEIGHT / 2 + 75 / scale, 50.0 / scale, 50.0 / scale);
+    if (isRewinding) {
+      isRewinding = bobbin.previousFrame(cards);
+      if (!isRewinding) bobbin.clear();
     }
 
-    Body createPolygonShape(double x, double y, double width, double height)
-    {
-        PolygonShape sd = new PolygonShape();
-        sd.setAsBox(width, height);
-
-        FixtureDef fd = new FixtureDef();
-        fd.shape = sd;
-        fd.friction = 0.7;
-
-        BodyDef bd = new BodyDef();
-        bd.position = new Vector2(x, y);
-
-        Body body = world.createBody(bd);
-        body.createFixture(fd);
-
-        return body;
+    if (canPut()) {
+      addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
     }
 
-    Body addCard(double x, double y, double angle, [double zoom = 1])
-    {
-        PolygonShape cs = new PolygonShape();
-        cs.setAsBox(CARD_WIDTH / 2 * zoom, CARD_HEIGHT / 2 * zoom);
-
-        FixtureDef fd = new FixtureDef();
-        fd.shape = cs;
-        fd.density = cardDensity;
-        fd.friction = cardFriction;
-        fd.restitution = cardRestitution;
-
-        BodyDef def = new BodyDef();
-        def.type = getBodyType(physicsEnabled);
-        def.position = new Vector2(x, y);
-        def.angularDamping = 10.5;
-        def.bullet = true;
-        def.angle = angle;
-
-        Body card = world.createBody(def);
-        card.createFixture(fd);
-
-        cards.add(card);
-
-        return card;
-    }
-
-    int getBodyType(bool activeness)
-    {
-        return activeness ? BodyType.DYNAMIC : BodyType.STATIC;
-    }
-
-    void togglePhysics(bool active)
-    {
-        physicsEnabled = active;
-        if (physicsEnabled) {
-            bobbin = new Bobbin((){});
+    if (contactListener.contactingBodies.isNotEmpty &&
+        Input.isMouseRightClicked) {
+      List<Body> cardsToDelete = new List<Body>();
+      cardsToDelete.addAll(contactListener.contactingBodies);
+      contactListener.contactingBodies.clear();
+      for (Body contacting in cardsToDelete) {
+        if (cards.contains(contacting)) {
+          world.destroyBody(contacting);
         }
-        for (Body body in cards) {
-            body.type = getBodyType(active);
-        }
+      }
     }
 
-    void run()
-    {
-        window.animationFrame.then(step);
+    Input.update();
+  }
+
+  void restart(double d, double f, double r) {
+    cardDensity = d;
+    cardRestitution = r;
+    cardFriction = f;
+
+    for (var x in cards) {
+      world.destroyBody(x);
+    }
+    cards = new List<Body>();
+
+    for (int i = 0; i < 13; i++) {
+      double x = i * 0.8;
+      double y = -i * 0.8;
+      addCard(x, y, 0.0);
     }
 
-    void step(num time)
-    {
-        num delta = time - this.lastStepTime;
+    togglePhysics(true);
+  }
 
-        world.step(1.0 / 60.0, 100, 100);
-        update(delta);
+  void rewind() {
+    togglePhysics(false);
+    isRewinding = true;
+  }
 
-        g.setFillColorRgb(0, 0, 0);
-        g.fillRect(0, 0, WIDTH * scale, HEIGHT * scale);
+  void removeCard(Body c) {
+    world.destroyBody(c);
+    cards.remove(c);
+  }
 
-        world.drawDebugData();
+  void zoom(bool zoomIn) {
+    double newZoom;
 
-        this.lastStepTime = time;
-        run();
+    if (zoomIn) {
+      newZoom = currentZoom < 3 ? currentZoom + 0.2 : currentZoom;
+    } else {
+      newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
     }
 
-    void update(num delta)
-    {
-        bcard.update();
-
-        camera.update();
-
-        if (physicsEnabled) bobbin.enterFrame(cards);
-
-        if (isRewinding) {
-            isRewinding = bobbin.previousFrame(cards);
-            if (!isRewinding) bobbin = new Bobbin((){});
-        }
-
-//print(contactListener.canPut);
-        if (Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty && !physicsEnabled) {
-            addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
-        }
-
-        if (Input.minusDown)zoom(false); else
-            if (Input.plusDown)zoom(true);
-
-        if (contactListener.contactingBodies.isNotEmpty && Input.isMouseRightClicked) {
-            List<Body> cardsToDelete = new List<Body>();
-            cardsToDelete.addAll(contactListener.contactingBodies);
-            contactListener.contactingBodies.clear();
-            for (Body contacting in cardsToDelete) {
-                if (cards.contains(contacting)) {
-                    world.destroyBody(contacting);
-                }
-            }
-        }
-
-        Input.update();
-    }
-
-    void restart(double d, double f, double r)
-    {
-        cardDensity = d;
-        cardRestitution = r;
-        cardFriction = f;
-
-        for (var x in cards) {
-            world.destroyBody(x);
-        }
-        cards = new List<Body>();
-
-        for (int i = 0; i < 13; i++) {
-            double x = i * 0.8;
-            double y = -i * 0.8;
-            addCard(x, y, 0);
-        }
-
-        togglePhysics(true);
-    }
-
-    void rewind()
-    {
-        togglePhysics(false);
-        isRewinding = true;
-    }
-
-    void removeCard(Body c)
-    {
-        world.destroyBody(c);
-        cards.remove(c);
-    }
-
-    void zoom(bool zoomIn)
-    {
-        double newZoom;
-        if (zoomIn) {
-            newZoom = currentZoom < 3 ? currentZoom + 0.2 : currentZoom;
-
-        } else {
-            newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
-        }
-
-        camera.beginZoom(newZoom, currentZoom);
-        currentZoom = newZoom;
-
-    }
+    camera.beginZoom(newZoom, currentZoom);
+    currentZoom = newZoom;
+  }
 }
-
