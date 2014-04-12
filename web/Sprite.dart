@@ -99,4 +99,16 @@ class Sprite {
         s.color = new Color3.fromRGB(128, 128, 0);
         return s;
     }
+    
+    static Sprite byType(int type) {
+      switch(type) {
+        case 1:
+          return ground();
+        case 2:
+          return from();
+        case 3:
+          return to();
+      }
+      return null;
+    }
 }

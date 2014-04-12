@@ -71,9 +71,6 @@ class Input {
   }
 
   static void toggle(KeyboardEvent event, bool down) {
-    if (event.altKey) {
-      isAltDown = down;
-    }
     keys.forEach((String key, Key val) {
       if (val.code == event.keyCode) {
         val.down = down;
@@ -82,6 +79,9 @@ class Input {
   }
 
   static void onKeyDown(KeyboardEvent event) {
+    if (event.altKey) {
+      isAltDown = true;
+    }
     toggle(event, true);
   }
 
@@ -101,6 +101,6 @@ class Input {
   }
 
   static double getMouseDeltaY() {
-    return (-mouseY + prevMouseY);
+    return mouseY - prevMouseY;
   }
 }

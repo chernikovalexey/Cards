@@ -24,11 +24,12 @@ class CardContactListener extends ContactListener {
 
   CardContactListener(GameEngine e) {
     this.e = e;
-  }
+  } 
 
   @override
   void beginContact(Contact contact) {
-    if (!e.physicsEnabled && !contact.fixtureB.body.userData.isInner) {
+    if (!e.physicsEnabled && contact.fixtureB.body.userData != null &&
+        !contact.fixtureB.body.userData.isInner) {
       contactingBodies.add(contact.fixtureB.body);
     }
   }

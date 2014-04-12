@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:convert';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
 import 'cards.dart';
@@ -18,6 +19,9 @@ class GameEngine {
   static double HEIGHT = 600.0 / SCALE;
   static double CARD_WIDTH = 45.0 / SCALE;
   static double CARD_HEIGHT = 2.5 / SCALE;
+  static double ENERGY_BLOCK_WIDTH = 35.0 / SCALE;
+  static double ENERGY_BLOCK_HEIGHT = ENERGY_BLOCK_WIDTH;
+
   static const double GRAVITY = -10.0;
 
   num lastStepTime = 0;
@@ -34,9 +38,13 @@ class GameEngine {
   Camera camera;
   Traverser traverser;
 
-  Body floor, from, to;
+  Body from, to;
+  List<Body> obstacles = new List<Body>();
   List<Body> cards = new List<Body>();
 
+  List levels;
+
+  int level = 1;
   bool isRewinding = false;
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
   double currentZoom = 1.0;
@@ -47,8 +55,9 @@ class GameEngine {
 
     initializeWorld();
     initializeCanvas();
+    preloadLevels();
   }
-
+  
   void initializeCanvas() {
     viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
         0.0, HEIGHT));
@@ -65,17 +74,19 @@ class GameEngine {
 
     world.contactListener = contactListener;
 
-    this.floor = createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
-    floor.userData = Sprite.ground();
+    // Body floor = createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
+    // floor.userData = Sprite.ground();
+
+    //  obstacles.add(floor);
 
     this.bcard = new BoundedCard(this);
-    this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT
-        * 0.02, 50.0 / scale, 50.0 / scale);
-    this.from.userData = Sprite.from();
+    /* this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT
+        * 0.02, 50.0 / scale, 50.0 / scale);*/
+    /*  this.from.userData = Sprite.from();
     this.to = createPolygonShape(WIDTH - 250 / scale, -HEIGHT + 50 / scale +
         HEIGHT * 0.02, 50.0 / scale, 50.0 / scale);
-    this.to.userData = Sprite.to();
-    this.traverser = new Traverser(floor, from, to);
+    this.to.userData = Sprite.to();*/
+    this.traverser = new Traverser(this);
 
     this.bobbin = new Bobbin(() {
       print(from.contactList);
@@ -93,20 +104,60 @@ class GameEngine {
     });
   }
 
+  void preloadLevels() {
+    HttpRequest.getString("levels.json").then((String str) {
+      levels = JSON.decode(str)["levels"];
+      loadCurrentLevel();
+    });
+  }
+
+  void loadCurrentLevel() {
+    obstacles.clear();
+    var l = levels[level - 1];
+
+    double x = l['x'].toDouble() / scale;
+    double y = l['y'].toDouble() / scale;
+    double w = l['width'].toDouble() / scale;
+    double h = l['height'].toDouble() / scale;
+    
+    camera.setBounds(x*scale,y*scale,x*scale + w*scale,y*scale + h*scale);
+
+    createPolygonShape(x, y, 10.0 / scale, 10.0 / scale);
+    createPolygonShape(x + w, y, 10.0 / scale, 10.0 / scale);
+    createPolygonShape(x, y + h, 10.0 / scale, 10.0 / scale);
+    createPolygonShape(x + w, y + h, 10.0 / scale, 10.0 / scale);
+
+    this.from = createPolygonShape(l["from"]["x"].toDouble()/scale,
+        l["from"]["y"].toDouble()/scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
+    this.from.userData = Sprite.from();
+
+    this.to = createPolygonShape(l["to"]["x"].toDouble() / SCALE,
+        l["to"]["y"].toDouble() / SCALE, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
+    this.to.userData = Sprite.to();
+
+    for (var obstacle in l["obstacles"]) {
+      Body o = createPolygonShape(obstacle["x"].toDouble() / SCALE,
+          obstacle["y"].toDouble() / SCALE, obstacle["width"].toDouble() / SCALE,
+          obstacle["height"].toDouble() / SCALE);
+      o.userData = Sprite.byType(obstacle["type"]);
+      obstacles.add(o);
+    }
+  }
+
   void setCanvasCursor(String cursor) {
     canvas.style.cursor = cursor;
   }
 
   Body createPolygonShape(double x, double y, double width, double height) {
     PolygonShape sd = new PolygonShape();
-    sd.setAsBox(width, height);
+    sd.setAsBox(width / 2, height / 2);
 
     FixtureDef fd = new FixtureDef();
     fd.shape = sd;
     fd.friction = 0.7;
 
     BodyDef bd = new BodyDef();
-    bd.position = new Vector2(x, y);
+    bd.position = new Vector2(x + width / 2, y + height / 2);
 
     Body body = world.createBody(bd);
     body.createFixture(fd);
@@ -155,7 +206,7 @@ class GameEngine {
   void togglePhysics(bool active) {
     physicsEnabled = active;
     if (physicsEnabled) {
-      bobbin.clear();
+      bobbin.erase();
     }
     for (Body body in cards) {
       body.type = getBodyType(active);
@@ -175,7 +226,7 @@ class GameEngine {
     g.setFillColorRgb(0, 0, 0);
     g.fillRect(0, 0, WIDTH * scale, HEIGHT * scale);
 
-    //world.drawDebugData();
+    world.drawDebugData();
     render();
 
     this.lastStepTime = time;
@@ -193,7 +244,7 @@ class GameEngine {
 
     if (isRewinding) {
       isRewinding = bobbin.previousFrame(cards);
-      if (!isRewinding) bobbin = new Bobbin(() {});
+      if (!isRewinding) bobbin.erase();
     }
 
     if (canPut()) {
@@ -228,7 +279,6 @@ class GameEngine {
     Body b = world.bodyList;
     while (b != null) {
       if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
-
       b = b.next;
     }
   }

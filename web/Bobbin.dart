@@ -44,7 +44,7 @@ class Bobbin {
     return true;
   }
 
-  void clear() {
+  void erase() {
     nFrame = 1;
     callbackFired = false;
     list.clear();

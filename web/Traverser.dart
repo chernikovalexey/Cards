@@ -1,23 +1,24 @@
 import 'package:box2d/box2d_browser.dart';
+import 'GameEngine.dart';
 
 class Traverser {
   List<Body> traversed = new List<Body>();
-  Body avoid, from, to;
+  GameEngine e;
 
   bool hasPath = false;
 
-  Traverser(this.avoid, this.from, this.to);
+  Traverser(this.e);
 
   void traverseEdges(ContactEdge edge) {
     //Color3 col1 = (edge.contact.fixtureA.body.userData as Sprite).color;
     //Color3 col2 = (edge.contact.fixtureB.body.userData as Sprite).color;
 
-    if (edge.contact.fixtureA.body == to || edge.contact.fixtureB.body == to) {
+    if (edge.contact.fixtureA.body == e.to || edge.contact.fixtureB.body == e.to) {
       hasPath = true;
     }
 
     if (!traversed.contains(edge.contact.fixtureA.body) &&
-        edge.contact.fixtureA.body != avoid) {
+        !e.obstacles.contains(edge.contact.fixtureA.body)) {
       //col1.setFromRGB(202, 201, 201);
 
       traversed.add(edge.contact.fixtureA.body);
@@ -25,7 +26,7 @@ class Traverser {
     }
 
     if (!traversed.contains(edge.contact.fixtureB.body) &&
-        edge.contact.fixtureB.body != avoid) {
+        !e.obstacles.contains(edge.contact.fixtureB.body)) {
       //col2.setFromRGB(202, 201, 201);
 
       traversed.add(edge.contact.fixtureB.body);
