@@ -22,6 +22,7 @@ class Camera {
 
     Camera(GameEngine e) {
         this.e = e;
+        Input.setCamera(this);
     }
 
     void beginZoom(double finalZoom, double currentZoom) {
