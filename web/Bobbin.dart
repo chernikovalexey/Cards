@@ -5,8 +5,11 @@ class Bobbin {
   List list = new List();
 
   int nFrame = 1;
+  bool callbackFired = false;
+  Function allAsleep;
 
-  Bobbin() {
+  Bobbin(Function allAsleep) {
+    this.allAsleep = allAsleep;
   }
 
   void enterFrame(List<Body> cards) {
@@ -21,6 +24,10 @@ class Bobbin {
     }
 
     if (numAsleep < cards.length) list.add(frame);
+    if (numAsleep == cards.length && !callbackFired) {
+      allAsleep();
+      callbackFired = true;
+    }
   }
 
   bool previousFrame(List<Body> cards) {
@@ -33,6 +40,12 @@ class Bobbin {
     }
 
     return true;
+  }
+
+  void clear() {
+    nFrame = 1;
+    callbackFired = false;
+    list.clear();
   }
 }
 

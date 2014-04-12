@@ -49,20 +49,31 @@ class GameEngine {
     world.debugDraw = debugDraw;
   }
 
+  
+  
   void initializeWorld() {
     this.contactListener = new CardContactListener(this);
     this.world = new World(new Vector2(0.0, GRAVITY), true,
         new DefaultWorldPool());
 
+    this.bobbin = new Bobbin(() {
+      if (from.contactList != null) {
+        ContactEdge edge = from.contactList;
+        
+      }
+    });
+
     world.contactListener = contactListener;
 
-    createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
+    createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01).userData = "floor";
 
     this.bcard = new BoundedCard(this);
     this.from = createPolygonShape(100.0 / SCALE, -HEIGHT + 50 / SCALE + HEIGHT
         * 0.02, 50.0 / SCALE, 50.0 / SCALE);
-    this.to = createPolygonShape(WIDTH - 100 / SCALE, -HEIGHT / 2 + 75 / SCALE,
-        50.0 / SCALE, 50.0 / SCALE);
+    from.userData="from";
+    this.to = createPolygonShape(400.0 / SCALE, -HEIGHT + 50 / SCALE + HEIGHT *
+        0.02 + 25.0 / SCALE, 50.0 / SCALE, 50.0 / SCALE);
+    to.userData = "to";
   }
 
   Body createPolygonShape(double x, double y, double width, double height) {
@@ -101,6 +112,7 @@ class GameEngine {
 
     Body card = world.createBody(def);
     card.createFixture(fd);
+    card.userData = "card";
 
     cards.add(card);
 
@@ -114,7 +126,7 @@ class GameEngine {
   void togglePhysics(bool active) {
     physicsEnabled = active;
     if (physicsEnabled) {
-      bobbin = new Bobbin();
+      bobbin.clear();
     }
     for (Body body in cards) {
       body.type = getBodyType(active);
@@ -146,7 +158,7 @@ class GameEngine {
 
     if (isRewinding) {
       isRewinding = bobbin.previousFrame(cards);
-      if (!isRewinding) bobbin = new Bobbin();
+      if (!isRewinding) bobbin.clear();
     }
 
     if (Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty) {
@@ -192,4 +204,3 @@ class GameEngine {
     isRewinding = true;
   }
 }
-
