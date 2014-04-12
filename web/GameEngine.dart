@@ -174,8 +174,7 @@ class GameEngine {
       if (!isRewinding) bobbin = new Bobbin(() {});
     }
 
-    if (Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty &&
-        !physicsEnabled) {
+    if (canPut()) {
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
     }
 
