@@ -7,8 +7,6 @@ import "Sprite.dart";
 
 class BoundedCard {
   Body b;
-  bool canPut = true;
-
   GameEngine e;
 
   BoundedCard(GameEngine e) {

@@ -6,7 +6,8 @@ import "DoubleAnimation.dart";
 import "dart:math" as Math;
 
 class Camera {
-  static final int FRAME_COUNT = 20;
+  static const int FRAME_COUNT = 20;
+  static const double SPEED =5.5;
 
   double finalZoom = 1.0;
   double startZoom = 1.0;
@@ -75,25 +76,23 @@ class Camera {
       }
     }
 
-    double speed = 5.5;
-
     if (Input.keys['w'].down) {
-      targetOffsetY -= speed;
+      targetOffsetY -= SPEED;
       updated = true;
     }
 
     if (Input.keys['a'].down) {
-      targetOffsetX -= speed;
+      targetOffsetX -= SPEED;
       updated = true;
     }
 
     if (Input.keys['s'].down) {
-      targetOffsetY += speed;
+      targetOffsetY += SPEED;
       updated = true;
     }
 
     if (Input.keys['d'].down) {
-      targetOffsetX += speed;
+      targetOffsetX += SPEED;
       updated = true;
     }
 

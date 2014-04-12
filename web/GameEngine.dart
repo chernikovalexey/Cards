@@ -8,6 +8,8 @@ import "Bobbin.dart";
 import "CardContactListener.dart";
 import 'Camera.dart';
 import 'Sprite.dart';
+import 'Traverser.dart';
+import 'dart:async';
 
 class GameEngine {
   static const double SCALE = 85.0;
@@ -30,8 +32,9 @@ class GameEngine {
   BoundedCard bcard;
   Bobbin bobbin;
   Camera camera;
+  Traverser traverser;
 
-  Body from, to;
+  Body floor, from, to;
   List<Body> cards = new List<Body>();
 
   bool isRewinding = false;
@@ -62,17 +65,32 @@ class GameEngine {
 
     world.contactListener = contactListener;
 
-    this.bobbin = new Bobbin(() {});
-    createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01).userData =
-        Sprite.ground();
+    this.floor = createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
+    floor.userData = Sprite.ground();
 
     this.bcard = new BoundedCard(this);
     this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT
         * 0.02, 50.0 / scale, 50.0 / scale);
     this.from.userData = Sprite.from();
-    this.to = createPolygonShape(WIDTH - 100 / scale, -HEIGHT / 2 + 75 / scale,
-        50.0 / scale, 50.0 / scale);
+    this.to = createPolygonShape(WIDTH - 250 / scale, -HEIGHT + 50 / scale +
+        HEIGHT * 0.02, 50.0 / scale, 50.0 / scale);
     this.to.userData = Sprite.to();
+    this.traverser = new Traverser(floor, from, to);
+
+    this.bobbin = new Bobbin(() {
+      print(from.contactList);
+      if (from.contactList != null) {
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.start();
+
+        traverser.reset();
+        traverser.traverseEdges(from.contactList);
+        print(traverser.hasPath);
+
+        stopwatch.stop();
+        print("Elapsed: " + stopwatch.elapsedMilliseconds.toString());
+      }
+    });
   }
 
   void setCanvasCursor(String cursor) {
@@ -102,6 +120,8 @@ class GameEngine {
         contactListener.contactingBodies.isEmpty && !physicsEnabled;
   }
 
+  int offset = 0;
+
   Body addCard(double x, double y, double angle, [double zoom = 1.0]) {
     PolygonShape cs = new PolygonShape();
     cs.setAsBox(CARD_WIDTH / 2 * zoom, CARD_HEIGHT / 2 * zoom);
@@ -121,7 +141,9 @@ class GameEngine {
 
     Body card = world.createBody(def);
     card.createFixture(fd);
-    card.userData = Sprite.card();
+    Sprite sprite = Sprite.card();
+    sprite.color.x -= offset++;
+    card.userData = sprite;
 
     cards.add(card);
 
@@ -167,7 +189,9 @@ class GameEngine {
     bcard.update();
     camera.update(delta);
 
-    if (physicsEnabled) bobbin.enterFrame(cards);
+    if (physicsEnabled) {
+      bobbin.enterFrame(cards);
+    }
 
     if (isRewinding) {
       isRewinding = bobbin.previousFrame(cards);
