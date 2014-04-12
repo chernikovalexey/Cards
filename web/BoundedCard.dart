@@ -3,6 +3,7 @@ import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
 import 'Input.dart';
 import 'GameEngine.dart';
+import "Sprite.dart";
 
 class BoundedCard {
   Body b;
@@ -27,7 +28,7 @@ class BoundedCard {
 
     b = e.world.createBody(bd);
     b.createFixture(fd);
-    b.userData = Colors.white;
+    b.userData = Sprite.card();
   }
 
   void update() {
