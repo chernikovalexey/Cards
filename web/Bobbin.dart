@@ -21,7 +21,6 @@ class Bobbin {
     }
 
     if (numAsleep < cards.length) list.add(frame);
-    print(list.length);
   }
 
   bool previousFrame(List<Body> cards) {
