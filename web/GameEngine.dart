@@ -381,8 +381,8 @@ class GameEngine {
 
     camera.beginZoom(newZoom, currentZoom);
     if (onMouse) {
-      camera.mTargetX = Input.mouseX - WIDTH / 2;
-      camera.mTargetY = Input.mouseY + HEIGHT / 2;
+      //camera.mTargetX = Input.mouseX - WIDTH / 2;
+      //camera.mTargetY = Input.mouseY + HEIGHT / 2;
     } else {
       camera.mTargetX = WIDTH / 2;
       camera.mTargetY = HEIGHT / 2;
