@@ -42,8 +42,8 @@ class Input {
     if (prevMouseX != mouseX || !Input.isMouseLeftDown) prevMouseX = mouseX;
     if (prevMouseY != mouseY || !Input.isMouseLeftDown) prevMouseY = mouseY;
 
-    mouseX = (event.client.x - canvasX) / GameEngine.scale + camera.mOffsetX;
-    mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.mOffsetY;
+    mouseX = (event.client.x - canvasX) / GameEngine.scale + camera.pxOffsetX/GameEngine.scale;
+    mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.pxOffsetY/GameEngine.scale;
   }
 
   static void onMouseDown(MouseEvent event) {

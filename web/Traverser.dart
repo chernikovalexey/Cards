@@ -1,6 +1,6 @@
 import 'package:box2d/box2d_browser.dart';
 import 'GameEngine.dart';
-import 'Sprite.dart';
+
 
 class Traverser {
     List<Body> traversed = new List<Body>();
@@ -12,19 +12,28 @@ class Traverser {
     Traverser(this.e);
 
     void traverseEdges(ContactEdge edge) {
-//Color3 col1 = (edge.contact.fixtureA.body.userData as Sprite).color;
-//Color3 col2 = (edge.contact.fixtureB.body.userData as Sprite).color;
+        if(edge == null) return;
 
         if (edge.contact.fixtureA.body == e.to || edge.contact.fixtureB.body == e.to) {
             hasPath = true;
         }
 
-        if (e.physicsEnabled) {
-            if (edge.contact.fixtureA.body != e.from && !edge.contact.fixtureA.isSensor)
-                (edge.contact.fixtureA.body.userData as Sprite).activate(edge.contact.fixtureB.body);
 
-            if (edge.contact.fixtureB.body != e.from && !edge.contact.fixtureB.isSensor)
-                (edge.contact.fixtureB.body.userData as Sprite).activate(edge.contact.fixtureA.body);
+
+        if(edge.contact.fixtureA.body.userData.energySupport) {
+            //edge.contact.fixtureA.body.userData.color = new Color3.fromRGB(0,255,255);
+            edge.contact.fixtureA.body.userData.connectedToEnergy = true;
+            edge.contact.fixtureA.body.userData.bFrom = edge.contact.fixtureB.body;
+        }
+
+        if(edge.contact.fixtureB.body.userData.energySupport) {
+            //edge.contact.fixtureB.body.userData.color = new Color3.fromRGB(0,255,255);
+            edge.contact.fixtureB.body.userData.connectedToEnergy = true;
+            edge.contact.fixtureB.body.userData.bFrom = edge.contact.fixtureA.body;
+        }
+
+        if (edge.next != null) {
+            traverseEdges(edge.next);
         }
 
         if (!traversed.contains(edge.contact.fixtureA.body) &&
@@ -43,9 +52,6 @@ class Traverser {
             traverseEdges(edge.contact.fixtureB.body.contactList);
         }
 
-        if (edge.next != null) {
-            traverseEdges(edge.next);
-        }
     }
 
     void reset() {

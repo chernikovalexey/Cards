@@ -126,11 +126,11 @@ class GameEngine {
 
     this.from = createPolygonShape(l["from"]["x"].toDouble() / scale,
         l["from"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
-    this.from.userData = Sprite.from();
+    this.from.userData = Sprite.from(world);
 
     this.to = createPolygonShape(l["to"]["x"].toDouble() / scale,
         l["to"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
-    this.to.userData = Sprite.to();
+    this.to.userData = Sprite.to(world);
 
     for (var obstacle in l["obstacles"]) {
       Body o = createPolygonShape(obstacle["x"].toDouble() / scale,
@@ -218,7 +218,7 @@ class GameEngine {
     }
     for (Body body in cards) {
       body.type = getBodyType(active);
-      if (!physicsEnabled) (body.userData as Sprite).deactivate(body);
+      if (!physicsEnabled) (body.userData as Sprite).deactivate();
     }
   }
 
@@ -302,6 +302,17 @@ class GameEngine {
       }
     }
 
+    for(Body c in cards) {
+        c.userData.update(this);
+    }
+
+    if(to!=null) {
+        to.userData.update(this);
+        if(to.userData.isFull()){
+          
+        }
+            //print("win");
+    }
     Input.update();
   }
 

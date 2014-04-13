@@ -21,18 +21,24 @@ class DoubleAnimation {
   }
 
   double next() {
+    isFinished = frame >= numFrames;
+   
     if (isFinished) return end;
+    
     double val = start + (end - start) * Math.sin(frame / numFrames * Math.PI /
         2);
     lastDelta = val - lastValue;
     lastValue = val;
     frame++;
-    isFinished = frame == numFrames;
     return val;
   }
 
   void setFrames(int frames) {
     this.numFrames = frames;
+  }
+  
+  void setFrame(int frame) {
+    this.frame = 0;
   }
 
   void setStart(double start) {
