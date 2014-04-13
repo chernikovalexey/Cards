@@ -5,6 +5,7 @@ import "Camera.dart";
 class Key {
   int code;
   bool down = false;
+  bool clicked = false;
   Key(this.code);
 }
 
@@ -15,7 +16,8 @@ class Input {
     'w': new Key(87),
     'a': new Key(65),
     's': new Key(83),
-    'd': new Key(68)
+    'd': new Key(68),
+    'n': new Key(78)
   };
 
   static num canvasX, canvasY;
@@ -74,6 +76,7 @@ class Input {
     keys.forEach((String key, Key val) {
       if (val.code == event.keyCode) {
         val.down = down;
+        val.clicked = down;
       }
     });
   }
@@ -94,6 +97,10 @@ class Input {
     isMouseLeftClicked = false;
     isMouseRightClicked = false;
     wheelDirection = 0;
+
+    keys.forEach((String key, Key val) {
+      val.clicked = false;
+    });
   }
 
   static double getMouseDeltaX() {

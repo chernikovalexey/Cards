@@ -58,7 +58,7 @@ class GameEngine {
     initializeCanvas();
     preloadLevels();
   }
-  
+
   void initializeCanvas() {
     viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
         0.0, HEIGHT));
@@ -108,41 +108,52 @@ class GameEngine {
   void preloadLevels() {
     HttpRequest.getString("levels.json").then((String str) {
       levels = JSON.decode(str)["levels"];
-      loadCurrentLevel();
+      loadLevel(level);
     });
   }
 
-  void loadCurrentLevel() {
+  void loadLevel(int number) {
     obstacles.clear();
-    var l = levels[level - 1];
+    var l = levels[number - 1];
 
     double x = l['x'].toDouble() / scale;
     double y = l['y'].toDouble() / scale;
     double w = l['width'].toDouble() / scale;
     double h = l['height'].toDouble() / scale;
-    
-    camera.setBounds(x,y,x + w,y + h);
 
-    createPolygonShape(x, y, 10.0 / scale, 10.0 / scale);
-    createPolygonShape(x + w, y, 10.0 / scale, 10.0 / scale);
-    createPolygonShape(x, y + h, 10.0 / scale, 10.0 / scale);
-    createPolygonShape(x + w, y + h, 10.0 / scale, 10.0 / scale);
+    camera.setBounds(x, y, x + w, y + h);
 
-    this.from = createPolygonShape(l["from"]["x"].toDouble()/scale,
-        l["from"]["y"].toDouble()/scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
+    //createPolygonShape(x, y, 10.0 / scale, 10.0 / scale);
+    //createPolygonShape(x + w, y, 10.0 / scale, 10.0 / scale);
+    //createPolygonShape(x, y + h, 10.0 / scale, 10.0 / scale);
+    //createPolygonShape(x + w, y + h, 10.0 / scale, 10.0 / scale);
+
+    this.from = createPolygonShape(l["from"]["x"].toDouble() / scale,
+        l["from"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
     this.from.userData = Sprite.from();
 
-    this.to = createPolygonShape(l["to"]["x"].toDouble() / SCALE,
-        l["to"]["y"].toDouble() / SCALE, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
+    this.to = createPolygonShape(l["to"]["x"].toDouble() / scale,
+        l["to"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
     this.to.userData = Sprite.to();
 
     for (var obstacle in l["obstacles"]) {
-      Body o = createPolygonShape(obstacle["x"].toDouble() / SCALE,
-          obstacle["y"].toDouble() / SCALE, obstacle["width"].toDouble() / SCALE,
-          obstacle["height"].toDouble() / SCALE);
+      Body o = createPolygonShape(obstacle["x"].toDouble() / scale,
+          obstacle["y"].toDouble() / scale, obstacle["width"].toDouble() / scale,
+          obstacle["height"].toDouble() / scale);
       o.userData = Sprite.byType(obstacle["type"]);
       obstacles.add(o);
     }
+  }
+
+  void nextLevel() {
+    if (hasLevel(level + 1)) {
+      print("ready to load the next level: " + (level + 1).toString());
+      loadLevel(++level);
+    }
+  }
+
+  bool hasLevel(int number) {
+    return levels.length - 1 <= number;
   }
 
   void setCanvasCursor(String cursor) {
@@ -239,6 +250,14 @@ class GameEngine {
     bcard.update();
     camera.update(delta);
 
+    // Debug
+
+    if (Input.keys['n'].clicked) {
+      nextLevel();
+    }
+
+    //
+
     if (physicsEnabled) {
       bobbin.enterFrame(cards);
     }
@@ -281,6 +300,11 @@ class GameEngine {
     while (b != null) {
       if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
       b = b.next;
+    }
+
+    if (levels != null && hasLevel(level)) {
+      g.fillStyle = 'rgba(255, 255, 255, 1.0)'; 
+      g.fillText(levels[level - 1]['name'], 10, 10);
     }
   }
 

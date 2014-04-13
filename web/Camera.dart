@@ -14,19 +14,19 @@ class Camera {
   double finalZoom = 1.0;
   double startZoom = 1.0;
   double currentZoom = 1.0;
-  double targetOffsetX = 0.0, targetOffsetY = 0.0, pxOffsetX = 0.0, pxOffsetY =
-      0.0;
+  double targetOffsetX = 0.0, targetOffsetY = 0.0, pxOffsetX = 0.0, pxOffsetY = 0.0;
   double bx1, by1, bx2, by2;
-  double get offsetX => pxOffsetX / GameEngine.scale;
-  double get offsetY => -pxOffsetY / GameEngine.scale;
 
-  set offsetX(double offset) {
-    this.pxOffsetX = offset * GameEngine.scale;
+  double get mTargetX => targetOffsetX / GameEngine.scale;
+  double get mTargetY => -targetOffsetY / GameEngine.scale;
+
+  set mTargetX(double offset) {
+    this.targetOffsetX = offset * GameEngine.scale;
     updateEngine(currentZoom);
   }
 
-  set offsetY(double offset) {
-    this.pxOffsetY = -offset * GameEngine.scale;
+  set mTargetY(double offset) {
+    this.targetOffsetY = -offset * GameEngine.scale;
     updateEngine(currentZoom);
   }
 
@@ -48,19 +48,10 @@ class Camera {
   }
 
   void update(num delta) {
-    (querySelector("#c") as DivElement).text = offsetX.toString() + " " +
-        offsetY.toString();
-    pxOffsetX = xAnim.next(); 
+     pxOffsetX = xAnim.next();
     pxOffsetY = yAnim.next();
 
     move();
-
-    if (hasBounds) {
-      if (offsetX < bx1) offsetX = bx1;
-      if (offsetX + GameEngine.WIDTH > bx2) offsetX = bx2 - GameEngine.WIDTH;
-      if (offsetY - GameEngine.HEIGHT < by1) offsetY = by1 + GameEngine.HEIGHT;
-      if (offsetY > by2) offsetY = by2;
-    }
 
     if (!zoomAnimation.isFinished) {
       double zoom = zoomAnimation.next();
@@ -113,7 +104,7 @@ class Camera {
           updated = true;
         }
       }
-      
+
       (e.bcard.b.userData as Sprite).isHidden = true;
     } else {
       (e.bcard.b.userData as Sprite).isHidden = false;
@@ -137,6 +128,14 @@ class Camera {
     if (Input.keys['d'].down) {
       targetOffsetX += speed;
       updated = true;
+    }
+
+    if (hasBounds) {
+      if (mTargetX <= bx1) mTargetX = bx1;
+      if (mTargetX + GameEngine.WIDTH >= bx2) mTargetX = bx2 - GameEngine.WIDTH;
+      if (mTargetY - GameEngine.HEIGHT <= by1) mTargetY = by1 +
+          GameEngine.HEIGHT;
+      if (mTargetY >= by2) mTargetY = by2;
     }
 
     if (updated) {
