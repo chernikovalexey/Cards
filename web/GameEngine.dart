@@ -10,6 +10,7 @@ import "CardContactListener.dart";
 import 'Camera.dart';
 import 'Sprite.dart';
 import 'Traverser.dart';
+import 'EnergySprite.dart';
 import 'dart:async';
 
 class GameEngine {
@@ -183,9 +184,8 @@ class GameEngine {
 
   Body addCard(double x, double y, double angle) {
     PolygonShape cs = new PolygonShape();
-    print(CARD_WIDTH / 2*currentZoom);
-    cs.setAsBox(CARD_WIDTH / 2*currentZoom, CARD_HEIGHT / 2*currentZoom);
- 
+    cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
+
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
     fd.density = cardDensity;
@@ -249,6 +249,7 @@ class GameEngine {
 
   void update(num delta) {
     setCanvasCursor('none');
+    
     bcard.update();
     camera.update(delta);
 
@@ -278,8 +279,6 @@ class GameEngine {
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
     }
 
-    toggleBoundedCard(true);
-
     if (Input.keys['z'].down && !Input.isAltDown) {
       setCanvasCursor('-webkit-zoom-in');
       toggleBoundedCard(false);
@@ -304,13 +303,17 @@ class GameEngine {
     }
 
     for (Body c in cards) {
-      c.userData.update(this);
+      (c.userData as EnergySprite).update(this);
     }
 
     if (to != null) {
       if (physicsEnabled) {
-        to.userData.update(this);
-        if (to.userData.isFull()) print("win");
+        EnergySprite sprite = to.userData as EnergySprite;
+        sprite.update(this);
+        if (sprite.isFull()) {
+          print("win");
+          //nextLevel();
+        }
       }
     }
     Input.update();
@@ -367,17 +370,25 @@ class GameEngine {
       newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
     }
 
-    camera.beginZoom(newZoom, currentZoom);
-    if (onMouse) {
-      //camera.mTargetX = Input.mouseX - WIDTH / 2;
-      //camera.mTargetY = Input.mouseY + HEIGHT / 2;
-    } else {
-      camera.mTargetX = WIDTH / 2;
-      camera.mTargetY = HEIGHT / 2;
+    if (newZoom != currentZoom) {
+      if (onMouse) {
+        camera.mTargetX = Input.mouseX - WIDTH / 2;
+        camera.mTargetY = Input.mouseY + HEIGHT / 2;
+      } else {
+        if (zoomIn) {
+          camera.mTargetX += WIDTH / 10;
+          camera.mTargetY += HEIGHT / 10;
+        } else {
+          camera.mTargetX -= WIDTH / 10;
+          camera.mTargetY -= HEIGHT / 10;
+        }
+      }
+
+      camera.checkTarget();
+      //camera.updateEngine(newZoom);
     }
-    camera.updateEngine(newZoom);
 
+    camera.beginZoom(newZoom, currentZoom);
     currentZoom = newZoom;
-
   }
 }

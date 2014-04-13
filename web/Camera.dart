@@ -7,14 +7,15 @@ import "DoubleAnimation.dart";
 import "dart:math" as Math;
 
 class Camera {
-  static final int FRAME_COUNT = 20;
+  static const int FRAME_COUNT = 10;
 
   bool hasBounds = false;
 
   double finalZoom = 1.0;
   double startZoom = 1.0;
   double currentZoom = 1.0;
-  double targetOffsetX = 0.0, targetOffsetY = 0.0, pxOffsetX = 0.0, pxOffsetY = 0.0;
+  double targetOffsetX = 0.0, targetOffsetY = 0.0, pxOffsetX = 0.0, pxOffsetY =
+      0.0;
   double bx1, by1, bx2, by2;
 
   double get mTargetX => targetOffsetX / GameEngine.scale;
@@ -48,10 +49,16 @@ class Camera {
   }
 
   void update(num delta) {
-     pxOffsetX = xAnim.next();
-     pxOffsetY = yAnim.next();
+    double nx = xAnim.next();
+    double ny = yAnim.next();
+    //print(xAnim.numFrames);
+    pxOffsetX = nx;
+    pxOffsetY = ny;
 
-     move();
+    if (xAnim.isFinished) xAnim.setFrames(FRAME_COUNT);
+    if (yAnim.isFinished) yAnim.setFrames(FRAME_COUNT);
+
+    move();
 
     if (!zoomAnimation.isFinished) {
       double zoom = zoomAnimation.next();
@@ -59,7 +66,7 @@ class Camera {
       updateEngine(zoom);
 
       if (!zoomAnimation.isFinished) currentZoom = finalZoom;
-    }
+    } 
   }
 
   void setBounds(double bx1, double by1, double bx2, double by2) {
@@ -70,7 +77,7 @@ class Camera {
     this.by2 = by2;
 
     this.xAnim = new DoubleAnimation(pxOffsetX, bx1, 100);
-    this.yAnim = new DoubleAnimation(pxOffsetY, by1, 100);
+    this.yAnim = new DoubleAnimation(pxOffsetY, by2, 100);
   }
 
   void updateEngine(double zoom) {
@@ -98,21 +105,24 @@ class Camera {
       double dy = Input.getMouseDeltaY() * GameEngine.scale;
 
       if (Input.isMouseLeftDown) {
-        if (dx!=0.0) {
+        if (dx != 0.0) {
           targetOffsetX -= dx;
           updated = true;
         }
-        if (dy!=0.0) {
+        if (dy != 0.0) {
           targetOffsetY += dy;
           updated = true;
         }
       }
 
-      (e.bcard.b.userData as Sprite).isHidden = true;
-    } else {
-      (e.bcard.b.userData as Sprite).isHidden = false;
+      e.toggleBoundedCard(false);
+    }  else {
+      e.toggleBoundedCard(true);
     }
 
+    double ptx = targetOffsetX;
+    double pty = targetOffsetY;
+    
     if (Input.keys['w'].down) {
       targetOffsetY -= speed;
       updated = true;
@@ -134,17 +144,21 @@ class Camera {
     }
 
     if (hasBounds) {
-      if (mTargetX <= bx1) mTargetX = bx1;
-      if (mTargetX + GameEngine.WIDTH >= bx2) mTargetX = bx2 - GameEngine.WIDTH;
-      if (mTargetY - GameEngine.HEIGHT <= by1) mTargetY = by1 +
-          GameEngine.HEIGHT;
-      if (mTargetY >= by2) mTargetY = by2;
-      
-      updated=true;
+      checkTarget();
+      updated = true;
     }
 
     if (updated) {
+     // print((targetOffsetX-ptx).toString() + ", " + (targetOffsetY-pty).toString());
+      //e.bcard.b.setTransform(new Vector2(e.bcard.b.position.x + (targetOffsetX-ptx)/GameEngine.scale, e.bcard.b.position.y + (targetOffsetY-pty)/GameEngine.scale),e.bcard.b.angle);
       updateEngine(currentZoom);
     }
+  }
+
+  void checkTarget() {
+    if (mTargetX <= bx1) mTargetX = bx1;
+    if (mTargetX + GameEngine.WIDTH >= bx2) mTargetX = bx2 - GameEngine.WIDTH;
+    if (mTargetY - GameEngine.HEIGHT <= by1) mTargetY = by1 + GameEngine.HEIGHT;
+    if (mTargetY >= by2) mTargetY = by2;
   }
 }
