@@ -32,7 +32,6 @@ class GameEngine {
     static double scale = NSCALE;
 
   num lastStepTime = 0;
-  static double scale = SCALE;
   bool physicsEnabled = false;
 
   World world;
