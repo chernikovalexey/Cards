@@ -26,6 +26,7 @@ class Bobbin {
     if (numAsleep < cards.length) {
       list.add(frame);
     }
+
     if (numAsleep == cards.length && !callbackFired) {
       allAsleep();
       callbackFired = true;
