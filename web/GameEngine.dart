@@ -299,9 +299,11 @@ class GameEngine {
     }
 
     if(to!=null) {
-        to.userData.update(this);
-        if(to.userData.isFull())
-            print("win");
+        if(physicsEnabled) {
+            to.userData.update(this);
+            if(to.userData.isFull())
+                print("win" );
+        }
     }
     Input.update();
   }
