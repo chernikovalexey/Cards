@@ -22,16 +22,17 @@ class GameEngine {
   static const double NENERGY_BLOCK_HEIGHT = NENERGY_BLOCK_WIDTH;
   static const double GRAVITY = -10.0;
 
-  static double get WIDTH =>  NWIDTH / scale;
-  static double get HEIGHT => NHEIGHT / scale;
-  static double get CARD_WIDTH => NCARD_WIDTH / scale;
-  static double get CARD_HEIGHT => NCARD_HEIGHT / scale;
-  static double get ENERGY_BLOCK_WIDTH => NENERGY_BLOCK_WIDTH / scale;
-  static double get ENERGY_BLOCK_HEIGHT => NENERGY_BLOCK_HEIGHT / scale;
+  static double WIDTH = 800.0 / SCALE;
+  static double HEIGHT = 600.0 / SCALE;
+  static double CARD_WIDTH = 45.0 / SCALE;
+  static double CARD_HEIGHT = 2.5 / SCALE;
+  static double ENERGY_BLOCK_WIDTH = 35.0 / SCALE;
+  static double ENERGY_BLOCK_HEIGHT = ENERGY_BLOCK_WIDTH;
 
-  static double scale = NSCALE;
+    static double scale = NSCALE;
 
   num lastStepTime = 0;
+  static double scale = SCALE;
   bool physicsEnabled = false;
 
   World world;
@@ -45,10 +46,10 @@ class GameEngine {
   Traverser traverser;
 
   Body from, to;
-
-  List levels;
   List<Body> obstacles = new List<Body>();
   List<Body> cards = new List<Body>();
+
+  List levels;
 
   int level = 1;
   int staticBlocksRemaining, dynamicBlocksRemaining;
@@ -60,6 +61,7 @@ class GameEngine {
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
     camera = new Camera(this);
+
 
     initializeWorld();
     initializeCanvas();
@@ -82,7 +84,18 @@ class GameEngine {
 
     world.contactListener = contactListener;
 
+    // Body floor = createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
+    // floor.userData = Sprite.ground();
+
+    //  obstacles.add(floor);
+
     this.bcard = new BoundedCard(this);
+    /* this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT
+        * 0.02, 50.0 / scale, 50.0 / scale);*/
+    /*  this.from.userData = Sprite.from();
+    this.to = createPolygonShape(WIDTH - 250 / scale, -HEIGHT + 50 / scale +
+        HEIGHT * 0.02, 50.0 / scale, 50.0 / scale);
+    this.to.userData = Sprite.to();*/
     this.traverser = new Traverser(this);
 
     this.bobbin = new Bobbin(() {
@@ -239,6 +252,7 @@ class GameEngine {
     g.setFillColorRgb(0, 0, 0);
     g.fillRect(0, 0, NWIDTH, NHEIGHT);
 
+    //world.drawDebugData();
     render();
 
     this.lastStepTime = time;
@@ -247,7 +261,6 @@ class GameEngine {
 
   void update(num delta) {
     setCanvasCursor('none');
-
     bcard.update();
     camera.update(delta);
 
