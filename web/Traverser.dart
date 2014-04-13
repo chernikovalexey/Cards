@@ -1,29 +1,28 @@
 import 'package:box2d/box2d_browser.dart';
 import 'GameEngine.dart';
 
-
 class Traverser {
     List<Body> traversed = new List<Body>();
 
     GameEngine e;
-
     bool hasPath = false;
 
     Traverser(this.e);
 
+
     void traverseEdges(ContactEdge edge) {
         if(edge == null) return;
+        //if(!touching(edge)) return;
 
         if (edge.contact.fixtureA.body == e.to || edge.contact.fixtureB.body == e.to) {
             hasPath = true;
         }
 
 
-
         if(edge.contact.fixtureA.body.userData.energySupport) {
             //edge.contact.fixtureA.body.userData.color = new Color3.fromRGB(0,255,255);
             edge.contact.fixtureA.body.userData.connectedToEnergy = true;
-            edge.contact.fixtureA.body.userData.bFrom = edge.contact.fixtureB.body;
+           // edge.contact.fixtureA.body.userData.bFrom = edge.contact.fixtureB.body;
         }
 
         if(edge.contact.fixtureB.body.userData.energySupport) {

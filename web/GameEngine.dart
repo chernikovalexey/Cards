@@ -55,7 +55,7 @@ class GameEngine {
   int staticBlocksRemaining, dynamicBlocksRemaining;
 
   bool isRewinding = false;
-  double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
+  double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;
   double currentZoom = 1.0;
 
   GameEngine(CanvasRenderingContext2D g) {
@@ -88,7 +88,6 @@ class GameEngine {
     this.traverser = new Traverser(this);
 
     this.bobbin = new Bobbin(() {
-      print(from.contactList);
       if (from.contactList != null) {
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.start();
@@ -99,6 +98,7 @@ class GameEngine {
 
         stopwatch.stop();
         print("Elapsed: " + stopwatch.elapsedMilliseconds.toString());
+        print("Checked: " + traverser.traversed.length.toString());
       }
     });
   }
@@ -159,6 +159,17 @@ class GameEngine {
     canvas.style.cursor = cursor;
   }
 
+
+  FixtureDef createHelperFixture(double w, double h) {
+      FixtureDef fd = new FixtureDef();
+      fd.isSensor = true;
+      PolygonShape s = new PolygonShape();
+      s.setAsBox(w / 2 +.01,h / 2 +.01);
+      fd.shape = s;
+
+      return fd;
+  }
+
   Body createPolygonShape(double x, double y, double width, double height) {
     PolygonShape sd = new PolygonShape();
     sd.setAsBox(width / 2, height / 2);
@@ -172,6 +183,8 @@ class GameEngine {
 
     Body body = world.createBody(bd);
     body.createFixture(fd);
+    body.createFixture(createHelperFixture(width,height));
+
 
     return body;
   }
@@ -201,6 +214,7 @@ class GameEngine {
 
     Body card = world.createBody(def);
     card.createFixture(fd);
+    card.createFixture(createHelperFixture(CARD_WIDTH, CARD_HEIGHT));
     card.userData = Sprite.card(world);
 
     cards.add(card);
@@ -297,7 +311,7 @@ class GameEngine {
       contactListener.contactingBodies.clear();
       for (Body contacting in cardsToDelete) {
         if (cards.contains(contacting)) {
-          world.destroyBody(contacting);
+          removeCard(contacting);
         }
       }
     }
@@ -357,6 +371,7 @@ class GameEngine {
   }
 
   void removeCard(Body c) {
+    print("card removed");
     world.destroyBody(c);
     cards.remove(c);
   }

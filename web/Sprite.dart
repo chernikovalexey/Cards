@@ -9,7 +9,9 @@ class Sprite {
     bool active = false;
     bool connectedToEnergy = false;
     bool energySupport = false;
+    bool isStatic = false;
     Body bFrom;
+
 
     Color3 color;
 

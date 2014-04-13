@@ -27,17 +27,8 @@ class CardContactListener extends ContactListener {
   }
 
   void beginContact(Contact contact) {
-    if (e.physicsEnabled) {
-      Body b = e.world.bodyList;
-      while (b != null) {
-        b.userData.connectedToEnergy = false;
-        b = b.next;
-      }
 
-      e.traverser.reset();
-      e.traverser.traverseEdges(e.from.contactList);
-
-    }
+    if(!contact.touching) return;
 
     if (!e.physicsEnabled && contact.fixtureB.body.userData != null &&
         !contact.fixtureB.body.userData.isInner) {
