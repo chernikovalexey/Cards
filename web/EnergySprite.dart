@@ -25,7 +25,7 @@ class EnergySprite extends Sprite {
     EnergySprite(World w) {
         energySupport = true;
         if (GLOW_COLORS.length == 0) {
-            GLOW_COLORS.add(new Color3.fromRGB(255, 255, 0));
+            GLOW_COLORS.add(new Color3.fromRGB(29, 78, 187));
             GLOW_COLORS.add(new Color3.fromRGB(255, 220, 0));
             GLOW_COLORS.add(new Color3.fromRGB(255, 200, 0));
         }
@@ -43,7 +43,14 @@ class EnergySprite extends Sprite {
         if(!active) return;
         if(alwaysAnimate && bFrom==null) bFrom = b;
 
-        PolygonShape shape = (b.fixtureList.shape as PolygonShape);
+        Fixture fixture = b.fixtureList;
+        if(fixture.userData==false) {
+            if(fixture.next!=null) fixture = fixture.next;
+            else return;
+        }
+
+
+        PolygonShape shape = (fixture.shape as PolygonShape);
 
         PolygonShape shape1 = shape.clone();
 
