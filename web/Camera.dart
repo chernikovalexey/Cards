@@ -49,9 +49,9 @@ class Camera {
 
   void update(num delta) {
      pxOffsetX = xAnim.next();
-    pxOffsetY = yAnim.next();
+     pxOffsetY = yAnim.next();
 
-    move();
+     move();
 
     if (!zoomAnimation.isFinished) {
       double zoom = zoomAnimation.next();
@@ -68,6 +68,9 @@ class Camera {
     this.bx2 = bx2;
     this.by1 = by1;
     this.by2 = by2;
+
+    this.xAnim = new DoubleAnimation(pxOffsetX, bx1, 100);
+    this.yAnim = new DoubleAnimation(pxOffsetX, by2, 100);
   }
 
   void updateEngine(double zoom) {
