@@ -17,7 +17,8 @@ class Input {
     'a': new Key(65),
     's': new Key(83),
     'd': new Key(68),
-    'n': new Key(78)
+    'n': new Key(78),
+    'p': new Key(80)
   };
 
   static num canvasX, canvasY;
@@ -38,13 +39,11 @@ class Input {
   }
 
   static void onMouseMove(MouseEvent event) {
-    if (prevMouseX != mouseX) prevMouseX = mouseX;
-    if (prevMouseY != mouseY) prevMouseY = mouseY;
+    if (prevMouseX != mouseX || !Input.isMouseLeftDown) prevMouseX = mouseX;
+    if (prevMouseY != mouseY || !Input.isMouseLeftDown) prevMouseY = mouseY;
 
-    mouseX = (event.client.x - canvasX) / GameEngine.scale + camera.pxOffsetX /
-        GameEngine.scale;
-    mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.pxOffsetY /
-        GameEngine.scale;
+    mouseX = (event.client.x - canvasX) / GameEngine.scale + camera.mOffsetX;
+    mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.mOffsetY;
   }
 
   static void onMouseDown(MouseEvent event) {
@@ -104,10 +103,10 @@ class Input {
   }
 
   static double getMouseDeltaX() {
-    return mouseX - prevMouseX;
+    return isMouseLeftDown ? mouseX - prevMouseX : 0.0;
   }
 
   static double getMouseDeltaY() {
-    return mouseY - prevMouseY;
+    return isMouseLeftDown ? mouseY - prevMouseY : 0.0;
   }
 }

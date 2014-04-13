@@ -31,16 +31,21 @@ class DoubleAnimation {
     return val;
   }
 
+  void setFrames(int frames) {
+    this.numFrames = frames;
+  }
+
   void setStart(double start) {
-    this.start=start;
+    this.start = start;
   }
-  
+
   void setEnd(double end) {
-    this.end=end;
+    this.end = end;
+    this.isFinished = false;
   }
-  
+
   void modify(double newEnd, int newFrameCount) {
-    end = newEnd;
-    numFrames = newFrameCount;
+    this.end = newEnd;
+    this.numFrames = newFrameCount;
   }
 }

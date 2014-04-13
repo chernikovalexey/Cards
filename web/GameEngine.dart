@@ -13,19 +13,25 @@ import 'Traverser.dart';
 import 'dart:async';
 
 class GameEngine {
-  static const double SCALE = 85.0;
-
-  static double WIDTH = 800.0 / SCALE;
-  static double HEIGHT = 600.0 / SCALE;
-  static double CARD_WIDTH = 45.0 / SCALE;
-  static double CARD_HEIGHT = 2.5 / SCALE;
-  static double ENERGY_BLOCK_WIDTH = 35.0 / SCALE;
-  static double ENERGY_BLOCK_HEIGHT = ENERGY_BLOCK_WIDTH;
-
+  static const double NSCALE = 85.0;
+  static const double NWIDTH = 800.0;
+  static const double NHEIGHT = 600.0;
+  static const double NCARD_WIDTH = 45.0;
+  static const double NCARD_HEIGHT = 2.5;
+  static const double NENERGY_BLOCK_WIDTH = 35.0;
+  static const double NENERGY_BLOCK_HEIGHT = NENERGY_BLOCK_WIDTH;
   static const double GRAVITY = -10.0;
 
+  static double get WIDTH =>  NWIDTH / scale;
+  static double get HEIGHT => NHEIGHT / scale;
+  static double get CARD_WIDTH => NCARD_WIDTH / scale;
+  static double get CARD_HEIGHT => NCARD_HEIGHT / scale;
+  static double get ENERGY_BLOCK_WIDTH => NENERGY_BLOCK_WIDTH / scale;
+  static double get ENERGY_BLOCK_HEIGHT => NENERGY_BLOCK_HEIGHT / scale;
+
+  static double scale = NSCALE;
+
   num lastStepTime = 0;
-  static double scale = SCALE;
   bool physicsEnabled = false;
 
   World world;
@@ -39,12 +45,14 @@ class GameEngine {
   Traverser traverser;
 
   Body from, to;
+
+  List levels;
   List<Body> obstacles = new List<Body>();
   List<Body> cards = new List<Body>();
 
-  List levels;
-
   int level = 1;
+  int staticBlocksRemaining, dynamicBlocksRemaining;
+
   bool isRewinding = false;
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.01;
   double currentZoom = 1.0;
@@ -53,10 +61,9 @@ class GameEngine {
     this.g = g;
     camera = new Camera(this);
 
-
     initializeWorld();
     initializeCanvas();
-    preloadLevels();
+    preloadLevels(run);
   }
 
   void initializeCanvas() {
@@ -75,18 +82,7 @@ class GameEngine {
 
     world.contactListener = contactListener;
 
-    // Body floor = createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
-    // floor.userData = Sprite.ground();
-
-    //  obstacles.add(floor);
-
     this.bcard = new BoundedCard(this);
-    /* this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT
-        * 0.02, 50.0 / scale, 50.0 / scale);*/
-    /*  this.from.userData = Sprite.from();
-    this.to = createPolygonShape(WIDTH - 250 / scale, -HEIGHT + 50 / scale +
-        HEIGHT * 0.02, 50.0 / scale, 50.0 / scale);
-    this.to.userData = Sprite.to();*/
     this.traverser = new Traverser(this);
 
     this.bobbin = new Bobbin(() {
@@ -105,16 +101,18 @@ class GameEngine {
     });
   }
 
-  void preloadLevels() {
+  void preloadLevels(Function ready) {
     HttpRequest.getString("levels.json").then((String str) {
       levels = JSON.decode(str)["levels"];
-      loadLevel(level);
+      level = 0;
+      nextLevel();
+      ready();
     });
   }
 
-  void loadLevel(int number) {
+  void loadLevel() {
     obstacles.clear();
-    var l = levels[number - 1];
+    var l = levels[level - 1];
 
     double x = l['x'].toDouble() / scale;
     double y = l['y'].toDouble() / scale;
@@ -123,10 +121,8 @@ class GameEngine {
 
     camera.setBounds(x, y, x + w, y + h);
 
-    //createPolygonShape(x, y, 10.0 / scale, 10.0 / scale);
-    //createPolygonShape(x + w, y, 10.0 / scale, 10.0 / scale);
-    //createPolygonShape(x, y + h, 10.0 / scale, 10.0 / scale);
-    //createPolygonShape(x + w, y + h, 10.0 / scale, 10.0 / scale);
+    this.staticBlocksRemaining = l["blocks"][0];
+    this.dynamicBlocksRemaining = l["blocks"][1];
 
     this.from = createPolygonShape(l["from"]["x"].toDouble() / scale,
         l["from"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
@@ -146,14 +142,15 @@ class GameEngine {
   }
 
   void nextLevel() {
-    if (hasLevel(level + 1)) {
-      print("ready to load the next level: " + (level + 1).toString());
-      loadLevel(++level);
+    if (hasNextLevel()) {
+      print("Ready to load the next level: " + (level + 1).toString());
+      ++level;
+      loadLevel();
     }
   }
 
-  bool hasLevel(int number) {
-    return levels.length - 1 <= number;
+  bool hasNextLevel() {
+    return levels.length >= level + 1;
   }
 
   void setCanvasCursor(String cursor) {
@@ -183,11 +180,10 @@ class GameEngine {
         contactListener.contactingBodies.isEmpty && !physicsEnabled;
   }
 
-  int offset = 0;
-
-  Body addCard(double x, double y, double angle, [double zoom = 1.0]) {
+  Body addCard(double x, double y, double angle) {
     PolygonShape cs = new PolygonShape();
-    cs.setAsBox(CARD_WIDTH / 2 * zoom, CARD_HEIGHT / 2 * zoom);
+    print(scale);
+    cs.setAsBox(CARD_WIDTH / 2, CARD_HEIGHT / 2);
 
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
@@ -222,9 +218,12 @@ class GameEngine {
     }
     for (Body body in cards) {
       body.type = getBodyType(active);
-      if(!physicsEnabled)
-          body.userData.deactivate(body);
+      if (!physicsEnabled) (body.userData as Sprite).deactivate(body);
     }
+  }
+
+  void toggleBoundedCard(bool visible) {
+    (bcard.b.userData as Sprite).isHidden = !visible;
   }
 
   void run() {
@@ -234,13 +233,12 @@ class GameEngine {
   void step(num time) {
     num delta = time - this.lastStepTime;
 
-    world.step(1.0 / 60.0, 100, 100);
+    world.step(1.0 / 60.0, 10, 10);
     update(delta);
 
     g.setFillColorRgb(0, 0, 0);
-    g.fillRect(0, 0, WIDTH * scale, HEIGHT * scale);
+    g.fillRect(0, 0, NWIDTH, NHEIGHT);
 
-    //world.drawDebugData();
     render();
 
     this.lastStepTime = time;
@@ -249,11 +247,17 @@ class GameEngine {
 
   void update(num delta) {
     setCanvasCursor('none');
+
     bcard.update();
     camera.update(delta);
 
     // Debug
 
+    if (Input.keys['p'].clicked) {
+      level = level - 1;
+      if (level <= 1) level = 1;
+      loadLevel();
+    }
     if (Input.keys['n'].clicked) {
       nextLevel();
     }
@@ -273,13 +277,17 @@ class GameEngine {
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
     }
 
+    toggleBoundedCard(true);
+
     if (Input.keys['z'].down && !Input.isAltDown) {
       setCanvasCursor('-webkit-zoom-in');
-      if (Input.isMouseLeftClicked) zoom(true);
+      toggleBoundedCard(false);
+      if (Input.isMouseLeftClicked) zoom(true, true);
     }
     if (Input.isAltDown) {
       setCanvasCursor('-webkit-zoom-out');
-      if (Input.isMouseLeftClicked) zoom(false);
+      toggleBoundedCard(false);
+      if (Input.isMouseLeftClicked) zoom(false, true);
     }
 
     if (contactListener.contactingBodies.isNotEmpty &&
@@ -304,8 +312,8 @@ class GameEngine {
       b = b.next;
     }
 
-    if (levels != null && hasLevel(level)) {
-      g.fillStyle = 'rgba(255, 255, 255, 1.0)'; 
+    if (levels != null) {
+      g.fillStyle = 'rgba(255, 255, 255, 1.0)';
       g.fillText(levels[level - 1]['name'], 10, 10);
     }
   }
@@ -339,16 +347,26 @@ class GameEngine {
     cards.remove(c);
   }
 
-  void zoom(bool zoomIn) {
+  void zoom(bool zoomIn, [bool onMouse = false]) {
     double newZoom;
 
     if (zoomIn) {
       newZoom = currentZoom < 3 ? currentZoom + 0.2 : currentZoom;
     } else {
-      newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
+      newZoom = currentZoom >= 0.2 ? currentZoom - 0.2 : currentZoom;
     }
 
     camera.beginZoom(newZoom, currentZoom);
+    if (onMouse) {
+      //camera.mTargetX = Input.mouseX - WIDTH / 2;
+      //camera.mTargetY = Input.mouseY + HEIGHT / 2;
+    } else {
+      camera.mTargetX = WIDTH / 2;
+      camera.mTargetY = HEIGHT / 2;
+    }
+    //camera.updateCameraMovement();
+
     currentZoom = newZoom;
+
   }
 }

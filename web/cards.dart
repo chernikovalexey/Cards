@@ -25,8 +25,9 @@ void main() {
   Input.canvasWidth = r.width;
   Input.canvasHeight = r.height;
 
+  // Runs automatically
   GameEngine engine = new GameEngine(g);
-  engine.run();
+  //engine.run();
 
   querySelector('#apply-physics').addEventListener("click", (event) =>
       engine.togglePhysics(true), false);

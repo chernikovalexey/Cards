@@ -20,6 +20,24 @@ JSON.stringify({
 	      	width: 1600,
 	      	height: 10,
 	      	type: 1
+	    }, {
+	    	x: 0,
+	    	y: 0,
+	    	width: 10,
+	    	height: 1200,
+	    	type: 1
+	    }, {
+	    	x: 1600,
+	    	y: 0,
+	    	width: 10,
+	    	height: 1200,
+	    	type: 1
+	    }, {
+	    	x: 0,
+	    	y: 1200,
+	    	width: 1600,
+	    	height: 10,
+	    	type: 1
 	    }]
   	}, {
   		name: 'Captain Asteroid',
