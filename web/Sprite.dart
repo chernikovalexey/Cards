@@ -73,6 +73,8 @@ class Sprite {
         }
     }
 
+    void activate(Body b) {}
+    void deactivate(Body b) {}
 
     static Sprite card(World w) {
         return new EnergySprite(w);

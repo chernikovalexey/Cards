@@ -39,7 +39,7 @@ class EnergySprite extends Sprite {
         PolygonShape shape1 = shape.clone();
 
         //todo: test!
-        if (from.position.distanceTo(shape1.vertices[1]) < from.position.distanceTo(shape1.vertices[1])) {
+        if (from.position.distanceTo(shape1.vertices[1]) < from.position.distanceTo(shape1.vertices[0])) {
             shape1.vertices[1].x -= GameEngine.CARD_WIDTH * (1 - energy);
             shape1.vertices[2].x -= GameEngine.CARD_WIDTH * (1 - energy);
         } else {
@@ -77,15 +77,31 @@ class EnergySprite extends Sprite {
         active = false;
     }
 
-    @override
+    void checkContact(Body b) {
+        ContactEdge c = b.contactList;
+        while(c != null) {
+            if(c.contact.fixtureA.body == from || c.contact.fixtureA.body == from) {
+                return;
+            }
+            c = c.next;
+        }
+        deactivate(from);
+    }
 
+    @override
     void render(CanvasDraw g, Body b) {
+
+
+
         if(isHidden) return;
         super.render(g, b);
 
         frame++;
 
         if (!active && energy <= 0) return;
+        if(energy>=0) {
+            checkContact(b);
+        }
 
         if (active && energy < .9) {
             energy += 0.1;

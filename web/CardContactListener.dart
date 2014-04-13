@@ -4,33 +4,43 @@ import 'Input.dart';
 import 'GameEngine.dart';
 
 class CardContactListener extends ContactListener {
-  GameEngine e;
-  List<Body> contactingBodies = new List<Body>();
+    GameEngine e;
 
-  @override
-  void endContact(Contact contact) {
-    if (!e.physicsEnabled) {
-      contactingBodies.remove(contact.fixtureB.body);
+    List<Body> contactingBodies = new List<Body>();
+
+    @override
+
+    void endContact(Contact contact) {
+        if (!e.physicsEnabled) {
+            contactingBodies.remove(contact.fixtureB.body);
+        }
+
+
     }
-  }
 
-  @override
-  void preSolve(Contact contact, Manifold oldManifold) {
-  }
+    @override
 
-  @override
-  void postSolve(Contact contact, ContactImpulse impulse) {
-  }
+    void preSolve(Contact contact, Manifold oldManifold) {
+    }
 
-  CardContactListener(GameEngine e) {
-    this.e = e;
-  } 
+    @override
 
-  @override
-  void beginContact(Contact contact) {
-    if (!e.physicsEnabled && contact.fixtureB.body.userData != null &&
+    void postSolve(Contact contact, ContactImpulse impulse) {
+    }
+
+    CardContactListener(GameEngine e) {
+        this.e = e;
+    }
+
+    @override
+
+    void beginContact(Contact contact) {
+        if(e.physicsEnabled)
+            e.traverser.traverseEdges(e.from.contactList);
+
+        if (!e.physicsEnabled && contact.fixtureB.body.userData != null &&
         !contact.fixtureB.body.userData.isInner) {
-      contactingBodies.add(contact.fixtureB.body);
+            contactingBodies.add(contact.fixtureB.body);
+        }
     }
-  }
 }

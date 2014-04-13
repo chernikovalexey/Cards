@@ -222,6 +222,8 @@ class GameEngine {
     }
     for (Body body in cards) {
       body.type = getBodyType(active);
+      if(!physicsEnabled)
+          body.userData.deactivate(body);
     }
   }
 

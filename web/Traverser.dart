@@ -1,45 +1,55 @@
 import 'package:box2d/box2d_browser.dart';
 import 'GameEngine.dart';
+import 'Sprite.dart';
 
 class Traverser {
-  List<Body> traversed = new List<Body>();
-  GameEngine e;
+    List<Body> traversed = new List<Body>();
 
-  bool hasPath = false;
+    GameEngine e;
 
-  Traverser(this.e);
+    bool hasPath = false;
 
-  void traverseEdges(ContactEdge edge) {
-    //Color3 col1 = (edge.contact.fixtureA.body.userData as Sprite).color;
-    //Color3 col2 = (edge.contact.fixtureB.body.userData as Sprite).color;
+    Traverser(this.e);
 
-    if (edge.contact.fixtureA.body == e.to || edge.contact.fixtureB.body == e.to) {
-      hasPath = true;
-    }
+    void traverseEdges(ContactEdge edge) {
+//Color3 col1 = (edge.contact.fixtureA.body.userData as Sprite).color;
+//Color3 col2 = (edge.contact.fixtureB.body.userData as Sprite).color;
 
-    if (!traversed.contains(edge.contact.fixtureA.body) &&
+        if (edge.contact.fixtureA.body == e.to || edge.contact.fixtureB.body == e.to) {
+            hasPath = true;
+        }
+
+        if (e.physicsEnabled) {
+            if (edge.contact.fixtureA.body != e.from && !edge.contact.fixtureA.isSensor)
+                (edge.contact.fixtureA.body.userData as Sprite).activate(edge.contact.fixtureB.body);
+
+            if (edge.contact.fixtureB.body != e.from && !edge.contact.fixtureB.isSensor)
+                (edge.contact.fixtureB.body.userData as Sprite).activate(edge.contact.fixtureA.body);
+        }
+
+        if (!traversed.contains(edge.contact.fixtureA.body) &&
         !e.obstacles.contains(edge.contact.fixtureA.body)) {
-      //col1.setFromRGB(202, 201, 201);
+//col1.setFromRGB(202, 201, 201);
 
-      traversed.add(edge.contact.fixtureA.body);
-      traverseEdges(edge.contact.fixtureA.body.contactList);
-    }
+            traversed.add(edge.contact.fixtureA.body);
+            traverseEdges(edge.contact.fixtureA.body.contactList);
+        }
 
-    if (!traversed.contains(edge.contact.fixtureB.body) &&
+        if (!traversed.contains(edge.contact.fixtureB.body) &&
         !e.obstacles.contains(edge.contact.fixtureB.body)) {
-      //col2.setFromRGB(202, 201, 201);
+//col2.setFromRGB(202, 201, 201);
 
-      traversed.add(edge.contact.fixtureB.body);
-      traverseEdges(edge.contact.fixtureB.body.contactList);
+            traversed.add(edge.contact.fixtureB.body);
+            traverseEdges(edge.contact.fixtureB.body.contactList);
+        }
+
+        if (edge.next != null) {
+            traverseEdges(edge.next);
+        }
     }
 
-    if (edge.next != null) {
-      traverseEdges(edge.next);
+    void reset() {
+        traversed.clear();
+        hasPath = false;
     }
-  }
-
-  void reset() {
-    traversed.clear();
-    hasPath = false;
-  }
 }
