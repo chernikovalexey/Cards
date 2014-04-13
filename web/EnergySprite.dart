@@ -38,9 +38,10 @@ class EnergySprite extends Sprite {
     }
 
     void glow(CanvasDraw g, Body b, double w, double h, int state) {
-        if (bFrom == null && !alwaysAnimate) return;
-        if(alwaysAnimate && bFrom==null) bFrom = b;
 
+        if (bFrom == null && !alwaysAnimate) return;
+        if(!active) return;
+        if(alwaysAnimate && bFrom==null) bFrom = b;
 
         PolygonShape shape = (b.fixtureList.shape as PolygonShape);
 
@@ -94,8 +95,8 @@ class EnergySprite extends Sprite {
 
         super.render(g, b);
 
-        if(b.fixtureList.isSensor)
-            return;
+     //   if(b.fixtureList.isSensor)
+         //   return;
 
         frame++;
 

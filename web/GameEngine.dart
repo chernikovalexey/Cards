@@ -164,7 +164,7 @@ class GameEngine {
       FixtureDef fd = new FixtureDef();
       fd.isSensor = true;
       PolygonShape s = new PolygonShape();
-      s.setAsBox(w / 2 +.01,h / 2 +.01);
+      s.setAsBox(w / 2 +.03,h / 2 +.03);
       fd.shape = s;
 
       return fd;
