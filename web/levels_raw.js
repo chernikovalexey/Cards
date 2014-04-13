@@ -5,7 +5,7 @@ JSON.stringify({
 	    y: 0,
 	    width: 1600,
 	    height: 1200,
-	    blocks: [100, 4],
+	    blocks: [4, 100],
 	    from: {
 	      	x: 100,
 	      	y: 50

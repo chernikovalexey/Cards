@@ -53,7 +53,7 @@ class GameEngine {
 
   int level = 1;
   int staticBlocksRemaining, dynamicBlocksRemaining;
-  bool staticBlocksSelected = true;
+  bool staticBlocksSelected = false;
   
   bool isRewinding = false;
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;

@@ -29,15 +29,24 @@ void main() {
   GameEngine engine = new GameEngine(g);
   //engine.run();
 
-  querySelector('#toggle-physics').addEventListener("click", (event) =>
-      engine.togglePhysics(true), false);
-  //querySelector('#disable-physics').addEventListener("click", (event) =>
-    //  engine.rewind(), false);
+  querySelector('#toggle-physics').addEventListener("click", (event) {
+    ButtonElement btn = (event.target as ButtonElement);
+
+    if (!btn.classes.contains("rewind")) {
+      btn.text = "Rewind";
+      engine.togglePhysics(true);
+    } else {
+      btn.text = "Apply physics";
+      engine.rewind();
+    }
+
+    btn.classes.toggle("rewind");
+
+  }, false);
   querySelector("#zoom-in").addEventListener("click", (event) => engine.zoom(
       true));
   querySelector("#zoom-out").addEventListener("click", (event) => engine.zoom(
       false));
-
 
   for (var x in querySelectorAll("input")) x.addEventListener("change", (event)
       => engine.restart(double.parse((querySelector("#density") as InputElement).value
