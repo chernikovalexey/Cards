@@ -35,6 +35,10 @@ class Sprite {
     }
 
     void drawShape(Fixture fixture, Transform xf, Color3 color) {
+        if(fixture.userData==false) {
+            if(fixture.next!=null) fixture = fixture.next;
+            else return;
+        }
         switch (fixture.type) {
             case ShapeType
         .

@@ -50,6 +50,7 @@ class GameEngine {
   List<Body> cards = new List<Body>();
 
   List levels;
+  DefaultWorldPool pool;
 
   int level = 1;
   int staticBlocksRemaining, dynamicBlocksRemaining;
@@ -78,9 +79,11 @@ class GameEngine {
   }
 
   void initializeWorld() {
+    pool = new DefaultWorldPool();
+
     this.contactListener = new CardContactListener(this);
     this.world = new World(new Vector2(0.0, GRAVITY), true,
-        new DefaultWorldPool());
+        pool);
 
     world.contactListener = contactListener;
 
@@ -172,6 +175,7 @@ class GameEngine {
       PolygonShape s = new PolygonShape();
       s.setAsBox(w / 2 +.01,h / 2 +.01);
       fd.shape = s;
+      fd.userData = false;
 
       return fd;
   }
@@ -330,13 +334,16 @@ class GameEngine {
     }
 
     if (to != null) {
-      if (physicsEnabled) {
         EnergySprite sprite = to.userData as EnergySprite;
+      if (physicsEnabled) {
+
         sprite.update(this);
         if (sprite.isFull()) {
           print("win");
           //nextLevel();
         }
+      } else {
+        sprite.deactivate();
       }
     }
     Input.update();
