@@ -29,10 +29,9 @@ class GameEngine {
   static double ENERGY_BLOCK_WIDTH = 35.0 / SCALE;
   static double ENERGY_BLOCK_HEIGHT = ENERGY_BLOCK_WIDTH;
 
-    static double scale = NSCALE;
+  static double scale = NSCALE;
 
   num lastStepTime = 0;
-  static double scale = SCALE;
   bool physicsEnabled = false;
 
   World world;
