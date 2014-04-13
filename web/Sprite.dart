@@ -6,6 +6,10 @@ class Sprite {
     double energy = 0.0;
     bool isInner = false;
     bool isHidden = false;
+    bool active = false;
+    bool connectedToEnergy = false;
+    bool energySupport = false;
+    Body bFrom;
 
     Color3 color;
 
@@ -73,8 +77,8 @@ class Sprite {
         }
     }
 
-    void activate(Body b) {}
-    void deactivate(Body b) {}
+    void activate() {}
+    void deactivate() {}
 
     static Sprite card(World w) {
         return new EnergySprite(w);
@@ -87,15 +91,21 @@ class Sprite {
         return s;
     }
 
-    static Sprite from() {
-        Sprite s = new Sprite();
-        s.color = new Color3.fromRGB(0, 255, 0);
+    static Sprite from(World w) {
+        EnergySprite s = new EnergySprite(w);
+        s.energy = 1.0;
+        s.alwaysAnimate = true;
+        s.connectedToEnergy = true;
+        s.activate();
         return s;
     }
 
-    static Sprite to() {
-        Sprite s = new Sprite();
-        s.color = new Color3.fromRGB(0, 255, 255);
+    static Sprite to(World w) {
+        EnergySprite s = new EnergySprite(w);;
+        //s.alwaysAnimate = true;
+        s.energy = 0.0;
+        s.active = true;
+        s.energyStep = .005;
         return s;
     }
 

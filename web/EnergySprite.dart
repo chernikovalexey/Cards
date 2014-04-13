@@ -14,13 +14,16 @@ class EnergySprite extends Sprite {
 
     int glowAdd = 1;
 
+    double energyStep = .1;
+
     int frame = 0;
 
-    bool active = false;
+    bool alwaysAnimate = false;
 
-    Body from;
+    Body current;
 
     EnergySprite(World w) {
+        energySupport = true;
         if (GLOW_COLORS.length == 0) {
             GLOW_COLORS.add(new Color3.fromRGB(255, 255, 0));
             GLOW_COLORS.add(new Color3.fromRGB(255, 220, 0));
@@ -30,16 +33,20 @@ class EnergySprite extends Sprite {
         this.color = new Color3.fromRGB(255, 250, 200);
     }
 
+    int sign(double x) {
+        return x>0?1:-1;
+    }
+
     void glow(CanvasDraw g, Body b, double w, double h, int state) {
-        if (from == null) return;
+        if (bFrom == null && !alwaysAnimate) return;
+        if(alwaysAnimate && bFrom==null) bFrom = b;
 
 
         PolygonShape shape = (b.fixtureList.shape as PolygonShape);
 
         PolygonShape shape1 = shape.clone();
 
-        //todo: test!
-        if (from.position.distanceTo(shape1.vertices[1]) < from.position.distanceTo(shape1.vertices[0])) {
+        if (bFrom.position.distanceTo(shape1.vertices[2]) > bFrom.position.distanceTo(shape1.vertices[3])) {
             shape1.vertices[1].x -= GameEngine.CARD_WIDTH * (1 - energy);
             shape1.vertices[2].x -= GameEngine.CARD_WIDTH * (1 - energy);
         } else {
@@ -48,8 +55,8 @@ class EnergySprite extends Sprite {
         }
 
         for (Vector2 v in shape1.vertices) {
-            v.x += v.x * (0.1 * state / 3);
-            v.y += v.y * (0.4 * state / 3);
+            v.x += sign(v.x) * .005 * state;
+            v.y += sign(v.y) * .005 * state;
         }
 
         FixtureDef fd = new FixtureDef();
@@ -67,49 +74,40 @@ class EnergySprite extends Sprite {
         glow(g, b, GameEngine.CARD_WIDTH / 2 * energy, GameEngine.CARD_HEIGHT / 2, n);
     }
 
-    void activate(Body from) {
-        this.from = from;
+    void activate() {
         active = true;
     }
 
-    void deactivate(Body from) {
-        this.from = from;
+    void deactivate() {
         active = false;
-    }
-
-    void checkContact(Body b) {
-        ContactEdge c = b.contactList;
-        while(c != null) {
-            if(c.contact.fixtureA.body == from || c.contact.fixtureA.body == from) {
-                return;
-            }
-            c = c.next;
-        }
-        deactivate(from);
+        connectedToEnergy = false;
     }
 
     @override
+
     void render(CanvasDraw g, Body b) {
+        if(energy<0) energy = 0.0;
+        else if(energy>1) energy = 1.0;
+        current = b;
 
+        if (isHidden) return;
 
-
-        if(isHidden) return;
         super.render(g, b);
+
+        if(b.fixtureList.isSensor)
+            return;
 
         frame++;
 
         if (!active && energy <= 0) return;
-        if(energy>=0) {
-            checkContact(b);
+
+        if (active && energy <= 1 - energyStep) {
+            energy += energyStep;
+        } else if (!active && energy >= energyStep) {
+            energy -= energyStep;
         }
 
-        if (active && energy < .9) {
-            energy += 0.1;
-        } else if (!active && energy >= .1) {
-            energy -= 0.1;
-        }
-
-        if (frame % 12 == 0) {
+        if (frame % 10 == 0) {
             if (glowBorders == 2 || glowBorders == 0)
                 glowAdd *= -1;
             glowBorders += glowAdd;
@@ -119,5 +117,15 @@ class EnergySprite extends Sprite {
 
     }
 
+    void update(GameEngine e) {
+        if(!e.physicsEnabled) return;
+        if(active && !connectedToEnergy)
+            deactivate();
+        else if(!active && connectedToEnergy)
+            activate();
+    }
 
+    bool isFull() {
+        return energy >= 1 - energyStep;
+    }
 }

@@ -2,6 +2,7 @@ import 'dart:html';
 import 'package:box2d/box2d_browser.dart';
 import 'Input.dart';
 import 'GameEngine.dart';
+import 'EnergySprite.dart';
 
 class CardContactListener extends ContactListener {
     GameEngine e;
@@ -14,8 +15,6 @@ class CardContactListener extends ContactListener {
         if (!e.physicsEnabled) {
             contactingBodies.remove(contact.fixtureB.body);
         }
-
-
     }
 
     @override
@@ -35,8 +34,17 @@ class CardContactListener extends ContactListener {
     @override
 
     void beginContact(Contact contact) {
-        if(e.physicsEnabled)
+        if(e.physicsEnabled) {
+           Body b = e.world.bodyList;
+            while(b!=null) {
+                b.userData.connectedToEnergy = false;
+                b = b.next;
+            }
+
+            e.traverser.reset();
             e.traverser.traverseEdges(e.from.contactList);
+
+        }
 
         if (!e.physicsEnabled && contact.fixtureB.body.userData != null &&
         !contact.fixtureB.body.userData.isInner) {
