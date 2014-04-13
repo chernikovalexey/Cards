@@ -47,8 +47,7 @@ JSON.stringify({
   		height: 1000,
   		blocks: [40, 10],
   		from: {
-  			x: 1600 + 100,
-  			y: 0 + 20
+  			offset: 100
   		},
   		to: {
   			x: 1600 + 400,

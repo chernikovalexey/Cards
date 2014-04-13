@@ -62,7 +62,6 @@ class GameEngine {
     this.g = g;
     camera = new Camera(this);
 
-
     initializeWorld();
     initializeCanvas();
     preloadLevels(run);
@@ -121,14 +120,20 @@ class GameEngine {
     double w = l['width'].toDouble() / scale;
     double h = l['height'].toDouble() / scale;
 
-    camera.setBounds(x, y, x + w, y + h);
-
     this.staticBlocksRemaining = l["blocks"][0];
     this.dynamicBlocksRemaining = l["blocks"][1];
 
-    this.from = createPolygonShape(l["from"]["x"].toDouble() / scale,
-        l["from"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
-    this.from.userData = Sprite.from(world);
+    double boundsOffset = 0.0;
+    if (level > 1) {
+      this.from = this.to;
+      boundsOffset = x - (to.position.x - l["from"]["offset"].toDouble() / scale);
+    } else {
+      this.from = createPolygonShape(l["from"]["x"].toDouble() / scale,
+          l["from"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
+      this.from.userData = Sprite.from(world);
+    }
+    
+    camera.setBounds(x - boundsOffset, y, x + w, y + h);
 
     this.to = createPolygonShape(l["to"]["x"].toDouble() / scale,
         l["to"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
@@ -249,7 +254,7 @@ class GameEngine {
 
   void update(num delta) {
     setCanvasCursor('none');
-    
+
     bcard.update();
     camera.update(delta);
 
