@@ -70,7 +70,7 @@ class Camera {
     this.by2 = by2;
 
     this.xAnim = new DoubleAnimation(pxOffsetX, bx1, 100);
-    this.yAnim = new DoubleAnimation(pxOffsetX, by2, 100);
+    this.yAnim = new DoubleAnimation(pxOffsetY, by1, 100);
   }
 
   void updateEngine(double zoom) {
@@ -98,11 +98,11 @@ class Camera {
       double dy = Input.getMouseDeltaY() * GameEngine.scale;
 
       if (Input.isMouseLeftDown) {
-        if (dx != 0.0) {
+        if (dx!=0.0) {
           targetOffsetX -= dx;
           updated = true;
         }
-        if (dy != 0.0) {
+        if (dy!=0.0) {
           targetOffsetY += dy;
           updated = true;
         }
@@ -139,6 +139,8 @@ class Camera {
       if (mTargetY - GameEngine.HEIGHT <= by1) mTargetY = by1 +
           GameEngine.HEIGHT;
       if (mTargetY >= by2) mTargetY = by2;
+      
+      updated=true;
     }
 
     if (updated) {

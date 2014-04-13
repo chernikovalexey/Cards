@@ -22,12 +22,12 @@ class GameEngine {
   static const double NENERGY_BLOCK_HEIGHT = NENERGY_BLOCK_WIDTH;
   static const double GRAVITY = -10.0;
 
-  static double WIDTH = 800.0 / NSCALE;
-  static double HEIGHT = 600.0 / NSCALE;
-  static double CARD_WIDTH = 45.0 / NSCALE;
-  static double CARD_HEIGHT = 2.5 / NSCALE;
-  static double ENERGY_BLOCK_WIDTH = 35.0 / NSCALE;
-  static double ENERGY_BLOCK_HEIGHT = ENERGY_BLOCK_WIDTH;
+  static double get WIDTH => NWIDTH / scale;
+  static double get HEIGHT => NHEIGHT / scale;
+  static double get CARD_WIDTH => NCARD_WIDTH / scale;
+  static double get CARD_HEIGHT => NCARD_HEIGHT / scale;
+  static double get ENERGY_BLOCK_WIDTH => NENERGY_BLOCK_WIDTH / scale;
+  static double get ENERGY_BLOCK_HEIGHT => NENERGY_BLOCK_HEIGHT / scale;
 
   static double scale = NSCALE;
 
@@ -83,18 +83,7 @@ class GameEngine {
 
     world.contactListener = contactListener;
 
-    // Body floor = createPolygonShape(0.0, -HEIGHT * 0.99, WIDTH, HEIGHT * 0.01);
-    // floor.userData = Sprite.ground();
-
-    //  obstacles.add(floor);
-
     this.bcard = new BoundedCard(this);
-    /* this.from = createPolygonShape(100.0 / scale, -HEIGHT + 50 / scale + HEIGHT
-        * 0.02, 50.0 / scale, 50.0 / scale);*/
-    /*  this.from.userData = Sprite.from();
-    this.to = createPolygonShape(WIDTH - 250 / scale, -HEIGHT + 50 / scale +
-        HEIGHT * 0.02, 50.0 / scale, 50.0 / scale);
-    this.to.userData = Sprite.to();*/
     this.traverser = new Traverser(this);
 
     this.bobbin = new Bobbin(() {
@@ -194,9 +183,9 @@ class GameEngine {
 
   Body addCard(double x, double y, double angle) {
     PolygonShape cs = new PolygonShape();
-    print(scale);
-    cs.setAsBox(CARD_WIDTH / 2, CARD_HEIGHT / 2);
-
+    print(CARD_WIDTH / 2*currentZoom);
+    cs.setAsBox(CARD_WIDTH / 2*currentZoom, CARD_HEIGHT / 2*currentZoom);
+ 
     FixtureDef fd = new FixtureDef();
     fd.shape = cs;
     fd.density = cardDensity;
@@ -314,16 +303,15 @@ class GameEngine {
       }
     }
 
-    for(Body c in cards) {
-        c.userData.update(this);
+    for (Body c in cards) {
+      c.userData.update(this);
     }
 
-    if(to!=null) {
-        if(physicsEnabled) {
-            to.userData.update(this);
-            if(to.userData.isFull())
-                print("win" );
-        }
+    if (to != null) {
+      if (physicsEnabled) {
+        to.userData.update(this);
+        if (to.userData.isFull()) print("win");
+      }
     }
     Input.update();
   }
@@ -376,7 +364,7 @@ class GameEngine {
     if (zoomIn) {
       newZoom = currentZoom < 3 ? currentZoom + 0.2 : currentZoom;
     } else {
-      newZoom = currentZoom >= 0.2 ? currentZoom - 0.2 : currentZoom;
+      newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
     }
 
     camera.beginZoom(newZoom, currentZoom);

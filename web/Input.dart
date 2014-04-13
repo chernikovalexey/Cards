@@ -23,7 +23,7 @@ class Input {
 
   static num canvasX, canvasY;
   static num canvasWidth, canvasHeight;
-  static num mouseX = 0.0, mouseY = 0.0, prevMouseX = 0.0, prevMouseY = 0.0;
+  static num mouseX = 0.0, mouseY = 0.0, mouseDeltaX = 0.0, mouseDeltaY = 0.0;
 
   static bool isAltDown = false;
   static bool isMouseLeftDown = false;
@@ -39,11 +39,15 @@ class Input {
   }
 
   static void onMouseMove(MouseEvent event) {
-    if (prevMouseX != mouseX || !Input.isMouseLeftDown) prevMouseX = mouseX;
-    if (prevMouseY != mouseY || !Input.isMouseLeftDown) prevMouseY = mouseY;
+    double prevMouseX = mouseX;
+    double prevMouseY = mouseY;
 
-    mouseX = (event.client.x - canvasX) / GameEngine.scale + camera.pxOffsetX/GameEngine.scale;
-    mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.pxOffsetY/GameEngine.scale;
+    mouseX = (event.client.x - canvasX) / GameEngine.scale + camera.pxOffsetX /
+        GameEngine.scale;
+    mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.pxOffsetY /
+        GameEngine.scale;
+    mouseDeltaX = mouseX - prevMouseX;
+    mouseDeltaY = mouseY - prevMouseY;
   }
 
   static void onMouseDown(MouseEvent event) {
@@ -97,16 +101,19 @@ class Input {
     isMouseRightClicked = false;
     wheelDirection = 0;
 
+    mouseDeltaX = 0.0;
+    mouseDeltaY = 0.0;
+
     keys.forEach((String key, Key val) {
       val.clicked = false;
     });
   }
 
   static double getMouseDeltaX() {
-    return isMouseLeftDown ? mouseX - prevMouseX : 0.0;
+    return mouseDeltaX;
   }
 
   static double getMouseDeltaY() {
-    return isMouseLeftDown ? mouseY - prevMouseY : 0.0;
+    return mouseDeltaY;
   }
 }

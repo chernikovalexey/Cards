@@ -27,14 +27,14 @@ JSON.stringify({
 	    	height: 1200,
 	    	type: 1
 	    }, {
-	    	x: 1600,
+	    	x: 1600-10,
 	    	y: 0,
 	    	width: 10,
 	    	height: 1200,
 	    	type: 1
 	    }, {
 	    	x: 0,
-	    	y: 1200,
+	    	y: 1200-0,
 	    	width: 1600,
 	    	height: 10,
 	    	type: 1
