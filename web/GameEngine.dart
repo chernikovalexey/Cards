@@ -53,7 +53,8 @@ class GameEngine {
 
   int level = 1;
   int staticBlocksRemaining, dynamicBlocksRemaining;
-
+  bool staticBlocksSelected = true;
+  
   bool isRewinding = false;
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;
   double currentZoom = 1.0;
@@ -200,7 +201,7 @@ class GameEngine {
         contactListener.contactingBodies.isEmpty && !physicsEnabled;
   }
 
-  Body addCard(double x, double y, double angle) {
+  Body addCard(double x, double y, double angle, [bool isStatic=false]) {
     PolygonShape cs = new PolygonShape();
     cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
 
@@ -221,14 +222,20 @@ class GameEngine {
     card.createFixture(fd);
     card.createFixture(createHelperFixture(CARD_WIDTH, CARD_HEIGHT));
     card.userData = Sprite.card(world);
-
+    card.userData.isStatic = isStatic;
+    card.userData.energySupport = !isStatic;
+    
+    if(isStatic) {
+      card.userData.color = new Color3.fromRGB(217, 214, 179);
+    }
+    
     cards.add(card);
 
     return card;
   }
 
-  int getBodyType(bool activeness) {
-    return activeness ? BodyType.DYNAMIC : BodyType.STATIC;
+  int getBodyType(bool activeness, [bool isStatic=false]) {
+    return activeness && !isStatic ? BodyType.DYNAMIC : BodyType.STATIC;
   }
 
   void togglePhysics(bool active) {
@@ -237,7 +244,7 @@ class GameEngine {
       bobbin.erase();
     }
     for (Body body in cards) {
-      body.type = getBodyType(active);
+      body.type = getBodyType(active, body.userData.isStatic);
       if (!physicsEnabled) (body.userData as Sprite).deactivate();
     }
   }
@@ -274,11 +281,6 @@ class GameEngine {
 
     // Debug
 
-    if (Input.keys['p'].clicked) {
-      level = level - 1;
-      if (level <= 1) level = 1;
-      loadLevel();
-    }
     if (Input.keys['n'].clicked) {
       nextLevel();
     }
@@ -294,8 +296,10 @@ class GameEngine {
       if (!isRewinding) bobbin.erase();
     }
 
-    if (canPut()) {
-      addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle);
+    if (canPut() && (staticBlocksSelected && staticBlocksRemaining > 0 || dynamicBlocksRemaining > 0)) {
+        addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,staticBlocksSelected);
+        if(staticBlocksSelected)--staticBlocksRemaining;
+        else --dynamicBlocksRemaining;
     }
 
     if (Input.keys['z'].down && !Input.isAltDown) {
@@ -343,11 +347,6 @@ class GameEngine {
     while (b != null) {
       if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
       b = b.next;
-    }
-
-    if (levels != null) {
-      g.fillStyle = 'rgba(255, 255, 255, 1.0)';
-      g.fillText(levels[level - 1]['name'], 10, 10);
     }
   }
 

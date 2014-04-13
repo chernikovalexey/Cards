@@ -29,10 +29,10 @@ void main() {
   GameEngine engine = new GameEngine(g);
   //engine.run();
 
-  querySelector('#apply-physics').addEventListener("click", (event) =>
+  querySelector('#toggle-physics').addEventListener("click", (event) =>
       engine.togglePhysics(true), false);
-  querySelector('#disable-physics').addEventListener("click", (event) =>
-      engine.rewind(), false);
+  //querySelector('#disable-physics').addEventListener("click", (event) =>
+    //  engine.rewind(), false);
   querySelector("#zoom-in").addEventListener("click", (event) => engine.zoom(
       true));
   querySelector("#zoom-out").addEventListener("click", (event) => engine.zoom(

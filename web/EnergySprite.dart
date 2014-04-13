@@ -30,7 +30,7 @@ class EnergySprite extends Sprite {
             GLOW_COLORS.add(new Color3.fromRGB(255, 200, 0));
         }
 
-        this.color = new Color3.fromRGB(255, 250, 200);
+        this.color = new Color3.fromRGB(234, 140, 64);
     }
 
     int sign(double x) {
