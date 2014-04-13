@@ -48,12 +48,10 @@ class Camera {
   }
 
   void update(num delta) {
-    pxOffsetX = targetOffsetX;
-  pxOffsetY = targetOffsetY;
-    // pxOffsetX = xAnim.next();
-    //pxOffsetY = yAnim.next();
+     pxOffsetX = xAnim.next();
+     pxOffsetY = yAnim.next();
 
-    move();
+     move();
 
     if (!zoomAnimation.isFinished) {
       double zoom = zoomAnimation.next();
@@ -70,20 +68,16 @@ class Camera {
     this.bx2 = bx2;
     this.by1 = by1;
     this.by2 = by2;
+
+    this.xAnim = new DoubleAnimation(pxOffsetX, bx1, 100);
+    this.yAnim = new DoubleAnimation(pxOffsetX, by2, 100);
   }
-  
-  void updateCameraMovement() {
-    print("upd");
+
+  void updateEngine(double zoom) {
     xAnim.setStart(pxOffsetX);
     xAnim.setEnd(targetOffsetX);
-//  xAnim.setFrame(0);
-  yAnim.setStart(pxOffsetY);
-  yAnim.setEnd(targetOffsetY);
-  //yAnim.setFrame(0);
-  }
-  
-  void updateEngine(double zoom) {
-    
+    yAnim.setStart(pxOffsetY);
+    yAnim.setEnd(targetOffsetY);
 
     e.viewport = new CanvasViewportTransform(new Vector2(0.0, 0.0), new Vector2(
         pxOffsetX, GameEngine.HEIGHT - pxOffsetY));
@@ -139,7 +133,16 @@ class Camera {
       updated = true;
     }
 
-    updateCameraMovement();
+    if (hasBounds) {
+      if (mTargetX <= bx1) mTargetX = bx1;
+      if (mTargetX + GameEngine.WIDTH >= bx2) mTargetX = bx2 - GameEngine.WIDTH;
+      if (mTargetY - GameEngine.HEIGHT <= by1) mTargetY = by1 +
+          GameEngine.HEIGHT;
+      if (mTargetY >= by2) mTargetY = by2;
+    }
 
+    if (updated) {
+      updateEngine(currentZoom);
+    }
   }
 }

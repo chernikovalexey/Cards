@@ -307,11 +307,11 @@ class GameEngine {
     }
 
     if(to!=null) {
-        to.userData.update(this);
-        if(to.userData.isFull()){
-          
+        if(physicsEnabled) {
+            to.userData.update(this);
+            if(to.userData.isFull())
+                print("win" );
         }
-            //print("win");
     }
     Input.update();
   }
