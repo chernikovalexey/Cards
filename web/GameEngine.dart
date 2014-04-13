@@ -22,11 +22,11 @@ class GameEngine {
   static const double NENERGY_BLOCK_HEIGHT = NENERGY_BLOCK_WIDTH;
   static const double GRAVITY = -10.0;
 
-  static double WIDTH = 800.0 / SCALE;
-  static double HEIGHT = 600.0 / SCALE;
-  static double CARD_WIDTH = 45.0 / SCALE;
-  static double CARD_HEIGHT = 2.5 / SCALE;
-  static double ENERGY_BLOCK_WIDTH = 35.0 / SCALE;
+  static double WIDTH = 800.0 / NSCALE;
+  static double HEIGHT = 600.0 / NSCALE;
+  static double CARD_WIDTH = 45.0 / NSCALE;
+  static double CARD_HEIGHT = 2.5 / NSCALE;
+  static double ENERGY_BLOCK_WIDTH = 35.0 / NSCALE;
   static double ENERGY_BLOCK_HEIGHT = ENERGY_BLOCK_WIDTH;
 
   static double scale = NSCALE;
