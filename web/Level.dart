@@ -66,4 +66,13 @@ class Level {
         current = new SubLevel(engine,levels[currentSubLevel - 1], currentSubLevel);
         return current;
     }
+
+    int getRating() {
+        int min = 3;
+        for(SubLevel sl in subLevels) {
+            if(sl.rating<min) min = sl.rating;
+        }
+
+        return min;
+    }
 }
