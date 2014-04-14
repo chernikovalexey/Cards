@@ -64,7 +64,6 @@ class GameEngine {
   List<int> stars;
   Level level;
 
-
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
     camera = new Camera(this);
@@ -73,16 +72,6 @@ class GameEngine {
     initializeCanvas();
 
     level = new Level(run, this);
-
-    Storage storage = window.localStorage;
-    if (storage.containsKey("last_level")) {
-      String last = storage['last_level'];
-
-      if (storage.containsKey('level_' + last)) {
-        String state = storage['level_' + last];
-        LevelSerializer.fromJSON(state, this);
-      }
-    }
   }
 
   void initializeCanvas() {
@@ -161,7 +150,7 @@ class GameEngine {
         contactListener.contactingBodies.isEmpty && !physicsEnabled;
   }
 
-  Body addCard(double x, double y, double angle, [bool isStatic = false]) {
+  Body addCard(double x, double y, double angle, [bool isStatic = false, SubLevel sub=null]) {
     PolygonShape cs = new PolygonShape();
     cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
 
@@ -182,6 +171,10 @@ class GameEngine {
     card.createFixture(fd);
     card.createFixture(createHelperFixture(CARD_WIDTH, CARD_HEIGHT));
 
+   if(sub!=null){
+     isStatic=true; 
+   }
+    
     EnergySprite sprite = Sprite.card(world);
     sprite.isStatic = isStatic;
     sprite.energySupport = !isStatic;
@@ -190,7 +183,20 @@ class GameEngine {
     }
 
     card.userData = sprite;
-    cards.add(card);
+    
+if(sub==null){
+  sub=level.current;
+  cards.add(card);
+} else {
+  sub.cards.add(card);
+}
+
+    if (isStatic) {
+      --sub.staticBlocksRemaining;
+    } else {
+      --sub.dynamicBlocksRemaining;
+    }
+    updateBlockButtons(this);
 
     return card;
   }
@@ -262,14 +268,6 @@ class GameEngine {
 
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,
           staticBlocksSelected);
-
-      if (staticBlocksSelected) {
-        --level.current.staticBlocksRemaining;
-      } else {
-        --level.current.dynamicBlocksRemaining;
-      }
-
-      updateBlockButtons(this);
     }
 
     if (Input.keys['z'].down && !Input.isAltDown) {
@@ -313,7 +311,7 @@ class GameEngine {
 
         sprite.update(this);
         if (sprite.isFull()) {
-          saveCurrentProgress(true);
+          saveCurrentProgress();
           RatingShower.show(this, level.current.getRating());
         }
       } else {
@@ -324,9 +322,9 @@ class GameEngine {
   }
 
   // saves the state of the current level
-  void saveCurrentProgress([bool finished = false]) {
+  void saveCurrentProgress() {
     window.localStorage['level_' + level.current.index.toString()] =
-        LevelSerializer.toJSON(cards, bobbin.list, finished);
+        LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled);
   }
 
   void previousLevel() {

@@ -30,17 +30,11 @@ void main() {
   updateCanvasPositionAndDimension();
 
   querySelector('#toggle-physics').addEventListener("click", (event) {
-    ButtonElement btn = (event.target as ButtonElement);
-
-    if (!btn.classes.contains("rewind")) {
-      btn.text = "Rewind";
-      engine.togglePhysics(true);
+    if (!(event.target as ButtonElement).classes.contains("rewind")) {
+      applyRewindLabelToButton();
     } else {
-      btn.text = "Apply physics";
-      engine.rewind();
+      applyPhysicsLabelToButton();
     }
-
-    btn.classes.toggle("rewind");
   }, false);
   querySelector("#zoom-in").addEventListener("click", (event) => engine.zoom(
       true));
@@ -97,8 +91,17 @@ void updateCanvasPositionAndDimension([Event event = null]) {
 }
 
 void applyPhysicsLabelToButton() {
-  querySelector("#toggle-physics").text = "Apply physics";
+  var btn = querySelector("#toggle-physics");
+  btn.classes.remove("rewind");
+  btn.text = "Apply physics";
   engine.rewind();
+}
+
+void applyRewindLabelToButton() {
+  var btn = querySelector("#toggle-physics");
+  btn.classes.add("rewind");
+  btn.text = "Rewind";
+  engine.togglePhysics(true);
 }
 
 void updateBlockButtons(GameEngine engine) {

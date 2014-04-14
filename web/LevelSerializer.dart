@@ -5,11 +5,13 @@ import 'dart:convert';
 import 'EnergySprite.dart';
 import 'Bobbin.dart';
 import 'GameEngine.dart';
+import 'cards.dart';
 
 class LevelSerializer {
-  static String toJSON(List<Body> cards, List<List> frames, bool finished) {
+  static String toJSON(List<Body> cards, List<List> frames, bool physicsEnabled)
+      {
     Map map = new Map();
-    map['finished'] = finished;
+    map['physics_enabled'] = physicsEnabled;
     map['cards'] = new List<Map>();
     map['frames'] = new List();
 
@@ -36,27 +38,33 @@ class LevelSerializer {
     return JSON.encode(map);
   }
 
-  static void fromJSON(String json, GameEngine e) {
+  static void fromJSON(String json, GameEngine e, SubLevel subLevel) {
     Map state = JSON.decode(json);
 
     for (Map card in state['cards']) {
       e.addCard(card['x'].toDouble(), card['y'].toDouble(),
-          card['angle'].toDouble(), card['static'] == "true");
+          card['angle'].toDouble(), card['static'], subLevel==null?null:subLevel);
     }
 
-    if (state['finished'] == "true") {
-      e.togglePhysics(true);
+    if (state['physics_enabled']) {
+      applyRewindLabelToButton();
+    } else {
+      applyPhysicsLabelToButton();
     }
 
-    /*List frames = new List();
-    for (List frame in state['frames']) {
+    List frames = new List();
+    for (int i = 0, len = state['frames'].length; i < len; ++i) {
       frames.add(new List());
-      for (Map t in frame) {
-        frames.add(new BTransform(new Vector2(t['x'].toDouble(), t['y'].toDouble(
-            )), t['angle'].toDouble()));
+      for (Map t in state['frames'][i]) {
+        frames[i].add(new BTransform(new Vector2(t['x'].toDouble(),
+            t['y'].toDouble()), t['angle'].toDouble()));
       }
     }
 
-    e.bobbin.list = frames;*/
+    if (subLevel != null) {
+      subLevel.frames = frames;
+    } else {
+      e.bobbin.list = frames;
+    }
   }
 }
