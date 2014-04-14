@@ -25,6 +25,7 @@ class RatingShower {
 
             (querySelector("#restart-level") as ButtonElement).addEventListener("click", (event) {
                 hide();
+                e.isPaused = false;
                 e.restartLevel();
             });
         } else {

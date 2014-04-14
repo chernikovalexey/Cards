@@ -101,6 +101,7 @@ class EnergySprite extends Sprite {
         if (isHidden) return;
 
         super.render(g, b);
+        if(!enabled) return;
 
      //   if(b.fixtureList.isSensor)
          //   return;

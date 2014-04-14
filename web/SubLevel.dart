@@ -7,28 +7,44 @@ import 'cards.dart';
 
 class SubLevel {
     String name;
+
     List frames;
+
     List cards;
+
     int rating = 0;
+
     Body from;
+
     Body to;
+
     int staticBlocksRemaining;
+
     int dynamicBlocksRemaining;
+
     List<Body> obstacles = new List<Body>();
+
     List stars;
+
     GameEngine e;
 
-    double x,y,w,h;
+    double x, y, w, h;
 
     Object fSprite, tSprite;
 
+    Object levelData;
+
+    int index;
+
     SubLevel(GameEngine e, Map l, int index) {
+        this.index = index;
         this.e = e;
         this.name = l["name"];
+        levelData = l;
         x = l['x'].toDouble() / GameEngine.scale;
-        y = l['y'].toDouble() / GameEngine.scale;;
-        w = l['width'].toDouble() / GameEngine.scale;;
-        h = l['height'].toDouble() / GameEngine.scale;;
+        y = l['y'].toDouble() / GameEngine.scale;
+        w = l['width'].toDouble() / GameEngine.scale;
+        h = l['height'].toDouble() / GameEngine.scale;
 
         this.staticBlocksRemaining = l["blocks"][0];
         this.dynamicBlocksRemaining = l["blocks"][1];
@@ -67,20 +83,24 @@ class SubLevel {
 
 
     int getRating() {
-        if(stars[0] >= e.cards.length) rating = 3;
-        else if(stars[1] >= e.cards.length) rating = 2;
+        if (stars[0] >= e.cards.length) rating = 3;
+        else if (stars[1] >= e.cards.length) rating = 2;
         else rating = 1;
 
         return rating;
     }
 
     void finish() {
+<<<<<<< HEAD
         for(Body b in e.cards) {
             b.type = BodyType.STATIC;
             b.userData.appliesToCurrentLevel = false;
             applyPhysicsLabelToButton();
         }
 
+=======
+        enable(false);
+>>>>>>> b9182cdfe6f66c120a2f20be16d110d61df322f0
         e.physicsEnabled = false;
         e.bobbin.erase();
         e.cards.clear();
@@ -98,11 +118,21 @@ class SubLevel {
         e.bobbin.list = frames;
     }
 
+    void enable(bool v) {
+        for(Body b in cards) {
+            b.userData.enabled = v;
+        }
+
+        e.from.enabled = v;
+        e.to.enabled = v;
+    }
+
     void apply() {
-        e.from = this.from;
+        e.camera.setBounds(x, y, w, h);
+/*e.from = this.from;
         e.to = this.to;
         e.from.userData = this.fSprite;
-        e.to.userData = this.tSprite;
-        e.camera.setBounds(x,y,w,h);
+        e.to.userData = this.tSprite;*/
+
     }
 }

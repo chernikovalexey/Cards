@@ -10,7 +10,7 @@ class Sprite {
     bool connectedToEnergy = false;
     bool energySupport = false;
     bool isStatic = false;
-    bool appliesToCurrentLevel = true;
+    bool enabled = true;
 
     Body bFrom;
 
@@ -33,7 +33,10 @@ class Sprite {
         canvasDraw = g;
         Transform tf = new Transform();
         tf.setFrom(b.originTransform);
-        drawShape(b.fixtureList, tf, color);
+        if(enabled)
+            drawShape(b.fixtureList, tf, color);
+        else
+            drawShape(b.fixtureList, tf, new Color3.fromRGB(192,192,192));
     }
 
     void drawShape(Fixture fixture, Transform xf, Color3 color) {
