@@ -150,7 +150,8 @@ class GameEngine {
         contactListener.contactingBodies.isEmpty && !physicsEnabled;
   }
 
-  Body addCard(double x, double y, double angle, [bool isStatic = false, SubLevel sub=null]) {
+  Body addCard(double x, double y, double angle, [bool isStatic =
+      false, SubLevel sub = null]) {
     PolygonShape cs = new PolygonShape();
     cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
 
@@ -171,10 +172,10 @@ class GameEngine {
     card.createFixture(fd);
     card.createFixture(createHelperFixture(CARD_WIDTH, CARD_HEIGHT));
 
-   if(sub!=null){
-     isStatic=true; 
-   }
-    
+    if (sub != null) {
+      isStatic = true;
+    }
+
     EnergySprite sprite = Sprite.card(world);
     sprite.isStatic = isStatic;
     sprite.energySupport = !isStatic;
@@ -183,13 +184,13 @@ class GameEngine {
     }
 
     card.userData = sprite;
-    
-if(sub==null){
-  sub=level.current;
-  cards.add(card);
-} else {
-  sub.cards.add(card);
-}
+
+    if (sub == null) {
+      sub = level.current;
+      cards.add(card);
+    } else {
+      sub.cards.add(card);
+    }
 
     if (isStatic) {
       --sub.staticBlocksRemaining;
@@ -378,7 +379,6 @@ if(sub==null){
   }
 
   void removeCard(Body c) {
-    print("card removed");
     world.destroyBody(c);
     cards.remove(c);
 
@@ -420,5 +420,14 @@ if(sub==null){
 
     camera.beginZoom(newZoom, currentZoom);
     currentZoom = newZoom;
+  }
+
+  void clear() {
+    bobbin.erase();
+    List<Body> _cards = new List<Body>();
+    _cards.addAll(cards);
+    for(Body b in _cards) {
+      removeCard(b);
+    }
   }
 }

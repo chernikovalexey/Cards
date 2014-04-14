@@ -40,6 +40,8 @@ void main() {
       true));
   querySelector("#zoom-out").addEventListener("click", (event) => engine.zoom(
       false));
+  querySelector("#restart").addEventListener("click", (event) => engine.clear(),
+      false);
 
   //updateBlockButtons(engine);
 
