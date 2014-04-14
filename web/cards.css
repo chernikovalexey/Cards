@@ -31,10 +31,12 @@ canvas {
 
 .buttons {
   text-align: center;
+  background: rgba(0, 0, 0, 0.25);
   padding: 5px;
-  width: 792px;
+  width: 790px;
   position: absolute;
-  z-index: 3
+  margin-left: -5px;
+  z-index: 6
 }
 
 button {
