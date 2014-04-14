@@ -50,6 +50,7 @@ class Level {
     void previous() {
         if(hasPrevious()) {
             --currentSubLevel;
+            current.saveState();
             current = subLevels[currentSubLevel - 1];
             current.apply();
             saveCurrentLevel();

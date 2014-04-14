@@ -193,6 +193,8 @@ class GameEngine {
     physicsEnabled = active;
     if (physicsEnabled) {
       bobbin.erase();
+    } else {
+        to.userData.deactivate();
     }
     for (Body body in cards) {
       body.type = getBodyType(active, (body.userData as EnergySprite).isStatic);
@@ -323,7 +325,6 @@ class GameEngine {
   void nextLevel() {
       if(level.hasNext()) {
           level.current.finish();
-          level.current.saveState();
           level.next();
       }
   }

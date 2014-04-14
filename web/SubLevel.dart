@@ -91,27 +91,29 @@ class SubLevel {
     }
 
     void finish() {
-<<<<<<< HEAD
+        saveState();
         for(Body b in e.cards) {
             b.type = BodyType.STATIC;
             b.userData.appliesToCurrentLevel = false;
             applyPhysicsLabelToButton();
         }
 
-=======
         enable(false);
->>>>>>> b9182cdfe6f66c120a2f20be16d110d61df322f0
         e.physicsEnabled = false;
         e.bobbin.erase();
         e.cards.clear();
     }
 
     void saveState() {
+        cards = new List();
+        cards.addAll(e.cards);
         frames = new List();
-        frames.add(e.bobbin.list);
+        frames.addAll(e.bobbin.list);
 
-        fSprite = from.userData;
-        tSprite = to.userData;
+        from = e.from;
+        to = e.to;
+        fSprite = e.from.userData;
+        tSprite = e.to.userData;
     }
 
     void fromData(GameEngine e) {
@@ -119,20 +121,27 @@ class SubLevel {
     }
 
     void enable(bool v) {
-        for(Body b in cards) {
+        for (Body b in cards) {
             b.userData.enabled = v;
         }
 
-        e.from.enabled = v;
-        e.to.enabled = v;
+        e.from.userData.enabled = v;
+        e.to.userData.enabled = v;
     }
 
     void apply() {
-        e.camera.setBounds(x, y, w, h);
-/*e.from = this.from;
-        e.to = this.to;
-        e.from.userData = this.fSprite;
-        e.to.userData = this.tSprite;*/
+        print("cards:" + cards.toString());
+        e.camera.setBounds(x, y, x + w, y + h);
+        e.camera.mTargetX = x;
+        e.camera.mTargetY = y;
+        e.bobbin.list = this.frames;
+        e.cards = this.cards;
+        e.from = from;
+        e.from.userData = fSprite;
+        e.to = to;
+        e.to.userData = tSprite;
+        e.rewind();
 
+        print("Bobbin frames length:" + e.bobbin.list.length.toString());
     }
 }
