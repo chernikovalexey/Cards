@@ -77,8 +77,11 @@ class GameEngine {
     Storage storage = window.localStorage;
     if (storage.containsKey("last_level")) {
       String last = storage['last_level'];
-      String state = storage['level_' + last];
-      LevelSerializer.fromJSON(state, this);
+
+      if (storage.containsKey('level_' + last)) {
+        String state = storage['level_' + last];
+        LevelSerializer.fromJSON(state, this);
+      }
     }
   }
 
@@ -331,7 +334,7 @@ class GameEngine {
   }
 
   void restartLevel() {
-      applyPhysicsLabelToButton();
+    applyPhysicsLabelToButton();
     //rewind();
 
     (to.userData as EnergySprite).energy = 0.0;
