@@ -59,7 +59,7 @@ class Level {
         return currentSubLevel > 1;
     }
 
-    void load(int level) {
+    SubLevel load(int level) {
         current = new SubLevel(engine,levels[currentSubLevel - 1], currentSubLevel);
         return current;
     }
