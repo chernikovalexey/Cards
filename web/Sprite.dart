@@ -10,6 +10,8 @@ class Sprite {
     bool connectedToEnergy = false;
     bool energySupport = false;
     bool isStatic = false;
+    bool appliesToCurrentLevel = true;
+
     Body bFrom;
 
 
@@ -111,7 +113,7 @@ class Sprite {
         //s.alwaysAnimate = true;
         s.energy = 0.0;
         s.active = true;
-        s.energyStep = .005;
+        s.energyStep = .1;
         return s;
     }
 

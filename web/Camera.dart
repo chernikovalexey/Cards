@@ -76,6 +76,7 @@ class Camera {
     this.by1 = by1;
     this.by2 = by2;
 
+
     this.xAnim = new DoubleAnimation(pxOffsetX, bx1, 100);
     this.yAnim = new DoubleAnimation(pxOffsetY, by2, 100);
   }

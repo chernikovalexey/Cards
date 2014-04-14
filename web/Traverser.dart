@@ -37,7 +37,7 @@ class Traverser {
 
         if (edge.contact.touching) {
             if (!traversed.contains(edge.contact.fixtureA.body) &&
-            !e.obstacles.contains(edge.contact.fixtureA.body)) {
+            !e.level.current.obstacles.contains(edge.contact.fixtureA.body)) {
 //col1.setFromRGB(202, 201, 201);
 
                 traversed.add(edge.contact.fixtureA.body);
@@ -45,7 +45,7 @@ class Traverser {
             }
 
             if (!traversed.contains(edge.contact.fixtureB.body) &&
-            !e.obstacles.contains(edge.contact.fixtureB.body)) {
+            !e.level.current.obstacles.contains(edge.contact.fixtureB.body)) {
 //col2.setFromRGB(202, 201, 201);
 
                 traversed.add(edge.contact.fixtureB.body);

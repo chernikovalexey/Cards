@@ -1,5 +1,4 @@
 import 'dart:html';
-import 'dart:convert';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
 import 'cards.dart';
@@ -12,6 +11,9 @@ import 'Sprite.dart';
 import 'Traverser.dart';
 import 'EnergySprite.dart';
 import 'dart:async';
+import 'RatingShower.dart';
+import "Level.dart";
+import 'SubLevel.dart';
 
 class GameEngine {
   static const double NSCALE = 85.0;
@@ -32,6 +34,7 @@ class GameEngine {
 
   static double scale = NSCALE;
 
+
   num lastStepTime = 0;
   bool physicsEnabled = false;
 
@@ -46,19 +49,20 @@ class GameEngine {
   Traverser traverser;
 
   Body from, to;
-  List<Body> obstacles = new List<Body>();
+
   List<Body> cards = new List<Body>();
 
   List levels;
   DefaultWorldPool pool;
-
-  int level = 1;
   int staticBlocksRemaining, dynamicBlocksRemaining;
   bool staticBlocksSelected = false;
   
   bool isRewinding = false;
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;
   double currentZoom = 1.0;
+  List<int> stars;
+  Level level;
+
 
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
@@ -66,7 +70,8 @@ class GameEngine {
 
     initializeWorld();
     initializeCanvas();
-    preloadLevels(run);
+
+    level = new Level(run, this);
   }
 
   void initializeCanvas() {
@@ -104,64 +109,6 @@ class GameEngine {
         print("Checked: " + traverser.traversed.length.toString());
       }
     });
-  }
-
-  void preloadLevels(Function ready) {
-    HttpRequest.getString("levels.json").then((String str) {
-      levels = JSON.decode(str)["levels"];
-      level = 0;
-      nextLevel();
-      ready();
-    });
-  }
-
-  void loadLevel() {
-    obstacles.clear();
-    var l = levels[level - 1];
-
-    double x = l['x'].toDouble() / scale;
-    double y = l['y'].toDouble() / scale;
-    double w = l['width'].toDouble() / scale;
-    double h = l['height'].toDouble() / scale;
-
-    this.staticBlocksRemaining = l["blocks"][0];
-    this.dynamicBlocksRemaining = l["blocks"][1];
-
-    double boundsOffset = 0.0;
-    if (level > 1) {
-      this.from = this.to;
-      boundsOffset = x - (to.position.x - l["from"]["offset"].toDouble() / scale);
-    } else {
-      this.from = createPolygonShape(l["from"]["x"].toDouble() / scale,
-          l["from"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
-      this.from.userData = Sprite.from(world);
-    }
-    
-    camera.setBounds(x - boundsOffset, y, x + w, y + h);
-
-    this.to = createPolygonShape(l["to"]["x"].toDouble() / scale,
-        l["to"]["y"].toDouble() / scale, ENERGY_BLOCK_WIDTH, ENERGY_BLOCK_HEIGHT);
-    this.to.userData = Sprite.to(world);
-
-    for (var obstacle in l["obstacles"]) {
-      Body o = createPolygonShape(obstacle["x"].toDouble() / scale,
-          obstacle["y"].toDouble() / scale, obstacle["width"].toDouble() / scale,
-          obstacle["height"].toDouble() / scale);
-      o.userData = Sprite.byType(obstacle["type"]);
-      obstacles.add(o);
-    }
-  }
-
-  void nextLevel() {
-    if (hasNextLevel()) {
-      print("Ready to load the next level: " + (level + 1).toString());
-      ++level;
-      loadLevel();
-    }
-  }
-
-  bool hasNextLevel() {
-    return levels.length >= level + 1;
   }
 
   void setCanvasCursor(String cursor) {
@@ -206,6 +153,7 @@ class GameEngine {
   }
 
   Body addCard(double x, double y, double angle, [bool isStatic=false]) {
+
     PolygonShape cs = new PolygonShape();
     cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
 
@@ -283,14 +231,6 @@ class GameEngine {
     bcard.update();
     camera.update(delta);
 
-    // Debug
-
-    if (Input.keys['n'].clicked) {
-      nextLevel();
-    }
-
-    //
-
     if (physicsEnabled) {
       bobbin.enterFrame(cards);
     }
@@ -300,10 +240,10 @@ class GameEngine {
       if (!isRewinding) bobbin.erase();
     }
 
-    if (canPut() && (staticBlocksSelected && staticBlocksRemaining > 0 || dynamicBlocksRemaining > 0)) {
+    if (canPut() && (staticBlocksSelected && level.current.staticBlocksRemaining > 0 || level.current.dynamicBlocksRemaining > 0)) {
         addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,staticBlocksSelected);
-        if(staticBlocksSelected)--staticBlocksRemaining;
-        else --dynamicBlocksRemaining;
+        if(staticBlocksSelected)--level.current.staticBlocksRemaining;
+        else --level.current.dynamicBlocksRemaining;
     }
 
     if (Input.keys['z'].down && !Input.isAltDown) {
@@ -339,8 +279,12 @@ class GameEngine {
 
         sprite.update(this);
         if (sprite.isFull()) {
-          print("win");
-          //nextLevel();
+
+            new RatingShower(this, level.current.getRating());
+
+          if(level.hasNext()) level.current.finish();
+
+            level.next();
         }
       } else {
         sprite.deactivate();

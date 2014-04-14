@@ -6,35 +6,49 @@
     <script type="application/dart" src="cards.dart"></script>
 </head>
 <body>
-    <div id = "c"></div>
-    <div class="game-box">
-        <!--<div class="headline">Cards</div>-->
-       
-        <div class="buttons">
-          <button id="zoom-in" class="plus"></button>
-          <button id="zoom-out" class="minus"></button>
-          <button id="toggle-physics">Apply physics</button>
-          <button id="clear-window">Restart</button>
-        </div>
-        
-        <div class="selectors">
-          <div class="selector static current">
-            <div class="icon"></div><div class="bound-key">1</div><div class="caption">static</div>
-          </div>
-          
-          <div class="selector dynamic">
-            <div class="icon"></div><div class="bound-key">2</div><div class="caption">dynamic</div>
-          </div>
-        </div>
-        
-        <div>
-            <canvas width="800" height="600" id="graphics"></canvas>
-        </div>
-        <!--<div>
-            <input type="number" id="density" value="1" step="0.05">
-            <input type="number" id="friction" value="0.5" step="0.05">
-            <input type="number" id="restitution" value="0.04" step="0.01">
-        </div>-->
+<div id="c"></div>
+<div class="game-box">
+    <!--<div class="headline">Cards</div>-->
+
+    <div class="buttons">
+        <button id="zoom-in" class="plus"></button>
+        <button id="zoom-out" class="minus"></button>
+        <button id="toggle-physics">Apply physics</button>
+        <button id="clear-window">Restart</button>
     </div>
+
+    <div class="selectors">
+        <div class="selector static current">
+            <div class="icon"></div>
+            <div class="bound-key">1</div>
+            <div class="caption">static</div>
+        </div>
+
+        <div class="selector dynamic">
+            <div class="icon"></div>
+            <div class="bound-key">2</div>
+            <div class="caption">dynamic</div>
+        </div>
+    </div>
+
+    <div>
+        <canvas width="800" height="600" id="graphics"></canvas>
+    </div>
+    <!--<div>
+        <input type="number" id="density" value="1" step="0.05">
+        <input type="number" id="friction" value="0.5" step="0.05">
+        <input type="number" id="restitution" value="0.04" step="0.01">
+    </div>-->
+    <div class="light-box hidden">
+        <div class="rating-wrap">
+            <div class="level-rating"></div>
+            <div class="rating-mask"></div>
+        </div>
+        <div class="level-controls">
+            <button id="restart-level">Restart</button>
+            <button id="next-level">Next</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

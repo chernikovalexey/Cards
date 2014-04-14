@@ -105,3 +105,58 @@ margin-left: 6px;
   font-family: Tahoma;
   margin-bottom: 10px;
 }
+
+.level-rating {
+  background-image: url(img/star.png);
+  background-color: black;
+  background-size: 100px 100px;
+  width: 300px;
+  height: 100px;
+}
+
+.rating-mask {
+    position: absolute;
+    right: 0px;
+    top: 250px;
+    background: black;
+    width: 100px;
+    height: 100px;
+}
+
+.rating-wrap {
+    position: absolute;
+    padding-top: 250px;
+    padding-left: 250px;
+}
+
+.light-box {
+    width: 800px;
+    height: 600px;
+    position: relative;
+    top: -600px;
+    background: rgba(0,0,0,0.8);
+}
+
+.hidden {
+    display: none;
+}
+
+.s-1 {
+    width: 200px;
+}
+
+.s-2 {
+    width: 100px;
+}
+
+.s-3 {
+    width: 0;
+}
+
+.level-controls {
+    width: 800px;
+    text-align: center;
+    position: absolute;
+    top: 360px;
+
+}
