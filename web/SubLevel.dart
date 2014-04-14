@@ -3,6 +3,7 @@ import "Bobbin.dart";
 import 'package:box2d/box2d_browser.dart';
 import "GameEngine.dart";
 import "Sprite.dart";
+import 'cards.dart';
 
 class SubLevel {
     String name;
@@ -77,7 +78,7 @@ class SubLevel {
         for(Body b in e.cards) {
             b.type = BodyType.STATIC;
             b.userData.appliesToCurrentLevel = false;
-            e.applyPhysicsLabelToButton();
+            applyPhysicsLabelToButton();
         }
 
         e.physicsEnabled = false;

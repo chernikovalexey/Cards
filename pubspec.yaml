@@ -3,6 +3,7 @@ version: 0.1.0
 author: Twopeople
 description: Cards Game.
 dependencies:
+  animation: any
   box2d: any
   browser: any
   vector_math: any

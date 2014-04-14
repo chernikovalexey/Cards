@@ -41,7 +41,7 @@ class Level {
                 current = subLevels[currentSubLevel - 1];
                 current.apply();
             }
-            
+            saveCurrentLevel();
             updateBlockButtons(engine);
         }
     }
@@ -51,7 +51,13 @@ class Level {
             --currentSubLevel;
             current = subLevels[currentSubLevel];
             current.apply();
+            saveCurrentLevel();
         }
+    }
+    
+    void saveCurrentLevel() {
+      showLevelName(subLevels[currentSubLevel - 1].name);
+      window.localStorage['last_level'] = currentSubLevel.toString();
     }
 
     bool hasNext() {

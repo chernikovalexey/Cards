@@ -10,6 +10,17 @@
   vertical-align: middle;
 }
 
+.level-name {
+  position: absolute;
+  top: 0;
+  z-index: 5;
+  color: #fff;
+  width: 800px;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 24px;
+}
+
 canvas {
   border: 1px solid black;
   cursor: none;

@@ -327,7 +327,6 @@ class GameEngine {
           level.current.saveState();
           level.next();
       }
-
   }
 
   void render() {
@@ -336,12 +335,6 @@ class GameEngine {
       if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
       b = b.next;
     }
-  }
-
-  void applyPhysicsLabelToButton() {
-    var btn = querySelector("#toggle-physics");
-    btn.text = "Apply physics";
-    btn.classes.remove("rewind");
   }
 
   void restart(double d, double f, double r) {

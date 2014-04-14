@@ -1,6 +1,8 @@
 import 'dart:html';
 import 'GameEngine.dart';
 import 'Input.dart';
+import 'package:animation/animation.dart';
+import 'dart:async';
 
 CanvasElement canvas;
 
@@ -60,6 +62,23 @@ void main() {
       double.parse((querySelector("#restitution") as InputElement).value)));
 }
 
+void showLevelName(String name) {
+  var el = querySelector(".level-name");
+  el.innerHtml = name;
+  
+  el.style.marginTop = "50";
+  
+  animate(el, properties: {'opacity': 1.0}, duration: 1150, easing: Easing.CUBIC_EASY_IN_OUT);
+  
+  new Timer(new Duration(seconds:2), () {
+    animate(el, properties: {
+        'margin-top': 0,
+        'opacity': 0.0,
+        'font-size': 30
+      }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
+  });
+}
+
 void updateCanvasPositionAndDimension([Event event = null]) {
   if (canvas != null) {
     Rectangle r = canvas.getBoundingClientRect();
@@ -70,13 +89,19 @@ void updateCanvasPositionAndDimension([Event event = null]) {
   }
 }
 
+void applyPhysicsLabelToButton() {
+  querySelector("#toggle-physics").click();
+}
+
 void updateBlockButtons(GameEngine engine) {
   querySelectorAll(".selector").forEach((DivElement s) {
     s.classes.remove("current");
   });
-  (querySelectorAll(".selector")[engine.staticBlocksSelected ? 0 : 1] as DivElement).classes.add(
-      "current");
-  
-  querySelector(".static .remaining").innerHtml = engine.level.current.staticBlocksRemaining.toString();
-  querySelector(".dynamic .remaining").innerHtml = engine.level.current.dynamicBlocksRemaining.toString();
+  (querySelectorAll(".selector")[engine.staticBlocksSelected ? 0 : 1] as
+      DivElement).classes.add("current");
+
+  querySelector(".static .remaining").innerHtml =
+      engine.level.current.staticBlocksRemaining.toString();
+  querySelector(".dynamic .remaining").innerHtml =
+      engine.level.current.dynamicBlocksRemaining.toString();
 }
