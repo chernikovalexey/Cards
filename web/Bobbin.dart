@@ -1,5 +1,6 @@
 import "dart:html";
 import 'package:box2d/box2d_browser.dart';
+import 'EnergySprite.dart';
 
 class Bobbin {
   List list = new List();
@@ -19,7 +20,7 @@ class Bobbin {
     List<Transform> frame = new List();
     int numAsleep = 0;
     for (Body b in cards) {
-      if (!b.awake) numAsleep++;
+      if (!b.awake || (b.userData as EnergySprite).isStatic) ++numAsleep;
       frame.add(new Transform(b.position.clone(), b.angle));
     }
 
@@ -39,7 +40,9 @@ class Bobbin {
     list.remove(frame);
     for (int i = 0; i < frame.length; i++) {
       Body b = cards[i];
-      b.setTransform(frame[i].pos, frame[i].angle);
+      if(!(b.userData as EnergySprite).isStatic) {
+        b.setTransform(frame[i].pos, frame[i].angle);
+      }
     }
 
     return true;

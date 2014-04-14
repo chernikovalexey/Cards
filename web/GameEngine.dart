@@ -15,6 +15,7 @@ import 'RatingShower.dart';
 import "Level.dart";
 import 'SubLevel.dart';
 import "LevelListShower.dart";
+import 'dart:convert';
 
 class GameEngine {
   static const double NSCALE = 85.0;
@@ -56,8 +57,8 @@ class GameEngine {
   List levels;
   DefaultWorldPool pool;
   int staticBlocksRemaining, dynamicBlocksRemaining;
-  bool staticBlocksSelected = false;
-  
+  bool staticBlocksSelected = true;
+
   bool isRewinding = false;
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;
   double currentZoom = 1.0;
@@ -73,6 +74,9 @@ class GameEngine {
     initializeCanvas();
 
     level = new Level(run, this);
+
+    // preload game settings here if necessary
+    // ...
   }
 
   void initializeCanvas() {
@@ -88,8 +92,7 @@ class GameEngine {
     pool = new DefaultWorldPool();
 
     this.contactListener = new CardContactListener(this);
-    this.world = new World(new Vector2(0.0, GRAVITY), true,
-        pool);
+    this.world = new World(new Vector2(0.0, GRAVITY), true, pool);
 
     world.contactListener = contactListener;
 
@@ -118,14 +121,14 @@ class GameEngine {
 
 
   FixtureDef createHelperFixture(double w, double h) {
-      FixtureDef fd = new FixtureDef();
-      fd.isSensor = true;
-      PolygonShape s = new PolygonShape();
-      s.setAsBox(w / 2 +.01,h / 2 +.01);
-      fd.shape = s;
-      fd.userData = false;
+    FixtureDef fd = new FixtureDef();
+    fd.isSensor = true;
+    PolygonShape s = new PolygonShape();
+    s.setAsBox(w / 2 + .01, h / 2 + .01);
+    fd.shape = s;
+    fd.userData = false;
 
-      return fd;
+    return fd;
   }
 
   Body createPolygonShape(double x, double y, double width, double height) {
@@ -141,7 +144,7 @@ class GameEngine {
 
     Body body = world.createBody(bd);
     body.createFixture(fd);
-    body.createFixture(createHelperFixture(width,height));
+    body.createFixture(createHelperFixture(width, height));
 
 
     return body;
@@ -153,8 +156,7 @@ class GameEngine {
         contactListener.contactingBodies.isEmpty && !physicsEnabled;
   }
 
-  Body addCard(double x, double y, double angle, [bool isStatic=false]) {
-
+  Body addCard(double x, double y, double angle, [bool isStatic = false]) {
     PolygonShape cs = new PolygonShape();
     cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
 
@@ -174,20 +176,21 @@ class GameEngine {
     Body card = world.createBody(def);
     card.createFixture(fd);
     card.createFixture(createHelperFixture(CARD_WIDTH, CARD_HEIGHT));
-    card.userData = Sprite.card(world);
-    card.userData.isStatic = isStatic;
-    card.userData.energySupport = !isStatic;
-    
-    if(isStatic) {
-      card.userData.color = new Color3.fromRGB(217, 214, 179);
+
+    EnergySprite sprite = Sprite.card(world);
+    sprite.isStatic = isStatic;
+    sprite.energySupport = !isStatic;
+    if (isStatic) {
+      sprite.color = new Color3.fromRGB(217, 214, 179);
     }
-    
+
+    card.userData = sprite;
     cards.add(card);
 
     return card;
   }
 
-  int getBodyType(bool activeness, [bool isStatic=false]) {
+  int getBodyType(bool activeness, [bool isStatic = false]) {
     return activeness && !isStatic ? BodyType.DYNAMIC : BodyType.STATIC;
   }
 
@@ -197,7 +200,7 @@ class GameEngine {
       bobbin.erase();
     }
     for (Body body in cards) {
-      body.type = getBodyType(active, body.userData.isStatic);
+      body.type = getBodyType(active, (body.userData as EnergySprite).isStatic);
       if (!physicsEnabled) (body.userData as Sprite).deactivate();
     }
   }
@@ -229,9 +232,9 @@ class GameEngine {
   void update(num delta) {
     setCanvasCursor('none');
 
-    if(Input.keys['p'].clicked) {
-        print("prev");
-        previousLevel();
+    if (Input.keys['p'].clicked) {
+      print("prev");
+      previousLevel();
     }
 
     bcard.update();
@@ -246,10 +249,19 @@ class GameEngine {
       if (!isRewinding) bobbin.erase();
     }
 
-    if (canPut() && (staticBlocksSelected && level.current.staticBlocksRemaining > 0 || level.current.dynamicBlocksRemaining > 0)) {
-        addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,staticBlocksSelected);
-        if(staticBlocksSelected)--level.current.staticBlocksRemaining;
-        else --level.current.dynamicBlocksRemaining;
+    if (canPut() && (staticBlocksSelected && level.current.staticBlocksRemaining
+        > 0 || level.current.dynamicBlocksRemaining > 0)) {
+
+      addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,
+          staticBlocksSelected);
+
+      if (staticBlocksSelected) {
+        --level.current.staticBlocksRemaining;
+      } else {
+        --level.current.dynamicBlocksRemaining;
+      }
+      
+      updateBlockButtons(this);
     }
 
     if (Input.keys['z'].down && !Input.isAltDown) {
@@ -262,9 +274,17 @@ class GameEngine {
       toggleBoundedCard(false);
       if (Input.isMouseLeftClicked) zoom(false, true);
     }
+    if (Input.keys['1'].clicked) {
+      staticBlocksSelected = true;
+      updateBlockButtons(this);
+    }
+    if (Input.keys['2'].clicked) {
+      staticBlocksSelected = false;
+      updateBlockButtons(this);
+    }
 
     if (contactListener.contactingBodies.isNotEmpty &&
-        Input.isMouseRightClicked) {
+        Input.isMouseRightClicked && !isRewinding) {
       List<Body> cardsToDelete = new List<Body>();
       cardsToDelete.addAll(contactListener.contactingBodies);
       contactListener.contactingBodies.clear();
@@ -280,12 +300,12 @@ class GameEngine {
     }
 
     if (to != null) {
-        EnergySprite sprite = to.userData as EnergySprite;
+      EnergySprite sprite = to.userData as EnergySprite;
       if (physicsEnabled) {
 
         sprite.update(this);
         if (sprite.isFull()) {
-            new RatingShower(this, level.current.getRating());
+          new RatingShower(this, level.current.getRating());
         }
       } else {
         sprite.deactivate();
@@ -295,23 +315,23 @@ class GameEngine {
   }
 
   void previousLevel() {
-        level.previous();
+    level.previous();
   }
 
   void restartLevel() {
-      rewind();
-      applyPhysicsLabelToButton();
-      to.userData.energy = 0.0;
+    rewind();
+    applyPhysicsLabelToButton();
+    (to.userData as EnergySprite).energy = 0.0;
   }
 
   void nextLevel() {
-      if(level.hasNext()) {
-          level.current.finish();
-          level.current.saveState();
-          level.next();
-      } else {
-          new LevelListShower(this);
-      }
+    if (level.hasNext()) {
+      level.current.finish();
+      level.current.saveState();
+      level.next();
+    } else {
+      new LevelListShower(this);
+    }
 
   }
 
@@ -324,9 +344,9 @@ class GameEngine {
   }
 
   void applyPhysicsLabelToButton() {
-      var btn = querySelector("#toggle-physics");
-      btn.text= "Apply physics";
-      btn.classes.remove("rewind");
+    var btn = querySelector("#toggle-physics");
+    btn.text = "Apply physics";
+    btn.classes.remove("rewind");
   }
 
   void restart(double d, double f, double r) {
@@ -357,6 +377,14 @@ class GameEngine {
     print("card removed");
     world.destroyBody(c);
     cards.remove(c);
+    
+    EnergySprite sprite = c.userData as EnergySprite;
+    if(sprite.isStatic) {
+      ++level.current.staticBlocksRemaining;
+    } else {
+      ++level.current.dynamicBlocksRemaining;
+    }
+    updateBlockButtons(this);
   }
 
   void zoom(bool zoomIn, [bool onMouse = false]) {

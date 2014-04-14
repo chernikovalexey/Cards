@@ -18,7 +18,9 @@ class Input {
     's': new Key(83),
     'd': new Key(68),
     'n': new Key(78),
-    'p': new Key(80)
+    'p': new Key(80),
+    '1': new Key(49),
+    '2': new Key(50)
   };
 
   static num canvasX, canvasY;

@@ -5,6 +5,7 @@ import 'GameEngine.dart';
 import 'package:box2d/box2d_browser.dart';
 import "Sprite.dart";
 import "SubLevel.dart";
+import 'cards.dart';
 
 class Level {
     GameEngine engine;
@@ -40,6 +41,8 @@ class Level {
                 current = subLevels[currentSubLevel - 1];
                 current.apply();
             }
+            
+            updateBlockButtons(engine);
         }
     }
 

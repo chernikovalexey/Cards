@@ -43,6 +43,7 @@ button {
 
 .selectors {
   position: absolute;
+  margin-top: 24%;
   padding: 10px 0 0 10px;
 }
 
@@ -78,24 +79,29 @@ button {
 
 .selector .bound-key {
   position: absolute;
-font-family: Tahoma;
-font-size: 9px;
-color: #fff;
-margin-top: -35px;
-margin-left: 6px;
+  font-size: 9px;
+  color: #fff;
+  margin-top: -36px;
+  margin-left: 6px;
+}
+
+.selector .remaining {
+  font-size: 9px;
+  color: #fff;
+  margin-top: 1px
 }
 
 .selector .caption {
   color: #fff;
-  font-family: Tahoma;
   font-size: 10px;
-  font-weight: 700
+  font-weight: 700;
 }
 
 .game-box {
   width: 800px;
   height: 600px;
   margin: 0 auto;
+  font-family: Tahoma;
   -webkit-user-select: none;
 }
 

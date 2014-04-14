@@ -20,7 +20,7 @@ class SubLevel {
 
     Object fSprite, tSprite;
 
-    SubLevel(GameEngine e, Object l, int index) {
+    SubLevel(GameEngine e, Map l, int index) {
         this.e = e;
         x = l['x'].toDouble() / GameEngine.scale;
         y = l['y'].toDouble() / GameEngine.scale;;
@@ -78,10 +78,8 @@ class SubLevel {
             b.userData.appliesToCurrentLevel = false;
             e.applyPhysicsLabelToButton();
         }
+
         e.physicsEnabled = false;
-
-
-
         e.bobbin.erase();
         e.cards.clear();
     }
