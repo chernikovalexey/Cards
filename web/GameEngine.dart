@@ -14,8 +14,7 @@ import 'dart:async';
 import 'RatingShower.dart';
 import "Level.dart";
 import 'SubLevel.dart';
-import "LevelListShower.dart";
-import 'dart:convert';
+import 'LevelComplete.dart';
 
 class GameEngine {
   static const double NSCALE = 85.0;
@@ -39,6 +38,7 @@ class GameEngine {
 
   num lastStepTime = 0;
   bool physicsEnabled = false;
+  bool isPaused = false;
 
   World world;
   CardContactListener contactListener;
@@ -57,7 +57,7 @@ class GameEngine {
   List levels;
   DefaultWorldPool pool;
   int staticBlocksRemaining, dynamicBlocksRemaining;
-  bool staticBlocksSelected = true;
+  bool staticBlocksSelected = false;
 
   bool isRewinding = false;
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;
@@ -74,9 +74,6 @@ class GameEngine {
     initializeCanvas();
 
     level = new Level(run, this);
-
-    // preload game settings here if necessary
-    // ...
   }
 
   void initializeCanvas() {
@@ -120,14 +117,14 @@ class GameEngine {
   }
 
   FixtureDef createHelperFixture(double w, double h) {
-    FixtureDef fd = new FixtureDef();
-    fd.isSensor = true;
-    PolygonShape s = new PolygonShape();
-    s.setAsBox(w / 2 + .01, h / 2 + .01);
-    fd.shape = s;
-    fd.userData = false;
+      FixtureDef fd = new FixtureDef();
+      fd.isSensor = true;
+      PolygonShape s = new PolygonShape();
+      s.setAsBox(w / 2 +.01,h / 2 +.01);
+      fd.shape = s;
+      fd.userData = false;
 
-    return fd;
+      return fd;
   }
 
   Body createPolygonShape(double x, double y, double width, double height) {
@@ -213,18 +210,19 @@ class GameEngine {
   }
 
   void step(num time) {
-    num delta = time - this.lastStepTime;
+    if(!isPaused) {
+        num delta = time - this.lastStepTime;
 
-    world.step(1.0 / 60.0, 10, 10);
-    update(delta);
+        world.step(1.0 / 60.0, 10, 10);
+        update(delta);
 
-    g.setFillColorRgb(0, 0, 0);
-    g.fillRect(0, 0, NWIDTH, NHEIGHT);
+        g.setFillColorRgb(0, 0, 0);
+        g.fillRect(0, 0, NWIDTH, NHEIGHT);
+        render();
+        this.lastStepTime = time;
 
+    }
     //world.drawDebugData();
-    render();
-
-    this.lastStepTime = time;
     run();
   }
 
@@ -324,13 +322,11 @@ class GameEngine {
   }
 
   void nextLevel() {
-    if (level.hasNext()) {
-      level.current.finish();
-      level.current.saveState();
-      level.next();
-    } else {
-      new LevelListShower(this);
-    }
+      if(level.hasNext()) {
+          level.current.finish();
+          level.current.saveState();
+          level.next();
+      }
 
   }
 

@@ -5,6 +5,7 @@ import "GameEngine.dart";
 import "Sprite.dart";
 
 class SubLevel {
+    String name;
     List frames;
     List cards;
     int rating = 0;
@@ -22,6 +23,7 @@ class SubLevel {
 
     SubLevel(GameEngine e, Map l, int index) {
         this.e = e;
+        this.name = l["name"];
         x = l['x'].toDouble() / GameEngine.scale;
         y = l['y'].toDouble() / GameEngine.scale;;
         w = l['width'].toDouble() / GameEngine.scale;;
@@ -64,7 +66,6 @@ class SubLevel {
 
 
     int getRating() {
-        print(stars[0]);
         if(stars[0] >= e.cards.length) rating = 3;
         else if(stars[1] >= e.cards.length) rating = 2;
         else rating = 1;
