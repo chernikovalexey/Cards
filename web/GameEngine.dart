@@ -301,7 +301,7 @@ class GameEngine {
   void restartLevel() {
       rewind();
       applyPhysicsLabelToButton();
-      to.userData.energy = 0;
+      to.userData.energy = 0.0;
   }
 
   void nextLevel() {
