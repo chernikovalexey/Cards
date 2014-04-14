@@ -81,6 +81,13 @@ class Camera {
     this.yAnim = new DoubleAnimation(pxOffsetY, by2, 100);
   }
 
+  void moveTo(double dx, double dy) {
+      pxOffsetX = dx;
+      pxOffsetY = dy;
+      //this.xAnim = new DoubleAnimation(dx, dx, 20);
+      //this.yAnim = new DoubleAnimation(dx, dy, 20);
+  }
+
   void updateEngine(double zoom) {
     xAnim.setStart(pxOffsetX);
     xAnim.setEnd(targetOffsetX);
