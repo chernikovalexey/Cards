@@ -8,9 +8,8 @@ import 'cards.dart';
 class SubLevel {
     String name;
 
-    List frames;
-
-    List cards;
+    List frames=new List();
+    List cards=new List();
 
     int rating = 0;
 

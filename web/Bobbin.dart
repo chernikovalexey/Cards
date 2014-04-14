@@ -17,11 +17,11 @@ class Bobbin {
     nFrame++;
     if (nFrame % 2 == 0) return;
 
-    List<Transform> frame = new List();
+    List<BTransform> frame = new List();
     int numAsleep = 0;
     for (Body b in cards) {
       if (!b.awake || (b.userData as EnergySprite).isStatic) ++numAsleep;
-      frame.add(new Transform(b.position.clone(), b.angle));
+      frame.add(new BTransform(b.position.clone(), b.angle));
     }
 
     if (numAsleep < cards.length) {
@@ -36,9 +36,9 @@ class Bobbin {
 
   bool previousFrame(List<Body> cards) {
     if (list.length == 0) return false;
-    List<Transform> frame = list.last;
+    List<BTransform> frame = list.last;
     list.remove(frame);
-    for (int i = 0; i < frame.length; i++) {
+    for (int i = 0, len = frame.length; i < len; i++) {
       Body b = cards[i];
       if(!(b.userData as EnergySprite).isStatic) {
         b.setTransform(frame[i].pos, frame[i].angle);
@@ -55,12 +55,12 @@ class Bobbin {
   }
 }
 
-class Transform {
+class BTransform {
   Vector2 pos;
 
   double angle;
 
-  Transform(Vector2 pos, double angle) {
+  BTransform(Vector2 pos, double angle) {
     this.pos = pos;
     this.angle = angle;
   }

@@ -15,6 +15,7 @@ import 'RatingShower.dart';
 import "Level.dart";
 import 'SubLevel.dart';
 import 'LevelComplete.dart';
+import 'LevelSerializer.dart';
 
 class GameEngine {
   static const double NSCALE = 85.0;
@@ -34,7 +35,6 @@ class GameEngine {
   static double get ENERGY_BLOCK_HEIGHT => NENERGY_BLOCK_HEIGHT / scale;
 
   static double scale = NSCALE;
-
 
   num lastStepTime = 0;
   bool physicsEnabled = false;
@@ -73,6 +73,13 @@ class GameEngine {
     initializeCanvas();
 
     level = new Level(run, this);
+
+    Storage storage = window.localStorage;
+    if (storage.containsKey("last_level")) {
+      String last = storage['last_level'];
+      String state = storage['level_' + last];
+      LevelSerializer.fromJSON(state, this);
+    }
   }
 
   void initializeCanvas() {
@@ -116,14 +123,14 @@ class GameEngine {
   }
 
   FixtureDef createHelperFixture(double w, double h) {
-      FixtureDef fd = new FixtureDef();
-      fd.isSensor = true;
-      PolygonShape s = new PolygonShape();
-      s.setAsBox(w / 2 +.01,h / 2 +.01);
-      fd.shape = s;
-      fd.userData = false;
+    FixtureDef fd = new FixtureDef();
+    fd.isSensor = true;
+    PolygonShape s = new PolygonShape();
+    s.setAsBox(w / 2 + .01, h / 2 + .01);
+    fd.shape = s;
+    fd.userData = false;
 
-      return fd;
+    return fd;
   }
 
   Body createPolygonShape(double x, double y, double width, double height) {
@@ -194,7 +201,7 @@ class GameEngine {
     if (physicsEnabled) {
       bobbin.erase();
     } else {
-        to.userData.deactivate();
+      to.userData.deactivate();
     }
     for (Body body in cards) {
       body.type = getBodyType(active, (body.userData as EnergySprite).isStatic);
@@ -211,16 +218,16 @@ class GameEngine {
   }
 
   void step(num time) {
-    if(!isPaused) {
-        num delta = time - this.lastStepTime;
+    if (!isPaused) {
+      num delta = time - this.lastStepTime;
 
-        world.step(1.0 / 60.0, 10, 10);
-        update(delta);
+      world.step(1.0 / 60, 10, 10);
+      update(delta);
 
-        g.setFillColorRgb(0, 0, 0);
-        g.fillRect(0, 0, NWIDTH, NHEIGHT);
-        render();
-        this.lastStepTime = time;
+      g.setFillColorRgb(0, 0, 0);
+      g.fillRect(0, 0, NWIDTH, NHEIGHT);
+      render();
+      this.lastStepTime = time;
 
     }
     //world.drawDebugData();
@@ -258,7 +265,7 @@ class GameEngine {
       } else {
         --level.current.dynamicBlocksRemaining;
       }
-      
+
       updateBlockButtons(this);
     }
 
@@ -281,8 +288,8 @@ class GameEngine {
       updateBlockButtons(this);
     }
 
-    if (contactListener.contactingBodies.isNotEmpty &&
-        Input.isMouseRightClicked && !isRewinding) {
+    if (contactListener.contactingBodies.isNotEmpty && Input.isMouseRightClicked
+        && !isRewinding) {
       List<Body> cardsToDelete = new List<Body>();
       cardsToDelete.addAll(contactListener.contactingBodies);
       contactListener.contactingBodies.clear();
@@ -303,6 +310,7 @@ class GameEngine {
 
         sprite.update(this);
         if (sprite.isFull()) {
+          saveCurrentProgress(true);
           new RatingShower(this, level.current.getRating());
         }
       } else {
@@ -310,6 +318,12 @@ class GameEngine {
       }
     }
     Input.update();
+  }
+
+  // saves the state of the current level
+  void saveCurrentProgress([bool finished = false]) {
+    window.localStorage['level_' + level.current.index.toString()] =
+        LevelSerializer.toJSON(cards, bobbin.list, finished);
   }
 
   void previousLevel() {
@@ -323,10 +337,10 @@ class GameEngine {
   }
 
   void nextLevel() {
-      if(level.hasNext()) {
-          level.current.finish();
-          level.next();
-      }
+    if (level.hasNext()) {
+      level.current.finish();
+      level.next();
+    }
   }
 
   void render() {
@@ -365,9 +379,9 @@ class GameEngine {
     print("card removed");
     world.destroyBody(c);
     cards.remove(c);
-    
+
     EnergySprite sprite = c.userData as EnergySprite;
-    if(sprite.isStatic) {
+    if (sprite.isStatic) {
       ++level.current.staticBlocksRemaining;
     } else {
       ++level.current.dynamicBlocksRemaining;
