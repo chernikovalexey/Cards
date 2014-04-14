@@ -119,7 +119,6 @@ class GameEngine {
     canvas.style.cursor = cursor;
   }
 
-
   FixtureDef createHelperFixture(double w, double h) {
     FixtureDef fd = new FixtureDef();
     fd.isSensor = true;

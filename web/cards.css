@@ -1,6 +1,21 @@
+.game-box {
+  width: 800px;
+  height: 600px;
+  margin-left: -400px;
+  left: 50%;
+  position: absolute;
+  font-family: Tahoma;
+  -webkit-user-select: none;
+  display: inline-table;
+  vertical-align: middle;
+}
+
 canvas {
   border: 1px solid black;
-  cursor: none
+  cursor: none;
+  position: relative;
+  z-index: 2;
+  left: -50px
 }
 
 .buttons {
@@ -8,6 +23,7 @@ canvas {
   padding: 5px;
   width: 792px;
   position: absolute;
+  z-index: 3
 }
 
 button {
@@ -42,9 +58,10 @@ button {
 }
 
 .selectors {
-  position: absolute;
-  margin-top: 24%;
-  padding: 10px 0 0 10px;
+  display: table-cell;
+  vertical-align: middle;
+  position: relative;
+  z-index: 3
 }
 
 .selector {
@@ -97,14 +114,6 @@ button {
   font-weight: 700;
 }
 
-.game-box {
-  width: 800px;
-  height: 600px;
-  margin: 0 auto;
-  font-family: Tahoma;
-  -webkit-user-select: none;
-}
-
 .headline {
   font-size: 24px;
   text-align: center;
@@ -136,11 +145,13 @@ button {
 }
 
 .light-box {
-    width: 800px;
-    height: 600px;
-    position: relative;
-    top: -600px;
-    background: rgba(0,0,0,0.8);
+  width: 800px;
+  height: 600px;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.75);
+  margin-top: -604px;
+  margin-left: -49px;
+  z-index: 4
 }
 
 .hidden {
