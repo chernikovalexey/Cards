@@ -13,7 +13,7 @@ void main() {
 
   // Runs automatically
   GameEngine engine = new GameEngine(g);
-  
+
   canvas.onMouseMove.listen(Input.onMouseMove);
   canvas.onMouseDown.listen(Input.onMouseDown);
 
@@ -29,12 +29,9 @@ void main() {
 
   updateCanvasPositionAndDimension();
 
-<<<<<<< HEAD
-=======
   // Runs automatically
   engine = new GameEngine(g);
 
->>>>>>> b0b852249e1dde5ede1e2c4840d3ccb90546fa30
   querySelector('#toggle-physics').addEventListener("click", (event) {
     ButtonElement btn = (event.target as ButtonElement);
 
@@ -103,8 +100,7 @@ void updateCanvasPositionAndDimension([Event event = null]) {
 }
 
 void applyPhysicsLabelToButton() {
-  //querySelector("#toggle-physics").click();
-    querySelector("#toggle-physics").text = "Apply physics";
+  querySelector("#toggle-physics").text = "Apply physics";
   engine.rewind();
 }
 
