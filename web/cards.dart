@@ -64,20 +64,23 @@ void main() {
 
 void showLevelName(String name) {
   var el = querySelector(".level-name");
- 
+
   el.innerHtml = name;
   el.style.display = "block";
-  el.style.marginTop = "50";
-  
-  animate(el, properties: {'opacity': 1.0}, duration: 1150, easing: Easing.CUBIC_EASY_IN_OUT);
-  
-  new Timer(new Duration(seconds:2), () {
+  el.style.marginTop = "65";
+
+  animate(el, properties: {
+    'margin-top': 50,
+    'opacity': 1.0,
+    'font-size': 24
+  }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
+
+  new Timer(new Duration(seconds: 3), () {
     animate(el, properties: {
-        'margin-top': 0,
-        'opacity': 0.0,
-        'font-size': 30
-      }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
-      el.style.display = "none";
+      'margin-top': -20,
+      'opacity': 0.0,
+      'font-size': 30
+    }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
   });
 }
 
