@@ -3,9 +3,23 @@ import "GameEngine.dart";
 import "LevelComplete.dart";
 
 class RatingShower {
-    bool active = true;
+    static GameEngine e;
+    static void nextLevel(event) {
+        hide();
+        e.nextLevel();
+        e.isPaused = false;
+    }
 
-    RatingShower(GameEngine e, int rating) {
+    static void restartLevel(event) {
+        hide();
+        e.isPaused = false;
+        e.restartLevel();
+    }
+
+
+    static void show(GameEngine engine, int rating) {
+        e = engine;
+
         e.isPaused = true;
         if (e.level.hasNext()) {
             (querySelector("#rating-box") as DivElement).classes.remove("hidden");
@@ -16,25 +30,20 @@ class RatingShower {
 
             classes.add("s-" + rating.toString());
             (querySelector("#next-level") as ButtonElement).focus();
-            (querySelector("#next-level") as ButtonElement).addEventListener("click", (event) {
-                hide();
-                e.nextLevel();
-                active = false;
-                e.isPaused = false;
-            });
+            (querySelector("#next-level") as ButtonElement).removeEventListener("click", nextLevel);
 
-            (querySelector("#restart-level") as ButtonElement).addEventListener("click", (event) {
-                hide();
-                e.isPaused = false;
-                e.restartLevel();
-            });
+            (querySelector("#next-level") as ButtonElement).addEventListener("click", nextLevel);
+
+
+            (querySelector("#restart-level") as ButtonElement).removeEventListener("click", restartLevel);
+            (querySelector("#restart-level") as ButtonElement).addEventListener("click", restartLevel);
         } else {
             e.level.current.getRating();
             new LevelComplete(e);
         }
     }
 
-    void hide() {
+    static void hide() {
         (querySelector("#rating-box") as DivElement).classes.add("hidden");
     }
 

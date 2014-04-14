@@ -70,5 +70,30 @@
                 "type": 1
             }
         ]
+    },
+    {
+        "name": "Level 3",
+        "x": -30,
+        "y": -50,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [40, 10],
+        "stars": [1,2],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 300,
+            "y": 50
+        },
+        "obstacles": [
+            {
+                "x": 1600,
+                "y": 10,
+                "width": 1200,
+                "height": 10,
+                "type": 1
+            }
+        ]
     }
 ]}
