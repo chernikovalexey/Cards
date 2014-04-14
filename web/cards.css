@@ -218,6 +218,11 @@ button {
     color: rgba(255,255,255,0.7);
 }
 
+.sl-item:hover {
+    cursor: pointer;
+    background: rgba(255,255,255, 0.05);
+}
+
 .sl-item div {
     display: inline-block;
     padding: 5px;

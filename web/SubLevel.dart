@@ -142,8 +142,11 @@ class SubLevel {
             e.to = to;
             e.to.userData = tSprite;
             e.rewind();
-            e.bobbin.rewindComplete = null;
-            e.bobbin.rewindComplete = levelApplied;
+            e.bobbin.rewindComplete = () {
+                e.bobbin.rewindComplete = null;
+                print("Level" + index.toString()+" is applied!");
+                if(levelApplied!=null) levelApplied();
+            };
         };
 
         if(e.physicsEnabled) {
@@ -151,4 +154,6 @@ class SubLevel {
             e.rewind();
         } else f();
     }
+
+
 }

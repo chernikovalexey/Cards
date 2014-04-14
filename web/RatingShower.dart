@@ -39,7 +39,7 @@ class RatingShower {
             (querySelector("#restart-level") as ButtonElement).addEventListener("click", restartLevel);
         } else {
             e.level.current.getRating();
-            new LevelComplete(e);
+            LevelComplete.show(e);
         }
     }
 
