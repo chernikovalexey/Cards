@@ -94,9 +94,9 @@ class SubLevel {
         saveState();
         for(Body b in e.cards) {
             b.type = BodyType.STATIC;
-            b.userData.appliesToCurrentLevel = false;
-            applyPhysicsLabelToButton();
         }
+        applyPhysicsLabelToButton();
+
 
         enable(false);
         e.physicsEnabled = false;
