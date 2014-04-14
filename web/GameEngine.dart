@@ -56,7 +56,6 @@ class GameEngine {
 
   List levels;
   DefaultWorldPool pool;
-  int staticBlocksRemaining, dynamicBlocksRemaining;
   bool staticBlocksSelected = false;
 
   bool isRewinding = false;
