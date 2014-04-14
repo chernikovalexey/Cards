@@ -16,14 +16,16 @@ class SubLevel {
     List stars;
     GameEngine e;
 
+    double x,y,w,h;
+
     Object fSprite, tSprite;
 
     SubLevel(GameEngine e, Object l, int index) {
         this.e = e;
-        double x = l['x'].toDouble() / GameEngine.scale;
-        double y = l['y'].toDouble() / GameEngine.scale;;
-        double w = l['width'].toDouble() / GameEngine.scale;;
-        double h = l['height'].toDouble() / GameEngine.scale;;
+        x = l['x'].toDouble() / GameEngine.scale;
+        y = l['y'].toDouble() / GameEngine.scale;;
+        w = l['width'].toDouble() / GameEngine.scale;;
+        h = l['height'].toDouble() / GameEngine.scale;;
 
         this.staticBlocksRemaining = l["blocks"][0];
         this.dynamicBlocksRemaining = l["blocks"][1];
@@ -74,17 +76,33 @@ class SubLevel {
         for(Body b in e.cards) {
             b.type = BodyType.STATIC;
             b.userData.appliesToCurrentLevel = false;
-            var btn = querySelector("#toggle-physics");
-            btn.text= "Apply physics";
-            btn.classes.toggle("rewind");
-
+            e.applyPhysicsLabelToButton();
         }
         e.physicsEnabled = false;
+
+
+
         e.bobbin.erase();
         e.cards.clear();
     }
 
+    void saveState() {
+        frames = new List();
+        frames.add(e.bobbin.list);
+
+        fSprite = from.userData;
+        tSprite = to.userData;
+    }
+
     void fromData(GameEngine e) {
         e.bobbin.list = frames;
+    }
+
+    void apply() {
+        e.from = this.from;
+        e.to = this.to;
+        e.from.userData = this.fSprite;
+        e.to.userData = this.tSprite;
+        e.camera.setBounds(x,y,w,h);
     }
 }

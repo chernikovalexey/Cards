@@ -9,6 +9,7 @@ import "SubLevel.dart";
 class Level {
     GameEngine engine;
     SubLevel current;
+    List<SubLevel> subLevels = new List();
     int currentSubLevel;
     List levels;
 
@@ -30,12 +31,32 @@ class Level {
         if (hasNext()) {
             print("Ready to load the next level: " + (currentSubLevel + 1).toString());
             ++currentSubLevel;
-            load(currentSubLevel);
+            if(currentSubLevel > subLevels.length) {
+                load(currentSubLevel);
+                subLevels.add(current);
+            }
+            else
+            {
+                current = subLevels[currentSubLevel - 1];
+                current.apply();
+            }
+        }
+    }
+
+    void previous() {
+        if(hasPrevious()) {
+            --currentSubLevel;
+            current = subLevels[currentSubLevel];
+            current.apply();
         }
     }
 
     bool hasNext() {
         return levels.length >= currentSubLevel + 1;
+    }
+
+    bool hasPrevious() {
+        return currentSubLevel > 1;
     }
 
     void load(int level) {

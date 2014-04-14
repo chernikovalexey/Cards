@@ -228,6 +228,11 @@ class GameEngine {
   void update(num delta) {
     setCanvasCursor('none');
 
+    if(Input.keys['p'].clicked) {
+        print("prev");
+        previousLevel();
+    }
+
     bcard.update();
     camera.update(delta);
 
@@ -279,12 +284,7 @@ class GameEngine {
 
         sprite.update(this);
         if (sprite.isFull()) {
-
             new RatingShower(this, level.current.getRating());
-
-          if(level.hasNext()) level.current.finish();
-
-            level.next();
         }
       } else {
         sprite.deactivate();
@@ -293,12 +293,39 @@ class GameEngine {
     Input.update();
   }
 
+  void previousLevel() {
+        level.previous();
+  }
+
+  void restartLevel() {
+      rewind();
+      applyPhysicsLabelToButton();
+      to.userData.energy = 0;
+  }
+
+  void nextLevel() {
+      if(level.hasNext()) {
+          level.current.finish();
+          level.current.saveState();
+          level.next();
+      } else {
+          new LevelListShower(this);
+      }
+
+  }
+
   void render() {
     Body b = world.bodyList;
     while (b != null) {
       if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
       b = b.next;
     }
+  }
+
+  void applyPhysicsLabelToButton() {
+      var btn = querySelector("#toggle-physics");
+      btn.text= "Apply physics";
+      btn.classes.remove("rewind");
   }
 
   void restart(double d, double f, double r) {
