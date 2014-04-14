@@ -8,6 +8,7 @@ class Bobbin {
   int nFrame = 1;
   bool callbackFired = false;
   Function allAsleep;
+  Function rewindComplete;
 
   Bobbin(Function allAsleep) {
     this.allAsleep = allAsleep;
@@ -35,7 +36,11 @@ class Bobbin {
   }
 
   bool previousFrame(List<Body> cards) {
-    if (list.length == 0) return false;
+    if (list.length == 0) {
+        if(rewindComplete!=null)
+            rewindComplete();
+        return false;
+    }
     List<Transform> frame = list.last;
     list.remove(frame);
     for (int i = 0; i < frame.length; i++) {

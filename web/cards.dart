@@ -5,6 +5,7 @@ import 'package:animation/animation.dart';
 import 'dart:async';
 
 CanvasElement canvas;
+GameEngine engine;
 
 void main() {
   canvas = (querySelector("#graphics") as CanvasElement);
@@ -25,7 +26,7 @@ void main() {
   updateCanvasPositionAndDimension();
 
   // Runs automatically
-  GameEngine engine = new GameEngine(g);
+  engine = new GameEngine(g);
 
   querySelector('#toggle-physics').addEventListener("click", (event) {
     ButtonElement btn = (event.target as ButtonElement);
@@ -92,7 +93,9 @@ void updateCanvasPositionAndDimension([Event event = null]) {
 }
 
 void applyPhysicsLabelToButton() {
-  querySelector("#toggle-physics").click();
+  //querySelector("#toggle-physics").click();
+    querySelector("#toggle-physics").text = "Apply physics";
+  engine.rewind();
 }
 
 void updateBlockButtons(GameEngine engine) {

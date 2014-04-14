@@ -36,6 +36,8 @@ class SubLevel {
 
     int index;
 
+    Function levelApplied;
+
     SubLevel(GameEngine e, Map l, int index) {
         this.index = index;
         this.e = e;
@@ -95,13 +97,13 @@ class SubLevel {
         for(Body b in e.cards) {
             b.type = BodyType.STATIC;
         }
-        applyPhysicsLabelToButton();
 
 
-        enable(false);
         e.physicsEnabled = false;
         e.bobbin.erase();
         e.cards.clear();
+
+        applyPhysicsLabelToButton();
     }
 
     void saveState() {
@@ -130,18 +132,24 @@ class SubLevel {
     }
 
     void apply() {
-        print("cards:" + cards.toString());
-        e.camera.setBounds(x, y, x + w, y + h);
-        e.camera.mTargetX = x;
-        e.camera.mTargetY = y;
-        e.bobbin.list = this.frames;
-        e.cards = this.cards;
-        e.from = from;
-        e.from.userData = fSprite;
-        e.to = to;
-        e.to.userData = tSprite;
-        e.rewind();
+        Function f = () {
+            e.camera.setBounds(x, y, x + w, y + h);
+            e.camera.mTargetX = x;
+            e.camera.mTargetY = y;
+            e.bobbin.list = this.frames;
+            e.cards = this.cards;
+            e.from = from;
+            e.from.userData = fSprite;
+            e.to = to;
+            e.to.userData = tSprite;
+            e.rewind();
+            e.bobbin.rewindComplete = null;
+            e.bobbin.rewindComplete = levelApplied;
+        };
 
-        print("Bobbin frames length:" + e.bobbin.list.length.toString());
+        if(e.physicsEnabled) {
+            e.bobbin.rewindComplete = f;
+            e.rewind();
+        } else f();
     }
 }

@@ -29,6 +29,7 @@ class Level {
     }
 
     void next() {
+
         if (hasNext()) {
             if(current!=null) current.enable(false);
             print("Ready to load the next level: " + (currentSubLevel + 1).toString());
@@ -45,6 +46,7 @@ class Level {
             saveCurrentLevel();
             updateBlockButtons(engine);
         }
+        print("Current sub level: " + (currentSubLevel).toString());
     }
 
     void previous() {
@@ -55,6 +57,7 @@ class Level {
             current.apply();
             saveCurrentLevel();
         }
+        print("Current sub level: " + (currentSubLevel).toString());
     }
     
     void saveCurrentLevel() {

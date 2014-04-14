@@ -303,7 +303,7 @@ class GameEngine {
 
         sprite.update(this);
         if (sprite.isFull()) {
-          new RatingShower(this, level.current.getRating());
+          RatingShower.show(this, level.current.getRating());
         }
       } else {
         sprite.deactivate();
@@ -317,8 +317,9 @@ class GameEngine {
   }
 
   void restartLevel() {
-    rewind();
-    applyPhysicsLabelToButton();
+      applyPhysicsLabelToButton();
+    //rewind();
+
     (to.userData as EnergySprite).energy = 0.0;
   }
 
