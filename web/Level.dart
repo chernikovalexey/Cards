@@ -30,6 +30,7 @@ class Level {
 
     void next() {
         if (hasNext()) {
+            if(current!=null) current.enable(false);
             print("Ready to load the next level: " + (currentSubLevel + 1).toString());
             ++currentSubLevel;
             if(currentSubLevel > subLevels.length) {
@@ -49,7 +50,7 @@ class Level {
     void previous() {
         if(hasPrevious()) {
             --currentSubLevel;
-            current = subLevels[currentSubLevel];
+            current = subLevels[currentSubLevel - 1];
             current.apply();
         }
     }
