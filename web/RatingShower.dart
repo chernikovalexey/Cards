@@ -6,7 +6,7 @@ class RatingShower {
 
     RatingShower(GameEngine e, int rating) {
         (querySelector("#rating-box") as DivElement).classes.remove("hidden");
-        (querySelector(".rating-mask") as DivElement).classes.add("s-"+rating.toString());
+        (querySelector("#sublevel-mask") as DivElement).classes.add("s-"+rating.toString());
         (querySelector("#next-level") as ButtonElement).focus();
         (querySelector("#next-level") as ButtonElement).addEventListener("click",(event){
             hide();
