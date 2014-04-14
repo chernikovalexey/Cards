@@ -48,7 +48,7 @@ class LevelSerializer {
       e.togglePhysics(true);
     }
 
-    List frames = new List();
+    /*List frames = new List();
     for (List frame in state['frames']) {
       frames.add(new List());
       for (Map t in frame) {
@@ -57,6 +57,6 @@ class LevelSerializer {
       }
     }
 
-    e.bobbin.list = frames;
+    e.bobbin.list = frames;*/
   }
 }

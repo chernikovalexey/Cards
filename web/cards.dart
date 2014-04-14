@@ -12,7 +12,7 @@ void main() {
   CanvasRenderingContext2D g = canvas.getContext('2d');
 
   // Runs automatically
-  GameEngine engine = new GameEngine(g);
+  engine = new GameEngine(g);
 
   canvas.onMouseMove.listen(Input.onMouseMove);
   canvas.onMouseDown.listen(Input.onMouseDown);
@@ -28,9 +28,6 @@ void main() {
   window.onBeforeUnload.listen((Event event) => engine.saveCurrentProgress());
 
   updateCanvasPositionAndDimension();
-
-  // Runs automatically
-  engine = new GameEngine(g);
 
   querySelector('#toggle-physics').addEventListener("click", (event) {
     ButtonElement btn = (event.target as ButtonElement);
