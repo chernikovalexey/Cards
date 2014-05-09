@@ -172,13 +172,13 @@ class GameEngine {
     card.createFixture(fd);
     card.createFixture(createHelperFixture(CARD_WIDTH, CARD_HEIGHT));
 
-    if (sub != null) {
+    /*if (sub != null) {
       isStatic = true;
-    }
+    }*/
 
     EnergySprite sprite = Sprite.card(world);
     sprite.isStatic = isStatic;
-    sprite.energySupport = !isStatic;
+    sprite.energySupport = (!isStatic || sub!=null);
     if (isStatic) {
       sprite.color = new Color3.fromRGB(217, 214, 179);
     }
@@ -261,7 +261,11 @@ class GameEngine {
 
     if (isRewinding) {
       isRewinding = bobbin.previousFrame(cards);
-      if (!isRewinding) bobbin.erase();
+      if (!isRewinding) {
+          bobbin.erase();
+          if(bobbin.rewindComplete!=null)
+            bobbin.rewindComplete();
+      }
     }
 
     if (canPut() && (staticBlocksSelected && level.current.staticBlocksRemaining
@@ -423,6 +427,7 @@ class GameEngine {
   }
 
   void clear() {
+    applyPhysicsLabelToButton();
     bobbin.erase();
     List<Body> _cards = new List<Body>();
     _cards.addAll(cards);

@@ -95,55 +95,5 @@
                 "type": 1
             }
         ]
-    },
-    {
-        "name": "Level 4",
-        "x": -30,
-        "y": -50,
-        "width": 1200,
-        "height": 1000,
-        "blocks": [0, 20],
-        "stars": [10,15],
-        "from": {
-            "offset": 50
-        },
-        "to": {
-            "x": 450,
-            "y": 100
-        },
-        "obstacles": [
-            {
-                "x": 1600,
-                "y": 10,
-                "width": 1200,
-                "height": 10,
-                "type": 1
-            }
-        ]
-    },
-    {
-        "name": "Level 5",
-        "x": -30,
-        "y": -50,
-        "width": 1200,
-        "height": 1000,
-        "blocks": [1, 30],
-        "stars": [15,20],
-        "from": {
-            "offset": 50
-        },
-        "to": {
-            "x": 750,
-            "y": 300
-        },
-        "obstacles": [
-            {
-                "x": 1600,
-                "y": 10,
-                "width": 1200,
-                "height": 10,
-                "type": 1
-            }
-        ]
     }
 ]}

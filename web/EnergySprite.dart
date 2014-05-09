@@ -92,7 +92,6 @@ class EnergySprite extends Sprite {
     }
 
     @override
-
     void render(CanvasDraw g, Body b) {
         if(energy<0) energy = 0.0;
         else if(energy>1) energy = 1.0;

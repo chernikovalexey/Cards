@@ -114,7 +114,7 @@ class Sprite {
         //s.alwaysAnimate = true;
         s.energy = 0.0;
         s.active = true;
-        s.energyStep = .01;
+        s.energyStep = .1;
         return s;
     }
 

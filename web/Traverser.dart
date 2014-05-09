@@ -14,7 +14,7 @@ class Traverser {
     Traverser.subLevel(this.to);
 
 
-    void traverseEdges(ContactEdge edge) {
+    void traverseEdges(ContactEdge edge, [bool makeFull=false]) {
         if (edge == null) return;
 
         Body to = null;
@@ -30,12 +30,22 @@ class Traverser {
             if (edge.contact.fixtureA.body.userData.energySupport) {
                 edge.contact.fixtureA.body.userData.connectedToEnergy = true;
                 edge.contact.fixtureA.body.userData.bFrom = edge.contact.fixtureB.body;
+                if(makeFull) {
+                    print("Make full");
+                    edge.contact.fixtureA.body.userData.enable(true);
+                    edge.contact.fixtureA.body.userData.energy = 1.0;
+                }
                // edge.contact.fixtureA.body.userData.color = new Color3.fromRGB(255, 0, 0);
             }
 
             if (edge.contact.fixtureB.body.userData.energySupport) {
                 edge.contact.fixtureB.body.userData.connectedToEnergy = true;
                 edge.contact.fixtureB.body.userData.bFrom = edge.contact.fixtureA.body;
+                if(makeFull) {
+                    print("Make full");
+                    edge.contact.fixtureB.body.userData.enable(true);
+                    edge.contact.fixtureB.body.userData.energy = 1.0;
+                }
               //  edge.contact.fixtureB.body.userData.color = new Color3.fromRGB(255, 0, 0);
             }
         }
@@ -50,7 +60,7 @@ class Traverser {
 //col1.setFromRGB(202, 201, 201);
 
                     traversed.add(edge.contact.fixtureA.body);
-                    traverseEdges(edge.contact.fixtureA.body.contactList);
+                    traverseEdges(edge.contact.fixtureA.body.contactList, makeFull);
                 }
             }
 
@@ -60,7 +70,7 @@ class Traverser {
 //col2.setFromRGB(202, 201, 201);
 
                     traversed.add(edge.contact.fixtureB.body);
-                    traverseEdges(edge.contact.fixtureB.body.contactList);
+                    traverseEdges(edge.contact.fixtureB.body.contactList, makeFull);
                 }
             }
         }
