@@ -37,8 +37,6 @@ class Bobbin {
 
   bool previousFrame(List<Body> cards) {
     if (list.length == 0) {
-        if(rewindComplete!=null)
-            rewindComplete();
         return false;
     }
     List<BTransform> frame = list.last;

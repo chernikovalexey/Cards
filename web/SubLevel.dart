@@ -5,6 +5,7 @@ import "GameEngine.dart";
 import "Sprite.dart";
 import 'cards.dart';
 import 'Traverser.dart';
+import 'EnergySprite.dart';
 
 class SubLevel {
     String name;
@@ -112,6 +113,7 @@ class SubLevel {
         frames = new List();
         frames.addAll(e.bobbin.list);
 
+
         from = e.from;
         to = e.to;
         fSprite = e.from.userData;
@@ -133,20 +135,32 @@ class SubLevel {
 
     void apply() {
         Function f = () {
+            print("f() called!");
             e.camera.setBounds(x, y, x + w, y + h);
             e.camera.mTargetX = x;
             e.camera.mTargetY = y;
             e.bobbin.list = this.frames;
+           //
             e.cards = this.cards;
+
             e.from = from;
-            e.from.userData = fSprite;
+            e.from.userData = Sprite.from(e.world);
+
             e.to = to;
-            e.to.userData = tSprite;
+
+            if(tSprite!=null)
+                e.to.userData = tSprite;
+            else
+                tSprite = e.to.userData;
+
+
             e.rewind();
             e.bobbin.rewindComplete = () {
                 e.bobbin.rewindComplete = null;
+                this.frames.clear();
                 print("Level" + index.toString()+" is applied!");
                 if(levelApplied!=null) levelApplied();
+                levelApplied = null;
             };
         };
 
@@ -157,6 +171,11 @@ class SubLevel {
     }
 
     void complete() {
-        Traverser t = new Traverser.subLevel(to);
+        print("Try to complete level!");
+        for(Body b in cards) {
+            (b.userData as EnergySprite).alwaysAnimate = true;
+            (b.userData as EnergySprite).activate();
+            (b.userData as EnergySprite).connectedToEnergy = true;
+        }
     }
 }

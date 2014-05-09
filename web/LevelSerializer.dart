@@ -20,7 +20,8 @@ class LevelSerializer {
         'x': body.position.x,
         'y': body.position.y,
         'angle': body.angle,
-        'static': (body.userData as EnergySprite).isStatic
+        'static': (body.userData as EnergySprite).isStatic,
+        'energy': (body.userData as EnergySprite).energy
       });
     }
 
@@ -42,8 +43,10 @@ class LevelSerializer {
     Map state = JSON.decode(json);
 
     for (Map card in state['cards']) {
-      e.addCard(card['x'].toDouble(), card['y'].toDouble(),
+      Body b = e.addCard(card['x'].toDouble(), card['y'].toDouble(),
           card['angle'].toDouble(), card['static'], subLevel==null?null:subLevel);
+
+      (b.userData as EnergySprite).energy = card['energy'].toDouble();
     }
 
     if (state['physics_enabled']) {
@@ -63,6 +66,7 @@ class LevelSerializer {
 
     if (subLevel != null) {
       subLevel.frames = frames;
+      subLevel.enable(false);
     } else {
       e.bobbin.list = frames;
     }
