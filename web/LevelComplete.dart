@@ -2,6 +2,7 @@ import "dart:html";
 import "GameEngine.dart";
 import "SubLevel.dart";
 import "cards.dart";
+import "Level.dart";
 
 class LevelComplete {
     static GameEngine engine;
@@ -35,30 +36,11 @@ class LevelComplete {
     }
 
     static void onItemClick(event) {
-        DivElement el = (event.currentTarget as DivElement);
-        targetLevel = int.parse(el.dataset['level']);
-        if(targetLevel== engine.level.currentSubLevel) {
-            engine.restartLevel();
-        } else {
-            last = engine.level.current;
-            engine.level.previous();
-            engine.level.current.levelApplied = onLevelApplied;
-        }
-
         engine.isPaused = false;
-        hide();
-    }
+        DivElement el = (event.currentTarget as DivElement);
+        Level.navigateToLevel(int.parse(el.dataset['level']), engine);
 
-    static void onLevelApplied() {
-        last.frames.clear();
-        print("target level:" + targetLevel.toString());
-        print("current level: "+ engine.level.currentSubLevel.toString());
-      if(targetLevel != engine.level.currentSubLevel) {
-          engine.level.previous();
-          engine.level.current.levelApplied = onLevelApplied;
-      } else {
-          engine.level.current.levelApplied = null;
-          applyPhysicsLabelToButton();
-      }
+
+        hide();
     }
 }

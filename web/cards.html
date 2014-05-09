@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" type="text/css" href="cards.css"/>
     <title>Cards</title>
+    <script type="application/javascript" src="external/scrollbar.js"></script>
     <script type="application/dart" src="cards.dart"></script>
 </head>
 <body>
@@ -52,13 +53,33 @@
     </div>
     
     <div class="light-box hidden" id="rating-box">
-        <div class="rating-wrap">
-            <div class="level-rating"></div>
-            <div class="rating-mask"  id="sublevel-mask"></div>
+        <div class="rating-inner-layout">
+            <div class="rating-wrap">
+                <div class="s-level-name"></div>
+                <div class="level-rating"></div>
+            </div>
+            <div class="chapter-rating-wrap hidden">
+                <div class="chapter-raring"></div>
+                <div class="star-ico"></div>
+            </div>
+
+            <div class="level-controls">
+                <button id="restart-level">Restart</button>
+                <button id="next-level">Next</button>
+            </div>
+            <div class="chapter-level"></div>
+            <div class="tape">
+
+            </div>
         </div>
-        <div class="level-controls">
-            <button id="restart-level">Restart</button>
-            <button id="next-level">Next</button>
+    </div>
+
+    <div class="tape-item-template hidden">
+        <div class="tape-item">
+            <div class="tape-rating-wrap">
+                <div class="tape-rating"></div>
+            </div>
+            <div class="tape-name"></div>
         </div>
     </div>
 

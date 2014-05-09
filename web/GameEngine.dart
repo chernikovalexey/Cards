@@ -235,6 +235,10 @@ class GameEngine extends State {
       return;
     }
 
+    if(Input.keys['esc'].clicked) {
+        RatingShower.pause();
+    }
+
     world.step(1.0 / 60, 10, 10);
 
     setCanvasCursor('none');

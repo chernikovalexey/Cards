@@ -73,5 +73,7 @@ class LevelSerializer {
     } else {
       e.bobbin.list = frames;
     }
+    if(subLevel!=null)
+    subLevel.loadRating();
   }
 }

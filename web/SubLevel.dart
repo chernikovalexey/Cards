@@ -93,6 +93,13 @@ class SubLevel {
         return rating;
     }
 
+    void loadRating() {
+        if (stars[0] >= cards.length) rating = 3;
+        else if (stars[1] >= cards.length) rating = 2;
+        else rating = 1;
+    }
+
+
     void finish() {
         saveState();
         for(Body b in e.cards) {
@@ -135,7 +142,6 @@ class SubLevel {
 
     void apply() {
         Function f = () {
-            print("f() called!");
             e.camera.setBounds(x, y, x + w, y + h);
             e.camera.mTargetX = x;
             e.camera.mTargetY = y;
@@ -171,7 +177,6 @@ class SubLevel {
     }
 
     void complete() {
-        print("Try to complete level!");
         for(Body b in cards) {
             (b.userData as EnergySprite).alwaysAnimate = true;
             (b.userData as EnergySprite).activate();

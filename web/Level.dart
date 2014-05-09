@@ -110,4 +110,31 @@ class Level {
 
     return min;
   }
+
+  static int targetLevel;
+  static SubLevel last;
+  static GameEngine eng;
+
+    static void navigateToLevel(int target, GameEngine _eng) {
+        eng = _eng;
+        targetLevel = target;
+        if (targetLevel == eng.level.currentSubLevel) {
+            eng.restartLevel();
+        } else {
+            last = eng.level.current;
+            eng.level.previous();
+            eng.level.current.levelApplied = onLevelApplied;
+        }
+    }
+
+    static void onLevelApplied() {
+        last.frames.clear();
+        if (targetLevel != eng.level.currentSubLevel) {
+            eng.level.previous();
+            eng.level.current.levelApplied = onLevelApplied;
+        } else {
+            eng.level.current.levelApplied = null;
+            applyPhysicsLabelToButton();
+        }
+    }
 }
