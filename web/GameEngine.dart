@@ -243,8 +243,11 @@ class GameEngine extends State {
     }
 
     if (Input.keys['esc'].clicked) {
-      RatingShower.pause();
+        RatingShower.pause(this);
     }
+    print(RatingShower.wasJustPaused);
+    RatingShower.wasJustPaused = false;
+
 
     world.step(1.0 / 60, 10, 10);
 

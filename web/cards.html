@@ -66,6 +66,9 @@
     
     <div class="light-box hidden" id="rating-box">
         <div class="rating-inner-layout">
+            <div class="pause-title hidden">
+                Game paused
+            </div>
             <div class="rating-wrap">
                 <div class="s-level-name"></div>
                 <div class="level-rating"></div>
@@ -75,10 +78,21 @@
                 <div class="star-ico"></div>
             </div>
 
-            <div class="level-controls">
-                <button id="restart-level">Restart</button>
+            <div class="level-controls controls">
                 <button id="next-level">Next</button>
+                <button id="restart-level">Restart</button>
             </div>
+
+            <div class="pause-controls controls hidden">
+                <button id="clear-level">Clear level</button>
+                <button class="main-menu">Main menu</button>
+            </div>
+
+            <div class="chapter-controls controls hidden">
+                <button class="main-menu">Main menu</button>
+                <button class="chapter-list">Chapter list</button>
+            </div>
+
             <div class="chapter-level"></div>
             <div class="tape">
 

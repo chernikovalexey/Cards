@@ -23,6 +23,10 @@ class StateManager {
     state.start(params);
   }
 
+  void removeState(State state) {
+      states.remove(state);
+  }
+
   void run() {
     window.requestAnimationFrame(step);
   }
