@@ -3,7 +3,7 @@ import "GameEngine.dart";
 import "LevelComplete.dart";
 import "SubLevel.dart";
 import "Level.dart";
-import "Scroll.dart";
+//import "Scroll.dart";
 
 class RatingShower {
 
@@ -98,9 +98,9 @@ class RatingShower {
         /*Scroll ss = new Scroll('t-box', 't');
         ss.buildScrollControls('scrollbar', 'h', 'mouseover', true);*/
 
-        if(!e.level.hasNext()) {
-            chapterComplete();
-        }
+        //if(!e.level.hasNext()) {
+        //    chapterComplete();
+        //}
     }
 
     static void pause(GameEngine e) {
