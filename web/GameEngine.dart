@@ -231,6 +231,10 @@ class GameEngine extends State {
   }
 
   void update(num delta) {
+    if(isPaused) {
+       return;
+    }
+
     if (!ready) {
       return;
     }

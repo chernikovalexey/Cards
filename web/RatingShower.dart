@@ -55,8 +55,10 @@ class RatingShower {
 
     static void show(GameEngine engine, int rating) {
         e = engine;
-
+        print("Show");
         e.isPaused = true;
+
+
         (querySelector("#rating-box") as DivElement).classes.remove("hidden");
 
         var classes = (querySelector(".level-rating") as DivElement).classes;
@@ -119,6 +121,7 @@ class RatingShower {
 
 
     static void onTypeItemClick(Event evt) {
+        print("click");
         hide();
         e.isPaused = false;
         Level.navigateToLevel(int.parse((evt.currentTarget as DivElement).dataset['level']), e);
