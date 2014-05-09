@@ -21,7 +21,7 @@ class RatingShower {
         e.restartLevel();
     }
 
-    static String tapeItem(HashMap l, int index, int current) {
+    static String tapeItem(Map l, int index, int current) {
         DivElement el = (querySelector(".tape-item-template") as DivElement);
 //el.querySelector(".tape-rating").innerHtml = l.rating.toString();
         el.querySelector(".tape-name").innerHtml = l["name"];
