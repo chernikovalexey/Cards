@@ -1,14 +1,19 @@
 import 'dart:html';
 import 'dart:math';
 import 'Input.dart';
+import 'StateManager.dart';
+import 'GameEngine.dart';
+import 'package:box2d/box2d_browser.dart';
 
 class Star {
   bool extinct = false;
-  double x = 0.0, y = -25.0;
+  double x = 0.0, y = 0.0;
   double speed;
   double opacity;
+  Color3 color;
 
-  Star(this.x, this.speed, this.opacity);
+  Star(this.x, this.y, this.speed, this.opacity) {
+  }
 
   void update(num delta) {
     y += speed;
@@ -19,12 +24,13 @@ class Star {
   }
 
   void render(CanvasRenderingContext2D g) {
-    g.fillStyle = 'rgba(255, 255, 255, '+opacity.toString()+')';
+    g.fillStyle = 'rgba(254, 251, 224, ' + opacity.toString() + ')';
     g.fillRect(x, y, 2, 2);
   }
 }
 
-class ParallaxManager {
+class ParallaxManager extends State {
+  GameEngine engine;
   CanvasRenderingContext2D g;
 
   num lastStepTime = 0;
@@ -32,56 +38,48 @@ class ParallaxManager {
 
   List<Star> stars = new List<Star>();
 
-  ParallaxManager(this.g, this.layers, this.amount) {
-    generateLacking();
-    run();
-  }
+  ParallaxManager(this.engine, this.g, this.layers, this.amount);
 
-  void generateLacking() {
-    Random random = new Random();
-
-    for (int i = 0; i < amount - stars.length; ++i) {
-      int layer = random.nextInt(layers);
-      var data = getStarData(random, layer,layers);
-      Star star = new Star(random.nextDouble() * Input.canvasWidth, data[0], data[1]);
-      stars.add(star);
-    }
-  }
-  
   static List getStarData(Random random, int layer, int layers) {
-    return [random.nextDouble() - layer/layers, layer/layers * 1.2];
+    double speed = (random.nextDouble() - layer / layers) * 0.35 / 1.5;
+    while (speed < 0.01) speed += random.nextDouble() / 10;
+
+    double opacity = speed + speed * layer / layers;
+    while (opacity > 0.25) opacity -= random.nextDouble() / 10;
+
+    return [speed, opacity];
   }
 
-  void run() {
-    window.animationFrame.then(step);
-  }
+  @override
+  void start() {}
 
-  void step(num time) {
-    num delta = time - this.lastStepTime;
-
-    update(delta);
-
-    g.setFillColorRgb(0, 0, 0);
-    render();
-    this.lastStepTime = time;
-
-    run();
-  }
-
+  @override
   void update(num delta) {
-    for (Star star in stars) {
-      star.update(delta);
+    if (!engine.ready || (engine.ready && engine.physicsEnabled)) {
+      List<Star> _stars = new List<Star>();
+      _stars.addAll(stars);
+      for (Star star in _stars) {
+        star.update(delta);
 
-      if (star.extinct) {
-        stars.remove(star);
+        if (star.extinct) {
+          stars.remove(star);
+        }
+      }
+
+      // Generate lacking stars
+      Random random = new Random();
+
+      for (int i = 0; i < amount - stars.length; ++i) {
+        int layer = random.nextInt(layers);
+        var data = getStarData(random, layer, layers);
+        Star star = new Star(random.nextDouble() * Input.canvasWidth,
+            random.nextDouble() * Input.canvasHeight, data[0], data[1]);
+        stars.add(star);
       }
     }
-
-    generateLacking();
-    
-    print("stars.length="+stars.length.toString());
   }
 
+  @override
   void render() {
     g.fillStyle = 'rgba(0, 0, 0, 1)';
     g.fillRect(0, 0, Input.canvasWidth, Input.canvasHeight);

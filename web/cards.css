@@ -24,18 +24,15 @@
 canvas {
   border: 1px solid black;
   cursor: none;
-  position: relative;
   z-index: 2;
-  left: -50px
 }
 
 .buttons {
   text-align: center;
   background: rgba(0, 0, 0, 0.25);
   padding: 5px;
-  width: 790px;
+  width: 793px;
   position: absolute;
-  margin-left: -5px;
   z-index: 6
 }
 
@@ -71,16 +68,19 @@ button {
 }
 
 .selectors {
-  display: table-cell;
-  vertical-align: middle;
-  position: relative;
-  z-index: 3
+  position: absolute;
+  padding-left: 5px;
+  z-index: 3;
 }
 
 .selector {
   text-align: center;
   cursor: pointer;
-  margin-bottom: 10px
+  margin-bottom: 10px;
+}
+
+.selector:last-child {
+  margin-bottom: 0;
 }
 
 .selector .icon {
@@ -163,7 +163,6 @@ button {
   position: absolute;
   background: rgba(0, 0, 0, 0.75);
   margin-top: -604px;
-  margin-left: -49px;
   z-index: 7
 }
 

@@ -17,8 +17,9 @@ import 'SubLevel.dart';
 import 'LevelComplete.dart';
 import 'LevelSerializer.dart';
 import 'ParallaxManager.dart';
+import 'StateManager.dart';
 
-class GameEngine {
+class GameEngine extends State {
   static const double NSCALE = 85.0;
   static double get NWIDTH => Input.canvasWidth;
   static double get NHEIGHT => Input.canvasHeight;
@@ -40,6 +41,7 @@ class GameEngine {
   num lastStepTime = 0;
   bool physicsEnabled = false;
   bool isPaused = false;
+  bool ready = false;
 
   World world;
   CardContactListener contactListener;
@@ -74,7 +76,9 @@ class GameEngine {
     initializeWorld();
     initializeCanvas();
 
-    level = new Level(run, this);
+    level = new Level(() {
+      ready = true;
+    }, this);
   }
 
   void initializeCanvas() {
@@ -181,7 +185,7 @@ class GameEngine {
 
     EnergySprite sprite = Sprite.card(world);
     sprite.isStatic = isStatic;
-    sprite.energySupport = (!isStatic || sub!=null);
+    sprite.energySupport = (!isStatic || sub != null);
     if (isStatic) {
       sprite.color = new Color3.fromRGB(217, 214, 179);
     }
@@ -226,30 +230,12 @@ class GameEngine {
     (bcard.b.userData as Sprite).isHidden = !visible;
   }
 
-  void run() {
-    window.animationFrame.then(step);
-  }
-
-  void step(num time) {
-    if (!isPaused) {
-      num delta = time - this.lastStepTime;
-
-      world.step(1.0 / 60, 10, 10);
-      update(delta);
-
-      g.setFillColorRgb(0, 0, 0);
-      g.fillRect(0, 0, NWIDTH, NHEIGHT);
-      render();
-      this.lastStepTime = time;
-    }
-
-    run();
-  }
-
   void update(num delta) {
-    if (level == null) {
+    if (!ready) {
       return;
     }
+
+    world.step(1.0 / 60, 10, 10);
 
     setCanvasCursor('none');
 
@@ -268,9 +254,8 @@ class GameEngine {
     if (isRewinding) {
       isRewinding = bobbin.previousFrame(cards);
       if (!isRewinding) {
-          bobbin.erase();
-          if(bobbin.rewindComplete!=null)
-            bobbin.rewindComplete();
+        bobbin.erase();
+        if (bobbin.rewindComplete != null) bobbin.rewindComplete();
       }
     }
 
@@ -335,7 +320,7 @@ class GameEngine {
 
   // saves the state of the current level
   void saveCurrentProgress() {
-    if (level != null) {
+    if (ready) {
       window.localStorage['level_' + level.current.index.toString()] =
           LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled);
     }
@@ -359,8 +344,9 @@ class GameEngine {
     }
   }
 
+  @override
   void render() {
-    if (level != null) {
+    if (ready) {
       Body b = world.bodyList;
       while (b != null) {
         if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);

@@ -4,21 +4,22 @@ import 'Input.dart';
 import 'package:animation/animation.dart';
 import 'dart:async';
 import 'ParallaxManager.dart';
+import 'StateManager.dart';
 
 CanvasElement canvas;
 GameEngine engine;
 ParallaxManager parallax;
+StateManager manager;
 
 void main() {
   canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
 
   updateCanvasPositionAndDimension();
-  
-  // Runs automatically
+
+  manager = new StateManager(g);
   engine = new GameEngine(g);
-  parallax = new ParallaxManager(g, 10, 75);
-  //engine.start();
+  manager.addState(new ParallaxManager(engine, g, 24, 100));
 
   canvas.onMouseMove.listen(Input.onMouseMove);
   canvas.onMouseDown.listen(Input.onMouseDown);
@@ -32,6 +33,15 @@ void main() {
   window.onKeyUp.listen(Input.onKeyUp);
   window.onResize.listen(updateCanvasPositionAndDimension);
   window.onBeforeUnload.listen((Event event) => engine.saveCurrentProgress());
+
+  querySelector("#continue").addEventListener("click", (event) {
+    manager.addState(engine);
+    updateCanvasPositionAndDimension();
+    
+    querySelector(".buttons").classes.remove("hidden");
+    querySelector(".selectors").classes.remove("hidden");
+    querySelector("#menu-box").classes.add("hidden");
+  }, false);
 
   querySelector('#toggle-physics').addEventListener("click", (event) {
     if (!(event.target as ButtonElement).classes.contains("rewind")) {
@@ -93,6 +103,12 @@ void updateCanvasPositionAndDimension([Event event = null]) {
     Input.canvasY = r.top;
     Input.canvasWidth = r.width;
     Input.canvasHeight = r.height;
+    
+    // 
+    // Align selector (of blocks) buttons
+    
+    DivElement selectors = querySelector(".selectors");
+    selectors.style.top = (r.top + r.height / 2 - 140 / 2).toString() + "px";
   }
 }
 

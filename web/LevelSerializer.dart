@@ -8,8 +8,11 @@ import 'GameEngine.dart';
 import 'cards.dart';
 
 class LevelSerializer {
-  static String toJSON(List<Body> cards, List<List> frames, bool physicsEnabled)
-      {
+  static double roundDouble(double n) {
+    return (n * 1000.0).round() / 1000.0;
+  }
+  
+  static String toJSON(List<Body> cards, List<List> frames, bool physicsEnabled) {
     Map map = new Map();
     map['physics_enabled'] = physicsEnabled;
     map['cards'] = new List<Map>();
@@ -17,9 +20,9 @@ class LevelSerializer {
 
     for (Body body in cards) {
       (map['cards'] as List).add({
-        'x': body.position.x,
-        'y': body.position.y,
-        'angle': body.angle,
+        'x': roundDouble(body.position.x),
+        'y': roundDouble(body.position.y),
+        'angle': roundDouble(body.angle),
         'static': (body.userData as EnergySprite).isStatic,
         'energy': (body.userData as EnergySprite).energy
       });
