@@ -16,11 +16,12 @@ import "Level.dart";
 import 'SubLevel.dart';
 import 'LevelComplete.dart';
 import 'LevelSerializer.dart';
+import 'ParallaxManager.dart';
 
 class GameEngine {
   static const double NSCALE = 85.0;
-  static const double NWIDTH = 800.0;
-  static const double NHEIGHT = 600.0;
+  static double get NWIDTH => Input.canvasWidth;
+  static double get NHEIGHT => Input.canvasHeight;
   static const double NCARD_WIDTH = 45.0;
   static const double NCARD_HEIGHT = 2.5;
   static const double NENERGY_BLOCK_WIDTH = 35.0;
@@ -67,7 +68,9 @@ class GameEngine {
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
     camera = new Camera(this);
+  }
 
+  void start() {
     initializeWorld();
     initializeCanvas();
 
@@ -211,7 +214,7 @@ class GameEngine {
     if (physicsEnabled) {
       bobbin.erase();
     } else {
-      to.userData.deactivate();
+      (to.userData as Sprite).deactivate();
     }
     for (Body body in cards) {
       body.type = getBodyType(active, (body.userData as EnergySprite).isStatic);
@@ -238,13 +241,16 @@ class GameEngine {
       g.fillRect(0, 0, NWIDTH, NHEIGHT);
       render();
       this.lastStepTime = time;
-
     }
-    //world.drawDebugData();
+
     run();
   }
 
   void update(num delta) {
+    if (level == null) {
+      return;
+    }
+
     setCanvasCursor('none');
 
     if (Input.keys['p'].clicked) {
@@ -319,13 +325,16 @@ class GameEngine {
         sprite.deactivate();
       }
     }
+
     Input.update();
   }
 
   // saves the state of the current level
   void saveCurrentProgress() {
-    window.localStorage['level_' + level.current.index.toString()] =
-        LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled);
+    if (level != null) {
+      window.localStorage['level_' + level.current.index.toString()] =
+          LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled);
+    }
   }
 
   void previousLevel() {
@@ -347,10 +356,12 @@ class GameEngine {
   }
 
   void render() {
-    Body b = world.bodyList;
-    while (b != null) {
-      if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
-      b = b.next;
+    if (level != null) {
+      Body b = world.bodyList;
+      while (b != null) {
+        if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
+        b = b.next;
+      }
     }
   }
 
@@ -426,7 +437,7 @@ class GameEngine {
     bobbin.erase();
     List<Body> _cards = new List<Body>();
     _cards.addAll(cards);
-    for(Body b in _cards) {
+    for (Body b in _cards) {
       removeCard(b);
     }
   }

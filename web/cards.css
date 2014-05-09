@@ -171,6 +171,38 @@ button {
     display: none;
 }
 
+#menu-box {
+  background: none;
+  text-align: center
+}
+
+.logo {
+  width: 146px;
+  height: 48px;
+  background-repeat: no-repeat;
+  margin: 50px auto 175px auto;
+}
+
+.menu-items {
+  display: inline-block;
+  text-align: center
+}
+
+.menu-item {
+  font-size: 15px;
+  color: #dbdbdb;
+  padding: 10px 15px;
+  -webkit-user-select: none;
+  cursor: pointer;
+  -webkit-text-stroke: 1px rgba(219, 219, 219, 0.15);
+   -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.menu-item:hover {
+  color: #fff;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+}
+
 .s-1 {
     width: 200px;
 }

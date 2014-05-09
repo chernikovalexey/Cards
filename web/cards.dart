@@ -3,16 +3,22 @@ import 'GameEngine.dart';
 import 'Input.dart';
 import 'package:animation/animation.dart';
 import 'dart:async';
+import 'ParallaxManager.dart';
 
 CanvasElement canvas;
 GameEngine engine;
+ParallaxManager parallax;
 
 void main() {
   canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
 
+  updateCanvasPositionAndDimension();
+  
   // Runs automatically
   engine = new GameEngine(g);
+  parallax = new ParallaxManager(g, 10, 75);
+  //engine.start();
 
   canvas.onMouseMove.listen(Input.onMouseMove);
   canvas.onMouseDown.listen(Input.onMouseDown);
@@ -26,8 +32,6 @@ void main() {
   window.onKeyUp.listen(Input.onKeyUp);
   window.onResize.listen(updateCanvasPositionAndDimension);
   window.onBeforeUnload.listen((Event event) => engine.saveCurrentProgress());
-
-  updateCanvasPositionAndDimension();
 
   querySelector('#toggle-physics').addEventListener("click", (event) {
     if (!(event.target as ButtonElement).classes.contains("rewind")) {
