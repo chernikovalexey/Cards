@@ -5,14 +5,29 @@ import 'StateManager.dart';
 import 'GameEngine.dart';
 import 'package:box2d/box2d_browser.dart';
 
+Random random = new Random();
+
+Color3 YELLOW = new Color3.fromRGB(254, 251, 224);
+Color3 CYAN = new Color3.fromRGB(125, 165, 253);
+
 class Star {
   bool extinct = false;
   double x = 0.0, y = 0.0;
   double speed;
   double opacity;
-  Color3 color;
+  int size = 2;
+  Color3 color = YELLOW;
 
   Star(this.x, this.y, this.speed, this.opacity) {
+
+    // Add some diversity
+    if (random.nextInt(128) % 2 == 0) {
+      color = CYAN;
+    }
+
+    if (random.nextInt(128) % 2 == 0) {
+      size = 1;
+    }
   }
 
   void update(num delta) {
@@ -24,8 +39,9 @@ class Star {
   }
 
   void render(CanvasRenderingContext2D g) {
-    g.fillStyle = 'rgba(254, 251, 224, ' + opacity.toString() + ')';
-    g.fillRect(x, y, 2, 2);
+    g.fillStyle = 'rgba(' + color.x.toString() + ', ' + color.y.toString() +
+        ', ' + color.z.toString() + ', ' + opacity.toString() + ')';
+    g.fillRect(x, y, size, size);
   }
 }
 
@@ -51,7 +67,7 @@ class ParallaxManager extends State {
   }
 
   @override
-  void start() {}
+  void start([Map params]) {}
 
   @override
   void update(num delta) {
@@ -67,8 +83,6 @@ class ParallaxManager extends State {
       }
 
       // Generate lacking stars
-      Random random = new Random();
-
       for (int i = 0; i < amount - stars.length; ++i) {
         int layer = random.nextInt(layers);
         var data = getStarData(random, layer, layers);

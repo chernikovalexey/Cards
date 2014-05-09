@@ -200,7 +200,7 @@ button {
     display: none;
 }
 
-#menu-box {
+#menu-box, #chapter-selection {
   background: none;
   text-align: center
 }
@@ -208,6 +208,7 @@ button {
 .logo {
   width: 146px;
   height: 48px;
+  background: url(img/logo.png);
   background-repeat: no-repeat;
   margin: 50px auto 175px auto;
 }
@@ -232,9 +233,34 @@ button {
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
 }
 
-.s-0 {
-    width: 0;
-    height: 0;
+.chapter-list {
+  margin: 150px 126px 
+}
+
+.chapter {
+  display: inline-block;
+  margin: 0 12px;
+  cursor: pointer;
+  -webkit-user-select: none
+}
+
+.chapter-thumbnail {
+  width: 240px;
+  height: 180px;
+  background-image: url(img/chapter_thumbnail.png);
+  background-repeat: no-repeat;
+}
+
+.unlock-stars {
+  color: #fff;
+  font-size: 12px;
+  margin-top: -20px;
+}
+
+.chapter-title {
+  color: #fff;
+  font-size: 14px;
+  margin-top: 20px;
 }
 
 .s-1 {
@@ -249,15 +275,10 @@ button {
     width: 300px;
 }
 
-.controls {
+.level-controls {
     width: 800px;
     text-align: center;
     margin-top: 20px;
-}
-
-.pause-title {
-    font-size: 115px;
-    color: silver;
 }
 
 .rating-inner-layout {

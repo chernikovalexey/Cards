@@ -72,13 +72,16 @@ class GameEngine extends State {
     camera = new Camera(this);
   }
 
-  void start() {
-    initializeWorld();
-    initializeCanvas();
+  @override
+  void start([Map params]) {
+    if (params != null) {
+      initializeWorld();
+      initializeCanvas();
 
-    level = new Level(() {
-      ready = true;
-    }, this);
+      level = new Level(() {
+        ready = true;
+      }, params["chapter"], this);
+    }
   }
 
   void initializeCanvas() {
@@ -231,19 +234,17 @@ class GameEngine extends State {
   }
 
   void update(num delta) {
-    if(isPaused) {
-       return;
+    if (isPaused) {
+      return;
     }
 
     if (!ready) {
       return;
     }
 
-    if(Input.keys['esc'].clicked ) {
-        RatingShower.pause(this);
+    if (Input.keys['esc'].clicked) {
+      RatingShower.pause();
     }
-    RatingShower.wasJustPaused = false;
-
 
     world.step(1.0 / 60, 10, 10);
 

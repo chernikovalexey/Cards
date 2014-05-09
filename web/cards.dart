@@ -5,6 +5,8 @@ import 'package:animation/animation.dart';
 import 'dart:async';
 import 'ParallaxManager.dart';
 import 'StateManager.dart';
+import 'Chapter.dart';
+import 'ChapterShower.dart';
 
 CanvasElement canvas;
 GameEngine engine;
@@ -37,10 +39,19 @@ void main() {
   querySelector("#continue").addEventListener("click", (event) {
     manager.addState(engine);
     updateCanvasPositionAndDimension();
-    
+
     querySelector(".buttons").classes.remove("hidden");
     querySelector(".selectors").classes.remove("hidden");
     querySelector("#menu-box").classes.add("hidden");
+  }, false);
+
+  querySelector("#new-game").addEventListener("click", (event) {
+    querySelector("#menu-box").classes.add("hidden");
+    querySelector("#chapter-selection").classes.remove("hidden");
+
+    Chapter.load((List chapters) {
+      ChapterShower.show(chapters);
+    });
   }, false);
 
   querySelector('#toggle-physics').addEventListener("click", (event) {
@@ -103,10 +114,10 @@ void updateCanvasPositionAndDimension([Event event = null]) {
     Input.canvasY = r.top;
     Input.canvasWidth = r.width;
     Input.canvasHeight = r.height;
-    
-    // 
+
+    //
     // Align selector (of blocks) buttons
-    
+
     DivElement selectors = querySelector(".selectors");
     selectors.style.top = (r.top + r.height / 2 - 140 / 2).toString() + "px";
   }
@@ -137,11 +148,4 @@ void updateBlockButtons(GameEngine engine) {
       engine.level.current.staticBlocksRemaining.toString();
   querySelector(".dynamic .remaining").innerHtml =
       engine.level.current.dynamicBlocksRemaining.toString();
-}
-
-void showMainMenu() {
-    manager.removeState(engine);
-    querySelector(".buttons").classes.add("hidden");
-    querySelector(".selectors").classes.add("hidden");
-    querySelector("#menu-box").classes.remove("hidden");
 }

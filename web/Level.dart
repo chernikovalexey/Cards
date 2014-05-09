@@ -15,16 +15,17 @@ class Level {
   int currentSubLevel;
   List levels;
 
-  Level(Function ready, GameEngine engine) {
-    preload(ready);
+  Level(Function ready, int chapter, GameEngine engine) {
+    preload(ready, chapter);
     this.engine = engine;
   }
 
-  void preload(Function ready) {
-    HttpRequest.getString("levels.json").then((String str) {
-      levels = JSON.decode(str)["levels"];
+  void preload(Function ready, int chapter) {
+    Storage storage = window.localStorage;
 
-      Storage storage = window.localStorage;
+    HttpRequest.getString("levels/chapter_" + chapter.toString() + ".json"
+        ).then((String str) {
+      levels = JSON.decode(str)["levels"];
 
       if (storage.containsKey("last_level")) {
         currentSubLevel = int.parse(storage['last_level']);
@@ -38,9 +39,10 @@ class Level {
         String level = (i + 1).toString();
         if (storage.containsKey('level_' + level)) {
           String state = storage['level_' + level];
-          LevelSerializer.fromJSON(state, engine, i+1!= currentSubLevel?subLevels[i]:null);
-          if(i+1!= currentSubLevel) {
-              subLevels[i].complete();
+          LevelSerializer.fromJSON(state, engine, i + 1 != currentSubLevel ?
+              subLevels[i] : null);
+          if (i + 1 != currentSubLevel) {
+            subLevels[i].complete();
           }
         }
       }
@@ -115,26 +117,26 @@ class Level {
   static SubLevel last;
   static GameEngine eng;
 
-    static void navigateToLevel(int target, GameEngine _eng) {
-        eng = _eng;
-        targetLevel = target;
-        if (targetLevel == eng.level.currentSubLevel) {
-            eng.restartLevel();
-        } else {
-            last = eng.level.current;
-            eng.level.previous();
-            eng.level.current.levelApplied = onLevelApplied;
-        }
+  static void navigateToLevel(int target, GameEngine _eng) {
+    eng = _eng;
+    targetLevel = target;
+    if (targetLevel == eng.level.currentSubLevel) {
+      eng.restartLevel();
+    } else {
+      last = eng.level.current;
+      eng.level.previous();
+      eng.level.current.levelApplied = onLevelApplied;
     }
+  }
 
-    static void onLevelApplied() {
-        last.frames.clear();
-        if (targetLevel != eng.level.currentSubLevel) {
-            eng.level.previous();
-            eng.level.current.levelApplied = onLevelApplied;
-        } else {
-            eng.level.current.levelApplied = null;
-            applyPhysicsLabelToButton();
-        }
+  static void onLevelApplied() {
+    last.frames.clear();
+    if (targetLevel != eng.level.currentSubLevel) {
+      eng.level.previous();
+      eng.level.current.levelApplied = onLevelApplied;
+    } else {
+      eng.level.current.levelApplied = null;
+      applyPhysicsLabelToButton();
     }
+  }
 }

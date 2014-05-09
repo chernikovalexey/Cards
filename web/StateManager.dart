@@ -2,7 +2,7 @@ import 'dart:html';
 import 'Input.dart';
 
 abstract class State {
-  void start();
+  void start([Map params]);
   void update(num delta);
   void render();
 }
@@ -18,13 +18,9 @@ class StateManager {
     run();
   }
 
-  void addState(State state) {
+  void addState(State state, [Map params = null]) {
     states.add(state);
-    state.start();
-  }
-
-  void removeState(State state) {
-      states.remove(state);
+    state.start(params);
   }
 
   void run() {
