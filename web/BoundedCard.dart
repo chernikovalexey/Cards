@@ -6,32 +6,33 @@ import 'GameEngine.dart';
 import "Sprite.dart";
 
 class BoundedCard {
-  Body b;
-  GameEngine e;
+    Body b;
 
-  BoundedCard(GameEngine e) {
-    this.e = e;
+    GameEngine e;
 
-    BodyDef bd = new BodyDef();
-    bd.type = BodyType.DYNAMIC;
-    bd.position = new Vector2(0.0, 0.0);
-    bd.bullet = true;
+    BoundedCard(GameEngine e) {
+        this.e = e;
 
-    FixtureDef fd = new FixtureDef();
+        BodyDef bd = new BodyDef();
+        bd.type = BodyType.DYNAMIC;
+        bd.position = new Vector2(0.0, 0.0);
+        bd.bullet = true;
 
-    PolygonShape sd = new PolygonShape();
-    sd.setAsBox(GameEngine.CARD_WIDTH / 2, GameEngine.CARD_HEIGHT / 2);
-    fd.shape = sd;
-    fd.isSensor = true;
+        FixtureDef fd = new FixtureDef();
 
-    b = e.world.createBody(bd);
-    b.createFixture(fd);
-    b.userData = Sprite.card(e.world);
-  }
+        PolygonShape sd = new PolygonShape();
+        sd.setAsBox(GameEngine.CARD_WIDTH / 2, GameEngine.CARD_HEIGHT / 2);
+        fd.shape = sd;
+        fd.isSensor = true;
 
-  void update() {
-    double angle = b.angle;
-    angle += Input.wheelDirection * Math.PI / 12;
-    b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
-  }
+        b = e.world.createBody(bd);
+        b.createFixture(fd);
+        b.userData = Sprite.card(e.world);
+    }
+
+    void update() {
+        double angle = b.angle;
+        angle += Input.wheelDirection * Math.PI / 12;
+        b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
+    }
 }

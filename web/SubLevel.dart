@@ -4,6 +4,7 @@ import 'package:box2d/box2d_browser.dart';
 import "GameEngine.dart";
 import "Sprite.dart";
 import 'cards.dart';
+import 'Traverser.dart';
 
 class SubLevel {
     String name;
@@ -155,5 +156,7 @@ class SubLevel {
         } else f();
     }
 
-
+    void complete() {
+        Traverser t = new Traverser.subLevel(to);
+    }
 }

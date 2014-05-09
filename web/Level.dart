@@ -39,6 +39,9 @@ class Level {
         if (storage.containsKey('level_' + level)) {
           String state = storage['level_' + level];
           LevelSerializer.fromJSON(state, engine, i+1!= currentSubLevel?subLevels[i]:null);
+          if(i+1!= currentSubLevel) {
+              subLevels[i].complete();
+          }
         }
       }
 

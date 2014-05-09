@@ -5,16 +5,23 @@ class Traverser {
     List<Body> traversed = new List<Body>();
 
     GameEngine e;
+    Body to;
 
     bool hasPath = false;
 
     Traverser(this.e);
 
+    Traverser.subLevel(this.to);
+
 
     void traverseEdges(ContactEdge edge) {
         if (edge == null) return;
 
-        if (edge.contact.fixtureA.body == e.to || edge.contact.fixtureB.body == e.to) {
+        Body to = null;
+        if(this.to!=null) to = this.to;
+        else to = e.to;
+
+        if (edge.contact.fixtureA.body == to || edge.contact.fixtureB.body == to) {
             hasPath = true;
         }
 
@@ -23,11 +30,13 @@ class Traverser {
             if (edge.contact.fixtureA.body.userData.energySupport) {
                 edge.contact.fixtureA.body.userData.connectedToEnergy = true;
                 edge.contact.fixtureA.body.userData.bFrom = edge.contact.fixtureB.body;
+               // edge.contact.fixtureA.body.userData.color = new Color3.fromRGB(255, 0, 0);
             }
 
             if (edge.contact.fixtureB.body.userData.energySupport) {
                 edge.contact.fixtureB.body.userData.connectedToEnergy = true;
                 edge.contact.fixtureB.body.userData.bFrom = edge.contact.fixtureA.body;
+              //  edge.contact.fixtureB.body.userData.color = new Color3.fromRGB(255, 0, 0);
             }
         }
 
@@ -36,20 +45,23 @@ class Traverser {
         }
 
         if (edge.contact.touching) {
-            if (!traversed.contains(edge.contact.fixtureA.body) &&
-            !e.level.current.obstacles.contains(edge.contact.fixtureA.body)) {
+            if (edge.contact.fixtureA.body.userData.energySupport) {
+                if (!traversed.contains(edge.contact.fixtureA.body)) {
 //col1.setFromRGB(202, 201, 201);
 
-                traversed.add(edge.contact.fixtureA.body);
-                traverseEdges(edge.contact.fixtureA.body.contactList);
+                    traversed.add(edge.contact.fixtureA.body);
+                    traverseEdges(edge.contact.fixtureA.body.contactList);
+                }
             }
 
-            if (!traversed.contains(edge.contact.fixtureB.body) &&
-            !e.level.current.obstacles.contains(edge.contact.fixtureB.body)) {
+            if (edge.contact.fixtureB.body.userData.energySupport) {
+
+                if (!traversed.contains(edge.contact.fixtureB.body)) {
 //col2.setFromRGB(202, 201, 201);
 
-                traversed.add(edge.contact.fixtureB.body);
-                traverseEdges(edge.contact.fixtureB.body.contactList);
+                    traversed.add(edge.contact.fixtureB.body);
+                    traverseEdges(edge.contact.fixtureB.body.contactList);
+                }
             }
         }
 
