@@ -92,8 +92,10 @@ class Input {
       isAltDown = true;
     }
     toggle(event, true);
+    if(keyDown!=null) keyDown(event);
   }
 
+  static Function keyDown;
   static void onKeyUp(KeyboardEvent event) {
     toggle(event, false);
     isAltDown = false;

@@ -138,3 +138,10 @@ void updateBlockButtons(GameEngine engine) {
   querySelector(".dynamic .remaining").innerHtml =
       engine.level.current.dynamicBlocksRemaining.toString();
 }
+
+void showMainMenu() {
+    manager.removeState(engine);
+    querySelector(".buttons").classes.add("hidden");
+    querySelector(".selectors").classes.add("hidden");
+    querySelector("#menu-box").classes.remove("hidden");
+}

@@ -3,11 +3,16 @@ import "GameEngine.dart";
 import "LevelComplete.dart";
 import "SubLevel.dart";
 import "Level.dart";
+import "Input.dart";
+import "cards.dart";
 //import "Scroll.dart";
 
 class RatingShower {
 
     static GameEngine e;
+    static bool wasJustPaused = false;
+
+    static bool pauseState;
 
     static void nextLevel(event) {
         hide();
@@ -54,22 +59,33 @@ class RatingShower {
     }
 
     static void show(GameEngine engine, int rating) {
+        print("show");
         e = engine;
-        print("Show");
         e.isPaused = true;
 
 
         (querySelector("#rating-box") as DivElement).classes.remove("hidden");
+        Input.keyDown = (KeyboardEvent e) {
+            if(e.keyCode == Input.keys['esc'].code) {
+                Input.keys['esc'].clicked = false;
+                Input.keys['esc'].down = false;
+                hide();
+                Input.keyDown = null;
+            }
+        };
 
         var classes = (querySelector(".level-rating") as DivElement).classes;
 
-        for (int i = 1;i < 4;i++)
+
+        for (int i = 0;i < 4;i++)
             if (classes.contains("s-" + i.toString())) classes.remove("s-" + i.toString());
+        classes.add("s-" + rating.toString());
+
 
         (querySelector(".s-level-name") as DivElement).innerHtml = e.level.current.name;
         (querySelector(".chapter-level") as DivElement).innerHtml = e.level.current.index.toString() + " of " + e.level.levels.length.toString();
 
-        classes.add("s-" + rating.toString());
+
         (querySelector("#next-level") as ButtonElement).focus();
         (querySelector("#next-level") as ButtonElement).removeEventListener("click", nextLevel);
 
@@ -91,32 +107,65 @@ class RatingShower {
         (querySelector(".tape") as DivElement).setInnerHtml(s, validator: _htmlValidator);
 
         for (DivElement e in querySelectorAll(".tape-item")) {
-            e.removeEventListener("click", onTypeItemClick);
-            e.addEventListener("click", onTypeItemClick);
+            if (!e.classes.contains('locked')) {
+                e.removeEventListener("click", onTypeItemClick);
+                e.addEventListener("click", onTypeItemClick);
+            }
+        }
+
+        querySelector("#clear-level").addEventListener('click', (e) {
+           engine.clear();
+           hide();
+        });
+
+
+
+        if (pauseState) {
+            querySelector(".level-controls").classes.add('hidden');
+            querySelector(".pause-controls").classes.remove('hidden');
+            querySelector(".pause-title").classes.remove('hidden');
+        } else {
+            querySelector(".level-controls").classes.remove('hidden');
+            querySelector(".pause-controls").classes.add('hidden');
+            querySelector(".level-rating").classes.remove('hidden');
+            querySelector(".pause-title").classes.add('hidden');
         }
 
 
-        //todo: Scroll
-        /*Scroll ss = new Scroll('t-box', 't');
+//todo: Scroll
+/*Scroll ss = new Scroll('t-box', 't');
         ss.buildScrollControls('scrollbar', 'h', 'mouseover', true);*/
 
-        //if(!e.level.hasNext()) {
-        //    chapterComplete();
-        //}
+        if(!e.level.hasNext()) {
+            chapterComplete();
+        }
     }
 
     static void pause(GameEngine e) {
+        pauseState = true;
         show(e, 0);
+        pauseState = false;
     }
 
     static void chapterComplete() {
         querySelector(".rating-wrap").classes.add("hidden");
         querySelector(".chapter-rating-wrap").classes.remove("hidden");
+        querySelector(".pause-controls").classes.add("hidden");
+        querySelector(".level-controls").classes.add("hidden");
+        querySelector(".chapter-controls").classes.remove("hidden");
         int totalStars = 0;
-        for(SubLevel l in e.level.subLevels) {
-            totalStars+=l.rating;
+        for (SubLevel l in e.level.subLevels) {
+            totalStars += l.rating;
         }
         querySelector(".chapter-raring").innerHtml = totalStars.toString();
+       // querySelector(".main-menu").removeEventListener('click', mainMenu);
+        querySelector(".m-menu").addEventListener('click', mainMenu);
+    }
+
+    static void mainMenu(Event e) {
+        print("To main menu");
+        hide();
+        showMainMenu();
     }
 
 
@@ -129,6 +178,9 @@ class RatingShower {
 
 
     static void hide() {
+        print("hide");
+        e.isPaused = false;
+        wasJustPaused = true;
         (querySelector("#rating-box") as DivElement).classes.add("hidden");
     }
 

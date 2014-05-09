@@ -232,6 +232,11 @@ button {
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
 }
 
+.s-0 {
+    width: 0;
+    height: 0;
+}
+
 .s-1 {
     width: 100px;
 }
@@ -244,10 +249,15 @@ button {
     width: 300px;
 }
 
-.level-controls {
+.controls {
     width: 800px;
     text-align: center;
     margin-top: 20px;
+}
+
+.pause-title {
+    font-size: 115px;
+    color: silver;
 }
 
 .rating-inner-layout {
