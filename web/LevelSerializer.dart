@@ -11,7 +11,7 @@ class LevelSerializer {
   static double roundDouble(double n) {
     return (n * 1000.0).round() / 1000.0;
   }
-  
+
   static String toJSON(List<Body> cards, List<List> frames, bool physicsEnabled) {
     Map map = new Map();
     map['physics_enabled'] = physicsEnabled;
@@ -24,7 +24,7 @@ class LevelSerializer {
         'y': roundDouble(body.position.y),
         'angle': roundDouble(body.angle),
         'static': (body.userData as EnergySprite).isStatic,
-        'energy': (body.userData as EnergySprite).energy
+        'energy': roundDouble((body.userData as EnergySprite).energy)
       });
     }
 
@@ -32,9 +32,9 @@ class LevelSerializer {
       map['frames'].add(new List());
       for (var t in frames[i]) {
         map['frames'][i].add({
-          'x': t.pos.x,
-          'y': t.pos.y,
-          'angle': t.angle
+          'x': roundDouble(t.pos.x),
+          'y': roundDouble(t.pos.y),
+          'angle': roundDouble(t.angle)
         });
       }
     }
@@ -47,7 +47,7 @@ class LevelSerializer {
 
     for (Map card in state['cards']) {
       Body b = e.addCard(card['x'].toDouble(), card['y'].toDouble(),
-          card['angle'].toDouble(), card['static'], subLevel==null?null:subLevel);
+          card['angle'].toDouble(), card['static'], subLevel);
 
       (b.userData as EnergySprite).energy = card['energy'].toDouble();
     }
@@ -73,7 +73,7 @@ class LevelSerializer {
     } else {
       e.bobbin.list = frames;
     }
-    if(subLevel!=null)
-    subLevel.loadRating();
+    
+    if (subLevel != null) subLevel.loadRating();
   }
 }

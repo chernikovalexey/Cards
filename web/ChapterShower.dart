@@ -3,6 +3,8 @@ import 'cards.dart';
 
 class ChapterShower {
   static void show(List chapters) {
+    querySelector(".chapter-list").innerHtml = "";
+    
     int id = 0;
     for (Map chapter in chapters) {
       querySelector(".chapter-list").appendHtml(chapterItem(chapter, ++id));

@@ -15,8 +15,12 @@ class Level {
   int currentSubLevel;
   List levels;
 
+  int chapter;
+
   Level(Function ready, int chapter, GameEngine engine) {
     preload(ready, chapter);
+
+    this.chapter = chapter;
     this.engine = engine;
   }
 
@@ -27,20 +31,20 @@ class Level {
         ).then((String str) {
       levels = JSON.decode(str)["levels"];
 
-      if (storage.containsKey("last_level")) {
+      /*if (storage.containsKey("last_level")) {
         currentSubLevel = int.parse(storage['last_level']);
         loadCurrent();
-      } else {
-        currentSubLevel = 0;
-        next();
-      }
+      } else {*/
+      currentSubLevel = 0;
+      next();
+      //}
 
       for (int i = 0; i < currentSubLevel; ++i) {
-        String level = (i + 1).toString();
-        if (storage.containsKey('level_' + level)) {
-          String state = storage['level_' + level];
-          LevelSerializer.fromJSON(state, engine, i + 1 != currentSubLevel ?
-              subLevels[i] : null);
+        String level = 'level_' + chapter.toString() + '_' + (i + 1).toString();
+
+        if (storage.containsKey(level)) {
+          LevelSerializer.fromJSON(storage[level], engine, i + 1 !=
+              currentSubLevel ? subLevels[i] : null);
           if (i + 1 != currentSubLevel) {
             subLevels[i].complete();
           }
@@ -88,7 +92,15 @@ class Level {
 
   void handleLevelChange() {
     showLevelName(subLevels[currentSubLevel - 1].name);
-    window.localStorage['last_level'] = currentSubLevel.toString();
+
+    if (hasNext()) {
+      window.localStorage["last"] = JSON.encode({
+        'chapter': chapter,
+        'level': currentSubLevel
+      });
+    } else {
+      window.localStorage.remove("last");
+    }
   }
 
   bool hasNext() {

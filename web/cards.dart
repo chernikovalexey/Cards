@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:convert';
 import 'GameEngine.dart';
 import 'Input.dart';
 import 'package:animation/animation.dart';
@@ -36,8 +37,16 @@ void main() {
   window.onResize.listen(updateCanvasPositionAndDimension);
   window.onBeforeUnload.listen((Event event) => engine.saveCurrentProgress());
 
+  // No continue button in case if there is nothing to proceed with
+  if(!window.localStorage.containsKey("last")) {
+    querySelector("#continue").hidden = true;
+  }
+  
   querySelector("#continue").addEventListener("click", (event) {
-    manager.addState(engine);
+    print(JSON.decode(window.localStorage["last"])["chapter"]);
+    manager.addState(engine, {
+      'chapter': JSON.decode(window.localStorage["last"])["chapter"]
+    });
     updateCanvasPositionAndDimension();
 
     querySelector(".buttons").classes.remove("hidden");

@@ -12,7 +12,7 @@ class RatingShower {
     static GameEngine e;
     static bool wasJustPaused = false;
 
-    static bool pauseState;
+    static bool pauseState=false;
 
     static void nextLevel(event) {
         hide();
