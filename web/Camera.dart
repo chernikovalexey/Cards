@@ -90,7 +90,6 @@ class Camera {
 
   String s = null;
   void updateEngine(double zoom) {
-    print("Update engine zoom: "+zoom.toString());
     xAnim.setStart(pxOffsetX);
     xAnim.setEnd(targetOffsetX);
     yAnim.setStart(pxOffsetY);
