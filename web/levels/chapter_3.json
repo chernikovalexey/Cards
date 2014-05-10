@@ -132,36 +132,19 @@
         "obstacles": []
     },
     {
-        "name": "Beautiful star",
+        "name": "New standards",
         "x": -50,
         "y": -350,
         "width": 1200,
         "height": 1000,
-        "blocks": [0, 8],
-        "stars": [6, 7],
+        "blocks": [0, 7],
+        "stars": [5, 6],
         "from": {
             "offset": 50
         },
         "to": {
-            "x": 520,
-            "y": 280
-        },
-        "obstacles": []
-    },
-    {
-        "name": "Arctic spring",
-        "x": -50,
-        "y": -350,
-        "width": 1200,
-        "height": 1000,
-        "blocks": [2, 8],
-        "stars": [10, 11],
-        "from": {
-            "offset": 50
-        },
-        "to": {
-            "x": 800,
-            "y": 280
+            "x": 430,
+            "y": 330
         },
         "obstacles": []
     }

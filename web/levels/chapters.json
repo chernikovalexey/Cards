@@ -1,14 +1,14 @@
 {"chapters": [
-  {
-    "name": "Adventures of Po",
-    "unlock_stars": 0
-  },
-  {
-    "name": "Staggering Ship",
-    "unlock_stars": 12
-  },
-  {
-    "name": "Lucky Strike",
-    "unlock_stars": 20
-  }
+    {
+        "name": "Adventures of Po",
+        "unlock_stars": 0
+    },
+    {
+        "name": "Staggering Ship",
+        "unlock_stars": 12
+    },
+    {
+        "name": "Impossible here",
+        "unlock_stars": 30
+    }
 ]}

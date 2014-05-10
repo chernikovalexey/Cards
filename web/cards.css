@@ -255,7 +255,7 @@ button {
   background-repeat: no-repeat;
 }
 
-.chapter-locked {
+.chapter-locked .chapter-thumbnail {
   background-image: url(img/locked_chapter_thumbnail.png)
 }
 
@@ -269,8 +269,12 @@ button {
 .chapter-title {
   color: #fff;
   font-size: 14px;
-  margin-top: 20px;
+  margin-top: 35px;
   text-align: center;
+}
+
+.chapter-locked .chapter-title {
+  margin-top: 20px
 }
 
 .s-0 {

@@ -28,7 +28,7 @@ class Level {
   int findLastEmptyLevel(int ch) {
     int index = 0;
     while(window.localStorage.containsKey("level_" + ch.toString() + "_" + (++index).toString())) {}
-    return index - 1;
+    return index - 1 >= levels.length ? levels.length-1 : index-1;
   }
   
   void preload(Function ready, int chapter) {
@@ -100,14 +100,14 @@ class Level {
   void handleLevelChange() {
     showLevelName(subLevels[currentSubLevel - 1].name);
 
-    if (hasNext()) {
+    //if (hasNext()) {
       window.localStorage["last"] = JSON.encode({
         'chapter': chapter,
         'level': currentSubLevel
       });
-    } else {
-      window.localStorage.remove("last");
-    }
+    //} else {
+      //window.localStorage.remove("last");
+    //}
   }
 
   bool hasNext() {
