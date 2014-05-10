@@ -333,8 +333,9 @@ class GameEngine extends State {
 
   // saves the state of the current level
   void saveCurrentProgress() {
-    if (ready) {
-      print(level.current);
+    
+    // No sense to save empty states, indeed
+    if (ready && !cards.isEmpty) {
       window.localStorage['level_' + level.chapter.toString() + '_' + level.current.index.toString()] =
           LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled);
     }
@@ -425,6 +426,7 @@ class GameEngine extends State {
   }
 
   void clear() {
+    window.localStorage.remove("level_"+level.chapter.toString() + "_" + (level.current.index+1).toString());
     applyPhysicsLabelToButton();
     bobbin.erase();
     List<Body> _cards = new List<Body>();

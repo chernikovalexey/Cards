@@ -43,7 +43,6 @@ void main() {
   }
   
   querySelector("#continue").addEventListener("click", (event) {
-    print(JSON.decode(window.localStorage["last"])["chapter"]);
     manager.addState(engine, {
       'chapter': JSON.decode(window.localStorage["last"])["chapter"]
     });

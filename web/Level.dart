@@ -24,6 +24,13 @@ class Level {
     this.engine = engine;
   }
 
+  // real amount minus one
+  int findLastEmptyLevel(int ch) {
+    int index = 0;
+    while(window.localStorage.containsKey("level_" + ch.toString() + "_" + (++index).toString())) {}
+    return index - 1;
+  }
+  
   void preload(Function ready, int chapter) {
     Storage storage = window.localStorage;
 
@@ -31,12 +38,11 @@ class Level {
       levels = JSON.decode(str)["levels"];
 
       Map last;
-
       if (storage.containsKey("last") && (last = JSON.decode(storage["last"]))["chapter"] == chapter) {
         currentSubLevel = last["level"];
         loadCurrent();
       } else {
-        currentSubLevel = 0;
+        currentSubLevel = findLastEmptyLevel(chapter);
         next();
       }
 
