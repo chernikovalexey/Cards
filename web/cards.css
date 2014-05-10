@@ -1,3 +1,7 @@
+body {
+  margin: 0
+}
+
 .game-box {
   width: 800px;
   height: 600px;
@@ -49,11 +53,10 @@ button {
 
 #zoom-in, #zoom-out {
   background-repeat: no-repeat;
-  height: 28px;
+  height: 29px;
   width: 37px;
   vertical-align: middle;
   background-position: 10px 6px;
-  top: -1px;
   position: relative;
 }
 
@@ -63,7 +66,7 @@ button {
 
 .minus {
   background-image: url(img/icon_minus.png);
-  left: -6px;
+  left: -5px;
   border-left: none
 }
 
