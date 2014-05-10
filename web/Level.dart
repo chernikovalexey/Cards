@@ -27,17 +27,18 @@ class Level {
   void preload(Function ready, int chapter) {
     Storage storage = window.localStorage;
 
-    HttpRequest.getString("levels/chapter_" + chapter.toString() + ".json"
-        ).then((String str) {
+    HttpRequest.getString("levels/chapter_" + chapter.toString() + ".json").then((String str) {
       levels = JSON.decode(str)["levels"];
 
-      /*if (storage.containsKey("last_level")) {
-        currentSubLevel = int.parse(storage['last_level']);
+      Map last;
+
+      if (storage.containsKey("last") && (last = JSON.decode(storage["last"]))["chapter"] == chapter) {
+        currentSubLevel = last["level"];
         loadCurrent();
-      } else {*/
-      currentSubLevel = 0;
-      next();
-      //}
+      } else {
+        currentSubLevel = 0;
+        next();
+      }
 
       for (int i = 0; i < currentSubLevel; ++i) {
         String level = 'level_' + chapter.toString() + '_' + (i + 1).toString();
