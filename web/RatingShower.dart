@@ -159,7 +159,7 @@ class RatingShower {
         }
         querySelector(".chapter-raring").innerHtml = totalStars.toString();
        // querySelector(".main-menu").removeEventListener('click', mainMenu);
-        querySelector(".m-menu").addEventListener('click', mainMenu);
+        querySelector("#cm-menu").addEventListener('click', mainMenu);
     }
 
     static void mainMenu(Event e) {
