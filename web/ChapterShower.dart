@@ -17,6 +17,8 @@ class ChapterShower {
         updateCanvasPositionAndDimension();
 
         querySelector("#chapter-selection").classes.add("hidden");
+        querySelector(".buttons").classes.remove("hidden");
+        querySelector(".selectors").classes.remove("hidden");
       }, false);
     });
   }
