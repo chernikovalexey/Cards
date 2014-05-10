@@ -6,5 +6,9 @@
   {
     "name": "Staggering Ship",
     "unlock_stars": 12
+  },
+  {
+    "name": "Lucky Strike",
+    "unlock_stars": 20
   }
 ]}

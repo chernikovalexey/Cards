@@ -237,12 +237,13 @@ button {
 }
 
 .chapter-list {
-  margin: 150px 126px 
+  margin: 150px 126px;
+  text-align: left
 }
 
 .chapter {
   display: inline-block;
-  margin: 0 12px;
+  margin: 0 12px 25px 12px;
   cursor: pointer;
   -webkit-user-select: none
 }
@@ -254,18 +255,23 @@ button {
   background-repeat: no-repeat;
 }
 
+.chapter-locked {
+  background-image: url(img/locked_chapter_thumbnail.png)
+}
+
 .unlock-stars {
-  color: #fff;
+  color: #c7c6c2;
   font-size: 12px;
   margin-top: -20px;
+  text-align: center;
 }
 
 .chapter-title {
   color: #fff;
   font-size: 14px;
   margin-top: 20px;
+  text-align: center;
 }
-
 
 .s-0 {
     width: 0;

@@ -29,8 +29,19 @@ class ChapterShower {
     DivElement el = querySelector(".chapter-template") as DivElement;
     el.querySelector(".chapter").dataset["id"] = id.toString();
     el.querySelector(".chapter-title").innerHtml = chapter["name"];
-    el.querySelector(".unlock-stars").innerHtml =
-        chapter["unlock_stars"].toString() + " stars left to unlock";
+    
+    int totalStars = int.parse(window.localStorage["total_stars"]);
+    bool unlocked = totalStars >= chapter["unlock_stars"];
+    
+    if(!unlocked) {
+      el.querySelector(".unlock-stars").innerHtml =
+              (chapter["unlock_stars"] - totalStars).toString() + " stars left to unlock";
+      el.querySelector(".chapter-thumbnail").classes.add("chapter-locked");
+    } else {
+      el.querySelector(".unlock-stars").innerHtml = "0";
+      el.querySelector(".chapter-thumbnail").classes.remove("chapter-locked");
+    }
+    
     return el.innerHtml;
   }
 }
