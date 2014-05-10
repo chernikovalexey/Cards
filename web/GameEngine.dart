@@ -414,22 +414,9 @@ class GameEngine extends State {
       newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
     }
 
-    if (newZoom != currentZoom) {
-      if (onMouse) {
-        camera.mTargetX = Input.mouseX - WIDTH / 2;
-        camera.mTargetY = Input.mouseY + HEIGHT / 2;
-      } else {
-        if (zoomIn) {
-          camera.mTargetX += WIDTH / 10;
-          camera.mTargetY += HEIGHT / 10;
-        } else {
-          camera.mTargetX -= WIDTH / 10;
-          camera.mTargetY -= HEIGHT / 10;
-        }
-      }
-
-      camera.checkTarget();
-      //camera.updateEngine(newZoom);
+    if(newZoom!=currentZoom) {
+        camera.mTargetX += (WIDTH * newZoom - WIDTH) / 2;
+        camera.mTargetY += (HEIGHT * newZoom - HEIGHT) / 2;
     }
 
     camera.beginZoom(newZoom, currentZoom);
