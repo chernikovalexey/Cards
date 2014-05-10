@@ -15,6 +15,10 @@ ParallaxManager parallax;
 StateManager manager;
 
 void main() {
+
+    if(window.localStorage['total_stars']==null)
+        window.localStorage["total_stars"] = "0";
+
   canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
 
