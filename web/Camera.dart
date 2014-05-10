@@ -51,7 +51,7 @@ class Camera {
   void update(num delta) {
     double nx = xAnim.next();
     double ny = yAnim.next();
-    //print(xAnim.numFrames);
+
     pxOffsetX = nx;
     pxOffsetY = ny;
 
@@ -88,7 +88,9 @@ class Camera {
       //this.yAnim = new DoubleAnimation(dx, dy, 20);
   }
 
+  String s = null;
   void updateEngine(double zoom) {
+    print("Update engine zoom: "+zoom.toString());
     xAnim.setStart(pxOffsetX);
     xAnim.setEnd(targetOffsetX);
     yAnim.setStart(pxOffsetY);
@@ -99,6 +101,7 @@ class Camera {
     GameEngine.scale = e.viewport.scale = GameEngine.NSCALE * zoom;
 
     e.debugDraw = new CanvasDraw(e.viewport, e.g);
+    
     e.world.debugDraw = e.debugDraw;
   }
 

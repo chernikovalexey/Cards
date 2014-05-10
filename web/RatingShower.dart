@@ -62,7 +62,7 @@ class RatingShower {
         print("show");
         e = engine;
         e.isPaused = true;
-
+        querySelector(".chapter-controls").classes.add("hidden");
 
         (querySelector("#rating-box") as DivElement).classes.remove("hidden");
         Input.keyDown = (KeyboardEvent e) {
@@ -124,6 +124,10 @@ class RatingShower {
             querySelector(".level-controls").classes.add('hidden');
             querySelector(".pause-controls").classes.remove('hidden');
             querySelector(".pause-title").classes.remove('hidden');
+            querySelector(".chapter-rating-wrap").classes.add("hidden");
+            querySelector(".chapter-controls").classes.add("hidden");
+            querySelector("#pm-menu").removeEventListener("click", mainMenu);
+            querySelector("#pm-menu").addEventListener("click", mainMenu);
         } else {
             querySelector(".level-controls").classes.remove('hidden');
             querySelector(".pause-controls").classes.add('hidden');
@@ -136,7 +140,7 @@ class RatingShower {
 /*Scroll ss = new Scroll('t-box', 't');
         ss.buildScrollControls('scrollbar', 'h', 'mouseover', true);*/
 
-        if(!e.level.hasNext()) {
+        if(!e.level.hasNext() && !pauseState) {
             chapterComplete();
         }
     }

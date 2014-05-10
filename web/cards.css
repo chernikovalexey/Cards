@@ -288,8 +288,10 @@ button {
 }
 
 .pause-title {
+    color: silver;
     font-size: 115px;
 }
+
 
 .rating-inner-layout {
     position: absolute;
