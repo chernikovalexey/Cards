@@ -32,7 +32,16 @@ class BoundedCard {
 
     void update() {
         double angle = b.angle;
-        angle += Input.wheelDirection * Math.PI / 12;
+        angle += Input.wheelDirection * Math.PI / 24;
         b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
+        
+        Color3 col;
+        if(e.staticBlocksSelected) {
+          col = new Color3.fromRGB(217, 214, 179);
+        } else {
+          col = new Color3.fromRGB(234, 140, 64);
+        }
+        
+        (b.userData as Sprite).color = col;
     }
 }

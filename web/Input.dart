@@ -92,7 +92,7 @@ class Input {
       isAltDown = true;
     }
     toggle(event, true);
-    if(keyDown!=null) keyDown(event);
+    if (keyDown != null) keyDown(event);
   }
 
   static Function keyDown;
@@ -120,5 +120,10 @@ class Input {
 
   static double getMouseDeltaY() {
     return mouseDeltaY;
+  }
+
+  static bool get mouseOverCanvas {
+    return mouseX >= canvasX && mouseX <= canvasX + canvasWidth && mouseY >=
+        canvasY && mouseY <= canvasY + canvasHeight;
   }
 }

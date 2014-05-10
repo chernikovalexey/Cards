@@ -96,7 +96,7 @@ class Level {
     }
     print("Current sub level: " + (currentSubLevel).toString());
   }
-
+  
   void handleLevelChange() {
     showLevelName(subLevels[currentSubLevel - 1].name);
 

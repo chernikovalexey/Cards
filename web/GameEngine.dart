@@ -78,6 +78,7 @@ class GameEngine extends State {
       initializeWorld();
       initializeCanvas();
 
+      print("new level is being created right now ...");
       level = new Level(() {
         ready = true;
       }, params["chapter"], this);
@@ -182,10 +183,6 @@ class GameEngine extends State {
     card.createFixture(fd);
     card.createFixture(createHelperFixture(CARD_WIDTH, CARD_HEIGHT));
 
-    /*if (sub != null) {
-      isStatic = true;
-    }*/
-
     EnergySprite sprite = Sprite.card(world);
     sprite.isStatic = isStatic;
     sprite.energySupport = (!isStatic || sub != null);
@@ -233,12 +230,9 @@ class GameEngine extends State {
     (bcard.b.userData as Sprite).isHidden = !visible;
   }
 
+  @override
   void update(num delta) {
-    if (isPaused) {
-      return;
-    }
-
-    if (!ready) {
+    if (!ready || isPaused) {
       return;
     }
 
@@ -246,7 +240,6 @@ class GameEngine extends State {
         RatingShower.pause(this);
     }
     RatingShower.wasJustPaused = false;
-
 
     world.step(1.0 / 60, 10, 10);
 
@@ -272,9 +265,9 @@ class GameEngine extends State {
       }
     }
 
-    if (canPut() && (staticBlocksSelected && level.current.staticBlocksRemaining
-        > 0 || level.current.dynamicBlocksRemaining > 0)) {
-
+    if (canPut() && ((staticBlocksSelected && level.current.staticBlocksRemaining
+        > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
+      print("add");
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,
           staticBlocksSelected);
     }
@@ -319,7 +312,7 @@ class GameEngine extends State {
       if (physicsEnabled) {
 
         sprite.update(this);
-        if (sprite.isFull()) {
+        if (sprite.isFull() && level.current!=null) {
           saveCurrentProgress();
           int or = level.current.rating;
           int nr = level.current.getRating();
@@ -341,7 +334,7 @@ class GameEngine extends State {
   void saveCurrentProgress() {
     
     // No sense to save empty states, indeed
-    if (ready && !cards.isEmpty) {
+    if (ready && !cards.isEmpty && level.current!=null) {
       window.localStorage['level_' + level.chapter.toString() + '_' + level.current.index.toString()] =
           LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled);
     }
@@ -436,6 +429,7 @@ class GameEngine extends State {
   }
 
   void clear() {
+    print("clear?");
     window.localStorage.remove("level_"+level.chapter.toString() + "_" + (level.current.index+1).toString());
     applyPhysicsLabelToButton();
     bobbin.erase();

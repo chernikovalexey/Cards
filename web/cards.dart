@@ -15,9 +15,8 @@ ParallaxManager parallax;
 StateManager manager;
 
 void main() {
-
-    if(window.localStorage['total_stars']==null)
-        window.localStorage["total_stars"] = "0";
+  if (window.localStorage['total_stars'] == null)
+      window.localStorage["total_stars"] = "0";
 
   canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
@@ -26,7 +25,7 @@ void main() {
 
   manager = new StateManager(g);
   engine = new GameEngine(g);
-  manager.addState(new ParallaxManager(engine, g, 24, 100));
+  manager.addState(new ParallaxManager(engine, g, 24, 175));
 
   canvas.onMouseMove.listen(Input.onMouseMove);
   canvas.onMouseDown.listen(Input.onMouseDown);
@@ -41,11 +40,8 @@ void main() {
   window.onResize.listen(updateCanvasPositionAndDimension);
   window.onBeforeUnload.listen((Event event) => engine.saveCurrentProgress());
 
-  // No continue button in case if there is nothing to proceed with
-  if(!window.localStorage.containsKey("last")) {
-    querySelector("#continue").hidden = true;
-  }
-  
+  showMainMenu();
+
   querySelector("#continue").addEventListener("click", (event) {
     manager.addState(engine, {
       'chapter': JSON.decode(window.localStorage["last"])["chapter"]
@@ -163,8 +159,11 @@ void updateBlockButtons(GameEngine engine) {
 }
 
 void showMainMenu() {
-    manager.removeState(engine);
-    querySelector(".buttons").classes.add("hidden");
-    querySelector(".selectors").classes.add("hidden");
-    querySelector("#menu-box").classes.remove("hidden");
+  // No continue button in case if there is nothing to proceed with
+  querySelector("#continue").hidden = !window.localStorage.containsKey("last");
+
+  manager.removeState(engine);
+  querySelector(".buttons").classes.add("hidden");
+  querySelector(".selectors").classes.add("hidden");
+  querySelector("#menu-box").classes.remove("hidden");
 }
