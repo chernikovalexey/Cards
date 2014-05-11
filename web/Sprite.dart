@@ -1,6 +1,8 @@
 import "dart:html";
 import 'package:box2d/box2d_browser.dart';
 import "EnergySprite.dart";
+import "SuperCanvasDraw.dart";
+import "Color4.dart";
 
 class Sprite {
     double energy = 0.0;
@@ -15,9 +17,9 @@ class Sprite {
     Body bFrom;
 
 
-    Color3 color;
+    Color4 color;
 
-    CanvasDraw canvasDraw;
+    SuperCanvasDraw canvasDraw;
 
     Vector2 center;
     Vector2 axis;
@@ -27,17 +29,17 @@ class Sprite {
         axis = new Vector2.zero();
     }
 
-    void render(CanvasDraw g, Body b) {
+    void render(SuperCanvasDraw g, Body b) {
         if(isHidden) return;
 
-        canvasDraw = g;
+        this.canvasDraw = g;
         Transform tf = new Transform();
         tf.setFrom(b.originTransform);
         drawShape(b.fixtureList, tf, color);
 
     }
 
-    void drawShape(Fixture fixture, Transform xf, Color3 color) {
+    void drawShape(Fixture fixture, Transform xf, Color4 color) {
         if(fixture.userData==false) {
             if(fixture.next!=null) fixture = fixture.next;
             else return;
@@ -95,13 +97,14 @@ class Sprite {
 
     static Sprite innerEnergy() {
         Sprite s = new Sprite();
-        s.color = new Color3.fromRGB(255,242,0);
+        s.color = new Color4.fromRGB(255,242,0);
         s.isInner = true;
         return s;
     }
 
     static Sprite from(World w) {
-        EnergySprite s = new EnergySprite(w);
+        EnergySprite s = new EnergySprite(w, false);
+        s.isCard = false;
         s.energy = 1.0;
         s.alwaysAnimate = true;
         s.connectedToEnergy = true;
@@ -110,7 +113,7 @@ class Sprite {
     }
 
     static Sprite to(World w) {
-        EnergySprite s = new EnergySprite(w);;
+        EnergySprite s = new EnergySprite(w, false);
         //s.alwaysAnimate = true;
         s.energy = 0.0;
         s.active = true;
@@ -120,7 +123,7 @@ class Sprite {
 
     static Sprite ground() {
         Sprite s = new Sprite();
-        s.color = new Color3.fromRGB(128, 128, 0);
+        s.color = new Color4.fromRGB(128, 128, 0);
         return s;
     }
     

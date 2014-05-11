@@ -6,6 +6,7 @@ class Traverser {
     List<Body> traversed = new List<Body>();
 
     GameEngine e;
+
     Body to;
 
     bool hasPath = false;
@@ -15,12 +16,11 @@ class Traverser {
     Traverser.subLevel(this.to);
 
 
-    void traverseEdges(ContactEdge edge, [bool makeFull=false]) {
+    void traverseEdges(ContactEdge edge, [bool makeFull = false]) {
         if (edge == null) return;
 
         Body to = null;
-        if(this.to!=null) to = this.to;
-        else to = e.to;
+        if (this.to != null) to = this.to; else to = e.to;
 
         if (edge.contact.fixtureA.body == to || edge.contact.fixtureB.body == to) {
             hasPath = true;
@@ -31,7 +31,7 @@ class Traverser {
             if (edge.contact.fixtureA.body.userData.energySupport) {
                 edge.contact.fixtureA.body.userData.connectedToEnergy = true;
                 edge.contact.fixtureA.body.userData.bFrom = edge.contact.fixtureB.body;
-                if(makeFull) {
+                if (makeFull) {
                     print("Make full");
                     edge.contact.fixtureA.body.userData.enable(true);
                     edge.contact.fixtureA.body.userData.energy = 1.0;
@@ -42,7 +42,7 @@ class Traverser {
             if (edge.contact.fixtureB.body.userData.energySupport) {
                 edge.contact.fixtureB.body.userData.connectedToEnergy = true;
                 edge.contact.fixtureB.body.userData.bFrom = edge.contact.fixtureA.body;
-                if(makeFull) {
+                if (makeFull) {
                     print("Make full");
                     edge.contact.fixtureB.body.userData.enable(true);
                     edge.contact.fixtureB.body.userData.energy = 1.0;
@@ -79,11 +79,11 @@ class Traverser {
     }
 
     bool checkEnergyConnection(Body b) {
-        for(ContactEdge item = b.contactList; item!=null; item = item.next) {
-            if(item.contact.touching) {
+        for (ContactEdge item = b.contactList; item != null; item = item.next) {
+            if (item.contact.touching) {
                 Sprite a = item.contact.fixtureA.body.userData as Sprite;
                 Sprite b = item.contact.fixtureB.body.userData as Sprite;
-                if(a.energy>0 || b.energy>0) {
+                if (a.energy > .5 || b.energy > .5) {
                     return true;
                 }
             }

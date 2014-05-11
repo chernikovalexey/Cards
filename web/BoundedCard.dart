@@ -4,6 +4,7 @@ import 'package:box2d/box2d_browser.dart';
 import 'Input.dart';
 import 'GameEngine.dart';
 import "Sprite.dart";
+import "Color4.dart";
 
 class BoundedCard {
   Body b;
@@ -35,13 +36,13 @@ class BoundedCard {
     angle += Input.wheelDirection * Math.PI / 24;
     b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
 
-    Color3 col;
+    Color4 col;
     if (e.staticBlocksSelected) {
-      col = new Color3.fromRGB(217, 214, 179);
-      if (e.physicsEnabled) col = new Color3.fromRGB(134, 133, 119);
+      col = new Color4.fromRGB(217, 214, 179);
+      if (e.physicsEnabled) col = new Color4.fromRGB(134, 133, 119);
     } else {
-      col = new Color3.fromRGB(234, 140, 64);
-      if (e.physicsEnabled) col = new Color3.fromRGB(113, 86, 64);
+      col = new Color4.fromRGB(234, 140, 64);
+      if (e.physicsEnabled) col = new Color4.fromRGB(113, 86, 64);
     }
 
     (b.userData as Sprite).color = col;
