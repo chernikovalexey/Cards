@@ -43,19 +43,21 @@ void main() {
   showMainMenu();
 
   querySelector("#continue").addEventListener("click", (event) {
-    manager.addState(engine, {
-      'chapter': JSON.decode(window.localStorage["last"])["chapter"]
-    });
-    updateCanvasPositionAndDimension();
+    fadeBoxOut(querySelector("#menu-box"), 250, () {
+      manager.addState(engine, {
+        'chapter': JSON.decode(window.localStorage["last"])["chapter"]
+      });
+      updateCanvasPositionAndDimension();
 
-    querySelector(".buttons").classes.remove("hidden");
-    querySelector(".selectors").classes.remove("hidden");
-    querySelector("#menu-box").classes.add("hidden");
+      querySelector(".buttons").classes.remove("hidden");
+      querySelector(".selectors").classes.remove("hidden");
+    });
   }, false);
 
   querySelector("#new-game").addEventListener("click", (event) {
     querySelector("#menu-box").classes.add("hidden");
-    querySelector("#chapter-selection").classes.remove("hidden");
+
+    fadeBoxIn(querySelector("#chapter-selection"));
 
     Chapter.load((List chapters) {
       ChapterShower.show(chapters);
@@ -168,11 +170,8 @@ void showMainMenu() {
   manager.removeState(engine);
   querySelector(".buttons").classes.add("hidden");
   querySelector(".selectors").classes.add("hidden");
-  DivElement box = querySelector("#menu-box") as DivElement;
-  box.classes.remove("hidden");
-  animate(box, properties: {
-    'opacity': 1.0
-  });
+
+  fadeBoxIn(querySelector("#menu-box"));
 }
 
 void blinkPhysicsButton() {
@@ -180,5 +179,24 @@ void blinkPhysicsButton() {
   btn.classes.add("error-blink");
   new Timer(new Duration(milliseconds: 450), () {
     btn.classes.remove("error-blink");
+  });
+}
+
+void fadeBoxIn(DivElement box, [int duration = 500, Function callback]) {
+  box.classes.remove("hidden");
+  animate(box, properties: {
+    'opacity': 1.0
+  }, duration: duration, easing: Easing.SINUSOIDAL_EASY_OUT);
+  if (callback != null) new Timer(new Duration(milliseconds: duration), callback
+      );
+}
+
+void fadeBoxOut(DivElement box, [int duration = 500, Function callback]) {
+  animate(box, properties: {
+    'opacity': 0.0
+  }, duration: duration, easing: Easing.SINUSOIDAL_EASY_IN);
+  new Timer(new Duration(milliseconds: duration), () {
+    box.classes.add("hidden");
+    if (callback != null) callback();
   });
 }

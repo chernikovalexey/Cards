@@ -140,7 +140,6 @@ class SubLevel {
       e.camera.mTargetX = x;
       e.camera.mTargetY = y;
       e.bobbin.list = this.frames;
-      //
       e.cards = this.cards;
 
       e.from = from;
@@ -151,12 +150,10 @@ class SubLevel {
       if (tSprite != null) e.to.userData = tSprite; else tSprite =
           e.to.userData;
 
-
       e.rewind();
       e.bobbin.rewindComplete = () {
         e.bobbin.rewindComplete = null;
         this.frames.clear();
-        print("Level" + index.toString() + " is applied!");
         if (levelApplied != null) levelApplied();
         levelApplied = null;
       };

@@ -8,7 +8,19 @@
         "unlock_stars": 12
     },
     {
-        "name": "Impossible here",
+        "name": "Impossible Here",
         "unlock_stars": 30
+    },
+    {
+        "name": "Stash of Joe",
+        "unlock_stars": 34
+    },
+    {
+        "name": "Slippery Hills",
+        "unlock_stars": 41
+    },
+    {
+        "name": "Endspiel",
+        "unlock_stars": 60
     }
 ]}

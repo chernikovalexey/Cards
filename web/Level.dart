@@ -27,18 +27,21 @@ class Level {
   // real amount minus one
   int findLastEmptyLevel(int ch) {
     int index = 0;
-    while(window.localStorage.containsKey("level_" + ch.toString() + "_" + (++index).toString())) {}
-    return index - 1 >= levels.length ? levels.length-1 : index-1;
+    while (window.localStorage.containsKey("level_" + ch.toString() + "_" +
+        (++index).toString())) {}
+    return index - 1 >= levels.length ? levels.length - 1 : index - 1;
   }
-  
+
   void preload(Function ready, int chapter) {
     Storage storage = window.localStorage;
 
-    HttpRequest.getString("levels/chapter_" + chapter.toString() + ".json").then((String str) {
+    HttpRequest.getString("levels/chapter_" + chapter.toString() + ".json"
+        ).then((String str) {
       levels = JSON.decode(str)["levels"];
 
       Map last;
-      if (storage.containsKey("last") && (last = JSON.decode(storage["last"]))["chapter"] == chapter) {
+      if (storage.containsKey("last") && (last = JSON.decode(storage["last"]
+          ))["chapter"] == chapter) {
         currentSubLevel = last["level"];
         loadCurrent();
       } else {
@@ -68,12 +71,10 @@ class Level {
       ++currentSubLevel;
       loadCurrent();
     }
-    print("Current sub level: " + (currentSubLevel).toString());
   }
 
   void loadCurrent() {
     if (currentSubLevel > subLevels.length) {
-      print("load further levels ...");
       for (int i = subLevels.length; i < currentSubLevel; ++i) {
         subLevels.add(load(i + 1));
       }
@@ -94,20 +95,15 @@ class Level {
       current.apply();
       handleLevelChange();
     }
-    print("Current sub level: " + (currentSubLevel).toString());
   }
-  
+
   void handleLevelChange() {
     showLevelName(subLevels[currentSubLevel - 1].name);
 
-    //if (hasNext()) {
-      window.localStorage["last"] = JSON.encode({
-        'chapter': chapter,
-        'level': currentSubLevel
-      });
-    //} else {
-      //window.localStorage.remove("last");
-    //}
+    window.localStorage["last"] = JSON.encode({
+      'chapter': chapter,
+      'level': currentSubLevel
+    });
   }
 
   bool hasNext() {

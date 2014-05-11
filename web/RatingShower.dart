@@ -10,6 +10,8 @@ import 'package:animation/animation.dart';
 import 'dart:async';
 
 class RatingShower {
+  static const int FADE_TIME = 450;
+
   static GameEngine e;
   static bool wasJustPaused = false;
 
@@ -61,12 +63,21 @@ class RatingShower {
     e.isPaused = true;
     querySelector(".chapter-controls").classes.add("hidden");
 
-    querySelector(".level-name").classes.add("hidden");
+    querySelector(".game-box").classes.add("paused");
+    querySelector(".level-name").style.display = "none";
+
     DivElement box = (querySelector("#rating-box") as DivElement);
     box.classes.remove("hidden");
+
     animate(box, properties: {
       'opacity': 1.0
-    }, duration: 125, easing: Easing.CUBIC_EASY_IN);
+    }, duration: 450, easing: Easing.CUBIC_EASY_IN);
+
+    new Timer(new Duration(milliseconds: FADE_TIME), () {
+      querySelector("#graphics").classes.add("blurred");
+      querySelector(".buttons").classes.add("blurred");
+      querySelector(".selectors").classes.add("blurred");
+    });
 
     Input.keyDown = (KeyboardEvent e) {
       if (e.keyCode == Input.keys['esc'].code) {
@@ -142,12 +153,7 @@ class RatingShower {
       querySelector(".pause-title").classes.add('hidden');
     }
 
-    Scroll ss = new Scroll('tape-vs', 'tape-es');
-    ss.buildScrollControls('tape-dragBar', 'tape-track', 'tape-scrollbar', 'h');
-
-    querySelector("#graphics").classes.add("blurred");
-    querySelector(".buttons").classes.add("blurred");
-    querySelector(".selectors").classes.add("blurred");
+    Scroll.setup('tape-vs', 'tape-es', 'tape-scrollbar', 'h');
 
     if (!e.level.hasNext() && !pauseState) {
       chapterComplete();
@@ -182,7 +188,6 @@ class RatingShower {
     showMainMenu();
   }
 
-
   static void onTypeItemClick(Event evt) {
     hide();
     e.isPaused = false;
@@ -190,24 +195,17 @@ class RatingShower {
         DivElement).dataset['level']), e);
   }
 
-
   static void hide() {
     e.isPaused = false;
     wasJustPaused = true;
-    DivElement box = (querySelector("#rating-box") as DivElement);
 
-    int time = 125;
-    animate(box, properties: {
-      'opacity': 0.0
-    }, duration: time, easing: Easing.CUBIC_EASY_IN);
-    
-    new Timer(new Duration(milliseconds: time), () {
-      box.classes.add("hidden");
+    fadeBoxOut(querySelector("#rating-box"), 100, () {
+      querySelector(".level-name").style.display = "block";
+
+      querySelector(".game-box").classes.remove("paused");
+      querySelector("#graphics").classes.remove("blurred");
+      querySelector(".buttons").classes.remove("blurred");
+      querySelector(".selectors").classes.remove("blurred");
     });
-
-    querySelector(".level-name").classes.remove("hidden");
-    querySelector("#graphics").classes.remove("blurred");
-    querySelector(".buttons").classes.remove("blurred");
-    querySelector(".selectors").classes.remove("blurred");
   }
 }

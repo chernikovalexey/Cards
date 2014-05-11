@@ -1,14 +1,17 @@
 import "dart:html";
 import 'cards.dart';
+import 'Scroll.dart';
 
 class ChapterShower {
   static void show(List chapters) {
-    querySelector(".chapter-list").innerHtml = "";
+    querySelector("#chapter-es").innerHtml = "";
 
     int id = 0;
     for (Map chapter in chapters) {
-      querySelector(".chapter-list").appendHtml(chapterItem(chapter, ++id));
+      querySelector("#chapter-es").appendHtml(chapterItem(chapter, ++id));
     }
+    
+    Scroll.setup('chapter-vs', 'chapter-es', 'chapter-scrollbar');
 
     querySelectorAll(".chapter").forEach((DivElement e) {
       e.addEventListener("click", (event) {

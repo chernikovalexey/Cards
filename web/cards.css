@@ -2,11 +2,6 @@ body {
   margin: 10px 0;
 }
 
-.blurred {
-  -webkit-filter: blur(4px);
-  -webkit-transition: all 225ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-
 .game-box {
   width: 800px;
   height: 600px;
@@ -37,9 +32,14 @@ body {
 }
 
 canvas {
-  border: 1px solid black;
+  background: rgba(0, 0, 0, 0.25);
   cursor: none;
-  z-index: 2
+  z-index: 2;
+}
+
+.blurred {
+  -webkit-filter: blur(4px);
+  -webkit-transition: all 225ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .buttons {
@@ -65,8 +65,9 @@ button {
 }
 
 .error-blink {
+  background: rgba(63, 55, 55, 1.0);
   border: 1px solid rgba(220, 16, 16, 0.35) !important;
-  box-shadow: 0 0 5px rgba(220, 16, 16, 0.75);
+  box-shadow: 0 0 12px rgba(220, 16, 16, 0.75);
 }
 
 #zoom-in, #zoom-out {
@@ -224,6 +225,10 @@ button {
   opacity: 0.0
 }
 
+.paused .light-box {
+  margin-top: -600px
+}
+
 .hidden {
     display: none !important;
 }
@@ -236,7 +241,7 @@ button {
 .logo {
   width: 146px;
   height: 48px;
-  background: url(img/logo.png);
+  /*background: url(img/logo.png);*/
   background-repeat: no-repeat;
   margin: 50px auto 175px auto;
 }
@@ -522,10 +527,51 @@ div#tape-scrollbar {
     -khtml-user-select: none;
     }
   
-/* safari, chrome, opera have very prominent outline by default 
-   opera shows outline movement with scrolling and won't allow none
-   set to suit your page design
-*/
 div#tape-vs:focus, div#tape-scrollbar:focus, div#tape-scrollbar .track:focus, div#tape-scrollbar .dragBar:focus {
+    outline: none
+}
+
+
+/*******************/
+
+
+div#chapter-vs  { 
+    position: relative; 
+    width: 535px; 
+    height: 455px;
+    overflow: hidden;
+  }
+  
+div#chapter-es {
+  width: 535px
+}
+div#chapter-scrollbar { 
+    position: absolute;
+width: 11px;
+font-size: 1px;
+top: 210px;
+margin-left: 733px;
+  }
+div#chapter-scrollbar .track { 
+   position: absolute;
+top: -59px;
+width: 11px;
+height: 445px;
+background-color: #2c2c2c;
+  }
+div#chapter-scrollbar .dragBar {
+    position: absolute;
+left: 1px;
+top: 1px;
+height: 9px;
+width: 9px;
+background-color: rgba(0, 0, 0, 0.45);
+  }  
+div#chapter-scrollbar {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    }
+  
+div#chapter-vs:focus, div#chapter-scrollbar:focus, div#chapter-scrollbar .track:focus, div#chapter-scrollbar .dragBar:focus {
     outline: none
 }

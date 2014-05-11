@@ -20,13 +20,13 @@ import 'ParallaxManager.dart';
 import 'StateManager.dart';
 import 'dart:js';
 
-class HistoryState {
+/*class HistoryState {
   static const ADD = 1;
   static const REMOVE = 2;
-  
+
   int action;
-  List<Body> cards = new List<Body>();
-}
+  List<Body> affectedCards = new List<Body>();
+}*/
 
 class GameEngine extends State {
   static const double NSCALE = 85.0;
@@ -121,14 +121,13 @@ class GameEngine extends State {
 
         traverser.reset();
         traverser.traverseEdges(from.contactList);
-        if(!traverser.hasPath) {
-            for(Body card in cards) {
-                if(traverser.checkEnergyConnection(card)) {
-                    traverser.traverseEdges(card.contactList);
-                }
+        if (!traverser.hasPath) {
+          for (Body card in cards) {
+            if (traverser.checkEnergyConnection(card)) {
+              traverser.traverseEdges(card.contactList);
             }
+          }
         }
-        print("traverser.hasPath: " + traverser.hasPath.toString());
 
         stopwatch.stop();
         print("Elapsed: " + stopwatch.elapsedMilliseconds.toString());
@@ -261,10 +260,9 @@ class GameEngine extends State {
 
     setCanvasCursor('none');
 
-    if (Input.keys['p'].clicked) {
-      print("prev");
-      previousLevel();
-    }
+    //if (Input.keys['p'].clicked) {
+    //previousLevel();
+    //}
 
     bcard.update();
     camera.update(delta);
@@ -281,14 +279,16 @@ class GameEngine extends State {
       }
     }
 
-    if (canPut() && ((staticBlocksSelected &&
+    if (level.current != null && ((staticBlocksSelected &&
         level.current.staticBlocksRemaining > 0) || (!staticBlocksSelected &&
         level.current.dynamicBlocksRemaining > 0))) {
-      recentlyRemovedCards.clear();
-      addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,
-          staticBlocksSelected);
-    } else if (canPut(true)) {
-      blinkPhysicsButton();
+      if (canPut()) {
+        recentlyRemovedCards.clear();
+        addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,
+            staticBlocksSelected);
+      } else if (canPut(true)) {
+        blinkPhysicsButton();
+      }
     }
 
     if (Input.keys['z'].down && !Input.isAltDown) {
@@ -305,7 +305,7 @@ class GameEngine extends State {
       staticBlocksSelected = false;
       updateBlockButtons(this);
     }
-    if (Input.keys['2'].clicked && level.current.staticBlocksRemaining>0) {
+    if (Input.keys['2'].clicked && level.current.staticBlocksRemaining > 0) {
       staticBlocksSelected = true;
       updateBlockButtons(this);
     }
@@ -456,7 +456,6 @@ class GameEngine extends State {
   }
 
   void clear() {
-    print("clear?");
     window.localStorage.remove("level_" + level.chapter.toString() + "_" +
         (level.current.index + 1).toString());
     applyPhysicsLabelToButton();
