@@ -121,7 +121,14 @@ class GameEngine extends State {
 
         traverser.reset();
         traverser.traverseEdges(from.contactList);
-        print(traverser.hasPath);
+        if(!traverser.hasPath) {
+            for(Body card in cards) {
+                if(traverser.checkEnergyConnection(card)) {
+                    traverser.traverseEdges(card.contactList);
+                }
+            }
+        }
+        print("traverser.hasPath: " + traverser.hasPath.toString());
 
         stopwatch.stop();
         print("Elapsed: " + stopwatch.elapsedMilliseconds.toString());

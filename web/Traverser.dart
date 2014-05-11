@@ -1,5 +1,6 @@
 import 'package:box2d/box2d_browser.dart';
 import 'GameEngine.dart';
+import 'Sprite.dart';
 
 class Traverser {
     List<Body> traversed = new List<Body>();
@@ -35,7 +36,7 @@ class Traverser {
                     edge.contact.fixtureA.body.userData.enable(true);
                     edge.contact.fixtureA.body.userData.energy = 1.0;
                 }
-               // edge.contact.fixtureA.body.userData.color = new Color3.fromRGB(255, 0, 0);
+// edge.contact.fixtureA.body.userData.color = new Color3.fromRGB(255, 0, 0);
             }
 
             if (edge.contact.fixtureB.body.userData.energySupport) {
@@ -46,7 +47,7 @@ class Traverser {
                     edge.contact.fixtureB.body.userData.enable(true);
                     edge.contact.fixtureB.body.userData.energy = 1.0;
                 }
-              //  edge.contact.fixtureB.body.userData.color = new Color3.fromRGB(255, 0, 0);
+//  edge.contact.fixtureB.body.userData.color = new Color3.fromRGB(255, 0, 0);
             }
         }
 
@@ -75,6 +76,20 @@ class Traverser {
             }
         }
 
+    }
+
+    bool checkEnergyConnection(Body b) {
+        for(ContactEdge item = b.contactList; item!=null; item = item.next) {
+            if(item.contact.touching) {
+                Sprite a = item.contact.fixtureA.body.userData as Sprite;
+                Sprite b = item.contact.fixtureB.body.userData as Sprite;
+                if(a.energy>0 || b.energy>0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     void reset() {
