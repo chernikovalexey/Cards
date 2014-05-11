@@ -18,16 +18,16 @@ class Camera {
       0.0;
   double bx1, by1, bx2, by2;
 
-  double get mTargetX => targetOffsetX / GameEngine.scale;
-  double get mTargetY => -targetOffsetY / GameEngine.scale;
+  double get mTargetX => targetOffsetX / GameEngine.NSCALE;
+  double get mTargetY => -targetOffsetY / GameEngine.NSCALE;
 
   set mTargetX(double offset) {
-    this.targetOffsetX = offset * GameEngine.scale;
+    this.targetOffsetX = offset * GameEngine.NSCALE;
     updateEngine(currentZoom);
   }
 
   set mTargetY(double offset) {
-    this.targetOffsetY = -offset * GameEngine.scale;
+    this.targetOffsetY = -offset * GameEngine.NSCALE;
     updateEngine(currentZoom);
   }
 
@@ -40,6 +40,13 @@ class Camera {
   Camera(GameEngine e) {
     this.e = e;
     Input.setCamera(this);
+  }
+  
+  void reset() {
+    pxOffsetX = 0.0;
+    pxOffsetY = 0.0;
+    targetOffsetX = 0.0;
+    targetOffsetY = 0.0;
   }
 
   void beginZoom(double finalZoom, double currentZoom) {

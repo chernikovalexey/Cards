@@ -21,7 +21,8 @@ class Input {
     'p': new Key(80),
     '1': new Key(49),
     '2': new Key(50),
-    'esc': new Key(27)
+    'esc': new Key(27),
+    'ctrl': new Key(17)
   };
 
   static num canvasX, canvasY;

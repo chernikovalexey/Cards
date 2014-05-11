@@ -33,7 +33,6 @@ canvas {
 
 .buttons {
   text-align: center;
-  background: rgba(0, 0, 0, 0.25);
   padding: 5px;
   width: 793px;
   position: absolute;
@@ -53,11 +52,12 @@ button {
 
 #zoom-in, #zoom-out {
   background-repeat: no-repeat;
-  height: 29px;
+  height: 28px;
   width: 37px;
   vertical-align: middle;
   background-position: 10px 6px;
   position: relative;
+  top: -1px;
 }
 
 .plus {
@@ -79,7 +79,7 @@ button {
 .selector {
   text-align: center;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .selector:last-child {
@@ -114,8 +114,8 @@ button {
   position: absolute;
   font-size: 9px;
   color: #fff;
-  margin-top: -36px;
-  margin-left: 6px;
+  margin-top: -35px;
+  margin-left: 8px;
 }
 
 .selector .remaining {
@@ -126,8 +126,9 @@ button {
 
 .selector .caption {
   color: #fff;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
+  margin-top: 1px;
 }
 
 .headline {

@@ -44,10 +44,10 @@ class SubLevel {
         this.e = e;
         this.name = l["name"];
         levelData = l;
-        x = l['x'].toDouble() / GameEngine.scale;
-        y = l['y'].toDouble() / GameEngine.scale;
-        w = l['width'].toDouble() / GameEngine.scale;
-        h = l['height'].toDouble() / GameEngine.scale;
+        x = l['x'].toDouble() / GameEngine.NSCALE;
+        y = l['y'].toDouble() / GameEngine.NSCALE;
+        w = l['width'].toDouble() / GameEngine.NSCALE;
+        h = l['height'].toDouble() / GameEngine.NSCALE;
 
         this.staticBlocksRemaining = l["blocks"][0];
         this.dynamicBlocksRemaining = l["blocks"][1];
@@ -61,21 +61,22 @@ class SubLevel {
             this.from.userData = Sprite.from(e.world);
 //boundsOffset = x - (to.position.x - l["from"]["offset"].toDouble() / GameEngine.scale;);
         } else {
-            this.from = e.createPolygonShape(l["from"]["x"].toDouble() / GameEngine.scale,
-            l["from"]["y"].toDouble() / GameEngine.scale, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
+            this.from = e.createPolygonShape(l["from"]["x"].toDouble() / GameEngine.NSCALE,
+            l["from"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
             this.from.userData = Sprite.from(e.world);
         }
-
+        
+        e.camera.reset();
         e.camera.setBounds(x, y, x + w, y + h);
 
-        this.to = e.createPolygonShape(l["to"]["x"].toDouble() / GameEngine.scale,
-        l["to"]["y"].toDouble() / GameEngine.scale, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
+        this.to = e.createPolygonShape(l["to"]["x"].toDouble() / GameEngine.NSCALE,
+        l["to"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
         this.to.userData = Sprite.to(e.world);
 
         for (var obstacle in l["obstacles"]) {
-            Body o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.scale,
-            obstacle["y"].toDouble() / GameEngine.scale, obstacle["width"].toDouble() / GameEngine.scale,
-            obstacle["height"].toDouble() / GameEngine.scale);
+            Body o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE,
+            obstacle["y"].toDouble() / GameEngine.NSCALE, obstacle["width"].toDouble() / GameEngine.NSCALE,
+            obstacle["height"].toDouble() / GameEngine.NSCALE);
             o.userData = Sprite.byType(obstacle["type"]);
             obstacles.add(o);
         }

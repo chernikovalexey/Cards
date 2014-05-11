@@ -33,8 +33,8 @@ class GameEngine extends State {
   static double get HEIGHT => NHEIGHT / scale;
   static double get CARD_WIDTH => NCARD_WIDTH / scale;
   static double get CARD_HEIGHT => NCARD_HEIGHT / scale;
-  static double get ENERGY_BLOCK_WIDTH => NENERGY_BLOCK_WIDTH / scale;
-  static double get ENERGY_BLOCK_HEIGHT => NENERGY_BLOCK_HEIGHT / scale;
+  static double get ENERGY_BLOCK_WIDTH => NENERGY_BLOCK_WIDTH / NSCALE;
+  static double get ENERGY_BLOCK_HEIGHT => NENERGY_BLOCK_HEIGHT / NSCALE;
 
   static double scale = NSCALE;
 
@@ -56,6 +56,7 @@ class GameEngine extends State {
   Body from, to;
 
   List<Body> cards = new List<Body>();
+  List<Body> recentlyRemovedCards = new List<Body>();
 
   List levels;
   DefaultWorldPool pool;
@@ -267,7 +268,7 @@ class GameEngine extends State {
 
     if (canPut() && ((staticBlocksSelected && level.current.staticBlocksRemaining
         > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
-      print("add");
+      recentlyRemovedCards.clear();
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,
           staticBlocksSelected);
     }
@@ -293,14 +294,19 @@ class GameEngine extends State {
 
     if (contactListener.contactingBodies.isNotEmpty && Input.isMouseRightClicked
         && !isRewinding) {
-      List<Body> cardsToDelete = new List<Body>();
-      cardsToDelete.addAll(contactListener.contactingBodies);
+      List<Body> cardsToRemove = new List<Body>();
+      cardsToRemove.addAll(contactListener.contactingBodies);
       contactListener.contactingBodies.clear();
-      for (Body contacting in cardsToDelete) {
+      for (Body contacting in cardsToRemove) {
         if (cards.contains(contacting)) {
           removeCard(contacting);
         }
       }
+    } else if(Input.keys['ctrl'].down && Input.keys['z'].clicked) {
+      for(Body card in recentlyRemovedCards) {
+        addCard(card.position.x, card.position.y, card.angle, (card.userData as EnergySprite).isStatic);
+      }
+      recentlyRemovedCards.clear();
     }
 
     for (Body c in cards) {
@@ -396,6 +402,7 @@ class GameEngine extends State {
   void removeCard(Body c) {
     world.destroyBody(c);
     cards.remove(c);
+    recentlyRemovedCards.add(c);
 
     EnergySprite sprite = c.userData as EnergySprite;
     if (sprite.isStatic) {
@@ -412,7 +419,7 @@ class GameEngine extends State {
     if (zoomIn) {
       newZoom = currentZoom < 3 ? currentZoom + 0.2 : currentZoom;
     } else {
-      newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
+      newZoom = currentZoom >= 0.4 ? currentZoom - 0.2 : currentZoom;
     }
 
     if (newZoom != currentZoom) {
