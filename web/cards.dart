@@ -8,6 +8,7 @@ import 'ParallaxManager.dart';
 import 'StateManager.dart';
 import 'Chapter.dart';
 import 'ChapterShower.dart';
+import 'dart:js';
 
 CanvasElement canvas;
 GameEngine engine;

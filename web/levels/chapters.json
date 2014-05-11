@@ -22,5 +22,13 @@
     {
         "name": "Endspiel",
         "unlock_stars": 60
+    },
+    {
+        "name": "Gottingham",
+        "unlock_stars": 68
+    },
+    {
+        "name": "Sebastopol",
+        "unlock_stars": 90
     }
 ]}

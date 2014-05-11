@@ -6,6 +6,7 @@
     
     <script type="application/javascript" src="external/scrollbar.js"></script>
     <script type="application/javascript" src="external/blur.js"></script>
+    <script type="application/javascript" src="external/html2canvas.js"></script>
     
     <script type="application/dart" src="cards.dart"></script>
 </head>
@@ -56,6 +57,9 @@
     </div>
     
     <div class="light-box hidden" id="chapter-selection">
+      <div class="go-to-menu-button">Menu</div>
+      <div class="chapter-headline">Choose Chapter</div>
+      <div class="chapter-blurry-bar"></div>
       <div class="chapter-list">
         <div id="chapter-vs">
           <div id="chapter-es"></div>
@@ -67,8 +71,17 @@
     
     <div class="chapter-template hidden">
       <div class="chapter">
+        <div class="progress-layout">
+          <div class="progress-caption">
+            <div class="finished-levels">12</div> of <div class="all-levels">49</div>
+          </div>
+          <div class="full-bar"></div>
+          <div class="current-bar"></div>
+        </div>
+        <div class="unlock-layout">
+          <div class="stars-left">12</div> star<span class="word-ending">s</span> left
+        </div>
         <div class="chapter-thumbnail"></div>
-        <div class="unlock-stars"></div>
         <div class="chapter-title"></div>
       </div>
     </div>
