@@ -3,7 +3,10 @@
 <head>
     <link rel="stylesheet" type="text/css" href="cards.css"/>
     <title>Cards</title>
+    
     <script type="application/javascript" src="external/scrollbar.js"></script>
+    <script type="application/javascript" src="external/blur.js"></script>
+    
     <script type="application/dart" src="cards.dart"></script>
 </head>
 <body>
@@ -18,17 +21,17 @@
     </div>
 
     <div class="selectors hidden">
-        <div class="selector static">
-            <div class="icon"></div>
-            <div class="bound-key">1</div>
-            <div class="caption">static</div>
-            <div class="remaining"></div>
-        </div>
-
         <div class="selector dynamic">
             <div class="icon"></div>
-            <div class="bound-key">2</div>
+            <div class="bound-key">1</div>
             <div class="caption">dynamic</div>
+            <div class="remaining"></div>
+        </div>
+        
+        <div class="selector static">
+            <div class="icon"></div>
+            <div class="bound-key">2</div>
+            <div class="caption">static</div>
             <div class="remaining"></div>
         </div>
     </div>
@@ -85,7 +88,7 @@
             </div>
 
             <div class="pause-controls controls hidden">
-                <button id="clear-level">Clear level</button>
+                <button id="clear-level">Restart level</button>
                 <button id="pm-menu">Main menu</button>
             </div>
 
@@ -96,7 +99,11 @@
 
             <div class="chapter-level"></div>
             <div class="tape">
-
+              <div id="tape-vs">
+                <div id="tape-es"></div>
+              </div>
+              
+              <div id="tape-scrollbar"></div>
             </div>
         </div>
     </div>

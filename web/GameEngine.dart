@@ -18,6 +18,15 @@ import 'LevelComplete.dart';
 import 'LevelSerializer.dart';
 import 'ParallaxManager.dart';
 import 'StateManager.dart';
+import 'dart:js';
+
+class HistoryState {
+  static const ADD = 1;
+  static const REMOVE = 2;
+  
+  int action;
+  List<Body> cards = new List<Body>();
+}
 
 class GameEngine extends State {
   static const double NSCALE = 85.0;
@@ -68,6 +77,9 @@ class GameEngine extends State {
   List<int> stars;
   Level level;
 
+  // For pause et cetera
+  var blurredCanvas;
+  
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
     camera = new Camera(this);
@@ -79,7 +91,6 @@ class GameEngine extends State {
       initializeWorld();
       initializeCanvas();
 
-      print("new level is being created right now ...");
       level = new Level(() {
         ready = true;
       }, params["chapter"], this);
@@ -156,10 +167,10 @@ class GameEngine extends State {
     return body;
   }
 
-  bool canPut() {
+  bool canPut([bool ignorePhysics = false]) {
     return !Input.keys['z'].down && !Input.isAltDown &&
         !Input.keys['space'].down && Input.isMouseLeftClicked &&
-        contactListener.contactingBodies.isEmpty && !physicsEnabled;
+        contactListener.contactingBodies.isEmpty && (ignorePhysics || !physicsEnabled);
   }
 
   Body addCard(double x, double y, double angle, [bool isStatic =
@@ -239,6 +250,7 @@ class GameEngine extends State {
 
     if (Input.keys['esc'].clicked) {
       RatingShower.pause(this);
+      this.blurredCanvas = context.callMethod('boxBlurCanvasRGBA', ['graphics', 0, 0, 800, 600, 5, 2]);
     }
     RatingShower.wasJustPaused = false;
 
@@ -272,6 +284,8 @@ class GameEngine extends State {
       recentlyRemovedCards.clear();
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,
           staticBlocksSelected);
+    } else if (canPut(true)) {
+      blinkPhysicsButton();
     }
 
     if (Input.keys['z'].down && !Input.isAltDown) {
@@ -285,11 +299,11 @@ class GameEngine extends State {
       if (Input.isMouseLeftClicked) zoom(false, true);
     }
     if (Input.keys['1'].clicked) {
-      staticBlocksSelected = true;
+      staticBlocksSelected = false;
       updateBlockButtons(this);
     }
-    if (Input.keys['2'].clicked) {
-      staticBlocksSelected = false;
+    if (Input.keys['2'].clicked && level.current.staticBlocksRemaining>0) {
+      staticBlocksSelected = true;
       updateBlockButtons(this);
     }
 
@@ -375,6 +389,11 @@ class GameEngine extends State {
         if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
         b = b.next;
       }
+    }
+    
+    // Draw blurred cached canvas above all
+    if(isPaused) {
+      g.putImageData(blurredCanvas, 0, 0);
     }
   }
 

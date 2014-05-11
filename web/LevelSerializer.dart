@@ -54,11 +54,11 @@ class LevelSerializer {
       (b.userData as EnergySprite).energy = card['energy'].toDouble();
     }
 
-    if (state['physics_enabled']) {
-      applyRewindLabelToButton();
-    } else {
+    //if (state['physics_enabled']) {
+      //applyRewindLabelToButton();
+    //} else {
       applyPhysicsLabelToButton();
-    }
+    //}
 
     List frames = new List();
     for (int i = 0, len = state['frames'].length; i < len; ++i) {

@@ -83,7 +83,6 @@ class Camera {
     this.by1 = by1;
     this.by2 = by2;
 
-
     this.xAnim = new DoubleAnimation(pxOffsetX, bx1, 100);
     this.yAnim = new DoubleAnimation(pxOffsetY, by2, 100);
   }
@@ -91,11 +90,8 @@ class Camera {
   void moveTo(double dx, double dy) {
       pxOffsetX = dx;
       pxOffsetY = dy;
-      //this.xAnim = new DoubleAnimation(dx, dx, 20);
-      //this.yAnim = new DoubleAnimation(dx, dy, 20);
   }
 
-  String s = null;
   void updateEngine(double zoom) {
     xAnim.setStart(pxOffsetX);
     xAnim.setEnd(targetOffsetX);
@@ -107,8 +103,6 @@ class Camera {
     GameEngine.scale = e.viewport.scale = GameEngine.NSCALE * zoom;
 
     e.debugDraw = new CanvasDraw(e.viewport, e.g);
-    
-    e.world.debugDraw = e.debugDraw;
   }
 
   void move() {
@@ -166,8 +160,6 @@ class Camera {
     }
 
     if (updated) {
-     // print((targetOffsetX-ptx).toString() + ", " + (targetOffsetY-pty).toString());
-      //e.bcard.b.setTransform(new Vector2(e.bcard.b.position.x + (targetOffsetX-ptx)/GameEngine.scale, e.bcard.b.position.y + (targetOffsetY-pty)/GameEngine.scale),e.bcard.b.angle);
       updateEngine(currentZoom);
     }
   }

@@ -149,13 +149,15 @@ void updateBlockButtons(GameEngine engine) {
   querySelectorAll(".selector").forEach((DivElement s) {
     s.classes.remove("current");
   });
-  (querySelectorAll(".selector")[engine.staticBlocksSelected ? 0 : 1] as
+  (querySelectorAll(".selector")[engine.staticBlocksSelected ? 1 : 0] as
       DivElement).classes.add("current");
 
+  querySelector(".static").hidden = engine.level.current.staticBlocksRemaining
+      == 0;
   querySelector(".static .remaining").innerHtml =
-      engine.level.current.staticBlocksRemaining.toString();
+      engine.level.current.staticBlocksRemaining.toString() + " left";
   querySelector(".dynamic .remaining").innerHtml =
-      engine.level.current.dynamicBlocksRemaining.toString();
+      engine.level.current.dynamicBlocksRemaining.toString() + " left";
 }
 
 void showMainMenu() {
@@ -167,4 +169,12 @@ void showMainMenu() {
   querySelector(".buttons").classes.add("hidden");
   querySelector(".selectors").classes.add("hidden");
   querySelector("#menu-box").classes.remove("hidden");
+}
+
+void blinkPhysicsButton() {
+  ButtonElement btn = querySelector("#toggle-physics");
+  btn.classes.add("error-blink");
+  new Timer(new Duration(milliseconds: 450), () {
+    btn.classes.remove("error-blink");
+  });
 }
