@@ -48,6 +48,8 @@ class LevelSerializer {
     for (Map card in state['cards']) {
       Body b = e.addCard(card['x'].toDouble(), card['y'].toDouble(),
           card['angle'].toDouble(), card['static'], subLevel);
+      if(subLevel != null)
+          b.type = BodyType.STATIC;
 
       (b.userData as EnergySprite).energy = card['energy'].toDouble();
     }

@@ -64,7 +64,7 @@
         "obstacles": []
     },
     {
-        "name": "Third advent",
+        "name": "Third Advent",
         "x": -30,
         "y": -70,
         "width": 1200,
@@ -81,7 +81,7 @@
         "obstacles": []
     },
     {
-        "name": "Oldschool ship",
+        "name": "Oldschool Ship",
         "x": -30,
         "y": -50,
         "width": 1200,
@@ -98,7 +98,7 @@
         "obstacles": []
     },
     {
-        "name": "Good times",
+        "name": "Good Times",
         "x": -100,
         "y": -50,
         "width": 1200,
@@ -115,7 +115,7 @@
         "obstacles": []
     },
     {
-        "name": "New standards",
+        "name": "New Standards",
         "x": -50,
         "y": -350,
         "width": 1200,
@@ -132,7 +132,7 @@
         "obstacles": []
     },
     {
-        "name": "Beautiful star",
+        "name": "Beautiful Star",
         "x": -50,
         "y": -350,
         "width": 1200,
@@ -149,7 +149,7 @@
         "obstacles": []
     },
     {
-        "name": "Arctic spring",
+        "name": "Arctic Spring",
         "x": -50,
         "y": -350,
         "width": 1200,
@@ -164,5 +164,103 @@
             "y": 280
         },
         "obstacles": []
+    },
+    {
+        "name": "Recrystallization",
+        "x": -50,
+        "y": -350,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [0, 20],
+        "stars": [18, 20],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 950,
+            "y": 280
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Galactic Agency(GA)",
+        "x": -200,
+        "y": -350,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [2, 7],
+        "stars": [8, 9],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 950,
+            "y": 50
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Door Alarm",
+        "x": -50,
+        "y": -50,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [0, 8],
+        "stars": [7, 8],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 1050,
+            "y": 50
+        },
+        "obstacles": [
+            {
+                "x": 1010,
+                "y": 0,
+                "width": 5,
+                "height": 220,
+                "type": 1
+            }
+        ]
+    },
+    {
+        "name": "Rainy Asteroid",
+        "x": -30,
+        "y": -150,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [1, 16],
+        "stars": [14, 17],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 1200,
+            "y": 50
+        },
+        "obstacles": [
+            {
+                "x": 1070,
+                "y": 45,
+                "width": 250,
+                "height": 5,
+                "type": 1
+            },
+            {
+                "x": 1150,
+                "y": 45,
+                "width": 5,
+                "height": 90,
+                "type": 1
+            },
+            {
+                "x": 1150,
+                "y": 135,
+                "width": 200,
+                "height": 5,
+                "type": 1
+            }
+        ]
     }
 ]}
