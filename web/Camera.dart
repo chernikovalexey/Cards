@@ -5,6 +5,7 @@ import "Input.dart";
 import 'Sprite.dart';
 import "DoubleAnimation.dart";
 import "dart:math" as Math;
+import "SuperCanvasDraw.dart";
 
 class Camera {
   static const int FRAME_COUNT = 10;
@@ -102,7 +103,7 @@ class Camera {
         pxOffsetX, GameEngine.HEIGHT - pxOffsetY));
     GameEngine.scale = e.viewport.scale = GameEngine.NSCALE * zoom;
 
-    e.debugDraw = new CanvasDraw(e.viewport, e.g);
+    e.debugDraw = new SuperCanvasDraw(e.viewport, e.g);
   }
 
   void move() {

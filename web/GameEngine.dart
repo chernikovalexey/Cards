@@ -19,6 +19,8 @@ import 'LevelSerializer.dart';
 import 'ParallaxManager.dart';
 import 'StateManager.dart';
 import 'dart:js';
+import "Color4.dart";
+import "SuperCanvasDraw.dart";
 
 /*class HistoryState {
   static const ADD = 1;
@@ -56,7 +58,7 @@ class GameEngine extends State {
   CardContactListener contactListener;
   CanvasRenderingContext2D g;
   ViewportTransform viewport;
-  DebugDraw debugDraw;
+  SuperCanvasDraw debugDraw;
   BoundedCard bcard;
   Bobbin bobbin;
   Camera camera;
@@ -99,8 +101,7 @@ class GameEngine extends State {
         0.0, HEIGHT));
     viewport.scale = scale;
 
-    debugDraw = new CanvasDraw(viewport, g);
-    world.debugDraw = debugDraw;
+    debugDraw = new SuperCanvasDraw(viewport, g);
   }
 
   void initializeWorld() {
@@ -202,7 +203,7 @@ class GameEngine extends State {
     sprite.isStatic = isStatic;
     sprite.energySupport = (!isStatic || sub != null);
     if (isStatic) {
-      sprite.color = new Color3.fromRGB(217, 214, 179);
+      sprite.color = new Color4.fromRGB(217, 214, 179);
     }
 
     card.userData = sprite;
