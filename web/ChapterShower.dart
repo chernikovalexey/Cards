@@ -25,8 +25,8 @@ class ChapterShower {
         'onrendered': (CanvasElement canvas) {
           canvas.id = "chapter-blur-g";
           querySelector(".chapter-blurry-bar").append(canvas);
-          context.callMethod('stackBlurCanvasRGB', ['chapter-blur-g', 0, 0,
-              canvas.width, canvas.height, 254]);
+          //context.callMethod('stackBlurCanvasRGB', ['chapter-blur-g', 0, 0,
+            //  canvas.width, canvas.height, 254]);
           CanvasRenderingContext2D g = canvas.getContext('2d');
           g.fillStyle = 'rgba(0, 0, 0, 0.5)';
           g.fillRect(0, 0, canvas.width, canvas.height);

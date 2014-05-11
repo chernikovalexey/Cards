@@ -284,6 +284,7 @@ margin-top: -76px;
   display: block;
   top: 0px;
   -webkit-transform: translateY(76px);
+  -webkit-filter: blur(20px);
 }
 
 .go-to-menu-button {
