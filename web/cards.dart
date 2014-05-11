@@ -168,7 +168,11 @@ void showMainMenu() {
   manager.removeState(engine);
   querySelector(".buttons").classes.add("hidden");
   querySelector(".selectors").classes.add("hidden");
-  querySelector("#menu-box").classes.remove("hidden");
+  DivElement box = querySelector("#menu-box") as DivElement;
+  box.classes.remove("hidden");
+  animate(box, properties: {
+    'opacity': 1.0
+  });
 }
 
 void blinkPhysicsButton() {

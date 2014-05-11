@@ -7,6 +7,7 @@ import "Input.dart";
 import "cards.dart";
 import "Scroll.dart";
 import 'package:animation/animation.dart';
+import 'dart:async';
 
 class RatingShower {
   static GameEngine e;
@@ -56,14 +57,17 @@ class RatingShower {
   }
 
   static void show(GameEngine engine, int rating) {
-    print("show");
     e = engine;
     e.isPaused = true;
     querySelector(".chapter-controls").classes.add("hidden");
 
-    
-    //animate();
-    (querySelector("#rating-box") as DivElement).classes.remove("hidden");
+    querySelector(".level-name").classes.add("hidden");
+    DivElement box = (querySelector("#rating-box") as DivElement);
+    box.classes.remove("hidden");
+    animate(box, properties: {
+      'opacity': 1.0
+    }, duration: 125, easing: Easing.CUBIC_EASY_IN);
+
     Input.keyDown = (KeyboardEvent e) {
       if (e.keyCode == Input.keys['esc'].code) {
         Input.keys['esc'].clicked = false;
@@ -74,7 +78,6 @@ class RatingShower {
     };
 
     var classes = (querySelector(".level-rating") as DivElement).classes;
-
 
     for (int i = 0; i < 4; i++) if (classes.contains("s-" + i.toString()))
         classes.remove("s-" + i.toString());
@@ -175,14 +178,12 @@ class RatingShower {
   }
 
   static void mainMenu(Event e) {
-    print("To main menu");
     hide();
     showMainMenu();
   }
 
 
   static void onTypeItemClick(Event evt) {
-    print("click");
     hide();
     e.isPaused = false;
     Level.navigateToLevel(int.parse((evt.currentTarget as
@@ -191,11 +192,20 @@ class RatingShower {
 
 
   static void hide() {
-    print("hide");
     e.isPaused = false;
     wasJustPaused = true;
-    (querySelector("#rating-box") as DivElement).classes.add("hidden");
+    DivElement box = (querySelector("#rating-box") as DivElement);
 
+    int time = 125;
+    animate(box, properties: {
+      'opacity': 0.0
+    }, duration: time, easing: Easing.CUBIC_EASY_IN);
+    
+    new Timer(new Duration(milliseconds: time), () {
+      box.classes.add("hidden");
+    });
+
+    querySelector(".level-name").classes.remove("hidden");
     querySelector("#graphics").classes.remove("blurred");
     querySelector(".buttons").classes.remove("blurred");
     querySelector(".selectors").classes.remove("blurred");

@@ -77,9 +77,6 @@ class GameEngine extends State {
   List<int> stars;
   Level level;
 
-  // For pause et cetera
-  var blurredCanvas;
-  
   GameEngine(CanvasRenderingContext2D g) {
     this.g = g;
     camera = new Camera(this);
@@ -250,7 +247,6 @@ class GameEngine extends State {
 
     if (Input.keys['esc'].clicked) {
       RatingShower.pause(this);
-      //this.blurredCanvas = context.callMethod('boxBlurCanvasRGBA', ['graphics', 0, 0, 800, 600, 5, 2]);
     }
     RatingShower.wasJustPaused = false;
 
@@ -389,11 +385,6 @@ class GameEngine extends State {
         if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
         b = b.next;
       }
-    }
-    
-    // Draw blurred cached canvas above all
-    if(isPaused) {
-      //g.putImageData(blurredCanvas, 0, 0);
     }
   }
 
