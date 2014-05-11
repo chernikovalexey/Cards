@@ -238,7 +238,7 @@ class GameEngine extends State {
     }
 
     if (Input.keys['esc'].clicked) {
-        RatingShower.pause(this);
+      RatingShower.pause(this);
     }
     RatingShower.wasJustPaused = false;
 
@@ -266,8 +266,9 @@ class GameEngine extends State {
       }
     }
 
-    if (canPut() && ((staticBlocksSelected && level.current.staticBlocksRemaining
-        > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
+    if (canPut() && ((staticBlocksSelected &&
+        level.current.staticBlocksRemaining > 0) || (!staticBlocksSelected &&
+        level.current.dynamicBlocksRemaining > 0))) {
       recentlyRemovedCards.clear();
       addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle,
           staticBlocksSelected);
@@ -302,9 +303,10 @@ class GameEngine extends State {
           removeCard(contacting);
         }
       }
-    } else if(Input.keys['ctrl'].down && Input.keys['z'].clicked) {
-      for(Body card in recentlyRemovedCards) {
-        addCard(card.position.x, card.position.y, card.angle, (card.userData as EnergySprite).isStatic);
+    } else if (Input.keys['ctrl'].down && Input.keys['z'].clicked) {
+      for (Body card in recentlyRemovedCards) {
+        addCard(card.position.x, card.position.y, card.angle, (card.userData as
+            EnergySprite).isStatic);
       }
       recentlyRemovedCards.clear();
     }
@@ -318,14 +320,14 @@ class GameEngine extends State {
       if (physicsEnabled) {
 
         sprite.update(this);
-        if (sprite.isFull() && level.current!=null) {
+        if (sprite.isFull() && level.current != null) {
           saveCurrentProgress();
           int or = level.current.rating;
           int nr = level.current.getRating();
 
 
-          window.localStorage['total_stars'] =
-            (int.parse(window.localStorage['total_stars']) + (nr - or)).toString();
+          window.localStorage['total_stars'] = (int.parse(
+              window.localStorage['total_stars']) + (nr - or)).toString();
           RatingShower.show(this, nr);
         }
       } else {
@@ -338,11 +340,12 @@ class GameEngine extends State {
 
   // saves the state of the current level
   void saveCurrentProgress() {
-    
+
     // No sense to save empty states, indeed
-    if (ready && !cards.isEmpty && level.current!=null) {
-      window.localStorage['level_' + level.chapter.toString() + '_' + level.current.index.toString()] =
-          LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled);
+    if (ready && !cards.isEmpty && level.current != null) {
+      window.localStorage['level_' + level.chapter.toString() + '_' +
+          level.current.index.toString()] = LevelSerializer.toJSON(cards, bobbin.list,
+          physicsEnabled);
     }
   }
 
@@ -419,16 +422,16 @@ class GameEngine extends State {
     if (zoomIn) {
       newZoom = currentZoom < 3 ? currentZoom + 0.2 : currentZoom;
     } else {
-      newZoom = currentZoom >= 0.4 ? currentZoom - 0.2 : currentZoom;
+      newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
     }
 
     if (newZoom != currentZoom) {
-        if (onMouse) {
-            camera.mTargetX = Input.mouseX - WIDTH / 2;
-            camera.mTargetY = Input.mouseY + HEIGHT / 2;
-        }
-        camera.checkTarget();
-//camera.updateEngine(newZoom);
+      if (onMouse) {
+        camera.mTargetX = Input.mouseX - WIDTH / 2;
+        camera.mTargetY = Input.mouseY + HEIGHT / 2;
+      }
+      camera.checkTarget();
+      //camera.updateEngine(newZoom);
     }
 
     camera.beginZoom(newZoom, currentZoom);
@@ -437,7 +440,8 @@ class GameEngine extends State {
 
   void clear() {
     print("clear?");
-    window.localStorage.remove("level_"+level.chapter.toString() + "_" + (level.current.index+1).toString());
+    window.localStorage.remove("level_" + level.chapter.toString() + "_" +
+        (level.current.index + 1).toString());
     applyPhysicsLabelToButton();
     bobbin.erase();
     List<Body> _cards = new List<Body>();
