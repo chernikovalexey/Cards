@@ -250,7 +250,7 @@ class GameEngine extends State {
 
     if (Input.keys['esc'].clicked) {
       RatingShower.pause(this);
-      this.blurredCanvas = context.callMethod('boxBlurCanvasRGBA', ['graphics', 0, 0, 800, 600, 5, 2]);
+      //this.blurredCanvas = context.callMethod('boxBlurCanvasRGBA', ['graphics', 0, 0, 800, 600, 5, 2]);
     }
     RatingShower.wasJustPaused = false;
 
@@ -393,7 +393,7 @@ class GameEngine extends State {
     
     // Draw blurred cached canvas above all
     if(isPaused) {
-      g.putImageData(blurredCanvas, 0, 0);
+      //g.putImageData(blurredCanvas, 0, 0);
     }
   }
 

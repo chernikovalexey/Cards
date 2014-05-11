@@ -6,6 +6,7 @@ import "Level.dart";
 import "Input.dart";
 import "cards.dart";
 import "Scroll.dart";
+import 'package:animation/animation.dart';
 
 class RatingShower {
   static GameEngine e;
@@ -60,6 +61,8 @@ class RatingShower {
     e.isPaused = true;
     querySelector(".chapter-controls").classes.add("hidden");
 
+    
+    //animate();
     (querySelector("#rating-box") as DivElement).classes.remove("hidden");
     Input.keyDown = (KeyboardEvent e) {
       if (e.keyCode == Input.keys['esc'].code) {
@@ -139,6 +142,7 @@ class RatingShower {
     Scroll ss = new Scroll('tape-vs', 'tape-es');
     ss.buildScrollControls('tape-dragBar', 'tape-track', 'tape-scrollbar', 'h');
 
+    querySelector("#graphics").classes.add("blurred");
     querySelector(".buttons").classes.add("blurred");
     querySelector(".selectors").classes.add("blurred");
 
@@ -192,6 +196,7 @@ class RatingShower {
     wasJustPaused = true;
     (querySelector("#rating-box") as DivElement).classes.add("hidden");
 
+    querySelector("#graphics").classes.remove("blurred");
     querySelector(".buttons").classes.remove("blurred");
     querySelector(".selectors").classes.remove("blurred");
   }

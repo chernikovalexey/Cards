@@ -30,10 +30,16 @@ body {
   font-size: 24px;
 }
 
+.canvas-layout {
+  width: 802px;
+  height: 602px;
+  overflow: hidden;
+}
+
 canvas {
   border: 1px solid black;
   cursor: none;
-  z-index: 2;
+  z-index: 2
 }
 
 .buttons {
@@ -219,6 +225,8 @@ button {
 
 .hidden {
     display: none;
+    opacity: 0.0;
+    -webkit-transition: all 500ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 #menu-box, #chapter-selection {
