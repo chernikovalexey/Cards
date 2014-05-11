@@ -1,26 +1,32 @@
 {"chapters": [
     {
         "name": "Adventures of Po",
-        "unlock_stars": 0
+        "unlock_stars": 0,
+        "levels": 12
     },
     {
         "name": "Staggering Ship",
-        "unlock_stars": 12
+        "unlock_stars": 32,
+        "levels": 12
     },
     {
         "name": "Impossible Here",
-        "unlock_stars": 30
+        "unlock_stars": 30,
+        "levels": 12
     },
     {
         "name": "Stash of Joe",
-        "unlock_stars": 34
+        "unlock_stars": 34,
+        "levels": 12
     },
     {
         "name": "Slippery Hills",
-        "unlock_stars": 41
+        "unlock_stars": 41,
+        "levels": 12
     },
     {
         "name": "Endspiel",
-        "unlock_stars": 60
+        "unlock_stars": 60,
+        "levels": 12
     }
 ]}

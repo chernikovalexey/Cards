@@ -148,23 +148,19 @@ class GameEngine extends State {
         this.traverser = new Traverser(this);
 
         this.bobbin = new Bobbin(() {
+            traverser.reset();
             if (from.contactList != null) {
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.start();
-
-                traverser.reset();
                 traverser.traverseEdges(from.contactList);
-                if (!traverser.hasPath) {
-                    for (Body card in cards) {
-                        if (traverser.checkEnergyConnection(card)) {
-                            traverser.traverseEdges(card.contactList);
-                        }
-                    }
-                }
+                print("traverser.hasPath: "+traverser.hasPath.toString());
+            }
+            if (!traverser.hasPath) {
+                for (Body card in cards) {
 
-                stopwatch.stop();
-                print("Elapsed: " + stopwatch.elapsedMilliseconds.toString());
-                print("Checked: " + traverser.traversed.length.toString());
+                if (traverser.checkEnergyConnection(card)) {
+
+                    traverser.traverseEdges(card.contactList);
+                }
+                }
             }
         });
     }

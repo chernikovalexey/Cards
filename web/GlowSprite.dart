@@ -28,8 +28,8 @@ class GlowSprite extends Sprite {
             return 0;
         }
 
-        PolygonShape ps = to.fixtureList.next.shape.clone();
-        PolygonShape s1 = from.fixtureList.next.shape;
+        PolygonShape ps = to.fixtureList.shape.clone();
+        PolygonShape s1 = from.fixtureList.shape;
 
         for(Vector2 v in ps.vertices) {
             v.x += (v.x > 0 ? 1 : -1) * .05;
