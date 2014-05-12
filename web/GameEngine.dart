@@ -357,8 +357,7 @@ class GameEngine extends State {
           int nr = level.current.getRating();
 
 
-          window.localStorage['total_stars'] = (int.parse(
-              window.localStorage['total_stars']) + (nr - or)).toString();
+          starManager.updateResult(level.chapter, nr - or);
           RatingShower.show(this, nr);
         }
       } else {

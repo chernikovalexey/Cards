@@ -64,7 +64,7 @@ class ChapterShower {
     el.querySelector(".chapter").dataset["id"] = id.toString();
     el.querySelector(".chapter-title").innerHtml = chapter["name"];
 
-    int totalStars = int.parse(window.localStorage["total_stars"]);
+    int totalStars = starManager.total;
     bool unlocked = totalStars >= chapter["unlock_stars"];
 
     if (!unlocked) {
