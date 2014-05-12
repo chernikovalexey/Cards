@@ -8,9 +8,11 @@ import "cards.dart";
 import "Scroll.dart";
 import 'package:animation/animation.dart';
 import 'dart:async';
+import "StarManager.dart";
 
 class RatingShower {
   static const int FADE_TIME = 450;
+  static int oldRating, newRating;
 
   static GameEngine e;
   static bool wasJustPaused = false;
@@ -19,6 +21,9 @@ class RatingShower {
 
   static void nextLevel(event) {
     hide();
+    print("oldRating: "+ oldRating.toString());
+
+    StarManager.updateResult(e.level.chapter, newRating - oldRating);
     e.nextLevel();
     e.isPaused = false;
   }
@@ -58,7 +63,10 @@ class RatingShower {
     return result;
   }
 
-  static void show(GameEngine engine, int rating) {
+  static void show(GameEngine engine, int rating, [int oldR = 0]) {
+    oldRating = oldR;
+    newRating = rating;
+
     e = engine;
     e.isPaused = true;
     querySelector(".chapter-controls").classes.add("hidden");

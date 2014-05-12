@@ -99,7 +99,8 @@ class SubLevel {
 
   void loadRating() {
     if (stars[0] >= cards.length) rating = 3; else if (stars[1] >= cards.length)
-        rating = 2; else rating = 1;
+        rating = 2;
+    else rating = 1;
   }
 
 

@@ -357,9 +357,7 @@ class GameEngine extends State {
           int or = level.current.rating;
           int nr = level.current.getRating();
 
-
-          StarManager.updateResult(level.chapter, nr - or);
-          RatingShower.show(this, nr);
+          RatingShower.show(this, nr, or);
         }
       } else {
         sprite.deactivate();
