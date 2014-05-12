@@ -14,7 +14,6 @@ import 'dart:async';
 import 'RatingShower.dart';
 import "Level.dart";
 import 'SubLevel.dart';
-import 'LevelComplete.dart';
 import 'LevelSerializer.dart';
 import 'ParallaxManager.dart';
 import 'StateManager.dart';
@@ -93,7 +92,7 @@ class GameEngine extends State {
 
       level = new Level(() {
         ready = true;
-      }, params["chapter"], this);
+      }, params["chapter"], this, params["continue"] != null && params["continue"]);
     }
   }
 

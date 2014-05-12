@@ -17,8 +17,8 @@ class Level {
 
   int chapter;
 
-  Level(Function ready, int chapter, GameEngine engine) {
-    preload(ready, chapter);
+  Level(Function ready, int chapter, GameEngine engine, bool _continue) {
+    preload(ready, chapter, _continue);
 
     this.chapter = chapter;
     this.engine = engine;
@@ -32,7 +32,7 @@ class Level {
     return index - 1 >= levels.length ? levels.length - 1 : index - 1;
   }
 
-  void preload(Function ready, int chapter) {
+  void preload(Function ready, int chapter, bool _continue) {
     Storage storage = window.localStorage;
 
     HttpRequest.getString("levels/chapter_" + chapter.toString() + ".json"
@@ -40,7 +40,7 @@ class Level {
       levels = JSON.decode(str)["levels"];
 
       Map last;
-      if (storage.containsKey("last") && (last = JSON.decode(storage["last"]
+      if (_continue && storage.containsKey("last") && (last = JSON.decode(storage["last"]
           ))["chapter"] == chapter) {
         currentSubLevel = last["level"];
         loadCurrent();

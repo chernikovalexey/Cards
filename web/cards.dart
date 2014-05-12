@@ -46,6 +46,7 @@ void main() {
   querySelector("#continue").addEventListener("click", (event) {
     fadeBoxOut(querySelector("#menu-box"), 250, () {
       manager.addState(engine, {
+        'continue': true,
         'chapter': JSON.decode(window.localStorage["last"])["chapter"]
       });
       updateCanvasPositionAndDimension();
