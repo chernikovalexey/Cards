@@ -187,8 +187,7 @@ button {
 }
 
 .rating-wrap {
-    width: 300px;
-
+    text-align: center;
     margin: 0 auto;
 }
 
@@ -222,7 +221,11 @@ button {
   background: rgba(0, 0, 0, 0.75);
   margin-top: -604px;
   z-index: 7;
-  opacity: 0.0
+  opacity: 0.0;
+}
+
+.light-box button {
+  padding: 10px 15px;
 }
 
 .paused .light-box {
@@ -425,20 +428,19 @@ font-weight: 700;
 }
 
 .s-0 {
-    width: 0;
-    height: 0;
+  display: none;
 }
 
 .s-1 {
-    width: 100px;
+  width: 100px;
 }
 
 .s-2 {
-    width: 200px;
+  width: 200px;
 }
 
 .s-3 {
-    width: 300px;
+  width: 300px;
 }
 
 .controls {
@@ -448,8 +450,9 @@ font-weight: 700;
 }
 
 .pause-title {
-    color: silver;
-    font-size: 18px;
+    color: #c7c6c2;
+font-size: 13px;
+text-transform: uppercase;
 }
 
 .rating-inner-layout {
@@ -458,17 +461,20 @@ font-weight: 700;
 }
 
 .s-level-name {
-    font-size: 24px;
-    color: #ffffff;
+   font-size: 36px;
+color: #fff;
+-webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
 }
 
 .tape{
-  margin-top: 223px;
+  position: absolute;
+  top: 327px;
   color: #e1e1e1;
   font-size: 14px;
   background: rgba(44, 44, 44, 0.5);
   padding: 10px 0;
-  border-top: 1px solid rgba(44,44,44,0.5);
+  border-top: 1px solid rgba(44, 44, 44, 0.5);
+  padding-bottom: 0;
 }
 
 .tape-item {
