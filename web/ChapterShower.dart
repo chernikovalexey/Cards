@@ -3,6 +3,7 @@ import 'cards.dart';
 import 'Scroll.dart';
 import 'dart:js';
 import 'Chapter.dart';
+import "StarManager.dart";
 
 class ChapterShower {
   static void show(List chapters) {
@@ -64,7 +65,7 @@ class ChapterShower {
     el.querySelector(".chapter").dataset["id"] = id.toString();
     el.querySelector(".chapter-title").innerHtml = chapter["name"];
 
-    int totalStars = int.parse(window.localStorage["total_stars"]);
+    int totalStars = StarManager.total;
     bool unlocked = totalStars >= chapter["unlock_stars"];
 
     if (!unlocked) {

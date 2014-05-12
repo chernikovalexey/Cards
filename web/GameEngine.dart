@@ -21,6 +21,7 @@ import 'StateManager.dart';
 import 'dart:js';
 import "Color4.dart";
 import "SuperCanvasDraw.dart";
+import "StarManager.dart";
 
 /*class HistoryState {
   static const ADD = 1;
@@ -357,8 +358,7 @@ class GameEngine extends State {
           int nr = level.current.getRating();
 
 
-          window.localStorage['total_stars'] = (int.parse(
-              window.localStorage['total_stars']) + (nr - or)).toString();
+          StarManager.updateResult(level.chapter, nr - or);
           RatingShower.show(this, nr);
         }
       } else {

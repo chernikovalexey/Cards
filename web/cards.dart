@@ -9,6 +9,7 @@ import 'StateManager.dart';
 import 'Chapter.dart';
 import 'ChapterShower.dart';
 import 'dart:js';
+import "StarManager.dart";
 
 CanvasElement canvas;
 GameEngine engine;
@@ -16,9 +17,7 @@ ParallaxManager parallax;
 StateManager manager;
 
 void main() {
-  if (window.localStorage['total_stars'] == null) {
-    window.localStorage["total_stars"] = "0";
-  }
+  StarManager.init();
 
   canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
