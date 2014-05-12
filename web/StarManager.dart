@@ -2,17 +2,17 @@ import "dart:html";
 import "dart:convert";
 
 class StarManager {
-    int total = 0;
-    Map byChapters;
+    static int total = 0;
+    static Map byChapters;
 
-    StarManager() {
+    static void init() {
         if(window.localStorage['stars']!=null) {
             load();
         } else
             byChapters = new Map();
     }
 
-    void load() {
+    static void load() {
         Map m = JSON.decode(window.localStorage['stars']);
         byChapters = new Map();
         total = m['total'];
@@ -21,7 +21,7 @@ class StarManager {
         }
     }
 
-    void setResult(int chapter, int result) {
+    static void setResult(int chapter, int result) {
         byChapters[chapter] = result;
         total = 0;
         byChapters.forEach((k,v) {
@@ -30,18 +30,18 @@ class StarManager {
         save();
     }
 
-    int getResult(int chapter) {
+    static int getResult(int chapter) {
         if(byChapters[chapter]!=null) {
             return byChapters[chapter];
         }
         return 0;
     }
 
-    void updateResult(int chapter, int delta) {
+    static void updateResult(int chapter, int delta) {
         setResult(chapter, getResult(chapter) + delta);
     }
 
-    void save() {
+    static void save() {
         Map m = new Map();
         m['total'] = total;
         List c = new List();
@@ -53,3 +53,5 @@ class StarManager {
         window.localStorage['stars'] = JSON.encode(m);
     }
 }
+
+

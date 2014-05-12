@@ -15,10 +15,9 @@ CanvasElement canvas;
 GameEngine engine;
 ParallaxManager parallax;
 StateManager manager;
-StarManager starManager;
 
 void main() {
-  starManager = new StarManager();
+  StarManager.init();
 
   canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
