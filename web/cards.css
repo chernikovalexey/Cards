@@ -163,12 +163,30 @@ button {
 }
 
 .level-rating {
-  background-image: url(img/star.png);
-  background-color: black;
-  background-size: 100px 100px;
-  width: 300px;
-  height: 100px;
-  margin-top: 10px;
+  height: 96px;
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+.stars-layout {
+  
+}
+
+.star {
+  display: inline-block;
+  width: 100px;
+  height: 96px;
+  background-image: url(img/new_star.png);
+  margin-right: 5px;
+}
+
+.star:last-child {
+  margin-right: 0;
+}
+
+.extinct-star {
+  opacity: 0.75;
+  -webkit-filter: grayscale(75%);
 }
 
 .rating-mask {
@@ -193,8 +211,6 @@ button {
 
 
 .chapter-rating-wrap {
-    width: 200px;
-    height: 100px;
     margin: 0 auto;
 }
 
@@ -203,15 +219,19 @@ button {
 }
 
 .star-ico {
-    background: url(img/star.png);
-    background-size: 100px;
-    width: 100px;
-    height: 100px;
+  background: url(img/new_star.png);
+  width: 100px;
+  height: 96px;
 }
 
-.chapter-raring {
-    font-size: 100px;
-    color: silver;
+.chapter-rating {
+  font-size: 96px;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+  top: -10px;
+  margin-right: 15px;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 1.0);
 }
 
 .light-box {
@@ -497,43 +517,35 @@ color: #fff;
 }
 
 .tape-rating {
-    background: url(img/new_star.png);
-background-size: 40px;
-height: 38px;
-margin-top: 7px;
+  height: 38px;
+  margin-top: 7px;
+}
+
+.locked .stars-layout {
+  display: none;
+}
+
+.tape-rating .star {
+  background-size: 40px;
+  width: 40px;
+  height: 38px;
 }
 
 .tape-rating-wrap {
-    width: 120px;
     margin: 0 auto;
-
 }
 
 .tape-current-item {
-    border: 1px solid green !important;
-}
-
-.tr-0 {
-    width: 0;
-}
-
-.tr-1 {
-    width: 40px;
-}
-
-.tr-2 {
-    width: 80px;
-}
-
-.tr-3 {
-    width: 120px;
+  border: 1px solid rgba(61, 95, 150, 1.0);
+  background-color: rgba(61, 95, 150, 0.25);
+  box-shadow: 0 0 3px rgba(61, 95, 150, 0.75);
 }
 
 .chapter-level {
-    font-size: 14px;
-color: #e1e1e1;
-padding: 10px;
-padding-top: 5px;
+  font-size: 14px;
+  color: #e1e1e1;
+  padding: 10px;
+  padding-top: 5px;
 }
 
 .final-rating-wrap {
@@ -594,30 +606,7 @@ padding-top: 5px;
     top: 2px;
 }
 
-.sl-1 {
-    width: 10px;
-}
-
-.sl-2 {
-    width: 30px;
-}
-
-.sl-3 {
-    width: 50px;
-}
-
-.fs-3 {
-    width: 300px;
-}
-
-.fs-2 {
-    width: 200px;
-}
-
-.fs-1 {
-    width: 100px;
-}
-
+/* Scrollbar on rating screen */
 #tape-vs  { 
   position: relative;
   width: 800px;
@@ -626,11 +615,10 @@ padding-top: 5px;
 }
 
 #tape-es {
-  width: 1897px;
   height: 90px;
 }
 
-div#tape-scrollbar { 
+#tape-scrollbar { 
   position: relative;
   width: 800px; 
   height: 11px;
@@ -662,50 +650,51 @@ div#tape-scrollbar {
   outline: none;
 }
 
-
-/*******************/
-
-
-div#chapter-vs  { 
-    position: relative;
-width: 800px;
-height: 524px;
-overflow: hidden;
-  }
-  
-div#chapter-es {
-  width: 535px;
-padding: 0 125px;
+/* Scrollbar in ng-state */
+#chapter-vs  { 
+  position: relative;
+  width: 800px;
+  height: 524px;
+  overflow: hidden;
 }
-div#chapter-scrollbar { 
-    position: absolute;
-width: 11px;
-font-size: 1px;
-top: 210px;
-  }
-div#chapter-scrollbar .track { 
- position: absolute;
-top: -130px;
-left: 790px;
-width: 8px;
-height: 524px;
-background-color: rgba(44,44,44,0.5);
-border-radius: 1px;
-  }
-div#chapter-scrollbar .dragBar {
- position: absolute;
-left: 1px;
-top: 1px;
-height: 9px;
-width: 6px;
-background-color: rgba(70, 70, 70, 0.75);
-border-radius: 1px;
-  }  
-div#chapter-scrollbar {
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    }
   
-div#chapter-vs:focus, div#chapter-scrollbar:focus, div#chapter-scrollbar .track:focus, div#chapter-scrollbar .dragBar:focus {
-    outline: none
+#chapter-es {
+  width: 535px;
+  padding: 0 125px;
+}
+
+#chapter-scrollbar { 
+  position: absolute;
+  width: 11px;
+  font-size: 1px;
+  top: 210px;
+}
+
+#chapter-scrollbar .track { 
+  position: absolute;
+  top: -130px;
+  left: 790px;
+  width: 8px;
+  height: 524px;
+  background-color: rgba(44, 44, 44, 0.5);
+  border-radius: 1px;
+}
+
+#chapter-scrollbar .dragBar {
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  height: 9px;
+  width: 6px;
+  background-color: rgba(70, 70, 70, 0.75);
+  border-radius: 1px;
+}
+
+#chapter-scrollbar {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+}
+
+#chapter-vs:focus, #chapter-scrollbar:focus, #chapter-scrollbar .track:focus, #chapter-scrollbar .dragBar:focus {
+  outline: none;
 }

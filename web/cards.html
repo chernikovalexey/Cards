@@ -76,13 +76,13 @@
         </div>
         <div class="progress-layout">
           <div class="progress-caption">
-            <div class="finished-levels">12</div> of <div class="all-levels">49</div>
+            <div class="finished-levels"></div> of <div class="all-levels"></div>
           </div>
           <div class="full-bar"></div>
           <div class="current-bar"></div>
         </div>
         <div class="unlock-layout">
-          <div class="stars-left">12</div> star<span class="word-ending">s</span> left
+          <div class="stars-left"></div> star<span class="word-ending">s</span> left
         </div>
         <div class="chapter-thumbnail"></div>
         <div class="chapter-title"></div>
@@ -97,24 +97,24 @@
                 <div class="level-rating"></div>
             </div>
             <div class="chapter-rating-wrap hidden">
-                <div class="chapter-raring"></div>
-
+                <div class="chapter-rating"></div>
                 <div class="star-ico"></div>
             </div>
 
             <div class="level-controls controls">
-                <button id="next-level">Next</button>
                 <button id="restart-level">Restart</button>
+                <button id="next-level">Next</button>
             </div>
 
             <div class="pause-controls controls hidden">
-                <button id="clear-level">Restart level</button>
-                <button id="pm-menu">Main menu</button>
+              <button id="resume-game">Resume</button>
+              <button id="clear-level">Restart</button>
+              <button id="pm-menu">Menu</button>
             </div>
 
             <div class="chapter-controls controls hidden">
-                <button id="cm-menu">Main menu</button>
-                <button id="cc-list">Chapter list</button>
+                <button id="cm-menu">Menu</button>
+                <button id="cc-list">Choose another chapter</button>
             </div>
 
             <div class="tape">
@@ -128,6 +128,14 @@
             </div>
         </div>
     </div>
+    
+    <div class="star-template hidden">
+      <div class="stars-layout">
+        <div class="star extinct-star"></div>
+        <div class="star extinct-star"></div>
+        <div class="star extinct-star"></div>
+      </div>
+    </div>
 
     <div class="tape-item-template hidden">
         <div class="tape-item">
@@ -135,29 +143,6 @@
                 <div class="tape-rating"></div>
             </div>
             <div class="tape-name"></div>
-        </div>
-    </div>
-
-    <div class="light-box hidden" id="level-list-box"></div>
-
-    <div class="light-box hidden" id="finished-level-box">
-        <div class="congratulations">
-            Congratulations!
-        </div>
-        <div class="final-rating-wrap">
-            <div class="level-rating"></div>
-        </div>
-        <div class="sublevel-table">
-
-        </div>
-
-        <div class="sl-template hidden">
-            <div class="sl-item">
-                <div class="sl-name"></div>
-                <div class="sl-rating-wrap">
-                    <div class="sl-rating"></div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

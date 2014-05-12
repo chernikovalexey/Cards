@@ -30,17 +30,22 @@ class RatingShower {
 
   static String tapeItem(Map l, int index, int current) {
     DivElement el = (querySelector(".tape-item-template") as DivElement);
-    //el.querySelector(".tape-rating").innerHtml = l.rating.toString();
     el.querySelector(".tape-name").innerHtml = l["name"];
     DivElement tr = el.querySelector(".tape-rating") as DivElement;
     DivElement ti = el.querySelector(".tape-item") as DivElement;
-    ti.dataset['level'] = (index + 1).toString();
 
-    if (index < e.level.subLevels.length) {
-      tr.classes.add("tr-" + e.level.subLevels[index].rating.toString());
-    } else {
-      tr.classes.add("tr-0");
+    for (int i = 1; i <= index + 1; ++i) {
+      ti.classes.remove("ti-" + i.toString());
+    }
+
+    String levelIndex = (index + 1).toString();
+    ti.dataset['level'] = levelIndex;
+    ti.classes.add("ti-" + levelIndex);
+
+    if (index >= e.level.subLevels.length) {
       ti.classes.add("locked");
+    } else {
+      tr.innerHtml = getStars(e.level.subLevels[index].rating);
     }
 
     if (index == current) ti.classes.add("tape-current-item");
@@ -55,6 +60,16 @@ class RatingShower {
     tr.classes.add("tape-rating");
 
     return result;
+  }
+
+  static String getStars(int stars) {
+    DivElement tpl = querySelector(".star-template") as DivElement;
+    int passed = 1;
+    for (var star in tpl.querySelectorAll(".star")) {
+      if (passed++ <= stars) star.classes.remove("extinct-star"); else
+          star.classes.add("extinct-star");
+    }
+    return tpl.innerHtml;
   }
 
   static void show(GameEngine engine, int rating) {
@@ -87,16 +102,9 @@ class RatingShower {
       }
     };
 
-    var classes = (querySelector(".level-rating") as DivElement).classes;
+    querySelector(".level-rating").innerHtml = getStars(rating);
+    querySelector(".s-level-name").innerHtml = e.level.current.name;
 
-    for (int i = 0; i < 4; i++) if (classes.contains("s-" + i.toString()))
-        classes.remove("s-" + i.toString());
-    classes.add("s-" + rating.toString());
-
-
-    (querySelector(".s-level-name") as DivElement).innerHtml =
-        e.level.current.name;
-    
     var chapterLevel = querySelector(".chapter-level");
     chapterLevel.querySelector(".finished-levels").innerHtml =
         e.level.current.index.toString();
@@ -135,6 +143,12 @@ class RatingShower {
       }
     }
 
+    DivElement nextTapeItem = querySelector(".ti-" + (e.level.currentSubLevel +
+        1).toString());
+    if (nextTapeItem != null) {
+      nextTapeItem.classes.remove("locked");
+    }
+
     querySelector("#clear-level").addEventListener('click', (e) {
       engine.clear();
       hide();
@@ -148,6 +162,10 @@ class RatingShower {
       querySelector(".chapter-controls").classes.add("hidden");
       querySelector("#pm-menu").removeEventListener("click", mainMenu);
       querySelector("#pm-menu").addEventListener("click", mainMenu);
+      querySelector("#resume-game")
+          ..removeEventListener("click", resume)
+          ..addEventListener("click", resume, false);
+      querySelector(".level-rating").classes.add('hidden');
     } else {
       querySelector(".level-controls").classes.remove('hidden');
       querySelector(".pause-controls").classes.add('hidden');
@@ -155,11 +173,18 @@ class RatingShower {
       querySelector(".pause-title").classes.add('hidden');
     }
 
+    querySelector("#tape-es").style.width = (e.level.levels.length * 172 +
+        10).toString() + "px";
     Scroll.setup('tape-vs', 'tape-es', 'tape-scrollbar', 'h');
 
     if (!e.level.hasNext() && !pauseState) {
       chapterComplete();
     }
+  }
+
+  static void resume(Event e) {
+    hide();
+    Input.keyDown = null;
   }
 
   static void pause(GameEngine e) {
@@ -178,8 +203,7 @@ class RatingShower {
     for (SubLevel l in e.level.subLevels) {
       totalStars += l.rating;
     }
-    querySelector(".chapter-raring").innerHtml = totalStars.toString();
-    // querySelector(".main-menu").removeEventListener('click', mainMenu);
+    querySelector(".chapter-rating").innerHtml = totalStars.toString();
     querySelector("#cm-menu").addEventListener('click', mainMenu);
 
     window.localStorage.remove("last");

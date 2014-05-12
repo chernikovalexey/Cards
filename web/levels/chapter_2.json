@@ -1,18 +1,18 @@
 {"levels": [
     {
-        "name": "Multi Forest",
+        "name": "Artic Hustler",
         "x": 0,
         "y": 0,
         "width": 1600,
         "height": 2000,
-        "blocks": [0, 20],
+        "blocks": [0, 3],
         "from": {
             "x": 100,
             "y": 50
         },
-        "stars": [15,17],
+        "stars": [1,2],
         "to": {
-            "x": 300,
+            "x": 150,
             "y": 50
         },
         "obstacles": [
@@ -43,170 +43,6 @@
                 "width": 1600,
                 "height": 10,
                 "type": 1
-            },
-            {
-                "x": 200,
-                "y": 0,
-                "width": 20,
-                "height": 130,
-                "type": 1
-            }
-        ]
-    },
-    {
-        "name": "Double Revolution",
-        "x": -50,
-        "y": -50,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [0, 5],
-        "from": {
-            "offset":100
-        },
-        "stars": [5,5],
-        "to": {
-            "x": 500,
-            "y": 50
-        },
-        "obstacles": []
-    },
-    {
-        "name": "Vertical Politics",
-        "x": -100,
-        "y": -50,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [1, 10],
-        "from": {
-            "offset":100
-        },
-        "stars": [9,10],
-        "to": {
-            "x": 450,
-            "y": 200
-        },
-        "obstacles": [
-            {
-                "type": 2,
-                "points": [
-                    {"x": 475, "y": 200},
-                    {"x": 600, "y": 200},
-                    {"x": 600, "y": 275}
-                ]
-            },
-            {
-                "type": 1,
-                "x": 440,
-                "y": 198,
-                "width": 60,
-                "height": 2
-            },
-            {
-                "type": 1,
-                "x": 440,
-                "y": 198,
-                "width": 2,
-                "height": 50
-            }, {
-                "type": 1,
-                "x": 440,
-                "y": 247,
-                "width": 50,
-                "height": 2
-            }
-        ]
-    },
-    {
-        "name": "Anarchy Monk",
-        "x": -450,
-        "y": -150,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [0, 6],
-        "from": {
-            "offset":100
-        },
-        "stars": [6,6],
-        "to": {
-            "x": 100,
-            "y": 300
-        },
-        "obstacles": []
-    },
-    {
-        "name": "Gold Hell",
-        "x": -50,
-        "y": -50,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [0, 9],
-        "from": {
-            "offset":100
-        },
-        "stars": [7,8],
-        "to": {
-            "x": 300,
-            "y": 300
-        },
-        "obstacles": [
-            {
-                "type": 1,
-                "x": 215,
-                "y": 325,
-                "width": 10,
-                "height": 10
-            }
-        ]
-    },
-    {
-        "name": "Galactic Loop",
-        "x": 100,
-        "y": -200,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [2, 5],
-        "from": {
-            "offset":100
-        },
-        "stars": [7,7],
-        "to": {
-            "x": 800,
-            "y": 240
-        },
-        "obstacles": []
-    },
-    {
-        "name": "Boundless Room",
-        "x": -50,
-        "y": -400,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [100, 100],
-        "from": {
-            "offset": 100
-        },
-        "stars": [7,7],
-        "to": {
-            "x": 1000,
-            "y": 10
-        },
-        "obstacles": [
-            {
-                "type": 2,
-                "points": [
-                    {"x": 950, "y": 5},
-                    {"x": 970, "y": 10},
-                    {"x": 990, "y": 15},
-                    {"x": 1000, "y": 20},
-                    {"x": 1020, "y": 20},
-                    {"x": 1040, "y": 15},
-                    {"x": 1060, "y": 10},
-                    {"x": 1080, "y": 5},
-                    {"x": 1085, "y": 5},
-                    {"x": 1065, "y": 10},
-                    {"x": 1045, "y": 17},
-                    {"x": 1045, "y": 20}
-                ]
             }
         ]
     }
