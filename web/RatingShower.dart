@@ -97,9 +97,12 @@ class RatingShower {
 
     (querySelector(".s-level-name") as DivElement).innerHtml =
         e.level.current.name;
-    (querySelector(".chapter-level") as DivElement).innerHtml =
-        e.level.current.index.toString() + " of " + e.level.levels.length.toString();
-
+    
+    var chapterLevel = querySelector(".chapter-level");
+    chapterLevel.querySelector(".finished-levels").innerHtml =
+        e.level.current.index.toString();
+    chapterLevel.querySelector(".all-levels").innerHtml =
+        e.level.levels.length.toString();
 
     (querySelector("#next-level") as ButtonElement).focus();
     (querySelector("#next-level") as ButtonElement).removeEventListener("click",

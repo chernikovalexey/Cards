@@ -391,10 +391,10 @@ font-weight: 700;
 
 .chapter-title {
   color: #fff;
-font-size: 14px;
-margin-top: 10px;
-text-align: center;
-font-weight: 700;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 700;
 }
 
 .s-0 {
@@ -436,19 +436,23 @@ font-weight: 700;
 }
 
 .tape{
-    margin-top: 10px;
-    color: #e1e1e1;
-    font-size: 14px;
+  margin-top: 223px;
+  color: #e1e1e1;
+  font-size: 14px;
+  background: rgba(44, 44, 44, 0.5);
+  padding: 10px 0;
+  border-top: 1px solid rgba(44,44,44,0.5);
 }
 
 .tape-item {
-    width: 160px;
-    height: 80px;
-    display: inline-block;
-    border: 1px solid #818181;
-    margin: 5px;
-    cursor: pointer;
-    -webkit-user-select: none;
+  width: 160px;
+  height: 80px;
+  display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 5px 1px 0 5px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  background: rgba(255, 255, 255, 0.125);
 }
 
 .locked {
@@ -460,10 +464,10 @@ font-weight: 700;
 }
 
 .tape-rating {
-    background: url(img/star.png);
-    background-size: 40px;
-    height: 40px;
-    margin-top: 5px;
+    background: url(img/new_star.png);
+background-size: 40px;
+height: 38px;
+margin-top: 7px;
 }
 
 .tape-rating-wrap {
@@ -493,9 +497,10 @@ font-weight: 700;
 }
 
 .chapter-level {
-    margin-top: 200px;
     font-size: 14px;
-    color: #e1e1e1;
+color: #e1e1e1;
+padding: 10px;
+padding-top: 5px;
 }
 
 .final-rating-wrap {
@@ -580,45 +585,48 @@ font-weight: 700;
     width: 100px;
 }
 
-div#tape-vs  { 
-    position:relative; /* scroll area div must be positioned */
-    width:800px; height:90px; /* width and height required. adjust to suit */
-    overflow:hidden; /* required! */
-  }
-div#tape-es {
-  width: 1942px;
-  height: 90px
+#tape-vs  { 
+  position: relative;
+  width: 800px;
+  height: 102px;
+  overflow: hidden;
 }
+
+#tape-es {
+  width: 1897px;
+  height: 90px;
+}
+
 div#tape-scrollbar { 
-    position:relative;
-    /* include following if you don't want scrollbar hidden when insufficient content for scrolling */
-    /* visibility:visible !important; */ 
-    width:800px; height:11px;
-    font-size:1px; /* or dragBar will overflow track in ie */
-  }
-div#tape-scrollbar .track { 
-    position:absolute; /* track must be positioned */
-    top: 10px;
-    width:800px; /* width of scrollbar minus 2 X image width minus 2 X gap between */
-    height:11px; 
-    background-color:#2c2c2c;
-  }
-div#tape-scrollbar .dragBar {
-    position:absolute; /* dragBar must be positioned */
-    left:1px; top:1px; /* for small gap between track and dragBar */
-    height:9px;
-    width:20px; /* code auto-sizes */
-    /* width:20px !important;  use !important to prevent code from sizing dragBar according to amount of content */
-    background-color:#1b1b1b;
-  }  
-/* for clutzy draggers */
-div#tape-scrollbar {
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    }
+  position: relative;
+  width: 800px; 
+  height: 11px;
+  font-size: 1px;
+}
+
+#tape-scrollbar .track { 
+  position: absolute;
+  width: 800px; 
+  height: 11px; 
+  background-color: #2c2c2c;
+}
+
+#tape-scrollbar .dragBar {
+  position: absolute;
+  left: 1px; 
+  top: 1px;
+  height: 9px;
+  width: 20px;
+  background-color: #1b1b1b;
+}
+
+#tape-scrollbar {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+}
   
-div#tape-vs:focus, div#tape-scrollbar:focus, div#tape-scrollbar .track:focus, div#tape-scrollbar .dragBar:focus {
-    outline: none
+#tape-vs:focus, #tape-scrollbar:focus, #tape-scrollbar .track:focus, #tape-scrollbar .dragBar:focus {
+  outline: none;
 }
 
 
