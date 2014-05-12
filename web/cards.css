@@ -320,11 +320,11 @@ margin-top: -76px;
   -webkit-user-select: none
 }
 
-.progress-layout, .unlock-layout {
+.progress-layout, .unlock-layout, .star-layout {
   position: absolute;
-text-align: center;
-width: 240px;
-margin-top: 153px;
+  text-align: center;
+  width: 240px;
+  margin-top: 153px;
 }
 
 .unlock-layout {
@@ -340,12 +340,39 @@ margin-top: 153px;
   font-weight: 700;
 }
 
+.star-layout {
+  margin-top: 0
+}
+
+.earned-stars {
+  display: inline-block;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.star-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  background-image: url(img/new_star.png);
+  background-size: 16px;
+  top: 3px;
+  position: relative;
+  left: 0px;
+}
+
 .chapter-locked .progress-layout {
   display: none
 }
 
 .chapter-locked .unlock-layout {
   display: block
+}
+
+.chapter-locked .star-layout {
+  display: none
 }
 
 .full-bar {

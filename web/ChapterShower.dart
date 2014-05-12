@@ -81,6 +81,8 @@ class ChapterShower {
           chapter["levels"]).toString() + "px";
       el.querySelector(".finished-levels").innerHtml = finished.toString();
       el.querySelector(".all-levels").innerHtml = chapter["levels"].toString();
+      
+      el.querySelector(".earned-stars").innerHtml = StarManager.getResult(id).toString();
     }
 
     return el.innerHtml;
