@@ -19,7 +19,8 @@ class EnergySprite extends Sprite {
 
     int glowAdd = 1;
 
-    double energyStep = .1;
+    double energyStep = .1
+    ;
 
     int frame = 0;
 
