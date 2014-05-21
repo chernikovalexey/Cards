@@ -25,7 +25,7 @@ Analytics.prototype.send = function(message) {
     var basic = {
         user_id: this.getUserId(),
         session_id: this.sessionId,
-        build: "PreRelease"
+        build: "AnalyticsTest"
     };
 
     message = this.extendAndOverride(message, basic);
@@ -94,12 +94,12 @@ Analytics.prototype.rewindPhysics = function(chapter, level) {
     this.sendLevelEvent("Level:RewindPhysics", chapter, level);
 };
 
-Analytics.prototype.levelComplete = function(chapter, level, nStatic, nDynamic, attempts, stars, time) {
+Analytics.prototype.levelComplete = function(chapter, level, nStatic, nDynamic, stars, time) {
     this.sendLevelEvent("Level:Complete", chapter, level, {
         "static": nStatic,
         dynamic: nDynamic,
-        attempts: attempts,
         stars: stars,
         timeSpent: time
     });
 };
+
