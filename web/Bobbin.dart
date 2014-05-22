@@ -1,6 +1,7 @@
 import "dart:html";
 import 'package:box2d/box2d_browser.dart';
 import 'EnergySprite.dart';
+import 'cards.dart';
 
 class Bobbin {
   List list = new List();
@@ -30,6 +31,7 @@ class Bobbin {
     }
 
     if (numAsleep == cards.length && !callbackFired) {
+      analytics.applyPhysics(engine.level.chapter, engine.level.currentSubLevel);
       allAsleep();
       callbackFired = true;
     }
@@ -37,6 +39,7 @@ class Bobbin {
 
   bool previousFrame(List<Body> cards) {
     if (list.length == 0) {
+        analytics.rewindPhysics(engine.level.chapter, engine.level.currentSubLevel);
         return false;
     }
     List<BTransform> frame = list.last;

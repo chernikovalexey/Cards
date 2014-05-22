@@ -145,6 +145,7 @@ class SubLevel {
   }
 
   void apply() {
+    analytics.levelStart(e.level.chapter, index);
     Function f = () {
       e.camera.setBounds(x, y, x + w, y + h);
       e.camera.mTargetX = x;

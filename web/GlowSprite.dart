@@ -31,10 +31,10 @@ class GlowSprite extends Sprite {
         PolygonShape ps = to.fixtureList.shape.clone();
         PolygonShape s1 = from.fixtureList.shape;
 
-        for(Vector2 v in ps.vertices) {
+        /*for(Vector2 v in ps.vertices) {
             v.x += (v.x > 0 ? 1 : -1) * .05;
             v.y += (v.y > 0 ? 1 : -1) * .05;
-        }
+        }*/
 
         for (int i = 0;i < ps.vertices.length;i++) {
             if(s1.testPoint(from.originTransform, to.getWorldPoint(ps.vertices[i])))
@@ -60,7 +60,7 @@ class GlowSprite extends Sprite {
 
         int l = getNearestPoints(bFrom, b);
 
-        if(l==1 || l==2) {
+        if(l==1 || l==2 || l==-1) {
             shape.vertices[0].x += GameEngine.CARD_WIDTH * (1 - energy);
             shape.vertices[3].x += GameEngine.CARD_WIDTH * (1 - energy);
         } else {

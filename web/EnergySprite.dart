@@ -19,7 +19,8 @@ class EnergySprite extends Sprite {
 
     int glowAdd = 1;
 
-    double energyStep = .1;
+    double energyStep = .1
+    ;
 
     int frame = 0;
 
@@ -61,6 +62,8 @@ class EnergySprite extends Sprite {
         if (energy < 0) energy = 0.0; else if (energy > 1) energy = 1.0;
         current = b;
 
+
+
         if (isHidden) return;
 
         super.render(g, b);
@@ -71,8 +74,12 @@ class EnergySprite extends Sprite {
 
         if (active && energy <= 1 - energyStep) {
             energy += energyStep;
+        } else if(active) {
+            energy = 1;
         } else if (!active && energy >= energyStep) {
             energy -= energyStep;
+        } else {
+            energy = 0;
         }
 
         for (GlowSprite gs in effects)
