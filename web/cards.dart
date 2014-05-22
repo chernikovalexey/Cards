@@ -167,6 +167,7 @@ void updateBlockButtons(GameEngine engine) {
 }
 
 void showMainMenu() {
+  print("showing main menu");
   // No continue button in case if there is nothing to proceed with
   engine.cards.clear();
   querySelector("#continue").hidden = !window.localStorage.containsKey("last");

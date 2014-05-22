@@ -397,7 +397,6 @@ class GameEngine extends State {
   }
 
   @override
-
   void render() {
     if (ready) {
       Body b = world.bodyList;
