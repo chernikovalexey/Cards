@@ -16,7 +16,6 @@ class Sprite {
 
     Body bFrom;
 
-
     Color4 color;
 
     SuperCanvasDraw canvasDraw;
@@ -36,7 +35,6 @@ class Sprite {
         Transform tf = new Transform();
         tf.setFrom(b.originTransform);
         drawShape(b.fixtureList, tf, color);
-
     }
 
     void drawShape(Fixture fixture, Transform xf, Color4 color) {
