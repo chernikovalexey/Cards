@@ -6,9 +6,11 @@ import "dart:math" as Math;
 import "Color4.dart";
 import "SuperCanvasDraw.dart";
 import "GlowSprite.dart";
+import "DoubleAnimation.dart";
 
 
 class EnergySprite extends Sprite {
+  static Color4 baseColor = new Color4.fromRGBA(234, 140, 64, 1.0);
   Body inner;
 
   List<GlowSprite> effects = new List();
@@ -17,7 +19,7 @@ class EnergySprite extends Sprite {
   int glowAdd = 1;
   int frame = 0;
   
-  double energyStep = .1;
+  double energyStep = .05;
 
   bool alwaysAnimate = false;
 
@@ -34,7 +36,7 @@ class EnergySprite extends Sprite {
     effects.add(new GlowSprite(.2, .45, 0.03 / k));
     effects.add(new GlowSprite(.1, .25, 0.04 / k));
 
-    this.color = new Color4.fromRGBA(234, 140, 64, .75);
+    this.color = new Color4.fromColor4(baseColor);
   }
 
   int sign(double x) {
@@ -52,8 +54,10 @@ class EnergySprite extends Sprite {
 
   @override
   void render(SuperCanvasDraw g, Body b) {
+
     if (energy < 0) energy = 0.0; else if (energy > 1) energy = 1.0;
     current = b;
+
 
     if (isHidden) return;
 
@@ -74,6 +78,7 @@ class EnergySprite extends Sprite {
     }
 
     for (GlowSprite gs in effects) gs.render(g, b);
+
   }
 
   void update(GameEngine e) {
