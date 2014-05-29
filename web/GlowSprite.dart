@@ -31,7 +31,7 @@ class GlowSprite extends Sprite {
         PolygonShape ps = to.fixtureList.shape.clone();
         PolygonShape s1 = from.fixtureList.shape;
 
-        /*for(Vector2 v in ps.vertices) {
+/*for(Vector2 v in ps.vertices) {
             v.x += (v.x > 0 ? 1 : -1) * .05;
             v.y += (v.y > 0 ? 1 : -1) * .05;
         }*/
@@ -57,12 +57,19 @@ class GlowSprite extends Sprite {
         PolygonShape shape = b.fixtureList.next.shape.clone() as PolygonShape;
         this.energy = (b.userData as Sprite).energy;
 
+        shape.vertices[0].x += GameEngine.CARD_WIDTH * (1 - energy) / 2;
+        shape.vertices[3].x += GameEngine.CARD_WIDTH * (1 - energy) / 2;
+
+        shape.vertices[1].x -= GameEngine.CARD_WIDTH * (1 - energy) / 2;
+        shape.vertices[2].x -= GameEngine.CARD_WIDTH * (1 - energy) / 2;
+
+
         for (Vector2 v in shape.vertices) {
             v.x += (v.x > 0 ? 1 : -1) * additionalOffset;
             v.y += (v.y > 0 ? 1 : -1) * additionalOffset;
         }
 
-        color.a = animation.next() * energy;
+        color.a = animation.next();
         if (animation.isFinished) {
             animation = new DoubleAnimation(dTo, dFrom, FRAME_COUNT);
             dFrom = animation.start;
