@@ -1,0 +1,11 @@
+[
+    [{"x":1.671,"y":1.03,"angle":0,"static":false,"energy":1}],
+    [{"x":2.318,"y":1.03,"angle":0,"static":false,"energy":1}],
+    [{"x":3.464,"y":0.398,"angle":-1.706,"static":false,"energy":1},{"x":2.866,"y":0.391,"angle":-1.293,"static":false,"energy":1},{"x":3.2,"y":0.281,"angle":-2.604,"static":false,"energy":1}],
+    [{"x":3.993,"y":1.268,"angle":-1.94,"static":false,"energy":1}],
+    [{"x":4.224,"y":3.736,"angle":-4.712,"static":false,"energy":1},{"x":4.224,"y":3.191,"angle":-4.712,"static":false,"energy":1},{"x":4.224,"y":2.103,"angle":-4.713,"static":false,"energy":1},{"x":4.224,"y":2.647,"angle":-4.714,"static":false,"energy":1}],
+    [{"x":5.023,"y":4.324,"angle":-6.279,"static":false,"energy":1},{"x":4.248,"y":4.322,"angle":-6.305,"static":false,"energy":1},{"x":4.635,"y":4.367,"angle":-6.272,"static":false,"energy":1},{"x":5.287,"y":4.369,"angle":-9.474,"static":false,"energy":1},{"x":3.996,"y":4.372,"angle":-9.432,"static":false,"energy":1}],
+    [{"x":6.146,"y":3.986,"angle":-10.995,"static":false,"energy":1},{"x":6.469,"y":3.986,"angle":-10.996,"static":false,"energy":1},{"x":6.278,"y":4.282,"angle":-9.41,"static":false,"energy":1},{"x":5.788,"y":4.364,"angle":-9.581,"static":false,"energy":1}],
+    [{"x":8.745,"y":3.687,"angle":-9.425,"static":true,"energy":0},{"x":6.797,"y":3.73,"angle":-9.446,"static":false,"energy":1},{"x":8.41,"y":3.726,"angle":-9.342,"static":false,"energy":1},{"x":9.164,"y":3.734,"angle":-9.417,"static":false,"energy":1},{"x":7.231,"y":3.77,"angle":-9.427,"static":false,"energy":1},{"x":7.26,"y":3.68,"angle":-9.425,"static":true,"energy":0},{"x":7.532,"y":3.724,"angle":-9.433,"static":false,"energy":1},{"x":7.966,"y":3.762,"angle":-9.45,"static":false,"energy":1},{"x":8.695,"y":3.791,"angle":-9.462,"static":false,"energy":1}],
+    
+]
