@@ -40,8 +40,9 @@ class Level {
       levels = JSON.decode(str)["levels"];
 
       Map last;
-      if (_continue && storage.containsKey("last") && (last = JSON.decode(storage["last"]
-          ))["chapter"] == chapter) {
+      if (_continue || (storage.containsKey("last") && (last = JSON.decode(storage["last"]
+          ))["chapter"] == chapter)) {
+        last = JSON.decode(storage["last"]);
         currentSubLevel = last["level"];
         loadCurrent();
       } else {
