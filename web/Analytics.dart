@@ -29,10 +29,10 @@ class Analytics {
 
   void levelComplete(chapter, level, nStatic, nDynamic, stars) {
     DateTime t = new DateTime.now();
-    int time = 0;
+    num time = 0;
     if (timers[chapter.toString() + "." + level.toString()] != null) {
-      int s = timers[chapter.toString() + "." + level.toString()];
-      time = (t.millisecondsSinceEpoch / 1000 - s) as int;
+      num s = timers[chapter.toString() + "." + level.toString()];
+      time = (t.millisecondsSinceEpoch / 1000 - s).round();
     }
     object.callMethod('levelComplete', [chapter, level, nStatic, nDynamic,
         stars, time]);
