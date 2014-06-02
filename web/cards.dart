@@ -11,17 +11,25 @@ import 'ChapterShower.dart';
 import 'dart:js';
 import "StarManager.dart";
 import "Analytics.dart";
+import "HintManager.dart";
+import "features/FeatureFactory.dart";
+import "features/FeatureManager.dart";
 
 CanvasElement canvas;
 GameEngine engine;
 ParallaxManager parallax;
 StateManager manager;
 Analytics analytics;
+HintManager hints;
+FeatureManager featureManager;
+
 
 void main() {
   StarManager.init();
   analytics = new Analytics();
   analytics.startSession();
+  
+  featureManager = FeatureFactory.create();
 
   canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
@@ -95,10 +103,9 @@ void main() {
     }, false);
   });
 
-  for (var x in querySelectorAll("input")) x.addEventListener("change", (event)
-      => engine.restart(double.parse((querySelector("#density") as InputElement).value
-      ), double.parse((querySelector("#friction") as InputElement).value),
-      double.parse((querySelector("#restitution") as InputElement).value)));
+
+  hints = new HintManager(engine);
+  querySelector("#hint").addEventListener("click", hints.onClick);
 }
 
 void showLevelName(String name) {

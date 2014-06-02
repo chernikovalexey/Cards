@@ -698,3 +698,8 @@ color: #fff;
 #chapter-vs:focus, #chapter-scrollbar:focus, #chapter-scrollbar .track:focus, #chapter-scrollbar .dragBar:focus {
   outline: none;
 }
+
+#hint {
+    position: relative;
+    left: 255px;
+}

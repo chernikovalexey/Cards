@@ -103,3 +103,7 @@ Analytics.prototype.levelComplete = function(chapter, level, nStatic, nDynamic, 
     });
 };
 
+function getScrypt(scriptUrl, callback) {
+	$.getScript(scriptUrl, callback);
+}
+
