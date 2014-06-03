@@ -1,14 +1,19 @@
 import "dart:js";
 import "dart:html";
+import "dart:async";
 import "FeatureManager.dart";
+import "VKApi.dart";
 
 class VKFeatureManager extends FeatureManager {  
+  VKApi VK;
+  
   VKFeatureManager() {
-     context.callMethod('getScript',[window.location.protocol+"//vk.com/js/api/xd_connection.js?2']",
-        new JsFunction.withThis(initialize)]);
+    VK = new VKApi();
+    VK.onLoad = () {
+      VK.getFriends((data){
+        print(data);
+      });
+    };
   }
   
-  void initialize() {
-    
-  }
 }
