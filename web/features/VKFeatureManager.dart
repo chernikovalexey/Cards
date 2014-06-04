@@ -10,9 +10,8 @@ class VKFeatureManager extends FeatureManager {
   VKFeatureManager() {
     VK = new VKApi();
     VK.onLoad = () {
-      VK.getFriends((data){
-        print(data);
-      });
+      JsObject obj = new JsObject(context['VKFeatures']);
+      obj.callMethod('showFriendsBar');
     };
   }
   
