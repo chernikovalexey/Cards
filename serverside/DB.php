@@ -11,4 +11,12 @@ class DB {
     public function DB(PDO $db) {
         $this->db = $db;
     }
+
+    /**
+     * @return \PDO
+     */
+    public function getDb()
+    {
+        return $this->db;
+    }
 } 

@@ -6,8 +6,8 @@ function WebApi(method, data, callback) {
     var json = JSON.stringify(data);
     $.ajax({
         type: 'POST',
-        url: "http://podkolzzzin.org/Cards/serverside?method="+method,
-        data: {arguments: json_message},
+        url: "http://podkolzin.org/Cards/serverside?method="+method,
+        data: {arguments: json},
         method: "POST",
         success: callback
     });
