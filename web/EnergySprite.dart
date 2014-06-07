@@ -85,4 +85,12 @@ class EnergySprite extends Sprite {
     bool isFull() {
         return energy >= 1 - energyStep;
     }
+    
+    void makeSensor(bool sensor, Body it) {
+      
+      for(Fixture f = it.fixtureList;f != null; f = f.next) {
+        f.isSensor = sensor;
+      }
+      color.a = sensor?.4:.8;
+    }
 }
