@@ -50,7 +50,7 @@ class DB {
         $scores = array();
         foreach($results as $r) {
             if(isset($scores[$r['userId']])) $scores[$r['userId']] = array('userId'=>$r['userId'], 'value'=>0);
-            $scores[$r['userId']]['value']+=$r['result'];
+            $scores[$r['userId']]['value'] += $r['result'];
         }
         usort($scores, "DB::cmpScores");
 
