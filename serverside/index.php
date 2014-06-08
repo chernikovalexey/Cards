@@ -6,10 +6,13 @@
  * Time: 15:36
  */
 
+
 require_once "Router.php";
 require_once "dbconnect.php";
 
+header("Content-type: application/json");
 $router = new Router($DB);
 $result = $router->route();
-header("Content-type: application/json");
-echo json_encode(get_object_vars($result));
+
+
+echo json_encode($result);

@@ -18,8 +18,8 @@ class Router {
     }
 
     public function route() {
-        list($api, $method) = explode('.',$_GET['method']);
-        $args = json_decode($_POST['arguments']);
+        list($api, $method) = explode('.',$_POST['method']);
+        $arguments = json_decode(stripslashes($_POST['arguments']), true);
         $api = ucfirst($api);
 
         if(file_exists($api.".php")) {
@@ -27,7 +27,7 @@ class Router {
             try {
                 $m = new ReflectionMethod($api, $method);
                 try {
-                    $result = $m->invokeArgs($Api, $args);
+                    $result = $m->invokeArgs($Api, $arguments);
                     return $result;
                 } catch(ApiException $e) {
                     return $e;
@@ -35,6 +35,6 @@ class Router {
 
             } catch(Exception $e) {}
         }
-        return new ApiException("404 method not found", $api, $method, $args);
+        return new ApiException("404 method not found", $api, $method, $arguments);
     }
 } 

@@ -139,7 +139,6 @@ class SubLevel {
   }
 
   void enable(bool v) {
-    online(true);
     for (Body b in cards) {
       b.userData.enabled = v;
     }
