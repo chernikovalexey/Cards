@@ -25,8 +25,10 @@ class DB {
     }
 
     private function bindArray(array $arr, $offset,$type, $selector, PDOStatement $sql) {
-        foreach($arr as $i=>$val) {
+        $i=0;
+        foreach($arr as $val) {
             $sql->bindValue($i+1+$offset, ($selector!=null)?$val[$selector]:$val, $type);
+            $i++;
         }
         return $sql;
     }
@@ -49,7 +51,7 @@ class DB {
 
         $scores = array();
         foreach($results as $r) {
-            if(isset($scores[$r['userId']])) $scores[$r['userId']] = array('userId'=>$r['userId'], 'value'=>0);
+            if(isset($scores[$r['userId']])) $scores[$r['userId']] = array('userId'=>$users[$r['userId']]['platformUserId'], 'value'=>0);
             $scores[$r['userId']]['value'] += $r['result'];
         }
         usort($scores, "DB::cmpScores");
@@ -68,6 +70,11 @@ class DB {
         $this->bindArray($users, 0, PDO::PARAM_INT, $selector, $sql);
         $sql->bindValue(count($users)+1, $platform, PDO::PARAM_STR);
         $sql->execute();
-        return $sql->fetchAll(PDO::FETCH_ASSOC);
+        $t =  $sql->fetchAll(PDO::FETCH_ASSOC);
+        $r = array();
+        foreach($t as $u) {
+            $r[$u['userId']] = $u;
+        }
+        return $r;
     }
 } 
