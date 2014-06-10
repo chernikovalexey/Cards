@@ -13,6 +13,13 @@ class Vk extends Api {
 
     public function getFriendsData(array $friends) {
         return $this->db->getTop($friends, 'vk');
+    }
 
+    public function result($chapter, $level, $result, $user) {
+        return $this->db->result($chapter, $level, $result, $user, 'vk');
+    }
+
+    public function user($uid) {
+        return $this->db->user($uid, 'vk');
     }
 } 

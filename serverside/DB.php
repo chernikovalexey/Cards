@@ -77,4 +77,55 @@ class DB {
         }
         return $r;
     }
+
+    public function getUser($userId, $platform) {
+        $r = $this->getPlatformUsers(array($userId), $platform);
+        return $r[0];
+    }
+
+    public function result($chapter, $level, $result, $user, $platform)
+    {
+        $u = $this->getUser($user, $platform);
+        if(!$u) return false;
+
+        $sql = $this->db->prepare("SELECT * FROM tcardresults WHERE userId=? AND chapterId=? AND levelId=?");
+        $sql->bindValue(1, $user['userId'], PDO::PARAM_INT);
+        $sql->bindValue(2, $chapter, PDO::PARAM_INT);
+        $sql->bindValue(3, $level, PDO::PARAM_INT);
+        $sql->execute();
+        if($rslt = $sql->fetch())
+        {
+            $sql = $this->db->prepare("UPDATE tcardresults SET result = ? WHERE id=?");
+            $sql->bindValue(1, $result, PDO::PARAM_INT);
+            $sql->bindParam(2, $rslt['id'], PDO::PARAM_INT);
+            $sql->execute();
+        } else {
+            $sql = $this->db->prepare("INSERT INTO tcardresults(`userId`, `chapterId`, `levelId`, `result`, `time`) VALUES(?,?,?,?,?)");
+            $sql->bindValue(1, $user, PDO::PARAM_INT);
+            $sql->bindValue(2, $chapter, PDO::PARAM_INT);
+            $sql->bindValue(3, $level, PDO::PARAM_INT);
+            $sql->bindValue(4, $result, PDO::PARAM_INT);
+            $sql->bindValue(5, time(), PDO::PARAM_INT);
+            $sql->execute();
+        }
+        return true;
+    }
+
+    public function user($uid,$platform)
+    {
+        $sql = $this->db->prepare("SELECT * FROM tcardusers WHERE platformUserId=? AND platformId=?");
+        $sql->bindValue(1,$uid, PDO::PARAM_INT);
+        $sql->bindValue(2, $platform, PDO::PARAM_STR);
+        $sql->execute();
+
+        if ($u = $sql->fetch(PDO::FETCH_ASSOC)) return $u;
+
+        $sql = $this->db->prepare("INSERT INTO tcardusers(platformId, platformUserId) VALUES (?,?)");
+        $sql->bindValue(1, $platform, PDO::PARAM_STR);
+        $sql->bindValue(2, $uid, PDO::PARAM_INT);
+
+        $sql->execute();
+
+        return array('userId' => +$this->db->lastInsertId(), 'platformId'=>$platform, 'platformUserId'=>$uid);
+    }
 } 
