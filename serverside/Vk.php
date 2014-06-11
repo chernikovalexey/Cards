@@ -19,6 +19,10 @@ class Vk extends Api {
         return $this->db->result($chapter, $level, $result, $user, 'vk');
     }
 
+    public function getHint($chapter, $level, $user) {
+
+    }
+
     public function user($uid) {
         return $this->db->user($uid, 'vk');
     }
