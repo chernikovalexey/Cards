@@ -23,6 +23,10 @@ class Vk extends Api {
 
     }
 
+    public function unlock($chapter, $user) {
+
+    }
+
     public function user($uid) {
         return $this->db->user($uid, 'vk');
     }
