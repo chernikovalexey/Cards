@@ -12,3 +12,22 @@ function WebApi(method, data, callback) {
     });
 }
 
+var Api = {
+  platform: "nil",
+  friendsList: null,
+  personalId: null,
+  setPlatform: function(platform) {
+      this.platform = platform;
+  },
+  setFriendsList: function(listOfFriends) {
+      this.friendsList = listOfFriends;
+  },
+  setPersonalId: function(personalId) {
+      this.personalId = personalId;
+  },
+  initialRequest: function(callback) {
+    WebApi(this.platform+".initialRequest", {userId: this.personalId, friends: this.friendsList}, function(data) {
+          callback(data);
+      });
+  }
+};

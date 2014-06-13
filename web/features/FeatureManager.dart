@@ -1,4 +1,0 @@
-abstract class FeatureManager {
-    FeatureManager() {
-    }
-}

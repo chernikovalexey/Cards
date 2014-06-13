@@ -18,23 +18,19 @@ class Router {
     }
 
     public function route() {
-        list($api, $method) = explode('.',$_POST['method']);
         $arguments = json_decode(stripslashes($_POST['arguments']), true);
-        $api = ucfirst($api);
-
-        if(file_exists($api.".php")) {
-            $Api = new $api($this->db);
-            try {
-                $m = new ReflectionMethod($api, $method);
-                try {
-                    $result = $m->invokeArgs($Api, $arguments);
-                    return $result;
-                } catch(ApiException $e) {
-                    return $e;
-                }
-
-            } catch(Exception $e) {}
+        list($platform,$method) = explode('.',$_POST['method']);
+        if(!Api::validatePlatform($platform)) {
+            return new ApiException('404 platform not found', $platform, $method, $arguments);
         }
-        return new ApiException("404 method not found", $api, $method, $arguments);
+
+        $Api = new Api($this->db,$platform);
+
+        $rm = new ReflectionMethod($Api, $method);
+        try {
+            return $rm->invokeArgs($Api, $arguments);
+        } catch(Exception $e) {
+            return new ApiException("404 method not found", $platform, $method, $arguments);
+        }
     }
 } 

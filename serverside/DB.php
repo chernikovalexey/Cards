@@ -111,14 +111,17 @@ class DB {
         return true;
     }
 
-    public function user($uid,$platform)
+    public function validateUser($uid,$platform)
     {
         $sql = $this->db->prepare("SELECT * FROM tcardusers WHERE platformUserId=? AND platformId=?");
         $sql->bindValue(1,$uid, PDO::PARAM_INT);
         $sql->bindValue(2, $platform, PDO::PARAM_STR);
         $sql->execute();
 
-        if ($u = $sql->fetch(PDO::FETCH_ASSOC)) return $u;
+        if ($u = $sql->fetch(PDO::FETCH_ASSOC)) {
+            $u['isNew'] = false;
+            return $u;
+        }
 
         $sql = $this->db->prepare("INSERT INTO tcardusers(platformId, platformUserId) VALUES (?,?)");
         $sql->bindValue(1, $platform, PDO::PARAM_STR);
@@ -126,6 +129,6 @@ class DB {
 
         $sql->execute();
 
-        return array('userId' => +$this->db->lastInsertId(), 'platformId'=>$platform, 'platformUserId'=>$uid);
+        return array('userId' => +$this->db->lastInsertId(), 'platformId'=>$platform, 'platformUserId'=>$uid, 'isNew'=>true);
     }
 } 

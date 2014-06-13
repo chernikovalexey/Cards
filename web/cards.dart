@@ -10,26 +10,21 @@ import 'Chapter.dart';
 import 'ChapterShower.dart';
 import 'dart:js';
 import "StarManager.dart";
-import "Analytics.dart";
 import "HintManager.dart";
-import "features/FeatureFactory.dart";
-import "features/FeatureManager.dart";
+import 'FeatureManager.dart';
 
 CanvasElement canvas;
 GameEngine engine;
 ParallaxManager parallax;
 StateManager manager;
-Analytics analytics;
 HintManager hints;
 FeatureManager featureManager;
 
 
 void main() {
   StarManager.init();
-  analytics = new Analytics();
-  analytics.startSession();
   
-  featureManager = FeatureFactory.create();
+  featureManager = new FeatureManager();
 
   canvas = (querySelector("#graphics") as CanvasElement);
   CanvasRenderingContext2D g = canvas.getContext('2d');
