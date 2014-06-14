@@ -6,6 +6,7 @@
  * Time: 15:36
  */
 
+session_start();
 
 require_once "Router.php";
 require_once "dbconnect.php";
