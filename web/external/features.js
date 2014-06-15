@@ -63,7 +63,7 @@ var NoFeatures = {
             Features = extendAndOverride(Features, VKFeatures);
     }
 
-    Features.load(Features.showFriendsBar);
+    //Features.load(Features.showFriendsBar);
 })();
 
 
