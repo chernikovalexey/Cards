@@ -30,7 +30,7 @@ class CardContactListener extends ContactListener {
 
     if(!contact.touching) return;
 
-    if (!e.physicsEnabled && contact.fixtureB.body.userData != null &&
+    if (!e.physicsEnabled && !contact.fixtureB.isSensor && contact.fixtureB.body.userData != null &&
         !contact.fixtureB.body.userData.isInner) {
       contactingBodies.add(contact.fixtureB.body);
     }

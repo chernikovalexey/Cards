@@ -927,3 +927,8 @@ button:hover {
   -webkit-transform: rotate(-90deg);
   margin-left: -11px;
 }
+
+#hint {
+  position: relative;
+  left: 255px;
+}

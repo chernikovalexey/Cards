@@ -7,8 +7,9 @@
     <script type="application/javascript" src="external/scrollbar.js"></script>
     <script type="application/javascript" src="external/html2canvas.js"></script>
     <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="application/javascript" src="external/analytics.js"></script>
+    <script id="jQuery" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="application/javascript" src="external/features.js"></script>
+    <script type="application/javascript" src="external/webapi.js"></script>
     
     <script type="application/dart" src="cards.dart"></script>
 </head>
@@ -21,6 +22,7 @@
         <button id="zoom-out" class="minus"></button>
         <button id="toggle-physics">Apply physics</button>
         <button id="restart" class="hidden">Restart</button>
+        <button id="hint">Hint (<span id="hint-count">1</span>)</button>
     </div>
 
     <div class="selectors hidden">

@@ -68,7 +68,9 @@ class Level {
 
   void next() {
     if (hasNext()) {
-      if (current != null) current.enable(false);
+      if (current != null) {
+        current.enable(false);
+      }
       ++currentSubLevel;
       loadCurrent();
     }
@@ -82,6 +84,7 @@ class Level {
     } else {
       current = subLevels[currentSubLevel - 1];
       current.apply();
+      current.online(true);
     }
 
     handleLevelChange();
@@ -92,6 +95,7 @@ class Level {
     if (hasPrevious()) {
       --currentSubLevel;
       current.saveState();
+      current.online(false);
       current = subLevels[currentSubLevel - 1];
       current.apply();
       handleLevelChange();

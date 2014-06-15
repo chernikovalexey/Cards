@@ -119,8 +119,11 @@ class SubLevel {
   }
 
   void saveState() {
+
     cards = new List();
     cards.addAll(e.cards);
+
+    
     frames = new List();
     frames.addAll(e.bobbin.list);
 
@@ -145,7 +148,7 @@ class SubLevel {
   }
 
   void apply() {
-    analytics.levelStart(e.level.chapter, index);
+    //analytics.levelStart(e.level.chapter, index);
     Function f = () {
       e.camera.setBounds(x, y, x + w, y + h);
       e.camera.mTargetX = x;
@@ -182,5 +185,13 @@ class SubLevel {
       (b.userData as EnergySprite).activate();
       (b.userData as EnergySprite).connectedToEnergy = true;
     }
+  }
+  
+  void online(bool online) {
+    for(Body c in e.cards) {
+      (c.userData as EnergySprite).makeSensor(!online, c);
+    }
+    
+    (e.to.userData as EnergySprite).makeSensor(!online, e.to);
   }
 }
