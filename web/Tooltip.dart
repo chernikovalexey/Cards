@@ -26,7 +26,7 @@ class Tooltip {
         '</div><div class="got-it">Got it</div></div><div class="arrow bottom-arrow" hidden></div></div>'
         );
 
-    Element tooltip = querySelectorAll(".tooltip")[index];
+    Element tooltip = querySelectorAll(".tooltip").last;
 
     Position gameboxPos = getElementOffset(body);
     Position pos = getElementOffset(rel);
