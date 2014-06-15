@@ -8,6 +8,7 @@ import "Scroll.dart";
 import 'package:animation/animation.dart';
 import 'dart:async';
 import "StarManager.dart";
+import 'GameWizard.dart';
 
 class RatingShower {
   static const int FADE_TIME = 450;
@@ -19,7 +20,9 @@ class RatingShower {
   static bool pauseState = false;
 
   static void nextLevel(event) {
-    analytics.levelComplete(e.level.chapter, e.level.currentSubLevel, e.level.current.staticBlocksRemaining, e.level.current.dynamicBlocksRemaining, e.level.current.rating);
+    analytics.levelComplete(e.level.chapter, e.level.currentSubLevel,
+        e.level.current.staticBlocksRemaining, e.level.current.dynamicBlocksRemaining,
+        e.level.current.rating);
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
     e.nextLevel();
@@ -77,6 +80,10 @@ class RatingShower {
   }
 
   static void show(GameEngine engine, int rating, [int oldR = 0]) {
+    if (GameWizard.showing) {
+      fadeBoxOut(GameWizard.progress, 175);
+    }
+
     oldRating = oldR;
     newRating = rating;
     e = engine;
@@ -228,6 +235,10 @@ class RatingShower {
   }
 
   static void hide() {
+    if (GameWizard.showing) {
+      fadeBoxIn(GameWizard.progress, 175);
+    }
+
     e.isPaused = false;
     wasJustPaused = true;
 

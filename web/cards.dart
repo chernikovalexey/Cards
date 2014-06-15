@@ -102,7 +102,7 @@ void main() {
 }
 
 void showLevelName(String name) {
-  var el = querySelector(".level-name");
+  /*var el = querySelector(".level-name");
 
   el.innerHtml = name;
   el.style.display = "block";
@@ -120,7 +120,7 @@ void showLevelName(String name) {
       'opacity': 0.0,
       'font-size': 30
     }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
-  });
+  });*/
 }
 
 void updateCanvasPositionAndDimension([Event event = null]) {

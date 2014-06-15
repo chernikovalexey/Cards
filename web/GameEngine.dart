@@ -21,14 +21,7 @@ import 'dart:js';
 import "Color4.dart";
 import "SuperCanvasDraw.dart";
 import "StarManager.dart";
-
-/*class HistoryState {
-  static const ADD = 1;
-  static const REMOVE = 2;
-
-  int action;
-  List<Body> affectedCards = new List<Body>();
-}*/
+import "GameWizard.dart";
 
 class GameEngine extends State {
   static const double NSCALE = 85.0;
@@ -71,7 +64,7 @@ class GameEngine extends State {
   List<Body> recentlyRemovedCards = new List<Body>();
   List<int> stars;
   List levels;
-  
+
   bool staticBlocksSelected = false;
   bool isRewinding = false;
 
@@ -84,7 +77,6 @@ class GameEngine extends State {
   }
 
   @override
-
   void start([Map params]) {
     if (params != null) {
       initializeWorld();
@@ -92,7 +84,12 @@ class GameEngine extends State {
 
       level = new Level(() {
         ready = true;
-      }, params["chapter"], this, params["continue"] != null && params["continue"]);
+
+        if (level.chapter == 1 && level.current.index == 1) {
+          GameWizard.show();
+        }
+      }, params["chapter"], this, params["continue"] != null &&
+          params["continue"]);
     }
   }
 
@@ -357,6 +354,10 @@ class GameEngine extends State {
           int nr = level.current.getRating();
 
           RatingShower.show(this, nr, or);
+
+          if (level.chapter == 1 && level.current.index == 1) {
+            GameWizard.finish();
+          }
         }
       } else {
         sprite.deactivate();

@@ -26,8 +26,6 @@ class ChapterShower {
         'onrendered': (CanvasElement canvas) {
           canvas.id = "chapter-blur-g";
           querySelector(".chapter-blurry-bar").append(canvas);
-          //context.callMethod('stackBlurCanvasRGB', ['chapter-blur-g', 0, 0,
-            //  canvas.width, canvas.height, 254]);
           CanvasRenderingContext2D g = canvas.getContext('2d');
           g.fillStyle = 'rgba(0, 0, 0, 0.5)';
           g.fillRect(0, 0, canvas.width, canvas.height);
@@ -81,8 +79,9 @@ class ChapterShower {
           chapter["levels"]).toString() + "px";
       el.querySelector(".finished-levels").innerHtml = finished.toString();
       el.querySelector(".all-levels").innerHtml = chapter["levels"].toString();
-      
-      el.querySelector(".earned-stars").innerHtml = StarManager.getResult(id).toString();
+
+      el.querySelector(".earned-stars").innerHtml = StarManager.getResult(id
+          ).toString();
     }
 
     return el.innerHtml;

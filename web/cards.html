@@ -142,6 +142,60 @@
             <div class="tape-name"></div>
         </div>
     </div>
+    
+    <div class="light-box hidden" id="game-wizard">
+      <div class="greeting-layout">
+        <div class="tutorial-headline">Welcome to the tutorial</div>
+        <div class="tutorial-description">Your goal: place blocks in the space so, that after applying physics to them, they fall in the way energy flows through them from the blue cube to the orange one.</div>
+        <div class="next-button-layout">
+          <button class="step-button show-controls">OK, show me the controls</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="light-box hidden" id="controls">
+      <div class="controls-layout">
+       <div class="control-block">
+          <div class="ctrl-icon"></div>
+          <div class="ctrl-instruction">Use your mouse wheel or arrows to rotate the block</div>
+        </div>
+        
+        <div class="control-block">
+          <div class="ctrl-icon zoom-in"></div>
+          <div class="ctrl-instruction">Hold Alt and left-click to zoom camera in</div>
+        </div>
+        
+        <div class="control-block">
+          <div class="ctrl-icon zoom-out"></div>
+          <div class="ctrl-instruction">Hold Alt+Z and left-click to zoom camera out</div>
+        </div>
+        
+        <div class="control-block">
+          <div class="ctrl-icon dragging"></div>
+          <div class="ctrl-instruction">Hold Space and drag the mouse to move the camera. Or, use WASD instead.</div>
+        </div>
+        
+        <div class="control-block">
+          <div class="ctrl-icon"></div>
+          <div class="ctrl-instruction">Press Ctrl+Shift to apply physics or rewind (in case physics are already applied).</div>
+        </div>
+        
+        <div class="control-block">
+          <div class="ctrl-icon"></div>
+          <div class="ctrl-instruction">Press Ctrl+Z to undo the most recent action.</div>
+        </div>
+        
+        <div class="next-button-layout">
+          <button class="step-button try-button">Try all it on my own</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tutorial-progress hidden">
+      <div class="progress-step overview active-step"></div>
+      <div class="progress-step controls"></div>
+      <div class="progress-step try"></div>
+    </div>
 </div>
 </body>
 </html>

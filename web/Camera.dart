@@ -22,6 +22,9 @@ class Camera {
   double get mTargetX => targetOffsetX / GameEngine.NSCALE;
   double get mTargetY => -targetOffsetY / GameEngine.NSCALE;
 
+  bool firedMovingEnd = true;
+  Function movingEnd = () {};
+
   set mTargetX(double offset) {
     this.targetOffsetX = offset * GameEngine.NSCALE;
     updateEngine(currentZoom);
@@ -42,7 +45,7 @@ class Camera {
     this.e = e;
     Input.setCamera(this);
   }
-  
+
   void reset() {
     pxOffsetX = 0.0;
     pxOffsetY = 0.0;
@@ -60,8 +63,18 @@ class Camera {
     double nx = xAnim.next();
     double ny = yAnim.next();
 
+    double ppx = pxOffsetX;
+    double ppy = pxOffsetY;
+    
     pxOffsetX = nx;
     pxOffsetY = ny;
+    
+    if(ppx == pxOffsetX && ppy == pxOffsetY && !firedMovingEnd) {
+      firedMovingEnd = true;
+      movingEnd();
+    } else if(ppx != pxOffsetX || ppy != pxOffsetY) {
+      firedMovingEnd = false;
+    }
 
     if (xAnim.isFinished) xAnim.setFrames(FRAME_COUNT);
     if (yAnim.isFinished) yAnim.setFrames(FRAME_COUNT);
@@ -74,7 +87,7 @@ class Camera {
       updateEngine(zoom);
 
       if (!zoomAnimation.isFinished) currentZoom = finalZoom;
-    } 
+    }
   }
 
   void setBounds(double bx1, double by1, double bx2, double by2) {
@@ -89,8 +102,8 @@ class Camera {
   }
 
   void moveTo(double dx, double dy) {
-      pxOffsetX = dx;
-      pxOffsetY = dy;
+    pxOffsetX = dx;
+    pxOffsetY = dy;
   }
 
   void updateEngine(double zoom) {
@@ -128,13 +141,13 @@ class Camera {
       }
 
       e.toggleBoundedCard(false);
-    }  else {
+    } else {
       e.toggleBoundedCard(true);
     }
 
     double ptx = targetOffsetX;
     double pty = targetOffsetY;
-    
+
     if (Input.keys['w'].down) {
       targetOffsetY -= speed;
       updated = true;

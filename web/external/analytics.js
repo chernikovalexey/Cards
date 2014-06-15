@@ -46,7 +46,7 @@ Analytics.prototype.send = function(message) {
             xhr.setRequestHeader('Content-Type', 'text/plain');
         },
         success: function(data, textStatus, XMLHttpRequest) {
-            console.log("GOOD! textStatus: " + textStatus);
+            //console.log("GOOD! textStatus: " + textStatus);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log("ERROR ajax call. error: " + errorThrown + ", url: " + url);
