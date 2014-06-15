@@ -53,7 +53,9 @@ var NoFeatures = {
 
     load: function(callback) {
         callback();
-    }
+    },
+
+    showFriendsBar: function() {}
 };
 
 
@@ -61,9 +63,12 @@ var NoFeatures = {
     switch (qs['platform']) {
         case 'vk':
             Features = extendAndOverride(Features, VKFeatures);
+            break;
+        default:
+            Features = NoFeatures;
     }
 
-    //Features.load(Features.showFriendsBar);
+    Features.load(Features.showFriendsBar);
 })();
 
 

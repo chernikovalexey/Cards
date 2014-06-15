@@ -13,6 +13,7 @@ class Api {
     public function Api(DB $db, $platform) {
         $this->db = $db;
         $this->platform = $platform;
+
     }
 
     public static function validatePlatform(&$platform)
@@ -23,6 +24,12 @@ class Api {
 
     public function initialRequest($userId, $friends) {
         $user = $this->db->validateUser($userId, $this->platform);
+        Analytics::init($userId);
+
+        if($user['isNew'])
+            Analytics::push(new AnalyticsEvent("user", "new", array('platform'=>$this->platform)));
+
+        Analytics::push(new AnalyticsEvent("session", "start", array('user'=>$userId)));
         return $this->db->getResults($friends);
     }
 } 

@@ -20,9 +20,6 @@ class RatingShower {
   static bool pauseState = false;
 
   static void nextLevel(event) {
-    analytics.levelComplete(e.level.chapter, e.level.currentSubLevel,
-        e.level.current.staticBlocksRemaining, e.level.current.dynamicBlocksRemaining,
-        e.level.current.rating);
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
     e.nextLevel();
