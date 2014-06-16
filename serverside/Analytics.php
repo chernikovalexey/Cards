@@ -10,8 +10,8 @@ class Analytics {
     private static $userId;
     private static $events;
 
-    private static $game_key = "65bfc1c766b5b05e4c7cbc4da3a56259";
-    private static $secret_key = "c080ac51b515df82ce4a529c2bbbdbe39ffec13b";
+    private static $game_key = "2adf5d6837a8a8b744a94772176f654d";
+    private static $secret_key = "fe9befdac51d6ce91a6b62bed933e59751078c47";
     private static $url = "http://api.gameanalytics.com/1";
     private static $category="design";
 
@@ -22,6 +22,9 @@ class Analytics {
 
     public static function push(AnalyticsEvent $evt) {
         self::$events[] = $evt;
+    }
+
+    public static function flush() {
         $values= array("user_id" => self::$userId, "session_id" => session_id(), "build" => "serverGA");
 
         $json_message = json_encode($values);
@@ -39,12 +42,8 @@ class Analytics {
         $result = curl_exec($ch);
         $curl_info = curl_getinfo($ch);
 
-        echo $result;
+        //echo $result;
         curl_close($ch);
-    }
-
-    public static function flush() {
-
     }
 }
 
