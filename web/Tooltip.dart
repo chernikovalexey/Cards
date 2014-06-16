@@ -23,7 +23,7 @@ class Tooltip {
     body.appendHtml(
         '<div class="tooltip"><div class="arrow top-arrow" hidden></div><div class="arrow left-arrow" hidden></div><div class="tooltip-contents"><div class="tooltip-text">'
         + code +
-        '</div><div class="got-it">Got it</div></div><div class="arrow bottom-arrow" hidden></div></div>'
+        '</div><button class="got-it">Got it</button></div><div class="arrow bottom-arrow" hidden></div></div>'
         );
 
     Element tooltip = querySelectorAll(".tooltip").last;
@@ -93,15 +93,19 @@ class Tooltip {
         el = querySelector(e);
         el.dataset["prev-zindex"] = el.style.zIndex;
         el.style.zIndex = "999";
+        toggleDisabled(el, true);
       }
 
       for (String e in options['blurred']) {
-        querySelector(e).classes.add("blurred");
+        el = querySelector(e);
+        el.classes.add("blurred");
+        toggleDisabled(el, true);
       }
 
       querySelectorAll(".tooltip").forEach((Element el) {
         if (!el.classes.contains("t-" + i.toString())) {
           el.classes.add("blurred");
+          toggleDisabled(el.querySelector(".got-it"), true);
         }
       });
 
@@ -112,12 +116,13 @@ class Tooltip {
   static void removeHighlighting(int i, Map options) {
     if (i <= index) {
       querySelector(".overlay").remove();
-      
+
       Element el = querySelector(".t-" + i.toString());
 
       if (el != null) {
         el.style.zIndex = el.dataset["prev-zindex"];
         el.dataset.remove("prev-zindex");
+        toggleDisabled(el, false);
       }
 
       for (String e in options['highlighted']) {
@@ -127,12 +132,21 @@ class Tooltip {
       }
 
       for (String e in options['blurred']) {
-        querySelector(e).classes.remove("blurred");
+        el = querySelector(e);
+        el.classes.remove("blurred");
+        toggleDisabled(el, false);
       }
 
       querySelectorAll(".tooltip").forEach((Element el) {
         el.classes.remove("blurred");
+        toggleDisabled(el.querySelector(".got-it"), false);
       });
+    }
+  }
+
+  static void toggleDisabled(Element el, bool flag) {
+    if (el is ButtonElement) {
+      el.disabled = flag;
     }
   }
 

@@ -57,7 +57,6 @@ button {
   font-size: 13px;
   font-weight: 700;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  cursor: pointer;
   -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
   transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
   border-radius: 2px;
@@ -68,13 +67,14 @@ button:focus {
   outline: none;
 }
 
-button:active {
+button:active:not([disabled]) {
   border: 1px solid rgba(61, 95, 150, 0.5);
   box-shadow: 0 0 3px rgba(61, 95, 150, 0.25);
 }
 
-button:hover {
+button:hover:not([disabled]) {
    background-color: rgba(255, 255, 255, 0.15);
+   cursor: pointer;
 }
 
 .error-blink {
@@ -753,7 +753,7 @@ button:hover {
   margin-top: -600px;
   display: table;
   text-align: center;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .greeting-layout {
@@ -784,20 +784,8 @@ button:hover {
   border-radius: 3px;
 }
 
-.step-button:hover {
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.skip {
-  margin-top: 40px;
-  color: rgb(238, 238, 238);
-  opacity: 0.5;
-  cursor: pointer;
-  display: inline-block;
-}
-
-.skip:hover {
-  opacity: 0.675;
+.step-button:hover:not([disabled]) {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 #controls {
@@ -824,6 +812,10 @@ button:hover {
   margin-right: 10px;
   vertical-align: top;
   position: relative;
+}
+
+.rotate {
+  background: url(img/rotate.png);
 }
 
 .zoom-in {
@@ -896,21 +888,29 @@ button:hover {
 }
 
 .got-it {
+  border: none !important;
   font-size: 13px;
   color: #fff;
   background: rgba(255, 255, 255, 0.05);
   margin-top: 10px;
   padding: 10px 15px;
   font-weight: 700;
-  cursor: pointer;
   -webkit-user-select: none;
   -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
   transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
   border-radius: 2px;
+  width: 100%;
 }
 
-.got-it:hover {
+.got-it:hover:not([disabled]) {
   background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.got-it:disabled {
+  cursor: default;
+  background: rgba(255, 255, 255, 0.025);
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .arrow {
