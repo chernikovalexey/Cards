@@ -7,6 +7,7 @@ import "Sprite.dart";
 import "SubLevel.dart";
 import 'cards.dart';
 import 'LevelSerializer.dart';
+import 'GameWizard.dart';
 
 class Level {
   GameEngine engine;
@@ -89,6 +90,7 @@ class Level {
 
     handleLevelChange();
     updateBlockButtons(engine);
+    GameWizard.manage(chapter, current.index);
   }
 
   void previous() {

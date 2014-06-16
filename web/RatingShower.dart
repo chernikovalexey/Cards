@@ -32,7 +32,7 @@ class RatingShower {
     e.restartLevel();
   }
 
-  static String tapeItem(Map l, int index, int current) {
+  static String tapeItem(Map l, int chapter, int index, int current) {
     DivElement el = (querySelector(".tape-item-template") as DivElement);
     el.querySelector(".tape-name").innerHtml = l["name"];
     DivElement tr = el.querySelector(".tape-rating") as DivElement;
@@ -54,6 +54,8 @@ class RatingShower {
 
     if (index == current) ti.classes.add("tape-current-item");
 
+    ti.id = chapter.toString() + "-" + levelIndex;
+    
     String result = el.innerHtml;
 
     if (ti.classes.contains("locked")) ti.classes.remove("locked");
@@ -62,7 +64,7 @@ class RatingShower {
 
     tr.classes.clear();
     tr.classes.add("tape-rating");
-
+    
     return result;
   }
 
@@ -121,27 +123,24 @@ class RatingShower {
     chapterLevel.querySelector(".all-levels").innerHtml =
         e.level.levels.length.toString();
 
-    (querySelector("#next-level") as ButtonElement).focus();
-    (querySelector("#next-level") as ButtonElement).removeEventListener("click",
+    querySelector("#next-level").focus();
+    querySelector("#next-level").removeEventListener("click",
         nextLevel);
-
-    (querySelector("#next-level") as ButtonElement).addEventListener("click",
+    querySelector("#next-level").addEventListener("click",
         nextLevel);
-
-    (querySelector("#restart-level") as ButtonElement).removeEventListener(
+    querySelector("#restart-level").removeEventListener(
         "click", restartLevel);
-    (querySelector("#restart-level") as ButtonElement).addEventListener("click",
+    querySelector("#restart-level").addEventListener("click",
         restartLevel);
 
-    (querySelector("#tape-es") as DivElement).innerHtml = "";
+    querySelector("#tape-es").innerHtml = "";
     String s = "";
     for (int i = 0; i < e.level.levels.length; i++) {
-      s += tapeItem(e.level.levels[i], i, e.level.currentSubLevel - 1);
+      s += tapeItem(e.level.levels[i], e.level.chapter, i, e.level.currentSubLevel - 1);
     }
 
     final NodeValidatorBuilder _htmlValidator = new NodeValidatorBuilder.common(
         )..allowElement('div', attributes: ['data-target', 'data-level']);
-
 
     (querySelector("#tape-es") as DivElement).setInnerHtml(s, validator:
         _htmlValidator);
@@ -186,6 +185,7 @@ class RatingShower {
     querySelector("#tape-es").style.width = (e.level.levels.length * 172 +
         10).toString() + "px";
     Scroll.setup('tape-vs', 'tape-es', 'tape-scrollbar', 'h');
+    Scroll.scrollTo('tape-vs', e.level.chapter.toString()+'-'+(e.level.currentSubLevel>0?e.level.currentSubLevel-1:0).toString());
 
     if (!e.level.hasNext() && !pauseState) {
       chapterComplete();

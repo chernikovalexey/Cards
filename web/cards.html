@@ -4,6 +4,8 @@
     <link rel="stylesheet" type="text/css" href="cards.css"/>
     <title>Cards</title>
     
+    <meta charset="utf-8">
+    
     <script type="application/javascript" src="external/scrollbar.js"></script>
     <script type="application/javascript" src="external/html2canvas.js"></script>
     <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
@@ -46,7 +48,7 @@
     </div>
     <div class="light-box" id="menu-box">
       <div class="logo"></div>
-      <div class="instructions"></div>
+      <div class="instructions">Don't let physics intervene the energy flow!</div>
       <div class="menu-items">
         <div class="menu-item" id="continue">Continue</div>
         <div class="menu-item" id="new-game">New Game</div>
@@ -145,17 +147,17 @@
         </div>
     </div>
     
-    <div class="light-box hidden" id="game-wizard">
+    <div class="light-box hidden" id="game-wizard" data-related="overview">
       <div class="greeting-layout">
         <div class="tutorial-headline">Welcome to the tutorial</div>
         <div class="tutorial-description">Would be nice if you place blocks in the space so, that after applying physics to them, they fall in the way energy flows through them from the blue cube to the orange one.</div>
         <div class="next-button-layout">
-          <button class="step-button show-controls">Got it — show me controls</button>
+          <button class="step-button show-controls">Got it â€” show me controls</button>
         </div>
       </div>
     </div>
     
-    <div class="light-box hidden" id="controls">
+    <div class="light-box hidden" id="controls" data-related="controls">
       <div class="controls-layout">
        <div class="control-block">
           <div class="ctrl-icon rotate"></div>
@@ -193,7 +195,7 @@
         </div>
         
         <div class="next-button-layout">
-          <button class="step-button try-button">Got it — try it all on my own</button>
+          <button class="step-button try-button">Got it â€” try it all on my own</button>
         </div>
       </div>
     </div>

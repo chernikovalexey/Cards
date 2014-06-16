@@ -10,6 +10,7 @@ class Position {
 class Tooltip {
   static int index = 0;
 
+  static Map lastOptions; // highlighting
   static Function closeListener = (int index) {};
 
   static const int TOP = 1;
@@ -17,8 +18,9 @@ class Tooltip {
   static const int BOTTOM = 3;
   static const int LEFT = 4;
 
-  static void show(Element rel, String code, int alignment, [num maxWidth =
-      800, num xOffset = 0, num xArrowOffset = 0, num yArrowOffset = 0]) {
+  static void show(Element rel, String code, int alignment, {num maxWidth:
+      800, num xOffset: 0, num yOffset: 0, num xArrowOffset: 0, num yArrowOffset: 0})
+      {
     Element body = querySelector(".game-box");
     body.appendHtml(
         '<div class="tooltip"><div class="arrow top-arrow" hidden></div><div class="arrow left-arrow" hidden></div><div class="tooltip-contents"><div class="tooltip-text">'
@@ -34,7 +36,7 @@ class Tooltip {
     tooltip.style.maxWidth = maxWidth.toString() + "px";
 
     num x = pos.left + xOffset - gameboxPos.left;
-    num y = pos.top;
+    num y = pos.top + yOffset;
 
     if (alignment == TOP) {
       x += rel.client.width / 2 - tooltip.client.width / 2;
@@ -85,6 +87,8 @@ class Tooltip {
 
   static void highlightByIndex(int i, Map options) {
     if (i <= index) {
+      lastOptions = options;
+
       Element el = querySelector(".t-" + i.toString());
       el.dataset["prev-zindex"] = el.style.zIndex;
       el.style.zIndex = "999";
@@ -113,8 +117,8 @@ class Tooltip {
     }
   }
 
-  static void removeHighlighting(int i, Map options) {
-    if (i <= index) {
+  static void removeHighlighting(int i) {
+    if (i <= index && lastOptions != null) {
       querySelector(".overlay").remove();
 
       Element el = querySelector(".t-" + i.toString());
@@ -125,13 +129,14 @@ class Tooltip {
         toggleDisabled(el, false);
       }
 
-      for (String e in options['highlighted']) {
+      for (String e in lastOptions['highlighted']) {
         el = querySelector(e);
         el.style.zIndex = el.dataset["prev-zindex"];
         el.dataset.remove("prev-zindex");
+        toggleDisabled(el, false);
       }
 
-      for (String e in options['blurred']) {
+      for (String e in lastOptions['blurred']) {
         el = querySelector(e);
         el.classes.remove("blurred");
         toggleDisabled(el, false);
