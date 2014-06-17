@@ -11,4 +11,8 @@ class Scroll {
         true]);
     return scroll;
   }
+  
+  static void scrollTo(String visibleId, String scrollToId) {
+    context['dw_scrollObj'].callMethod('scrollToId', [visibleId, scrollToId, '', 550]);
+  }
 }

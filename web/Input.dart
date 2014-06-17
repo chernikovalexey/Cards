@@ -22,6 +22,7 @@ class Input {
     '1': new Key(49),
     '2': new Key(50),
     'esc': new Key(27),
+    'shift': new Key(16),
     'ctrl': new Key(17)
   };
 

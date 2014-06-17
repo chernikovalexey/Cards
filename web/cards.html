@@ -4,11 +4,12 @@
     <link rel="stylesheet" type="text/css" href="cards.css"/>
     <title>Cards</title>
 
+    <meta charset="utf-8">
+
     <script type="application/javascript" src="external/scrollbar.js"></script>
     <script type="application/javascript" src="external/html2canvas.js"></script>
     <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
     <script id="jQuery" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="application/javascript" src="external/templateEngine.js"></script>
     <script type="application/javascript" src="external/features.js"></script>
     <script type="application/javascript" src="external/webapi.js"></script>
 
@@ -47,7 +48,7 @@
     </div>
     <div class="light-box" id="menu-box">
         <div class="logo"></div>
-        <div class="instructions"></div>
+        <div class="instructions">Don't let physics intervene the energy flow!</div>
         <div class="menu-items">
             <div class="menu-item" id="continue">Continue</div>
             <div class="menu-item" id="new-game">New Game</div>
@@ -75,16 +76,13 @@
             </div>
             <div class="progress-layout">
                 <div class="progress-caption">
-                    <div class="finished-levels"></div>
-                    of
-                    <div class="all-levels"></div>
+                    <div class="finished-levels"></div> of <div class="all-levels"></div>
                 </div>
                 <div class="full-bar"></div>
                 <div class="current-bar"></div>
             </div>
             <div class="unlock-layout">
-                <div class="stars-left"></div>
-                star<span class="word-ending">s</span> left
+                <div class="stars-left"></div> star<span class="word-ending">s</span> left
             </div>
             <div class="chapter-thumbnail"></div>
             <div class="chapter-title"></div>
@@ -122,9 +120,7 @@
 
             <div class="tape">
                 <div class="chapter-level">
-                    <div class="finished-levels"></div>
-                    of
-                    <div class="all-levels"></div>
+                    <div class="finished-levels"></div> of <div class="all-levels"></div>
                 </div>
                 <div id="tape-vs">
                     <div id="tape-es"></div>
@@ -151,19 +147,17 @@
         </div>
     </div>
 
-    <div class="light-box hidden" id="game-wizard">
+    <div class="light-box hidden" id="game-wizard" data-related="overview">
         <div class="greeting-layout">
             <div class="tutorial-headline">Welcome to the tutorial</div>
-            <div class="tutorial-description">Would be nice if you place blocks in the space so, that after applying
-                physics to them, they fall in the way energy flows through them from the blue cube to the orange one.
-            </div>
+            <div class="tutorial-description">Would be nice if you place blocks in the space so, that after applying physics to them, they fall in the way energy flows through them from the blue cube to the orange one.</div>
             <div class="next-button-layout">
-                <button class="step-button show-controls">Got it � show me controls</button>
+                <button class="step-button show-controls">Got it — show me controls</button>
             </div>
         </div>
     </div>
 
-    <div class="light-box hidden" id="controls">
+    <div class="light-box hidden" id="controls" data-related="controls">
         <div class="controls-layout">
             <div class="control-block">
                 <div class="ctrl-icon rotate"></div>
@@ -182,15 +176,12 @@
 
             <div class="control-block">
                 <div class="ctrl-icon dragging"></div>
-                <div class="ctrl-instruction">Hold Space and drag the mouse to move the camera. Or, use WASD instead.
-                </div>
+                <div class="ctrl-instruction">Hold Space and drag the mouse to move the camera. Or, use WASD instead.</div>
             </div>
 
             <div class="control-block">
                 <div class="ctrl-icon"></div>
-                <div class="ctrl-instruction">Press Ctrl+Shift to apply physics or rewind (in case physics are already
-                    applied).
-                </div>
+                <div class="ctrl-instruction">Press Ctrl+Shift to apply physics or rewind (in case physics are already applied).</div>
             </div>
 
             <div class="control-block">
@@ -204,7 +195,7 @@
             </div>
 
             <div class="next-button-layout">
-                <button class="step-button try-button">Got it � try it all on my own</button>
+                <button class="step-button try-button">Got it — try it all on my own</button>
             </div>
         </div>
     </div>
@@ -215,6 +206,7 @@
         <div class="progress-step try"></div>
     </div>
 </div>
+
 <div class="templates">
     <div class="friends-bar-template">
         <div class="friends">
@@ -243,5 +235,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

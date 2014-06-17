@@ -21,7 +21,7 @@ import 'dart:js';
 import "Color4.dart";
 import "SuperCanvasDraw.dart";
 import "StarManager.dart";
-import "GameWizard.dart";
+import 'GameWizard.dart';
 
 class GameEngine extends State {
   static const double NSCALE = 85.0;
@@ -84,10 +84,6 @@ class GameEngine extends State {
 
       level = new Level(() {
         ready = true;
-
-        if (level.chapter == 1 && level.current.index == 1) {
-          GameWizard.show();
-        }
       }, params["chapter"], this, params["continue"] != null &&
           params["continue"]);
     }
@@ -226,6 +222,10 @@ class GameEngine extends State {
 
     if (isStatic) {
       --sub.staticBlocksRemaining;
+
+      if (sub.staticBlocksRemaining == 0) {
+        this.staticBlocksSelected = false;
+      }
     } else {
       --sub.dynamicBlocksRemaining;
     }
@@ -256,7 +256,6 @@ class GameEngine extends State {
   }
 
   @override
-
   void update(num delta) {
     if (!ready || isPaused) {
       return;
@@ -320,6 +319,10 @@ class GameEngine extends State {
       staticBlocksSelected = true;
       updateBlockButtons(this);
     }
+    if (Input.keys['ctrl'].down && Input.keys['shift'].clicked ||
+        Input.keys['ctrl'].clicked && Input.keys['shift'].down) {
+      applyRewindLabelToButton();
+    }
 
     if (contactListener.contactingBodies.isNotEmpty && Input.isMouseRightClicked
         && !isRewinding) {
@@ -370,12 +373,15 @@ class GameEngine extends State {
   // saves the state of the current level
 
   void saveCurrentProgress() {
+    if (level != null && level.current != null) {
+      String id = 'level_' + level.chapter.toString() + '_' +
+          level.current.index.toString();
 
-    // No sense to save empty states, indeed
-    if (ready && !cards.isEmpty && level.current != null) {
-      window.localStorage['level_' + level.chapter.toString() + '_' +
-          level.current.index.toString()] = LevelSerializer.toJSON(cards, bobbin.list,
-          physicsEnabled);
+      // No sense to save empty states, indeed
+      if (ready && (window.localStorage.containsKey(id) || !cards.isEmpty)) {
+        window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list,
+            physicsEnabled);
+      }
     }
   }
 
