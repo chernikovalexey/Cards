@@ -932,3 +932,7 @@ button:hover:not([disabled]) {
   -webkit-transform: rotate(-90deg);
   margin-left: -11px;
 }
+
+.templates {
+    display: none;
+}

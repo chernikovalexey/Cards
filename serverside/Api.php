@@ -30,6 +30,6 @@ class Api {
             Analytics::push(new AnalyticsEvent("user", "new", array('platform'=>$this->platform)));
 
         Analytics::push(new AnalyticsEvent("session", "start", array('user'=>$userId)));
-        return $this->db->getResults($friends);
+        return $this->db->getResults($friends, $this->platform);
     }
 } 

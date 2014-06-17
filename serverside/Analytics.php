@@ -25,9 +25,15 @@ class Analytics {
     }
 
     public static function flush() {
-        $values= array("user_id" => self::$userId, "session_id" => session_id(), "build" => "serverGA");
 
-        $json_message = json_encode($values);
+        $values= array("user_id" => self::$userId, "session_id" => session_id(), "build" => "serverGA");
+        $arr = array();
+        foreach(self::$events as $evt) {
+            $arr[] = array_merge($evt->toArray(), $values);
+        }
+
+        $json_message = json_encode($arr);
+
         $authorization = md5($json_message . "" . self::$secret_key);
 
         $ch = curl_init();
@@ -42,7 +48,6 @@ class Analytics {
         $result = curl_exec($ch);
         $curl_info = curl_getinfo($ch);
 
-        //echo $result;
         curl_close($ch);
     }
 }
