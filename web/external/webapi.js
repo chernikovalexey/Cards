@@ -29,5 +29,16 @@ var Api = {
     WebApi(this.platform+".initialRequest", {userId: this.personalId, friends: this.friendsList}, function(data) {
           callback(data);
       });
+  },
+  finishLevel: function(chapter, level, result, attempts, timeSpent, callback) {
+      WebApi(this.platform+".finishLevel", {
+          userId: this.personalId,
+          chapter: chapter,
+          level: level,
+          result: result,
+          attempts: attempts,
+          timeSpent: timeSpent
+      }, callback);
   }
+
 };

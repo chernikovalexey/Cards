@@ -6,11 +6,13 @@
  * Time: 16:01
  */
 
-class Api {
+class Api
+{
     protected $db;
     private $platform;
 
-    public function Api(DB $db, $platform) {
+    public function Api(DB $db, $platform)
+    {
         $this->db = $db;
         $this->platform = $platform;
 
@@ -22,14 +24,23 @@ class Api {
         return in_array($platform, array('vk'));
     }
 
-    public function initialRequest($userId, $friends) {
-        $user = $this->db->validateUser($userId, $this->platform);
-        Analytics::init($userId);
-
-        if($user['isNew'])
-            Analytics::push(new AnalyticsEvent("user", "new", array('platform'=>$this->platform)));
-
-        Analytics::push(new AnalyticsEvent("session", "start", array('user'=>$userId)));
+    public function initialRequest(array $user, $friends)
+    {
+        Analytics::push(new AnalyticsEvent("session", "start", array('user' => $user)));
         return $this->db->getResults($friends, $this->platform);
+    }
+
+    public function finishLevel(array $user, $chapter, $level, $result, $attempts, $timeSpent)
+    {
+        Analytics::push(new AnalyticsEvent("level", "finish", array(
+            'area' => 'c' . $chapter . 'l' . $level,
+            'chapter' => $chapter,
+            'level' => $level,
+            'result' => $result,
+            'attempts' => $attempts,
+            'timeSpent' => $timeSpent
+        )));
+
+        return array('result' => $this->db->result($chapter, $level, $result, $user, $this->platform));
     }
 } 

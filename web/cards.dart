@@ -12,6 +12,7 @@ import 'dart:js';
 import "StarManager.dart";
 import "HintManager.dart";
 import 'FeatureManager.dart';
+import 'WebApi.dart';
 
 CanvasElement canvas;
 GameEngine engine;
@@ -150,6 +151,7 @@ void applyPhysicsLabelToButton() {
 
 void applyRewindLabelToButton() {
   if (!engine.isRewinding) {
+    WebApi.addAttempt();
     var btn = querySelector("#toggle-physics");
     btn.classes.add("rewind");
     btn.text = "Rewind";

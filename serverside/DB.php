@@ -103,11 +103,8 @@ class DB
         return $r[0];
     }
 
-    public function result($chapter, $level, $result, $user, $platform)
+    public function result($chapter, $level, $result,array $user, $platform)
     {
-        $u = $this->getUser($user, $platform);
-        if (!$u) return false;
-
         $sql = $this->db->prepare("SELECT * FROM tcardresults WHERE userId=? AND chapterId=? AND levelId=?");
         $sql->bindValue(1, $user['userId'], PDO::PARAM_INT);
         $sql->bindValue(2, $chapter, PDO::PARAM_INT);

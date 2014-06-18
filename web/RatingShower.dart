@@ -9,6 +9,7 @@ import 'package:animation/animation.dart';
 import 'dart:async';
 import "StarManager.dart";
 import 'GameWizard.dart';
+import 'WebApi.dart';
 
 class RatingShower {
   static const int FADE_TIME = 450;
@@ -20,6 +21,7 @@ class RatingShower {
   static bool pauseState = false;
 
   static void nextLevel(event) {
+    WebApi.finishLevel(newRating);
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
     e.nextLevel();

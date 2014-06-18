@@ -952,3 +952,22 @@ button:hover:not([disabled]) {
 .templates {
     display: none;
 }
+
+.friends {
+    position: absolute;
+    top:800px;
+    background: #000000;
+}
+
+.fr-name {
+    font-family: Arial;
+    color: silver;
+}
+
+.fr-result {
+    color: #ffffff;
+}
+
+.friends div {
+    display: inline-block;
+}

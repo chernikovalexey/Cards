@@ -35,8 +35,8 @@ var Features = {
                             );
                         }
 
-                        var obj;
-                        TemplateEngine.parseTemplate($('.friends-bar-template').html(), obj = {
+
+                       /* $('body').append(TemplateEngine.parseTemplate($('.friends-bar-template').html(),  {
                             users: (function () {
                                 var r = "";
                                 $(items).each(function () {
@@ -52,8 +52,16 @@ var Features = {
                                 });
                                 return r;
                             })()
-                        });
-                        console.log(obj);
+                        }));
+                        var height = $($('.friends').get(1)).height() + 800;
+                        VK.callMethod('resizeWindow', 800, height);
+                        $('.invite-button').click(function(e) {
+                            VK.callMethod("showRequestBox", {
+                                uid: $(e.target).data('id'),
+                                message: "Test",
+                                requestKey: "RequestKey"
+                            });
+                        })*/
                     });
                 }
             )
@@ -75,6 +83,12 @@ var Features = {
             });
 
             return r;
+        },
+
+        onLevelFinish: function(chapter,level, result, attempts, timeSpent) {
+            Api.finishLevel(chapter, level, result, attempts, timeSpent, function(data) {
+                console.log(data);
+            });
         }
     }
     ;
@@ -83,7 +97,7 @@ var VKFeatures = {
     friends: null,
 
     initFields: function (callback) {
-        VK.api("friends.get", {fields: "domain, photo_100"}, function (data) {
+        VK.api("friends.get", {fields: "domain, photo_50"}, function (data) {
             Api.setFriendsList(Features.toIdArray(data.response));
             Features.friends = data.response;
 
@@ -107,7 +121,7 @@ var VKFeatures = {
     toUserObject: function(fr) {
         return {
             id: fr.uid,
-            ava: fr.photo_100,
+            ava: fr.photo_50,
             name: fr.first_name,
             surname: fr.last_name
         };
