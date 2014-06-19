@@ -21,7 +21,7 @@ class Api
     public static function validatePlatform(&$platform)
     {
         $platform = strtolower($platform);
-        return in_array($platform, array('vk'));
+        return in_array($platform, array('vk','no'));
     }
 
     public function initialRequest(array $user, $friends)

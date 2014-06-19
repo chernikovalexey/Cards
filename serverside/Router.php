@@ -32,7 +32,7 @@ class Router {
             $user = $this->db->validateUser($arguments['userId'], $platform);
             $arguments['userId'] = $user;
 
-            Analytics::init($user['userId']);
+            Analytics::init($user['userId'], $platform);
 
             if($user['isNew'])
                 Analytics::push(new AnalyticsEvent("user", "new", array('platform'=>$platform)));

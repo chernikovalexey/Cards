@@ -142,7 +142,17 @@ var VKFeatures = {
 };
 
 var NoFeatures = {
+    getPersonalId: function() {
+        if(localStorage['userId']==null) {
+            var dt = new Date();
+            localStorage['userId'] ="" + dt.getMilliseconds() + dt.getTime();
+        }
+        return localStorage['userId'];
+    },
+
     initFields: function (callback) {
+        Api.setPersonalId(this.getPersonalId());
+        Api.setPlatform('no');
         callback();
     },
 
@@ -161,7 +171,7 @@ var NoFeatures = {
             Features = extendAndOverride(Features, VKFeatures);
             break;
         default:
-            Features = NoFeatures;
+            Features = extendAndOverride(Features, NoFeatures);
     }
 
     Features.load(Features.showFriendsBar);
