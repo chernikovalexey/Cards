@@ -52,6 +52,7 @@ class Analytics
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
         $result = curl_exec($ch);
+        //echo $result;
         $curl_info = curl_getinfo($ch);
 
         curl_close($ch);

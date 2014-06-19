@@ -27,7 +27,10 @@ class Api
     public function initialRequest(array $user, $friends)
     {
         Analytics::push(new AnalyticsEvent("session", "start", array('user' => $user)));
-        return $this->db->getResults($friends, $this->platform);
+        if(count($friends)>0)
+            return $this->db->getResults($friends, $this->platform);
+        else
+            return array();
     }
 
     public function finishLevel(array $user, $chapter, $level, $result, $attempts, $timeSpent)

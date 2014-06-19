@@ -157,10 +157,14 @@ var NoFeatures = {
     },
 
     load: function (callback) {
-        callback();
+        this.initFields(callback)
     },
 
     showFriendsBar: function () {
+        Api.setFriendsList([]);
+        Api.initialRequest(function(data) {
+            console.log('no platform: ',data);
+        })
     }
 };
 
