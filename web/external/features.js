@@ -22,6 +22,10 @@ var extendAndOverride = function (o1, o2) {
 
 
 var Features = {
+        keepAlive: function() {
+            Api.keepAlive();
+        },
+
         showFriendsBar: function () {
             Features.initFields(function () {
                     Api.initialRequest(function (data) {
@@ -179,6 +183,7 @@ var NoFeatures = {
     }
 
     Features.load(Features.showFriendsBar);
+    setInterval(Features.keepAlive, 5000);
 })();
 
 

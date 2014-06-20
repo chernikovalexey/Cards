@@ -39,6 +39,11 @@ var Api = {
           attempts: attempts,
           timeSpent: timeSpent
       }, callback);
+  },
+  keepAlive: function() {
+      WebApi(this.platform+".keepAlive", {
+          userId: this.personalId
+      });
   }
 
 };

@@ -26,11 +26,16 @@ class Api
 
     public function initialRequest(array $user, $friends)
     {
-        Analytics::push(new AnalyticsEvent("session", "start", array('user' => $user)));
+        Analytics::push(new AnalyticsEvent("session", "start", array('user' => $user['userId'])));
         if(count($friends)>0)
             return $this->db->getResults($friends, $this->platform);
         else
             return array();
+    }
+
+    public function keepAlive(array $user) {
+        Analytics::push(new AnalyticsEvent("connection", "keepAlive", array('user' => $user['userId'])));
+        return array('result'=>true);
     }
 
     public function finishLevel(array $user, $chapter, $level, $result, $attempts, $timeSpent)
