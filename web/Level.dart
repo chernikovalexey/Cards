@@ -8,6 +8,7 @@ import "SubLevel.dart";
 import 'cards.dart';
 import 'LevelSerializer.dart';
 import 'GameWizard.dart';
+import 'WebApi.dart';
 
 class Level {
   GameEngine engine;
@@ -82,6 +83,8 @@ class Level {
       for (int i = subLevels.length; i < currentSubLevel; ++i) {
         subLevels.add(load(i + 1));
       }
+
+      WebApi.levelStart(chapter ,currentSubLevel);
     } else {
       current = subLevels[currentSubLevel - 1];
       current.apply();

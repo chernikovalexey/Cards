@@ -22,40 +22,154 @@ var extendAndOverride = function (o1, o2) {
 
 
 var Features = {
-    showFriendsBar: function () {
-        Features.initFields(function () {
-            Api.initialRequest(function (data) {
+        keepAlive: function() {
+            Api.keepAlive();
+        },
+
+        showFriendsBar: function () {
+            Features.initFields(function () {
+                    Api.initialRequest(function (data) {
+                        var items = [];
+
+                        for (var key in data) {
+                            items.push(
+                                extendAndOverride(
+                                    {id: +key.substr(1), result: Features.calcResult(data[key])},
+                                    Features.getUserObject(+key.substr(1)))
+                            );
+                        }
+
+
+                       /* $('body').append(TemplateEngine.parseTemplate($('.friends-bar-template').html(),  {
+                            users: (function () {
+                                var r = "";
+                                $(items).each(function () {
+                                    r += TemplateEngine.parseTemplate($('.friend-card-template').html(), this);
+                                    console.log(this);
+                                });
+                                return r;
+                            })(),
+                            invite: (function () {
+                                var r = "";
+                                $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
+                                    r += TemplateEngine.parseTemplate($('.invite-card-template').html(), this);
+                                });
+                                return r;
+                            })()
+                        }));
+                        var height = $($('.friends').get(1)).height() + 800;
+                        VK.callMethod('resizeWindow', 800, height);
+                        $('.invite-button').click(function(e) {
+                            VK.callMethod("showRequestBox", {
+                                uid: $(e.target).data('id'),
+                                message: "Test",
+                                requestKey: "RequestKey"
+                            });
+                        })*/
+                    });
+                }
+            )
+            ;
+        },
+
+        calcResult: function (data) {
+            var r = 0;
+            $(data).each(function () {
+                r += +this.result;
+            });
+            return r;
+        },
+
+        toIdArray: function (data) {
+            var r = [];
+            $(data).each(function () {
+                r.push(this.uid || this.id);
+            });
+
+            return r;
+        },
+
+        onLevelFinish: function(chapter,level, result, attempts, timeSpent) {
+            Api.finishLevel(chapter, level, result, attempts, timeSpent, function(data) {
                 console.log(data);
             });
-        });
+        }
     }
-};
+    ;
 
 var VKFeatures = {
+    friends: null,
+
     initFields: function (callback) {
-        VK.api("friends.get", {}, function (data) {
-            Api.setFriendsList(data.response);
+        VK.api("friends.get", {fields: "domain, photo_50"}, function (data) {
+            Api.setFriendsList(Features.toIdArray(data.response));
+            Features.friends = data.response;
+
             Api.setPersonalId(qs['viewer_id']);
             Api.setPlatform('vk');
             callback();
         });
     },
 
-    load: function(callback) {
-        $.getScript(document.location.protocol+"//vk.com/js/api/xd_connection.js?2", callback);
+
+    getNotGameFriends: function (inGameFriendsIds) {
+        var r = [];
+        $(Features.friends).each(function () {
+            if ($.inArray(this.uid, inGameFriendsIds))
+                r.push(Features.toUserObject(this));
+        });
+
+        return r;
+    },
+
+    toUserObject: function(fr) {
+        return {
+            id: fr.uid,
+            ava: fr.photo_50,
+            name: fr.first_name,
+            surname: fr.last_name
+        };
+    },
+
+    getUserObject: function (id) {
+        for (var i = 0; i < this.friends.length; i++) {
+            var fr = this.friends[i];
+            if (fr.uid == id) {
+                return this.toUserObject(fr);
+            }
+        }
+    },
+
+    load: function (callback) {
+        $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", callback);
     }
 };
 
 var NoFeatures = {
-    initFields: function(callback) {
+    getPersonalId: function() {
+        if(localStorage['userId']==null) {
+            var dt = new Date();
+            localStorage['userId'] ="" + dt.getMilliseconds() + dt.getTime();
+        }
+        return localStorage['userId'];
+    },
+
+    initFields: function (callback) {
+        Api.setPersonalId(this.getPersonalId());
+        Api.setPlatform('no');
         callback();
     },
 
-    load: function(callback) {
-        callback();
+    load: function (callback) {
+        this.initFields(callback)
     },
 
-    showFriendsBar: function() {}
+    showFriendsBar: function () {
+        Api.setFriendsList([]);
+        Api.initialRequest(function(data) {
+            console.log('no platform: ',data);
+        })
+    }
 };
 
 
@@ -65,10 +179,11 @@ var NoFeatures = {
             Features = extendAndOverride(Features, VKFeatures);
             break;
         default:
-            Features = NoFeatures;
+            Features = extendAndOverride(Features, NoFeatures);
     }
 
     Features.load(Features.showFriendsBar);
+    setInterval(Features.keepAlive, 5000);
 })();
 
 

@@ -3,16 +3,18 @@
 <head>
     <link rel="stylesheet" type="text/css" href="cards.css"/>
     <title>Cards</title>
-    
+
     <meta charset="utf-8">
-    
+
     <script type="application/javascript" src="external/scrollbar.js"></script>
     <script type="application/javascript" src="external/html2canvas.js"></script>
     <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
     <script id="jQuery" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="application/javascript" src="external/features.js"></script>
+    <script type="application/javascript" src="external/TemplateEngine.js"></script>
     <script type="application/javascript" src="external/webapi.js"></script>
-    
+    <script type="application/javascript" src="external/features.js"></script>
+
+
     <script type="application/dart" src="cards.dart"></script>
 </head>
 <body>
@@ -34,7 +36,7 @@
             <div class="caption">dynamic</div>
             <div class="remaining"></div>
         </div>
-        
+
         <div class="selector static">
             <div class="icon"></div>
             <div class="bound-key">2</div>
@@ -47,48 +49,48 @@
         <canvas width="800" height="600" id="graphics"></canvas>
     </div>
     <div class="light-box" id="menu-box">
-      <div class="logo"></div>
-      <div class="instructions">Don't let physics intervene the energy flow!</div>
-      <div class="menu-items">
-        <div class="menu-item" id="continue">Continue</div>
-        <div class="menu-item" id="new-game">New Game</div>
-      </div>
+        <div class="logo"></div>
+        <div class="instructions">Don't let physics intervene the energy flow!</div>
+        <div class="menu-items">
+            <div class="menu-item" id="continue">Continue</div>
+            <div class="menu-item" id="new-game">New Game</div>
+        </div>
     </div>
-    
+
     <div class="light-box hidden" id="chapter-selection">
-      <div class="go-to-menu-button">Menu</div>
-      <div class="chapter-headline">Choose Chapter</div>
-      <div class="chapter-blurry-bar"></div>
-      <div class="chapter-list">
-        <div id="chapter-vs">
-          <div id="chapter-es"></div>
+        <div class="go-to-menu-button">Menu</div>
+        <div class="chapter-headline">Choose Chapter</div>
+        <div class="chapter-blurry-bar"></div>
+        <div class="chapter-list">
+            <div id="chapter-vs">
+                <div id="chapter-es"></div>
+            </div>
         </div>
-      </div>
-      
-      <div id="chapter-scrollbar"></div>
+
+        <div id="chapter-scrollbar"></div>
     </div>
-    
+
     <div class="chapter-template hidden">
-      <div class="chapter">
-        <div class="star-layout">
-          <div class="earned-stars"></div>
-          <div class="star-icon"></div>
+        <div class="chapter">
+            <div class="star-layout">
+                <div class="earned-stars"></div>
+                <div class="star-icon"></div>
+            </div>
+            <div class="progress-layout">
+                <div class="progress-caption">
+                    <div class="finished-levels"></div> of <div class="all-levels"></div>
+                </div>
+                <div class="full-bar"></div>
+                <div class="current-bar"></div>
+            </div>
+            <div class="unlock-layout">
+                <div class="stars-left"></div> star<span class="word-ending">s</span> left
+            </div>
+            <div class="chapter-thumbnail"></div>
+            <div class="chapter-title"></div>
         </div>
-        <div class="progress-layout">
-          <div class="progress-caption">
-            <div class="finished-levels"></div> of <div class="all-levels"></div>
-          </div>
-          <div class="full-bar"></div>
-          <div class="current-bar"></div>
-        </div>
-        <div class="unlock-layout">
-          <div class="stars-left"></div> star<span class="word-ending">s</span> left
-        </div>
-        <div class="chapter-thumbnail"></div>
-        <div class="chapter-title"></div>
-      </div>
     </div>
-    
+
     <div class="light-box hidden" id="rating-box">
         <div class="rating-inner-layout">
             <div class="pause-title hidden">Game paused</div>
@@ -108,9 +110,9 @@
             </div>
 
             <div class="pause-controls controls hidden">
-              <button id="resume-game">Resume</button>
-              <button id="clear-level">Restart</button>
-              <button id="pm-menu">Menu</button>
+                <button id="resume-game">Resume</button>
+                <button id="clear-level">Restart</button>
+                <button id="pm-menu">Menu</button>
             </div>
 
             <div class="chapter-controls controls hidden">
@@ -119,23 +121,23 @@
             </div>
 
             <div class="tape">
-              <div class="chapter-level">
-                <div class="finished-levels"></div> of <div class="all-levels"></div>
-              </div>
-              <div id="tape-vs">
-                <div id="tape-es"></div>
-              </div>
-              <div id="tape-scrollbar"></div>
+                <div class="chapter-level">
+                    <div class="finished-levels"></div> of <div class="all-levels"></div>
+                </div>
+                <div id="tape-vs">
+                    <div id="tape-es"></div>
+                </div>
+                <div id="tape-scrollbar"></div>
             </div>
         </div>
     </div>
-    
+
     <div class="star-template hidden">
-      <div class="stars-layout">
-        <div class="star extinct-star"></div>
-        <div class="star extinct-star"></div>
-        <div class="star extinct-star"></div>
-      </div>
+        <div class="stars-layout">
+            <div class="star extinct-star"></div>
+            <div class="star extinct-star"></div>
+            <div class="star extinct-star"></div>
+        </div>
     </div>
 
     <div class="tape-item-template hidden">
@@ -146,6 +148,7 @@
             <div class="tape-name"></div>
         </div>
     </div>
+<<<<<<< HEAD
     
     <div class="light-box hidden" id="wizard-overview">
       <div class="greeting-layout">
@@ -153,9 +156,19 @@
         <div class="tutorial-description">Would be nice if you place blocks in the space so, that after applying physics to them, they fall in the way energy flows through them from the blue cube to the orange one.</div>
         <div class="next-button-layout">
           <button class="step-button show-controls progress-step wizard-controls">Got it — show me controls</button>
+=======
+
+    <div class="light-box hidden" id="game-wizard" data-related="overview">
+        <div class="greeting-layout">
+            <div class="tutorial-headline">Welcome to the tutorial</div>
+            <div class="tutorial-description">Would be nice if you place blocks in the space so, that after applying physics to them, they fall in the way energy flows through them from the blue cube to the orange one.</div>
+            <div class="next-button-layout">
+                <button class="step-button show-controls">Got it — show me controls</button>
+            </div>
+>>>>>>> 5d44ae2251b585c883dde5744e25e8b41bce64cf
         </div>
-      </div>
     </div>
+<<<<<<< HEAD
     
     <div class="light-box hidden" id="wizard-controls">
       <div class="controls-layout">
@@ -187,18 +200,85 @@
         <div class="control-block">
           <div class="ctrl-icon"></div>
           <div class="ctrl-instruction">Press Ctrl+Z to undo the most recent action.</div>
+=======
+
+    <div class="light-box hidden" id="controls" data-related="controls">
+        <div class="controls-layout">
+            <div class="control-block">
+                <div class="ctrl-icon rotate"></div>
+                <div class="ctrl-instruction">Use your mouse wheel or arrows to rotate the block</div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon zoom-in"></div>
+                <div class="ctrl-instruction">Hold Alt and left-click to zoom camera in</div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon zoom-out"></div>
+                <div class="ctrl-instruction">Hold Alt+Z and left-click to zoom camera out</div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon dragging"></div>
+                <div class="ctrl-instruction">Hold Space and drag the mouse to move the camera. Or, use WASD instead.</div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction">Press Ctrl+Shift to apply physics or rewind (in case physics are already applied).</div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction">Press Ctrl+Z to undo the most recent action.</div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction">Hover a desired block and right-click to remove it.</div>
+            </div>
+
+            <div class="next-button-layout">
+                <button class="step-button try-button">Got it — try it all on my own</button>
+            </div>
+>>>>>>> 5d44ae2251b585c883dde5744e25e8b41bce64cf
         </div>
-        
-        <div class="control-block">
-          <div class="ctrl-icon"></div>
-          <div class="ctrl-instruction">Hover a desired block and right-click to remove it.</div>
+    </div>
+
+    <div class="tutorial-progress hidden">
+        <div class="progress-step overview active-step"></div>
+        <div class="progress-step controls"></div>
+        <div class="progress-step try"></div>
+    </div>
+</div>
+
+<div class="templates">
+    <div class="friends-bar-template">
+        <div class="friends">
+            <div class="card-users">
+                <%=users%>
+            </div>
+            <div class="invite-users">
+                <%=invite%>
+            </div>
         </div>
+<<<<<<< HEAD
         
         <div class="next-button-layout">
           <button class="step-button try-button progress-step wizard-try">Got it — try it all on my own</button>
-        </div>
-      </div>
+=======
     </div>
+
+    <div class="friend-card-template">
+        <div data-id="<%=id%>" class="friend-card">
+            <div class="fr-ava"><img src="<%=ava%>" /></div>
+            <div class="fr-name"><%=name%> <%=surname%></div>
+            <div class="fr-result"><%=result%></div>
+>>>>>>> 5d44ae2251b585c883dde5744e25e8b41bce64cf
+        </div>
+    </div>
+<<<<<<< HEAD
     
     <div class="light-box hidden" id="wizard-try"></div>
     
@@ -206,7 +286,17 @@
       <div class="progress-step wizard-overview active-step" title="Overview of controls, and the goal of the game"></div>
       <div class="progress-step wizard-controls" title="Controls"></div>
       <div class="progress-step wizard-try" title="Try to complete a level on your own"></div>
+=======
+
+    <div class="invite-card-template">
+        <div data-id="<%=id%>" class="invite-card">
+            <div class="fr-ava"><img src="<%=ava%>" /></div>
+            <div class="fr-name"><%=name%> <%=surname%></div>
+            <button class="invite-button" data-id="<%=id%>">Пригласить</button>
+        </div>
+>>>>>>> 5d44ae2251b585c883dde5744e25e8b41bce64cf
     </div>
 </div>
+
 </body>
 </html>
