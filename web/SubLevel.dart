@@ -164,18 +164,24 @@ class SubLevel {
       if (tSprite != null) e.to.userData = tSprite; else tSprite =
           e.to.userData;
 
-      e.rewind();
-      e.bobbin.rewindComplete = () {
-        e.bobbin.rewindComplete = null;
-        this.frames.clear();
-        if (levelApplied != null) levelApplied();
-        levelApplied = null;
-      };
+      if (e.frontRewind) {
+        applyRewindLabelToButton();
+      } else {
+          e.rewind();
+          e.bobbin.rewindComplete = () {
+              e.bobbin.rewindComplete = null;
+              this.frames.clear();
+              if (levelApplied != null) levelApplied();
+              levelApplied = null;
+          };
+      }
     };
 
     if (e.physicsEnabled) {
-      e.bobbin.rewindComplete = f;
-      e.rewind();
+      if(!e.frontRewind) {
+        e.bobbin.rewindComplete = f;
+        e.rewind();
+      }
     } else f();
   }
 

@@ -232,6 +232,7 @@ class RatingShower {
   static void onTypeItemClick(Event evt) {
     hide();
     e.isPaused = false;
+    e.saveCurrentProgress();
     Level.navigateToLevel(int.parse((evt.currentTarget as
         DivElement).dataset['level']), e);
   }

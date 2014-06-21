@@ -87,8 +87,8 @@ class Level {
       WebApi.levelStart(chapter ,currentSubLevel);
     } else {
       current = subLevels[currentSubLevel - 1];
-      current.apply();
       current.online(true);
+      current.apply();
     }
 
     GameWizard.manage(chapter, current.index);
@@ -147,19 +147,41 @@ class Level {
     targetLevel = target;
     if (targetLevel == eng.level.currentSubLevel) {
       eng.restartLevel();
-    } else {
+    } else if(target < eng.level.currentSubLevel) {
       last = eng.level.current;
+      eng.frontRewind = false;
       eng.level.previous();
       eng.level.current.levelApplied = onLevelApplied;
+    } else {
+      eng.frontRewind = true;
+      if(!eng.physicsEnabled) {
+          applyRewindLabelToButton();
+          eng.frontRewindLevelComplete = onFrontRewindLevelComplete;
+          eng.frontRewindLevelFailed = onFrontRewindLevelFailed;
+      }
+      eng.level.next();
     }
+  }
+
+  static void onFrontRewindLevelComplete() {
+      print("onFrontRewindLevelComplete");
+      print("target: "+targetLevel.toString()+" current: "+ eng.level.currentSubLevel.toString());
+    if(targetLevel != eng.level.currentSubLevel) {
+        eng.level.next();
+        applyRewindLabelToButton();
+    }
+  }
+
+  static void onFrontRewindLevelFailed() {
+
   }
 
   static void onLevelApplied() {
     last.frames.clear();
-    if (targetLevel != eng.level.currentSubLevel) {
+    if (targetLevel < eng.level.currentSubLevel) {
       eng.level.previous();
       eng.level.current.levelApplied = onLevelApplied;
-    } else {
+    } else if(targetLevel == eng.level.currentSubLevel) {
       eng.level.current.levelApplied = null;
       applyPhysicsLabelToButton();
     }
