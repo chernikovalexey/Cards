@@ -21,8 +21,7 @@ body {
   color: #fff;
   width: 800px;
   text-align: center;
-  margin-top: 50px;
-  font-size: 24px;
+  opacity: 0.75;
 }
 
 .canvas-layout {
@@ -773,8 +772,7 @@ button:hover:not([disabled]) {
 }
 
 #wizard-try {
-  margin-top: -600px;
-  background: transparent;
+  display: none;
 }
 
 .greeting-layout {

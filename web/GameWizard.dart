@@ -19,17 +19,17 @@ class GameWizard {
 
   static bool showing = false;
 
-  static void enterStep(Element box) {
+  static void enterStep(Element box, [Function callback]) {
     if (currentBox != box) {
-      var callback = () {
-        fadeBoxIn(box);
+      var setNewBox = () {
+        fadeBoxIn(box, ANIM_TIME, callback);
         currentBox = box;
       };
 
       if (currentBox != null) {
-        fadeBoxOut(currentBox, ANIM_TIME, callback);
+        fadeBoxOut(currentBox, ANIM_TIME, setNewBox);
       } else {
-        callback();
+        setNewBox();
       }
 
       querySelectorAll(".progress-step").forEach((Element el) {
@@ -95,7 +95,9 @@ class GameWizard {
       } else if (event.target.classes.contains("wizard-controls")) {
         enterStep(querySelector("#wizard-controls"));
       } else if (event.target.classes.contains("wizard-try")) {
-        enterStep(querySelector("#wizard-try"));
+        enterStep(querySelector("#wizard-try"), () {
+          Tooltip.show(querySelector(".dynamic"), DYNAMIC, Tooltip.RIGHT, maxWidth: 300, yOffset: -9, yArrowOffset: -12);
+        });
       }
     });
   }

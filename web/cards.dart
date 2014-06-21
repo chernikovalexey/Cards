@@ -1,4 +1,4 @@
- import 'dart:html';
+import 'dart:html';
 import 'dart:convert';
 import 'GameEngine.dart';
 import 'Input.dart';
@@ -13,6 +13,7 @@ import "StarManager.dart";
 import "HintManager.dart";
 import 'FeatureManager.dart';
 import 'WebApi.dart';
+import 'GameWizard.dart';
 
 CanvasElement canvas;
 GameEngine engine;
@@ -24,7 +25,7 @@ FeatureManager featureManager;
 
 void main() {
   StarManager.init();
-  
+
   featureManager = new FeatureManager();
 
   canvas = (querySelector("#graphics") as CanvasElement);
@@ -105,25 +106,27 @@ void main() {
 }
 
 void showLevelName(String name) {
-  /*var el = querySelector(".level-name");
+  if (!GameWizard.showing) {
+    var el = querySelector(".level-name");
 
-  el.innerHtml = name;
-  el.style.display = "block";
-  el.style.marginTop = "65";
+    el.innerHtml = name;
+    el.style.display = "block";
+    el.style.marginTop = "75px";
 
-  animate(el, properties: {
-    'margin-top': 50,
-    'opacity': 1.0,
-    'font-size': 24
-  }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
-
-  new Timer(new Duration(seconds: 3), () {
     animate(el, properties: {
-      'margin-top': -20,
-      'opacity': 0.0,
-      'font-size': 30
-    }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
-  });*/
+      'margin-top': 60,
+      'opacity': 1.0,
+      'font-size': 24
+    }, duration: 150, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
+
+    new Timer(new Duration(seconds: 3), () {
+      animate(el, properties: {
+        'margin-top': -20,
+        'opacity': 0.0,
+        'font-size': 32
+      }, duration: 150, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
+    });
+  }
 }
 
 void updateCanvasPositionAndDimension([Event event = null]) {
