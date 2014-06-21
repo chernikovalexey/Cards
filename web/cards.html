@@ -147,17 +147,17 @@
         </div>
     </div>
     
-    <div class="light-box hidden" id="game-wizard" data-related="overview">
+    <div class="light-box hidden" id="wizard-overview">
       <div class="greeting-layout">
         <div class="tutorial-headline">Welcome to the tutorial</div>
         <div class="tutorial-description">Would be nice if you place blocks in the space so, that after applying physics to them, they fall in the way energy flows through them from the blue cube to the orange one.</div>
         <div class="next-button-layout">
-          <button class="step-button show-controls">Got it — show me controls</button>
+          <button class="step-button show-controls progress-step wizard-controls">Got it — show me controls</button>
         </div>
       </div>
     </div>
     
-    <div class="light-box hidden" id="controls" data-related="controls">
+    <div class="light-box hidden" id="wizard-controls">
       <div class="controls-layout">
        <div class="control-block">
           <div class="ctrl-icon rotate"></div>
@@ -195,15 +195,17 @@
         </div>
         
         <div class="next-button-layout">
-          <button class="step-button try-button">Got it — try it all on my own</button>
+          <button class="step-button try-button progress-step wizard-try">Got it — try it all on my own</button>
         </div>
       </div>
     </div>
     
+    <div class="light-box hidden" id="wizard-try"></div>
+    
     <div class="tutorial-progress hidden">
-      <div class="progress-step overview active-step"></div>
-      <div class="progress-step controls"></div>
-      <div class="progress-step try"></div>
+      <div class="progress-step wizard-overview active-step" title="Overview of controls, and the goal of the game"></div>
+      <div class="progress-step wizard-controls" title="Controls"></div>
+      <div class="progress-step wizard-try" title="Try to complete a level on your own"></div>
     </div>
 </div>
 </body>
