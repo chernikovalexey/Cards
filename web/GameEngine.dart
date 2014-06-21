@@ -67,6 +67,10 @@ class GameEngine extends State {
 
   bool staticBlocksSelected = false;
   bool isRewinding = false;
+  bool frontRewind = false;
+
+  Function frontRewindLevelComplete;
+  Function frontRewindLevelFailed;
 
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;
   double currentZoom = 1.0;
@@ -122,6 +126,13 @@ class GameEngine extends State {
             traverser.traverseEdges(card.contactList);
           }
         }
+      }
+
+      if(frontRewind) {
+          if(traverser.hasPath)
+              frontRewindLevelComplete();
+          else
+              frontRewindLevelFailed();
       }
     });
   }
