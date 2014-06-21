@@ -91,9 +91,9 @@ class Level {
       current.online(true);
     }
 
+    GameWizard.manage(chapter, current.index);
     handleLevelChange();
     updateBlockButtons(engine);
-    GameWizard.manage(chapter, current.index);
   }
 
   void previous() {

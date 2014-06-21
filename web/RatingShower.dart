@@ -10,6 +10,7 @@ import 'dart:async';
 import "StarManager.dart";
 import 'GameWizard.dart';
 import 'WebApi.dart';
+import 'Tooltip.dart';
 
 class RatingShower {
   static const int FADE_TIME = 450;
@@ -57,7 +58,7 @@ class RatingShower {
     if (index == current) ti.classes.add("tape-current-item");
 
     ti.id = chapter.toString() + "-" + levelIndex;
-    
+
     String result = el.innerHtml;
 
     if (ti.classes.contains("locked")) ti.classes.remove("locked");
@@ -66,7 +67,7 @@ class RatingShower {
 
     tr.classes.clear();
     tr.classes.add("tape-rating");
-    
+
     return result;
   }
 
@@ -83,6 +84,8 @@ class RatingShower {
   static void show(GameEngine engine, int rating, [int oldR = 0]) {
     if (GameWizard.showing) {
       fadeBoxOut(GameWizard.progress, 175);
+      Tooltip.closeAll();
+      querySelector("#wizard-overview").classes.add("blurred");
     }
 
     oldRating = oldR;
@@ -94,18 +97,8 @@ class RatingShower {
     querySelector(".game-box").classes.add("paused");
     querySelector(".level-name").style.display = "none";
 
-    DivElement box = (querySelector("#rating-box") as DivElement);
-    box.classes.remove("hidden");
-
-    animate(box, properties: {
-      'opacity': 1.0
-    }, duration: 450, easing: Easing.CUBIC_EASY_IN);
-
-    new Timer(new Duration(milliseconds: FADE_TIME), () {
-      querySelector("#graphics").classes.add("blurred");
-      querySelector(".buttons").classes.add("blurred");
-      querySelector(".selectors").classes.add("blurred");
-    });
+    blurGameBox();
+    fadeBoxIn(querySelector("#rating-box"), 175);
 
     Input.keyDown = (KeyboardEvent e) {
       if (e.keyCode == Input.keys['esc'].code) {
@@ -126,19 +119,16 @@ class RatingShower {
         e.level.levels.length.toString();
 
     querySelector("#next-level").focus();
-    querySelector("#next-level").removeEventListener("click",
-        nextLevel);
-    querySelector("#next-level").addEventListener("click",
-        nextLevel);
-    querySelector("#restart-level").removeEventListener(
-        "click", restartLevel);
-    querySelector("#restart-level").addEventListener("click",
-        restartLevel);
+    querySelector("#next-level").removeEventListener("click", nextLevel);
+    querySelector("#next-level").addEventListener("click", nextLevel);
+    querySelector("#restart-level").removeEventListener("click", restartLevel);
+    querySelector("#restart-level").addEventListener("click", restartLevel);
 
     querySelector("#tape-es").innerHtml = "";
     String s = "";
     for (int i = 0; i < e.level.levels.length; i++) {
-      s += tapeItem(e.level.levels[i], e.level.chapter, i, e.level.currentSubLevel - 1);
+      s += tapeItem(e.level.levels[i], e.level.chapter, i,
+          e.level.currentSubLevel - 1);
     }
 
     final NodeValidatorBuilder _htmlValidator = new NodeValidatorBuilder.common(
@@ -187,11 +177,24 @@ class RatingShower {
     querySelector("#tape-es").style.width = (e.level.levels.length * 172 +
         10).toString() + "px";
     Scroll.setup('tape-vs', 'tape-es', 'tape-scrollbar', 'h');
-    Scroll.scrollTo('tape-vs', e.level.chapter.toString()+'-'+(e.level.currentSubLevel>0?e.level.currentSubLevel-1:0).toString());
+    Scroll.scrollTo('tape-vs', e.level.chapter.toString() + '-' +
+        (e.level.currentSubLevel > 0 ? e.level.currentSubLevel - 1 : 0).toString());
 
     if (!e.level.hasNext() && !pauseState) {
       chapterComplete();
     }
+  }
+
+  static void blurGameBox() {
+    querySelector("#graphics").classes.add("blurred");
+    querySelector(".buttons").classes.add("blurred");
+    querySelector(".selectors").classes.add("blurred");
+  }
+
+  static void unblurGameBox() {
+    querySelector("#graphics").classes.remove("blurred");
+    querySelector(".buttons").classes.remove("blurred");
+    querySelector(".selectors").classes.remove("blurred");
   }
 
   static void resume(Event e) {
@@ -236,6 +239,7 @@ class RatingShower {
   static void hide() {
     if (GameWizard.showing) {
       fadeBoxIn(GameWizard.progress, 175);
+      querySelector("#wizard-overview").classes.remove("blurred");
     }
 
     e.isPaused = false;
@@ -245,9 +249,7 @@ class RatingShower {
       querySelector(".level-name").style.display = "block";
 
       querySelector(".game-box").classes.remove("paused");
-      querySelector("#graphics").classes.remove("blurred");
-      querySelector(".buttons").classes.remove("blurred");
-      querySelector(".selectors").classes.remove("blurred");
+      unblurGameBox();
     });
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:html';
 import 'dart:js';
 import 'dart:async';
+import 'package:animation/animation.dart';
 
 class Position {
   num left, top;
@@ -17,6 +18,8 @@ class Tooltip {
   static const int RIGHT = 2;
   static const int BOTTOM = 3;
   static const int LEFT = 4;
+  
+  static List opened = new List();
 
   static void show(Element rel, String code, int alignment, {num maxWidth:
       800, num xOffset: 0, num yOffset: 0, num xArrowOffset: 0, num yArrowOffset: 0})
@@ -67,6 +70,7 @@ class Tooltip {
       y += tooltip.client.height / 2;
     }
 
+    opened.add(index);
     tooltip.dataset["index"] = index.toString();
     tooltip.classes.add("t-" + index.toString());
 
@@ -117,7 +121,7 @@ class Tooltip {
     }
   }
 
-  static void removeHighlighting(int i) {
+  static void removeHighlighting(int i, [Function callback]) {
     if (i <= index && lastOptions != null) {
       querySelector(".overlay").remove();
 
@@ -146,6 +150,8 @@ class Tooltip {
         el.classes.remove("blurred");
         toggleDisabled(el.querySelector(".got-it"), false);
       });
+      
+      new Timer(new Duration(milliseconds: 200), callback!=null?callback:(){});
     }
   }
 
@@ -157,7 +163,15 @@ class Tooltip {
 
   static void closeByIndex(int i) {
     closeListener(i);
-    querySelector(".t-" + i.toString()).remove();
+    opened.remove(i);
+    int time = 175;
+    DivElement tooltip = querySelector(".t-" + i.toString());
+    animate(tooltip, properties: {
+      'opacity': 0.0
+    }, duration: time, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
+    new Timer(new Duration(milliseconds: time), () {
+      tooltip.remove();
+    });
   }
 
   static void closeAll() {

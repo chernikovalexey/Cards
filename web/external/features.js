@@ -183,7 +183,7 @@ var NoFeatures = {
     }
 
     Features.load(Features.showFriendsBar);
-    setInterval(Features.keepAlive, 5000);
+    //setInterval(Features.keepAlive, 5000);
 })();
 
 
