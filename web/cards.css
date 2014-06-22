@@ -400,22 +400,21 @@ button:hover:not([disabled]) {
   display: inline-block;
   margin: 0 12px 25px 12px;
   cursor: pointer;
-  -webkit-user-select: none
+  -webkit-user-select: none;
 }
 
 .progress-layout, .unlock-layout, .star-layout {
   position: absolute;
-  text-align: center;
-  width: 240px;
-  margin-top: 153px;
+text-align: center;
+width: 240px;
+margin-top: 149px;
 }
 
 .unlock-layout {
   display: none;
-  margin-top: 140px;
-  color: #c7c6c2;
-  font-size: 12px;
-  padding: 5px;
+margin-top: 151px;
+color: #c7c6c2;
+font-size: 15px;
 }
 
 .stars-left {
@@ -424,26 +423,25 @@ button:hover:not([disabled]) {
 }
 
 .star-layout {
-  margin-top: 0
+  margin-top: 49px;
 }
 
 .earned-stars {
   display: inline-block;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
+color: #fff;
+font-size: 48px;
+position: relative;
+top: -12px;
+margin-right: 5px;
 }
 
 .star-icon {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background-repeat: no-repeat;
-  background-image: url(img/new_star.png);
-  background-size: 16px;
-  top: 3px;
-  position: relative;
-  left: 0px;
+ display: inline-block;
+width: 64px;
+height: 64px;
+background-repeat: no-repeat;
+background-image: url(img/new_star.png);
+background-size: 64px;
 }
 
 .chapter-locked .progress-layout {
@@ -460,20 +458,22 @@ button:hover:not([disabled]) {
 
 .full-bar {
   width: 240px;
-  height: 2px;
-  background: #eee;
+height: 4px;
+background: rgba(255, 255, 255, 0.5);
 }
 
 .current-bar {
-  margin-top: -2px;
-  background: green;
-  height: 2px;
+  margin-top: -4px;
+background: rgba(0, 128, 0, 0.95);
+height: 4px;
 }
 
 .progress-caption {
   color: #c7c6c2;
-  font-size: 12px;
-  padding: 5px;
+font-size: 14px;
+padding: 5px;
+position: relative;
+top: -5px;
 }
 
 .finished-levels, .all-levels {
@@ -483,13 +483,14 @@ button:hover:not([disabled]) {
 
 .chapter-thumbnail {
   width: 240px;
-  height: 180px;
-  background-image: url(img/chapter_thumbnail.png);
-  background-repeat: no-repeat;
+height: 180px;
+background-repeat: no-repeat;
+background-color: rgba(255, 255, 255, 0.095);
 }
 
 .chapter-locked .chapter-thumbnail {
-  background-image: url(img/locked_chapter_thumbnail.png)
+  background-image: url(img/lock.png);
+  background-position: 57px 16px;
 }
 
 .unlock-stars {
@@ -501,10 +502,10 @@ button:hover:not([disabled]) {
 
 .chapter-title {
   color: #fff;
-  font-size: 14px;
-  margin-top: 10px;
-  text-align: center;
-  font-weight: 700;
+font-size: 16px;
+margin-top: 10px;
+text-align: center;
+font-weight: 700;
 }
 
 .s-0 {
