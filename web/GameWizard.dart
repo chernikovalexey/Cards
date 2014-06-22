@@ -43,6 +43,12 @@ class GameWizard {
 
   static void finish() {
     showing = false;
+    
+    if(currentBox!=null) {
+      fadeBoxOut(currentBox, ANIM_TIME);
+      fadeBoxOut(progress, ANIM_TIME);
+      Tooltip.closeAll();
+    }
   }
 
   static void nextStep() {

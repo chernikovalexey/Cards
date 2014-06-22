@@ -18,7 +18,7 @@ class Tooltip {
   static const int RIGHT = 2;
   static const int BOTTOM = 3;
   static const int LEFT = 4;
-  
+
   static List opened = new List();
 
   static void show(Element rel, String code, int alignment, {num maxWidth:
@@ -123,7 +123,10 @@ class Tooltip {
 
   static void removeHighlighting(int i, [Function callback]) {
     if (i <= index && lastOptions != null) {
-      querySelector(".overlay").remove();
+      Element overlay = querySelector(".overlay");
+      if(overlay!=null){
+        overlay.remove(); 
+      }
 
       Element el = querySelector(".t-" + i.toString());
 
@@ -150,8 +153,9 @@ class Tooltip {
         el.classes.remove("blurred");
         toggleDisabled(el.querySelector(".got-it"), false);
       });
-      
-      new Timer(new Duration(milliseconds: 200), callback!=null?callback:(){});
+
+      new Timer(new Duration(milliseconds: 200), callback != null ? callback :
+          () {});
     }
   }
 
@@ -166,6 +170,7 @@ class Tooltip {
     opened.remove(i);
     int time = 175;
     DivElement tooltip = querySelector(".t-" + i.toString());
+    print(tooltip);
     animate(tooltip, properties: {
       'opacity': 0.0
     }, duration: time, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
@@ -176,7 +181,8 @@ class Tooltip {
 
   static void closeAll() {
     querySelectorAll(".tooltip").forEach((Element el) {
-      el.remove();
+      //el.remove();
+      closeByIndex(int.parse(el.dataset['index']));
     });
   }
 

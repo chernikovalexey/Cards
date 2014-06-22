@@ -25,8 +25,10 @@ class RatingShower {
     WebApi.finishLevel(newRating);
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
+    GameWizard.finish();
     e.nextLevel();
     e.isPaused = false;
+    updateBlockButtons(e);
   }
 
   static void restartLevel(event) {
@@ -72,6 +74,8 @@ class RatingShower {
   }
 
   static String getStars(int stars) {
+    print("get stars " + stars.toString());
+    
     DivElement tpl = querySelector(".star-template") as DivElement;
     int passed = 1;
     for (var star in tpl.querySelectorAll(".star")) {
@@ -83,9 +87,7 @@ class RatingShower {
 
   static void show(GameEngine engine, int rating, [int oldR = 0]) {
     if (GameWizard.showing) {
-      fadeBoxOut(GameWizard.progress, 175);
-      Tooltip.closeAll();
-      querySelector("#wizard-overview").classes.add("blurred");
+      GameWizard.finish();
     }
 
     oldRating = oldR;
@@ -139,10 +141,15 @@ class RatingShower {
     (querySelector("#tape-es") as DivElement).setInnerHtml(s, validator:
         _htmlValidator);
 
-    for (DivElement e in querySelectorAll(".tape-item")) {
-      if (!e.classes.contains('locked')) {
-        e.removeEventListener("click", onTypeItemClick);
-        e.addEventListener("click", onTypeItemClick);
+    for (DivElement element in querySelectorAll(".tape-item")) {
+      element.removeEventListener("click", nextLevel);
+      
+      if (!element.classes.contains('locked')) {
+        element.removeEventListener("click", onTypeItemClick);
+        element.addEventListener("click", onTypeItemClick);
+      } else if (element.classes.contains("ti-" + (e.level.currentSubLevel +
+          1).toString())) {
+        element.addEventListener("click", nextLevel);
       }
     }
 
@@ -246,10 +253,10 @@ class RatingShower {
     }
 
     e.isPaused = false;
-    
+
     wasJustPaused = true;
     unblurGameBox();
-    
+
     fadeBoxOut(querySelector("#rating-box"), 175, () {
       querySelector(".level-name").style.display = "block";
       querySelector(".game-box").classes.remove("paused");
