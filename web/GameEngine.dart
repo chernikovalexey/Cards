@@ -367,7 +367,8 @@ class GameEngine extends State {
           int or = level.current.rating;
           int nr = level.current.getRating();
 
-          RatingShower.show(this, nr, or);
+          if(!frontRewind)
+            RatingShower.show(this, nr, or);
 
           if (level.chapter == 1 && level.current.index == 1) {
             GameWizard.finish();
