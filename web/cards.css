@@ -39,7 +39,6 @@ canvas {
 .blurred {
   -webkit-backface-visibility: hidden;
   -webkit-filter: blur(3px);
-  -webkit-transition: all 25ms cubic-bezier(0.47, 0, 0.745, 0.715);
 }
 
 .buttons {

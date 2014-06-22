@@ -97,7 +97,9 @@ class RatingShower {
     querySelector(".game-box").classes.add("paused");
     querySelector(".level-name").style.display = "none";
 
-    blurGameBox();
+    new Timer(new Duration(milliseconds: 87), () {
+      blurGameBox();
+    });
     fadeBoxIn(querySelector("#rating-box"), 175);
 
     Input.keyDown = (KeyboardEvent e) {
@@ -244,13 +246,13 @@ class RatingShower {
     }
 
     e.isPaused = false;
+    
     wasJustPaused = true;
-
-    fadeBoxOut(querySelector("#rating-box"), 100, () {
+    unblurGameBox();
+    
+    fadeBoxOut(querySelector("#rating-box"), 175, () {
       querySelector(".level-name").style.display = "block";
-
       querySelector(".game-box").classes.remove("paused");
-      unblurGameBox();
     });
   }
 }
