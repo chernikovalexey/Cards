@@ -30,12 +30,14 @@ var Api = {
           callback(data);
       });
   },
-  finishLevel: function(chapter, level, result, attempts, timeSpent, callback) {
+  finishLevel: function(chapter, level, result, numStatic, numDynamic, attempts, timeSpent, callback) {
       WebApi(this.platform+".finishLevel", {
           userId: this.personalId,
           chapter: chapter,
           level: level,
           result: result,
+          numStatic: numStatic,
+          numDynamic: numDynamic,
           attempts: attempts,
           timeSpent: timeSpent
       }, callback);

@@ -89,8 +89,8 @@ var Features = {
             return r;
         },
 
-        onLevelFinish: function(chapter,level, result, attempts, timeSpent) {
-            Api.finishLevel(chapter, level, result, attempts, timeSpent, function(data) {
+        onLevelFinish: function(chapter,level, result, numStatic, numDynamic, attempts, timeSpent) {
+            Api.finishLevel(chapter, level, result, numStatic, numDynamic, attempts, timeSpent, function(data) {
                 console.log(data);
             });
         }

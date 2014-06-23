@@ -38,7 +38,7 @@ class Api
         return array('result'=>true);
     }
 
-    public function finishLevel(array $user, $chapter, $level, $result, $attempts, $timeSpent)
+    public function finishLevel(array $user, $chapter, $level, $result, $numStatic, $numDynamic, $attempts, $timeSpent)
     {
         Analytics::push(new AnalyticsEvent("level", "finish", array(
             'area' => 'c' . $chapter . 'l' . $level,
@@ -49,6 +49,6 @@ class Api
             'timeSpent' => $timeSpent
         )));
 
-        return array('result' => $this->db->result($chapter, $level, $result, $user, $this->platform));
+        return array('result' => $this->db->result($chapter, $level, $result, $numStatic, $numDynamic, $user, $this->platform));
     }
 } 

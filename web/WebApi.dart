@@ -20,8 +20,8 @@ class WebApi {
       attempts++;
     }
     
-    static void finishLevel(int result) {
+    static void finishLevel(int result, int dynamic, int nStatic) {
       num time = (new DateTime.now().difference(startTime)).inSeconds;
-      (context['Features'] as JsObject).callMethod('onLevelFinish', [chapter, level, result, attempts, time]);
+      (context['Features'] as JsObject).callMethod('onLevelFinish', [chapter, level, result, dynamic, nStatic, attempts, time]);
     }
 }

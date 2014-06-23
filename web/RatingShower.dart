@@ -22,7 +22,7 @@ class RatingShower {
   static bool pauseState = false;
 
   static void nextLevel(Event event) {
-    WebApi.finishLevel(newRating);
+    WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false));
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
     GameWizard.finish();
