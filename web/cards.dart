@@ -53,11 +53,11 @@ void main() {
   showMainMenu();
 
   querySelector("#continue").addEventListener("click", (event) {
+    manager.addState(engine, {
+            'continue': true,
+            'chapter': JSON.decode(window.localStorage["last"])["chapter"]
+          });
     fadeBoxOut(querySelector("#menu-box"), 250, () {
-      manager.addState(engine, {
-        'continue': true,
-        'chapter': JSON.decode(window.localStorage["last"])["chapter"]
-      });
       updateCanvasPositionAndDimension();
 
       querySelector(".buttons").classes.remove("hidden");
