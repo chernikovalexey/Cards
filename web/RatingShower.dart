@@ -22,7 +22,6 @@ class RatingShower {
   static bool pauseState = false;
 
   static void nextLevel(Event event) {
-    print("next level");
     WebApi.finishLevel(newRating);
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
@@ -149,7 +148,6 @@ class RatingShower {
 
     for (DivElement element in querySelectorAll(".tape-item")) {
       if (element.classes.contains("ti-" + (e.level.currentSubLevel + 1).toString()) && !element.classes.contains("locked")) {
-              print("ti-" + (e.level.currentSubLevel).toString());
               element.removeEventListener("click", nextLevel);
               element.addEventListener("click", nextLevel);
             } else if (!element.classes.contains('locked')) {
