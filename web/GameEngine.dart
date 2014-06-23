@@ -382,6 +382,14 @@ class GameEngine extends State {
     Input.update();
   }
 
+  int countCards(bool countStatic) {
+      int n = 0;
+      for(Body c in cards) {
+          n+=((c.userData as EnergySprite).isStatic == countStatic)?1:0;
+      }
+      return n;
+  }
+
   // saves the state of the current level
 
   void saveCurrentProgress() {
