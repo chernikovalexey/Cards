@@ -181,7 +181,7 @@ class SubLevel {
       if(!e.frontRewind) {
         e.bobbin.rewindComplete = f;
         e.rewind();
-      }
+      } else f();
     } else f();
   }
 
@@ -194,6 +194,7 @@ class SubLevel {
   }
   
   void online(bool online) {
+    print("SubLevel::online("+online.toString()+")");
     for(Body c in e.cards) {
       (c.userData as EnergySprite).makeSensor(!online, c);
     }

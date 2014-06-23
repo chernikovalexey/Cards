@@ -166,7 +166,7 @@ class Level {
   static void onFrontRewindLevelComplete() {
       print("onFrontRewindLevelComplete");
       print("target: "+targetLevel.toString()+" current: "+ eng.level.currentSubLevel.toString());
-    if(targetLevel != eng.level.currentSubLevel + 1) {
+    if(targetLevel != eng.level.currentSubLevel) {
         eng.level.next();
         applyRewindLabelToButton();
     } else {
