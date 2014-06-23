@@ -116,7 +116,7 @@ class GameEngine extends State {
       traverser.reset();
       if (from.contactList != null) {
         traverser.traverseEdges(from.contactList);
-        print("traverser.hasPath: " + traverser.hasPath.toString());
+        //print("traverser.hasPath: " + traverser.hasPath.toString());
       }
       if (!traverser.hasPath) {
         for (Body card in cards) {

@@ -94,38 +94,40 @@ class Tooltip {
       lastOptions = options;
 
       Element el = querySelector(".t-" + i.toString());
-      el.dataset["prev-zindex"] = el.style.zIndex;
-      el.style.zIndex = "999";
-
-      for (String e in options['highlighted']) {
-        el = querySelector(e);
+      if (el != null) {
         el.dataset["prev-zindex"] = el.style.zIndex;
         el.style.zIndex = "999";
-        toggleDisabled(el, true);
-      }
 
-      for (String e in options['blurred']) {
-        el = querySelector(e);
-        el.classes.add("blurred");
-        toggleDisabled(el, true);
-      }
-
-      querySelectorAll(".tooltip").forEach((Element el) {
-        if (!el.classes.contains("t-" + i.toString())) {
-          el.classes.add("blurred");
-          toggleDisabled(el.querySelector(".got-it"), true);
+        for (String e in options['highlighted']) {
+          el = querySelector(e);
+          el.dataset["prev-zindex"] = el.style.zIndex;
+          el.style.zIndex = "999";
+          toggleDisabled(el, true);
         }
-      });
 
-      querySelector(".game-box").appendHtml('<div class="overlay"></div>');
+        for (String e in options['blurred']) {
+          el = querySelector(e);
+          el.classes.add("blurred");
+          toggleDisabled(el, true);
+        }
+
+        querySelectorAll(".tooltip").forEach((Element el) {
+          if (!el.classes.contains("t-" + i.toString())) {
+            el.classes.add("blurred");
+            toggleDisabled(el.querySelector(".got-it"), true);
+          }
+        });
+
+        querySelector(".game-box").appendHtml('<div class="overlay"></div>');
+      }
     }
   }
 
   static void removeHighlighting(int i, [Function callback]) {
     if (i <= index && lastOptions != null) {
       Element overlay = querySelector(".overlay");
-      if(overlay!=null){
-        overlay.remove(); 
+      if (overlay != null) {
+        overlay.remove();
       }
 
       Element el = querySelector(".t-" + i.toString());

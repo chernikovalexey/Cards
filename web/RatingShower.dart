@@ -21,7 +21,8 @@ class RatingShower {
 
   static bool pauseState = false;
 
-  static void nextLevel(event) {
+  static void nextLevel(Event event) {
+    print("next level");
     WebApi.finishLevel(newRating);
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
@@ -29,6 +30,7 @@ class RatingShower {
     e.nextLevel();
     e.isPaused = false;
     updateBlockButtons(e);
+    event.stopPropagation();
   }
 
   static void restartLevel(event) {
@@ -43,13 +45,19 @@ class RatingShower {
     DivElement tr = el.querySelector(".tape-rating") as DivElement;
     DivElement ti = el.querySelector(".tape-item") as DivElement;
 
-    for (int i = 1; i <= index + 1; ++i) {
+    for (int i = 1; i <= e.level.levels.length; ++i) {
       ti.classes.remove("ti-" + i.toString());
     }
 
     String levelIndex = (index + 1).toString();
     ti.dataset['level'] = levelIndex;
     ti.classes.add("ti-" + levelIndex);
+
+    ti.classes.remove("tape-current-item");
+    ti.classes.remove("locked");
+
+    tr.classes.clear();
+    tr.classes.add("tape-rating");
 
     if (index >= e.level.subLevels.length) {
       ti.classes.add("locked");
@@ -61,21 +69,10 @@ class RatingShower {
 
     ti.id = chapter.toString() + "-" + levelIndex;
 
-    String result = el.innerHtml;
-
-    if (ti.classes.contains("locked")) ti.classes.remove("locked");
-
-    if (index == current) ti.classes.remove("tape-current-item");
-
-    tr.classes.clear();
-    tr.classes.add("tape-rating");
-
-    return result;
+    return el.innerHtml;
   }
 
   static String getStars(int stars) {
-    print("get stars " + stars.toString());
-    
     DivElement tpl = querySelector(".star-template") as DivElement;
     int passed = 1;
     for (var star in tpl.querySelectorAll(".star")) {
@@ -141,22 +138,24 @@ class RatingShower {
     (querySelector("#tape-es") as DivElement).setInnerHtml(s, validator:
         _htmlValidator);
 
-    for (DivElement element in querySelectorAll(".tape-item")) {
-      element.removeEventListener("click", nextLevel);
-      
-      if (!element.classes.contains('locked')) {
-        element.removeEventListener("click", onTypeItemClick);
-        element.addEventListener("click", onTypeItemClick);
-      } else if (element.classes.contains("ti-" + (e.level.currentSubLevel +
-          1).toString())) {
-        element.addEventListener("click", nextLevel);
-      }
-    }
-
     DivElement nextTapeItem = querySelector(".ti-" + (e.level.currentSubLevel +
         1).toString());
-    if (nextTapeItem != null) {
+    if (nextTapeItem != null && !pauseState) {
+      nextTapeItem.querySelectorAll(".star").forEach((Element el) {
+        el.classes.add("extinct-star");
+      });
       nextTapeItem.classes.remove("locked");
+    }
+
+    for (DivElement element in querySelectorAll(".tape-item")) {
+      if (element.classes.contains("ti-" + (e.level.currentSubLevel + 1).toString()) && !element.classes.contains("locked")) {
+              print("ti-" + (e.level.currentSubLevel).toString());
+              element.removeEventListener("click", nextLevel);
+              element.addEventListener("click", nextLevel);
+            } else if (!element.classes.contains('locked')) {
+        element.removeEventListener("click", onTypeItemClick);
+        element.addEventListener("click", onTypeItemClick);
+      }  
     }
 
     querySelector("#clear-level").addEventListener('click', (e) {

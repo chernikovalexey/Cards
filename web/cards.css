@@ -405,16 +405,16 @@ button:hover:not([disabled]) {
 
 .progress-layout, .unlock-layout, .star-layout {
   position: absolute;
-text-align: center;
-width: 240px;
-margin-top: 149px;
+  text-align: center;
+  width: 240px;
+  margin-top: 149px;
 }
 
 .unlock-layout {
   display: none;
-margin-top: 151px;
-color: #c7c6c2;
-font-size: 15px;
+  margin-top: 151px;
+  color: #c7c6c2;
+  font-size: 15px;
 }
 
 .stars-left {
@@ -428,20 +428,20 @@ font-size: 15px;
 
 .earned-stars {
   display: inline-block;
-color: #fff;
-font-size: 48px;
-position: relative;
-top: -12px;
-margin-right: 5px;
+  color: #fff;
+  font-size: 48px;
+  position: relative;
+  top: -12px;
+  margin-right: 5px;
 }
 
 .star-icon {
  display: inline-block;
-width: 64px;
-height: 64px;
-background-repeat: no-repeat;
-background-image: url(img/new_star.png);
-background-size: 64px;
+  width: 64px;
+  height: 64px;
+  background-repeat: no-repeat;
+  background-image: url(img/new_star.png);
+  background-size: 64px;
 }
 
 .chapter-locked .progress-layout {
@@ -458,22 +458,22 @@ background-size: 64px;
 
 .full-bar {
   width: 240px;
-height: 4px;
-background: rgba(255, 255, 255, 0.5);
+  height: 4px;
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .current-bar {
   margin-top: -4px;
-background: rgba(0, 128, 0, 0.95);
-height: 4px;
+  background: rgba(0, 128, 0, 0.95);
+  height: 4px;
 }
 
 .progress-caption {
   color: #c7c6c2;
-font-size: 14px;
-padding: 5px;
-position: relative;
-top: -5px;
+  font-size: 14px;
+  padding: 5px;
+  position: relative;
+  top: -5px;
 }
 
 .finished-levels, .all-levels {
@@ -483,9 +483,9 @@ top: -5px;
 
 .chapter-thumbnail {
   width: 240px;
-height: 180px;
-background-repeat: no-repeat;
-background-color: rgba(255, 255, 255, 0.095);
+  height: 180px;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 0.095);
 }
 
 .chapter-locked .chapter-thumbnail {
