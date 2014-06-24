@@ -46,7 +46,7 @@ class ChapterShower {
           querySelector(".buttons").classes.remove("hidden");
           querySelector(".selectors").classes.remove("hidden");
         } else {
-          print("Man, it's still locked, ok?");
+          //print("Man, it's still locked, ok?");
         }
       }, false);
     });
