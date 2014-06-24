@@ -54,9 +54,9 @@ void main() {
 
   querySelector("#continue").addEventListener("click", (event) {
     manager.addState(engine, {
-            'continue': true,
-            'chapter': JSON.decode(window.localStorage["last"])["chapter"]
-          });
+      'continue': true,
+      'chapter': JSON.decode(window.localStorage["last"])["chapter"]
+    });
     fadeBoxOut(querySelector("#menu-box"), 250, () {
       updateCanvasPositionAndDimension();
 
@@ -147,17 +147,32 @@ void updateCanvasPositionAndDimension([Event event = null]) {
 
 void applyPhysicsLabelToButton() {
   var btn = querySelector("#toggle-physics");
+  if (engine.manuallyControlled) {
+    btn.classes.add("active-button");
+    new Timer(new Duration(milliseconds: 125), () {
+      btn.classes.remove("active-button");
+    });
+  }
   btn.classes.remove("rewind");
   btn.text = "Apply physics";
+
   engine.rewind();
 }
 
 void applyRewindLabelToButton() {
   if (!engine.isRewinding) {
     WebApi.addAttempt();
+
     var btn = querySelector("#toggle-physics");
+    if (engine.manuallyControlled) {
+      btn.classes.add("active-button");
+      new Timer(new Duration(milliseconds: 125), () {
+        btn.classes.remove("active-button");
+      });
+    }
     btn.classes.add("rewind");
     btn.text = "Rewind";
+
     engine.togglePhysics(true);
   }
 }

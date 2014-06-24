@@ -5,6 +5,7 @@ import 'Input.dart';
 import 'GameEngine.dart';
 import "Sprite.dart";
 import "Color4.dart";
+import 'GameWizard.dart';
 
 class BoundedCard {
   Body b;
@@ -36,7 +37,7 @@ class BoundedCard {
     b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
 
     Color4 col;
-    if(!e.contactListener.contactingBodies.isEmpty) {
+    if (!e.contactListener.contactingBodies.isEmpty) {
       col = new Color4.fromRGBA(255, 0, 0, 0.5);
     } else if (e.staticBlocksSelected) {
       col = new Color4.fromRGB(217, 214, 179);

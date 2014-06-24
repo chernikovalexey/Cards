@@ -67,7 +67,7 @@ button:focus {
   outline: none;
 }
 
-button:active:not([disabled]) {
+button:active:not([disabled]), .active-button {
   border: 1px solid rgba(61, 95, 150, 0.5);
   box-shadow: 0 0 3px rgba(61, 95, 150, 0.25);
 }
@@ -780,7 +780,7 @@ font-weight: 700;
 
 .tutorial-headline {
   color: #fff;
-  font-size: 30px;
+  font-size: 24px;
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
 }
 
@@ -788,11 +788,11 @@ font-weight: 700;
   padding: 0 150px;
   color: rgba(238, 238, 238, 0.75);
   margin-top: 10px;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .next-button-layout {
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .step-button {
