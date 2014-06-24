@@ -92,6 +92,5 @@ class EnergySprite extends Sprite {
         f.isSensor = sensor;
       }
       color.a = sensor?.4:.8;
-      print("Color.a = "+color.a.toString());
     }
 }

@@ -170,24 +170,15 @@ class Level {
         eng.level.next();
         applyRewindLabelToButton();
       } else {
-        //eng.level.current.online(true);
         eng.frontRewind = false;
       }
     
   }
 
   static void onFrontRewindLevelFailed() {
-    bool answer = window.confirm("The system is broken! [ok] To change this level, [cancel] To cancel changes you make on one of previous level.");
-    if(answer) changeThisLevel();
-    else restoreLevel();
-  }
-  
-  static void changeThisLevel() {
-    
-  }
-  
-  static void restoreLevel() {
-    
+    window.alert("The system is broken! Please repair this level to continue.");
+    eng.frontRewind = false;
+    applyPhysicsLabelToButton();
   }
 
   static void onLevelApplied() {

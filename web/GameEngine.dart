@@ -128,7 +128,7 @@ class GameEngine extends State {
         }
       }
       
-      if(!traverser.hasPath) {
+      if(!traverser.hasPath && frontRewind) {
             frontRewindLevelFailed();
       }
     });
