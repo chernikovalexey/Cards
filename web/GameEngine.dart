@@ -130,9 +130,8 @@ class GameEngine extends State {
         }
       }
 
-      if (frontRewind) {
-        if (traverser.hasPath) frontRewindLevelComplete(); else
-            frontRewindLevelFailed();
+      if (!traverser.hasPath && frontRewind) {
+        frontRewindLevelFailed();
       }
     });
   }
@@ -371,6 +370,10 @@ class GameEngine extends State {
               GameWizard.finish();
             }
           }
+
+          if (frontRewind) {
+            frontRewindLevelComplete();
+          }
         }
       } else {
         sprite.deactivate();
@@ -383,7 +386,7 @@ class GameEngine extends State {
   void addOnLevelEndCallback(Function callback) {
     this.onLevelEndCallback = callback;
   }
-  
+
   void removeOnLevelEndCallback() {
     this.onLevelEndCallback = () {};
   }

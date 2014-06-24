@@ -22,6 +22,10 @@ class RatingShower {
   static bool pauseState = false;
 
   static void nextLevel(Event event) {
+    if(e.level.currentSubLevel != e.level.subLevels.length){
+      onTypeItemClick(event);
+      return;
+    }
     WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false));
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
