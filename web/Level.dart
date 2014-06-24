@@ -87,8 +87,8 @@ class Level {
       WebApi.levelStart(chapter ,currentSubLevel);
     } else {
       current = subLevels[currentSubLevel - 1];
-      current.online(true);
       current.apply();
+      current.online(true);      
     }
 
     GameWizard.manage(chapter, current.index);
@@ -159,23 +159,35 @@ class Level {
           eng.frontRewindLevelComplete = onFrontRewindLevelComplete;
           eng.frontRewindLevelFailed = onFrontRewindLevelFailed;
       }
-      eng.level.next();
+      //eng.level.next();
     }
   }
 
   static void onFrontRewindLevelComplete() {
       print("onFrontRewindLevelComplete");
       print("target: "+targetLevel.toString()+" current: "+ eng.level.currentSubLevel.toString());
-    if(targetLevel != eng.level.currentSubLevel) {
+      if(targetLevel != eng.level.currentSubLevel) {
         eng.level.next();
         applyRewindLabelToButton();
-    } else {
-      eng.level.current.online(true);
-    }
+      } else {
+        //eng.level.current.online(true);
+        eng.frontRewind = false;
+      }
+    
   }
 
   static void onFrontRewindLevelFailed() {
-
+    bool answer = window.confirm("The system is broken! [ok] To change this level, [cancel] To cancel changes you make on one of previous level.");
+    if(answer) changeThisLevel();
+    else restoreLevel();
+  }
+  
+  static void changeThisLevel() {
+    
+  }
+  
+  static void restoreLevel() {
+    
   }
 
   static void onLevelApplied() {

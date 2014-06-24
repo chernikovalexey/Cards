@@ -127,12 +127,9 @@ class GameEngine extends State {
           }
         }
       }
-
-      if(frontRewind) {
-          if(traverser.hasPath)
-              frontRewindLevelComplete();
-          else
-              frontRewindLevelFailed();
+      
+      if(!traverser.hasPath) {
+            frontRewindLevelFailed();
       }
     });
   }
@@ -372,6 +369,10 @@ class GameEngine extends State {
 
           if (level.chapter == 1 && level.current.index == 1) {
             GameWizard.finish();
+          }
+          
+          if(frontRewind) {
+                  frontRewindLevelComplete();
           }
         }
       } else {
