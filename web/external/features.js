@@ -22,7 +22,7 @@ var extendAndOverride = function (o1, o2) {
 
 
 var Features = {
-        keepAlive: function() {
+        keepAlive: function () {
             Api.keepAlive();
         },
 
@@ -40,32 +40,32 @@ var Features = {
                         }
 
 
-                       /* $('body').append(TemplateEngine.parseTemplate($('.friends-bar-template').html(),  {
-                            users: (function () {
-                                var r = "";
-                                $(items).each(function () {
-                                    r += TemplateEngine.parseTemplate($('.friend-card-template').html(), this);
-                                    console.log(this);
-                                });
-                                return r;
-                            })(),
-                            invite: (function () {
-                                var r = "";
-                                $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
-                                    r += TemplateEngine.parseTemplate($('.invite-card-template').html(), this);
-                                });
-                                return r;
-                            })()
-                        }));
-                        var height = $($('.friends').get(1)).height() + 800;
-                        VK.callMethod('resizeWindow', 800, height);
-                        $('.invite-button').click(function(e) {
-                            VK.callMethod("showRequestBox", {
-                                uid: $(e.target).data('id'),
-                                message: "Test",
-                                requestKey: "RequestKey"
-                            });
-                        })*/
+                        /* $('body').append(TemplateEngine.parseTemplate($('.friends-bar-template').html(),  {
+                         users: (function () {
+                         var r = "";
+                         $(items).each(function () {
+                         r += TemplateEngine.parseTemplate($('.friend-card-template').html(), this);
+                         console.log(this);
+                         });
+                         return r;
+                         })(),
+                         invite: (function () {
+                         var r = "";
+                         $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
+                         r += TemplateEngine.parseTemplate($('.invite-card-template').html(), this);
+                         });
+                         return r;
+                         })()
+                         }));
+                         var height = $($('.friends').get(1)).height() + 800;
+                         VK.callMethod('resizeWindow', 800, height);
+                         $('.invite-button').click(function(e) {
+                         VK.callMethod("showRequestBox", {
+                         uid: $(e.target).data('id'),
+                         message: "Test",
+                         requestKey: "RequestKey"
+                         });
+                         })*/
                     });
                 }
             )
@@ -89,8 +89,8 @@ var Features = {
             return r;
         },
 
-        onLevelFinish: function(chapter,level, result, numStatic, numDynamic, attempts, timeSpent) {
-            Api.finishLevel(chapter, level, result, numStatic, numDynamic, attempts, timeSpent, function(data) {
+        onLevelFinish: function (chapter, level, result, numStatic, numDynamic, attempts, timeSpent) {
+            Api.finishLevel(chapter, level, result, numStatic, numDynamic, attempts, timeSpent, function (data) {
                 console.log(data);
             });
         }
@@ -122,7 +122,7 @@ var VKFeatures = {
         return r;
     },
 
-    toUserObject: function(fr) {
+    toUserObject: function (fr) {
         return {
             id: fr.uid,
             ava: fr.photo_50,
@@ -146,10 +146,10 @@ var VKFeatures = {
 };
 
 var NoFeatures = {
-    getPersonalId: function() {
-        if(localStorage['userId']==null) {
+    getPersonalId: function () {
+        if (localStorage['userId'] == null) {
             var dt = new Date();
-            localStorage['userId'] ="" + dt.getMilliseconds() + dt.getTime();
+            localStorage['userId'] = "" + dt.getMilliseconds() + dt.getTime();
         }
         return localStorage['userId'];
     },
@@ -166,8 +166,8 @@ var NoFeatures = {
 
     showFriendsBar: function () {
         Api.setFriendsList([]);
-        Api.initialRequest(function(data) {
-            console.log('no platform: ',data);
+        Api.initialRequest(function (data) {
+            console.log('no platform: ', data);
         })
     }
 };
