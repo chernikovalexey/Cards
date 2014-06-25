@@ -51,11 +51,13 @@ class Level {
         currentSubLevel = findLastEmptyLevel(chapter);
         next();
       }
+      
+      ready();
 
       for (int i = 0; i < currentSubLevel; ++i) {
         String level = 'level_' + chapter.toString() + '_' + (i + 1).toString();
 
-        if (storage.containsKey(level)) {
+        if (storage.containsKey(level) && !engine.manuallyControlled) {
           LevelSerializer.fromJSON(storage[level], engine, i + 1 !=
               currentSubLevel ? subLevels[i] : null);
           if (i + 1 != currentSubLevel) {
@@ -63,8 +65,6 @@ class Level {
           }
         }
       }
-
-      ready();
     });
   }
 

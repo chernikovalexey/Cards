@@ -45,6 +45,7 @@ class GameEngine extends State {
   bool physicsEnabled = false;
   bool isPaused = false;
   bool ready = false;
+  bool manuallyControlled = false;
 
   World world;
   DefaultWorldPool pool;
@@ -71,6 +72,7 @@ class GameEngine extends State {
 
   Function frontRewindLevelComplete;
   Function frontRewindLevelFailed;
+  Function onLevelEndCallback = () {};
 
   double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;
   double currentZoom = 1.0;
@@ -127,9 +129,9 @@ class GameEngine extends State {
           }
         }
       }
-      
-      if(!traverser.hasPath && frontRewind) {
-            frontRewindLevelFailed();
+
+      if (!traverser.hasPath && frontRewind) {
+        frontRewindLevelFailed();
       }
     });
   }
@@ -278,10 +280,6 @@ class GameEngine extends State {
 
     setCanvasCursor('none');
 
-    //if (Input.keys['p'].clicked) {
-    //previousLevel();
-    //}
-
     bcard.update();
     camera.update(delta);
 
@@ -357,22 +355,24 @@ class GameEngine extends State {
     if (to != null) {
       EnergySprite sprite = to.userData as EnergySprite;
       if (physicsEnabled) {
-
         sprite.update(this);
         if (sprite.isFull() && level.current != null) {
-          saveCurrentProgress();
-          int or = level.current.rating;
-          int nr = level.current.getRating();
+          onLevelEndCallback();
 
-          if(!frontRewind)
-            RatingShower.show(this, nr, or);
+          if (!manuallyControlled) {
+            saveCurrentProgress();
+            int or = level.current.rating;
+            int nr = level.current.getRating();
 
-          if (level.chapter == 1 && level.current.index == 1) {
-            GameWizard.finish();
+            if (!frontRewind) RatingShower.show(this, nr, or);
+
+            if (level.chapter == 1 && level.current.index == 1) {
+              GameWizard.finish();
+            }
           }
-          
-          if(frontRewind) {
-                  frontRewindLevelComplete();
+
+          if (frontRewind) {
+            frontRewindLevelComplete();
           }
         }
       } else {
@@ -383,18 +383,26 @@ class GameEngine extends State {
     Input.update();
   }
 
+  void addOnLevelEndCallback(Function callback) {
+    this.onLevelEndCallback = callback;
+  }
+
+  void removeOnLevelEndCallback() {
+    this.onLevelEndCallback = () {};
+  }
+
   int countCards(bool countStatic) {
-      int n = 0;
-      for(Body c in cards) {
-          n+=((c.userData as EnergySprite).isStatic == countStatic)?1:0;
-      }
-      return n;
+    int n = 0;
+    for (Body c in cards) {
+      n += ((c.userData as EnergySprite).isStatic == countStatic) ? 1 : 0;
+    }
+    return n;
   }
 
   // saves the state of the current level
 
   void saveCurrentProgress() {
-    if (level != null && level.current != null) {
+    if (level != null && level.current != null && !manuallyControlled) {
       String id = 'level_' + level.chapter.toString() + '_' +
           level.current.index.toString();
 

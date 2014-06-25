@@ -123,7 +123,7 @@ class Input {
   static double getMouseDeltaY() {
     return mouseDeltaY;
   }
-
+  
   static bool get mouseOverCanvas {
     return mouseX >= canvasX && mouseX <= canvasX + canvasWidth && mouseY >=
         canvasY && mouseY <= canvasY + canvasHeight;

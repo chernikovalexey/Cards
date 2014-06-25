@@ -30,8 +30,8 @@ class EnergySprite extends Sprite {
         double k = 1.0;
         if (isCard) k = 1.65;
         //effects.add(new GlowSprite(.75, .95, 0.01 / k));
-        //effects.add(new GlowSprite(.5, .75, 0.02 / k));
-        //effects.add(new GlowSprite(.2, .45, 0.03 / k));
+        effects.add(new GlowSprite(.5, .75, 0.02 / k));
+        effects.add(new GlowSprite(.2, .45, 0.03 / k));
         effects.add(new GlowSprite(.1, .25, 0.04 / k));
 
         this.color = new Color4.fromRGBA(234, 140, 64, .75);

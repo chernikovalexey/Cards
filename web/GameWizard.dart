@@ -3,6 +3,11 @@ import "cards.dart";
 import 'Tooltip.dart';
 import 'dart:async';
 import 'RatingShower.dart';
+import 'dart:math' as Math;
+import 'package:box2d/box2d_browser.dart';
+import 'GameEngine.dart';
+import 'Input.dart';
+import 'EnergySprite.dart';
 
 class GameWizard {
   static const int ANIM_TIME = 175;
@@ -11,7 +16,7 @@ class GameWizard {
   static Element progress = querySelector(".tutorial-progress");
 
   static const String DYNAMIC =
-      "The type of block to put. Pay attention to the amount of blocks remaining.<br><br>Dynamic blocks convey energy and fall when physics applied.";
+      "Block type. Dynamic conduct energy. Pay attention to the remaining amount.";
   static const String STATIC =
       "Static blocks. They don't fall when physics applied. But, as well, they <b>don't convey the energy</b>.";
   static const String ZOOM =
@@ -43,8 +48,8 @@ class GameWizard {
 
   static void finish() {
     showing = false;
-    
-    if(currentBox!=null) {
+
+    if (currentBox != null) {
       fadeBoxOut(currentBox, ANIM_TIME);
       fadeBoxOut(progress, ANIM_TIME);
       Tooltip.closeAll();
@@ -80,7 +85,30 @@ class GameWizard {
           Tooltip.closeAll();
           RatingShower.unblurGameBox();
 
-          Tooltip.show(querySelector(".plus"), ZOOM, Tooltip.BOTTOM, maxWidth:
+          //engine.bcard.b.setTransform(new Vector2(150.0 / GameEngine.scale, 200.0 / GameEngine.scale), engine.bcard.b.angle);
+
+          engine.manuallyControlled = true;
+          engine.addCard(150.0 / GameEngine.scale, 200.0 / GameEngine.scale,
+              engine.bcard.b.angle);
+
+          engine.bobbin.rewindComplete = () {
+            //new Timer(new Duration(milliseconds: 850), () {
+              if (engine.manuallyControlled) applyRewindLabelToButton();
+            //});
+          };
+
+          engine.addOnLevelEndCallback(() {
+            //new Timer(new Duration(milliseconds: 850), () {
+              if (engine.manuallyControlled) applyPhysicsLabelToButton();
+            //});
+          });
+
+          applyRewindLabelToButton();
+          //EnergySprite to = engine.to.userData as EnergySprite;
+
+          //applyRewindLabelToButton();
+
+          /*Tooltip.show(querySelector(".plus"), ZOOM, Tooltip.BOTTOM, maxWidth:
               300, xOffset: -79, xArrowOffset: 24);
           Tooltip.show(querySelector("#toggle-physics"), TOGGLE_PHYSICS,
               Tooltip.BOTTOM, maxWidth: 300, xOffset: 91);
@@ -104,16 +132,21 @@ class GameWizard {
             } else if (index == last) {
               Tooltip.removeHighlighting(last);
             }
-          });
+          });*/
         });
       } else if (event.target.classes.contains("wizard-controls")) {
         enterStep(querySelector("#wizard-controls"), () {
           Tooltip.closeAll();
-          
+
           RatingShower.blurGameBox();
         });
       } else if (event.target.classes.contains("wizard-try")) {
         enterStep(querySelector("#wizard-try"), () {
+          engine.removeOnLevelEndCallback();
+          engine.bobbin.rewindComplete = null;
+          applyPhysicsLabelToButton();
+          engine.manuallyControlled = false;
+
           RatingShower.unblurGameBox();
           Tooltip.show(querySelector(".dynamic"), DYNAMIC, Tooltip.RIGHT,
               maxWidth: 300, yOffset: -9, yArrowOffset: -12);
