@@ -1,7 +1,3 @@
-/**
- * Created by podko_000 on 13.06.14.
- */
-
 var qs = (function (a) {
     if (a == "") return {};
     var b = {};
