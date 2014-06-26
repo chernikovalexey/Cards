@@ -85,28 +85,37 @@ class GameWizard {
           Tooltip.closeAll();
           RatingShower.unblurGameBox();
 
-          //engine.bcard.b.setTransform(new Vector2(150.0 / GameEngine.scale, 200.0 / GameEngine.scale), engine.bcard.b.angle);
-
           engine.manuallyControlled = true;
+          engine.clear();
           engine.addCard(150.0 / GameEngine.scale, 200.0 / GameEngine.scale,
               engine.bcard.b.angle);
 
+          int delay = 850;
+          bool rEnd = false;
+
           engine.bobbin.rewindComplete = () {
-            //new Timer(new Duration(milliseconds: 850), () {
-              if (engine.manuallyControlled) applyRewindLabelToButton();
-            //});
+            if (!rEnd) {
+              rEnd = true;
+
+              new Timer(new Duration(milliseconds: delay), () {
+                if (engine.manuallyControlled) {
+                  applyRewindLabelToButton();
+                }
+              });
+            }
           };
 
           engine.addOnLevelEndCallback(() {
-            //new Timer(new Duration(milliseconds: 850), () {
-              if (engine.manuallyControlled) applyPhysicsLabelToButton();
-            //});
+            rEnd = false;
+
+            new Timer(new Duration(milliseconds: delay), () {
+              if (engine.manuallyControlled) {
+                applyPhysicsLabelToButton();
+              }
+            });
           });
 
           applyRewindLabelToButton();
-          //EnergySprite to = engine.to.userData as EnergySprite;
-
-          //applyRewindLabelToButton();
 
           /*Tooltip.show(querySelector(".plus"), ZOOM, Tooltip.BOTTOM, maxWidth:
               300, xOffset: -79, xArrowOffset: 24);

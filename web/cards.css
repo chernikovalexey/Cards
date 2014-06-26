@@ -766,7 +766,7 @@ font-weight: 700;
   margin-top: -600px;
   display: table;
   text-align: center;
-  background: rgba(0, 0, 0, 0.15);
+  background: transparent;
 }
 
 #wizard-try {

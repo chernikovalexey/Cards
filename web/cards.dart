@@ -159,7 +159,7 @@ void applyPhysicsLabelToButton() {
   engine.rewind();
 }
 
-void applyRewindLabelToButton() {
+void applyRewindLabelToButton([List list]) {
   if (!engine.isRewinding) {
     WebApi.addAttempt();
 

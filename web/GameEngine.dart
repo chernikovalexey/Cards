@@ -250,11 +250,13 @@ class GameEngine extends State {
 
   void togglePhysics(bool active) {
     physicsEnabled = active;
+    
     if (physicsEnabled) {
       bobbin.erase();
     } else {
       (to.userData as Sprite).deactivate();
     }
+    
     for (Body body in cards) {
       body.type = getBodyType(active, (body.userData as EnergySprite).isStatic);
       if (!physicsEnabled) (body.userData as Sprite).deactivate();
@@ -306,6 +308,8 @@ class GameEngine extends State {
         blinkPhysicsButton();
       }
     }
+    
+    //print(bobbin.list.length);
 
     if (Input.keys['z'].down && !Input.isAltDown) {
       setCanvasCursor('-webkit-zoom-in');
@@ -462,7 +466,10 @@ class GameEngine extends State {
     togglePhysics(true);
   }
 
-  void rewind() {
+  void rewind([List list]) {
+    if(list!=null){
+      bobbin.list = list; 
+    }
     togglePhysics(false);
     isRewinding = true;
   }
