@@ -178,7 +178,7 @@ var NoFeatures = {
             Features = extendAndOverride(Features, NoFeatures);
     }
 
-    Features.load(Features.showFriendsBar);
+    Features.load(function() {});
     //setInterval(Features.keepAlive, 5000);
 })();
 

@@ -24,4 +24,8 @@ class WebApi {
       num time = (new DateTime.now().difference(startTime)).inSeconds;
       (context['Features'] as JsObject).callMethod('onLevelFinish', [chapter, level, result, dynamic, nStatic, attempts, time]);
     }
+
+    static void showFriends() {
+        (context['Features'] as JsObject).callMethod('showFriendsBar');
+    }
 }
