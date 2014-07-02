@@ -50,6 +50,11 @@ class BoundedCard {
             = new Color4.fromRGB(113, 86, 64);
       }
 
+      if (e.physicsEnabled) {
+        col = new Color4.fromRGBA(0, 0, 0, 0.0);
+        e.setCanvasCursor('default');
+      }
+
       (b.userData as Sprite).color = col;
     }
   }

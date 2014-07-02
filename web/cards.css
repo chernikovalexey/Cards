@@ -304,7 +304,7 @@ button:hover:not([disabled]) {
 .instructions {
   color: #fff;
   margin-bottom: 115px;
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 1px;
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.125);
   opacity: 0.85;
@@ -809,6 +809,7 @@ font-weight: 700;
   margin-top: -600px;
   display: table;
   text-align: center;
+  z-index: 101;
 }
 
 .controls-layout {
@@ -881,6 +882,24 @@ div.progress-step {
 
 div.active-step {
   opacity: 1.0;
+}
+
+.topbar-show-controls {
+  display: inline-block;
+  float: left;
+  background: transparent !important;
+  border: none !important;
+  padding: 0;
+  position: absolute;
+  left: 15px;
+  top: 17px;
+  opacity: 0.5;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.topbar-show-controls:hover {
+  opacity: 0.75;
 }
 
 .tooltip {

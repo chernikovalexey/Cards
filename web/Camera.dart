@@ -35,7 +35,7 @@ class Camera {
     updateEngine(currentZoom);
   }
 
-  DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, FRAME_COUNT);
+  DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, 5);
   DoubleAnimation xAnim = new DoubleAnimation(0.0, 0.0, FRAME_COUNT);
   DoubleAnimation yAnim = new DoubleAnimation(0.0, 0.0, FRAME_COUNT);
 
@@ -161,7 +161,7 @@ class Camera {
     if (Input.keys['s'].down) {
       targetOffsetY += speed;
       updated = true;
-    }
+    } 
 
     if (Input.keys['d'].down) {
       targetOffsetX += speed;
@@ -177,11 +177,12 @@ class Camera {
       updateEngine(currentZoom);
     }
   }
-
+ 
   void checkTarget() {
-    if (mTargetX <= bx1) mTargetX = bx1;
-    if (mTargetX + GameEngine.WIDTH >= bx2) mTargetX = bx2 - GameEngine.WIDTH;
-    if (mTargetY - GameEngine.HEIGHT <= by1) mTargetY = by1 + GameEngine.HEIGHT;
-    if (mTargetY >= by2) mTargetY = by2;
+    if (mTargetX <= bx1/GameEngine.NSCALE) mTargetX = bx1/GameEngine.NSCALE;
+    if (mTargetX + GameEngine.WIDTH >= bx2/GameEngine.NSCALE) mTargetX = bx2/GameEngine.NSCALE - GameEngine.WIDTH;
+    
+    if (mTargetY - GameEngine.HEIGHT <= by1/GameEngine.NSCALE) mTargetY = by1/GameEngine.NSCALE + GameEngine.HEIGHT;
+    if (mTargetY >= by2/GameEngine.NSCALE) mTargetY = by2/GameEngine.NSCALE;
   }
 }

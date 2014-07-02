@@ -22,7 +22,7 @@ class GameWizard {
   static const String ZOOM =
       "Use two these buttons to zoom camera in and out, accordingly.";
   static const String TOGGLE_PHYSICS =
-      "Drop all blocks according to the physical laws, and run the energy flow through the blocks that are connected to the energy cube.";
+      "Apply physics to drop blocks. Rewind to enter the construction mode.";
 
   static bool showing = false;
 
@@ -65,6 +65,73 @@ class GameWizard {
   static bool isTutorial(int chapter, int level) {
     return true;
   }
+  
+  static void init() {
+    querySelectorAll(".progress-step").onClick.listen((event) {
+          if (event.target.classes.contains("wizard-overview")) {
+            enterStep(querySelector("#wizard-overview"), () {
+              Tooltip.closeAll();
+              RatingShower.unblurGameBox();
+
+              engine.manuallyControlled = true;
+              engine.clear();
+              engine.addCard(150.0 / GameEngine.scale, 200.0 / GameEngine.scale,
+                  engine.bcard.b.angle);
+
+              int delay = 850;
+              bool rEnd = false;
+
+              engine.bobbin.rewindComplete = () {
+                if (!rEnd) {
+                  rEnd = true;
+
+                  new Timer(new Duration(milliseconds: delay), () {
+                    if (engine.manuallyControlled) {
+                      applyRewindLabelToButton();
+                    }
+                  });
+                }
+              };
+
+              engine.addOnLevelEndCallback(() {
+                rEnd = false;
+                new Timer(new Duration(milliseconds: delay), () {
+                  if (engine.manuallyControlled) {
+                    applyPhysicsLabelToButton();
+                  }
+                });
+              });
+
+              applyRewindLabelToButton();
+
+              Tooltip.show(querySelector("#toggle-physics"), TOGGLE_PHYSICS,
+                  Tooltip.BOTTOM, maxWidth: 300);
+            });
+          } else if (event.target.classes.contains("wizard-controls")) {
+            enterStep(querySelector("#wizard-controls"), () {
+              Tooltip.closeAll();
+              RatingShower.blurGameBox();
+            });
+          } else if (event.target.classes.contains("wizard-try")) {
+            enterStep(querySelector("#wizard-try"), () {
+
+              // Show tooltip just in case player is in tutorial
+              // Otherwise, just fade the screen out
+              if (showing) {
+                engine.removeOnLevelEndCallback();
+                engine.bobbin.rewindComplete = null;
+                applyPhysicsLabelToButton();
+                engine.manuallyControlled = false;
+
+                Tooltip.show(querySelector(".dynamic"), DYNAMIC, Tooltip.RIGHT,
+                    maxWidth: 300, yOffset: -9, yArrowOffset: -12);
+              }
+              
+              RatingShower.unblurGameBox();
+            });
+          }
+        });
+  }
 
   static void manage(int chapter, int level) {
     if (chapter == 1 && level == 1) {
@@ -76,93 +143,7 @@ class GameWizard {
 
   static void showOverview() {
     showing = true;
-
     fadeBoxIn(progress);
-
-    querySelectorAll(".progress-step").onClick.listen((event) {
-      if (event.target.classes.contains("wizard-overview")) {
-        enterStep(querySelector("#wizard-overview"), () {
-          Tooltip.closeAll();
-          RatingShower.unblurGameBox();
-
-          engine.manuallyControlled = true;
-          engine.clear();
-          engine.addCard(150.0 / GameEngine.scale, 200.0 / GameEngine.scale,
-              engine.bcard.b.angle);
-
-          int delay = 850;
-          bool rEnd = false;
-
-          engine.bobbin.rewindComplete = () {
-            if (!rEnd) {
-              rEnd = true;
-
-              new Timer(new Duration(milliseconds: delay), () {
-                if (engine.manuallyControlled) {
-                  applyRewindLabelToButton();
-                }
-              });
-            }
-          };
-
-          engine.addOnLevelEndCallback(() {
-            rEnd = false;
-
-            new Timer(new Duration(milliseconds: delay), () {
-              if (engine.manuallyControlled) {
-                applyPhysicsLabelToButton();
-              }
-            });
-          });
-
-          applyRewindLabelToButton();
-
-          /*Tooltip.show(querySelector(".plus"), ZOOM, Tooltip.BOTTOM, maxWidth:
-              300, xOffset: -79, xArrowOffset: 24);
-          Tooltip.show(querySelector("#toggle-physics"), TOGGLE_PHYSICS,
-              Tooltip.BOTTOM, maxWidth: 300, xOffset: 91);
-
-          int first = Tooltip.opened.first;
-          int last = Tooltip.opened.last;
-          Tooltip.highlightByIndex(first, {
-            'highlighted': [".plus", ".minus"],
-            'blurred': ["#graphics", "#toggle-physics", ".show-controls",
-                ".dynamic"]
-          });
-          Tooltip.addCloseListener((int index) {
-            if (index == first) {
-              Tooltip.removeHighlighting(first, () {
-                Tooltip.highlightByIndex(last, {
-                  'highlighted': ["#toggle-physics"],
-                  'blurred': ["#graphics", ".plus", ".minus", ".show-controls",
-                      ".dynamic"]
-                });
-              });
-            } else if (index == last) {
-              Tooltip.removeHighlighting(last);
-            }
-          });*/
-        });
-      } else if (event.target.classes.contains("wizard-controls")) {
-        enterStep(querySelector("#wizard-controls"), () {
-          Tooltip.closeAll();
-
-          RatingShower.blurGameBox();
-        });
-      } else if (event.target.classes.contains("wizard-try")) {
-        enterStep(querySelector("#wizard-try"), () {
-          engine.removeOnLevelEndCallback();
-          engine.bobbin.rewindComplete = null;
-          applyPhysicsLabelToButton();
-          engine.manuallyControlled = false;
-
-          RatingShower.unblurGameBox();
-          Tooltip.show(querySelector(".dynamic"), DYNAMIC, Tooltip.RIGHT,
-              maxWidth: 300, yOffset: -9, yArrowOffset: -12);
-        });
-      }
-    });
-
     querySelector(".wizard-overview").click();
   }
 

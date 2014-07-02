@@ -243,8 +243,7 @@ class RatingShower {
     hide();
     e.isPaused = false;
     e.saveCurrentProgress();
-    Level.navigateToLevel(int.parse((evt.currentTarget as
-        DivElement).dataset['level']), e);
+    Level.navigateToLevel(int.parse(evt.currentTarget.dataset['level']), e);
   }
 
   static void hide() {

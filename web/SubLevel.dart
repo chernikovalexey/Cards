@@ -37,11 +37,11 @@ class SubLevel {
     this.e = e;
     this.name = l["name"];
     levelData = l;
-    x = l['x'].toDouble() / GameEngine.NSCALE;
-    y = l['y'].toDouble() / GameEngine.NSCALE;
-    w = l['width'].toDouble() / GameEngine.NSCALE;
-    h = l['height'].toDouble() / GameEngine.NSCALE;
-
+    x = l['x'].toDouble();
+    y = l['y'].toDouble();
+    w = l['width'].toDouble();
+    h = l['height'].toDouble();
+    
     this.staticBlocksRemaining = l["blocks"][0];
     this.dynamicBlocksRemaining = l["blocks"][1];
     this.stars = l['stars'];
@@ -70,7 +70,7 @@ class SubLevel {
 
     for (var obstacle in l["obstacles"]) {
       Body o;
-      if(obstacle["type"]==1) {
+      if(obstacle["type"] == 1) {
         o = e.createPolygonShape(obstacle["x"].toDouble() /
             GameEngine.NSCALE, obstacle["y"].toDouble() / GameEngine.NSCALE,
             obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble()
@@ -104,13 +104,11 @@ class SubLevel {
     else rating = 1;
   }
 
-
   void finish() {
     saveState();
     for (Body b in e.cards) {
       b.type = BodyType.STATIC;
     }
-
 
     e.physicsEnabled = false;
     e.bobbin.erase();
@@ -120,14 +118,11 @@ class SubLevel {
   }
 
   void saveState() {
-
     cards = new List();
     cards.addAll(e.cards);
-
     
     frames = new List();
     frames.addAll(e.bobbin.list);
-
 
     from = e.from;
     to = e.to;
@@ -152,8 +147,8 @@ class SubLevel {
     //analytics.levelStart(e.level.chapter, index);
     Function f = () {
       e.camera.setBounds(x, y, x + w, y + h);
-      e.camera.mTargetX = x;
-      e.camera.mTargetY = y;
+      e.camera.mTargetX = x/GameEngine.NSCALE;
+      e.camera.mTargetY = y /GameEngine.NSCALE;
       e.bobbin.list = this.frames;
       e.cards = this.cards;
 

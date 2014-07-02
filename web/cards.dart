@@ -171,7 +171,7 @@ void applyRewindLabelToButton([List list]) {
       });
     }
     btn.classes.add("rewind");
-    btn.text = "Rewind";
+    btn.text = "Rewind blocks";
 
     engine.togglePhysics(true);
   }
