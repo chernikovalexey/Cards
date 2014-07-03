@@ -19,19 +19,19 @@ class Camera {
       0.0;
   double bx1, by1, bx2, by2;
 
-  double get mTargetX => targetOffsetX / GameEngine.NSCALE;
-  double get mTargetY => -targetOffsetY / GameEngine.NSCALE;
+  double get mTargetX => targetOffsetX / GameEngine.scale;
+  double get mTargetY => -targetOffsetY / GameEngine.scale;
 
   bool firedMovingEnd = true;
   Function movingEnd = () {};
 
   set mTargetX(double offset) {
-    this.targetOffsetX = offset * GameEngine.NSCALE;
+    this.targetOffsetX = offset * GameEngine.scale;
     updateEngine(currentZoom);
   }
 
   set mTargetY(double offset) {
-    this.targetOffsetY = -offset * GameEngine.NSCALE;
+    this.targetOffsetY = -offset * GameEngine.scale;
     updateEngine(currentZoom);
   }
 
