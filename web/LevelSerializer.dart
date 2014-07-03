@@ -48,17 +48,12 @@ class LevelSerializer {
     for (Map card in state['cards']) {
       Body b = e.addCard(card['x'].toDouble(), card['y'].toDouble(),
           card['angle'].toDouble(), card['static'], subLevel);
-      if(subLevel != null)
-          b.type = BodyType.STATIC;
+      if (subLevel != null) b.type = BodyType.STATIC;
 
       (b.userData as EnergySprite).energy = card['energy'].toDouble();
     }
 
-    //if (state['physics_enabled']) {
-      //applyRewindLabelToButton();
-    //} else {
-      applyPhysicsLabelToButton();
-    //}
+    applyPhysicsLabelToButton();
 
     List frames = new List();
     for (int i = 0, len = state['frames'].length; i < len; ++i) {
@@ -75,7 +70,7 @@ class LevelSerializer {
     } else {
       e.bobbin.list = frames;
     }
-    
+
     if (subLevel != null) subLevel.loadRating();
   }
 }

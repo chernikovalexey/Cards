@@ -2,7 +2,7 @@
     {
         "name": "Transgalactic Hustler",
         "x": 0,
-        "y": 0,
+        "y": -10,
         "width": 1600,
         "height": 2000,
         "blocks": [0, 3],
@@ -41,8 +41,8 @@
     },
     {
         "name": "Captain Asteroid",
-        "x": -30,
-        "y": -50,
+        "x": 30,
+        "y": 10,
         "width": 1200,
         "height": 1000,
         "blocks": [0, 3],
@@ -58,8 +58,8 @@
     },
     {
         "name": "Third Advent",
-        "x": -30,
-        "y": -70,
+        "x": 30,
+        "y": -10,
         "width": 1200,
         "height": 1000,
         "blocks": [0, 6],
@@ -75,8 +75,8 @@
     },
     {
         "name": "Oldschool Ship",
-        "x": -30,
-        "y": -50,
+        "x": 30,
+        "y": -10,
         "width": 1200,
         "height": 1000,
         "blocks": [0, 6],
@@ -92,8 +92,8 @@
     },
     {
         "name": "Good Times",
-        "x": -100,
-        "y": -50,
+        "x": 100,
+        "y": -10,
         "width": 1200,
         "height": 1000,
         "blocks": [0, 6],
@@ -109,10 +109,10 @@
     },
     {
         "name": "New Standards",
-        "x": -50,
-        "y": -350,
-        "width": 1200,
-        "height": 1000,
+        "x": 125,
+        "y": 20,
+        "width": 800,
+        "height": 700,
         "blocks": [0, 7],
         "stars": [5, 6],
         "from": {
@@ -126,10 +126,10 @@
     },
     {
         "name": "Beautiful Star",
-        "x": -50,
-        "y": -350,
+        "x": 150,
+        "y": -50,
         "width": 1200,
-        "height": 1000,
+        "height": 1000, 
         "blocks": [0, 8],
         "stars": [6, 7],
         "from": {
@@ -139,12 +139,12 @@
             "x": 520,
             "y": 280
         },
-        "obstacles": []
+        "obstacles": [] 
     },
     {
         "name": "Arctic Spring",
-        "x": -50,
-        "y": -350,
+        "x": 200,
+        "y": -50,
         "width": 1200,
         "height": 1000,
         "blocks": [2, 8],
@@ -159,7 +159,7 @@
         "obstacles": []
     },
     {
-        "name": "Recrystallization",
+        "name": "Recrystalization",
         "x": -50,
         "y": -350,
         "width": 1200,
@@ -176,7 +176,7 @@
         "obstacles": []
     },
     {
-        "name": "Galactic Agency (GA)",
+        "name": "Galactic Agency",
         "x": -200,
         "y": -350,
         "width": 1200,
@@ -243,7 +243,7 @@
             {
                 "x": 1150,
                 "y": 45,
-                "width": 5,
+                "width": 5, 
                 "height": 90,
                 "type": 1
             },

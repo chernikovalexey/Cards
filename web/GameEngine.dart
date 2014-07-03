@@ -87,7 +87,9 @@ class GameEngine extends State {
     if (params != null) {
       initializeWorld();
       initializeCanvas();
-
+      
+      GameWizard.init();
+      
       level = new Level(() {
         ready = true;
       }, params["chapter"], this, params["continue"] != null &&
@@ -165,7 +167,6 @@ class GameEngine extends State {
     Body body = world.createBody(bd);
     body.createFixture(fd);
     body.createFixture(createHelperFixture(width, height));
-
 
     return body;
   }
@@ -309,18 +310,19 @@ class GameEngine extends State {
       }
     }
     
-    //print(bobbin.list.length);
-
+    //
+    // Button clicks
+    
     if (Input.keys['z'].down && !Input.isAltDown) {
       setCanvasCursor('-webkit-zoom-in');
       toggleBoundedCard(false);
       if (Input.isMouseLeftClicked) zoom(true, true);
-    }
-    if (Input.isAltDown) {
+    } else if (Input.isAltDown) {
       setCanvasCursor('-webkit-zoom-out');
       toggleBoundedCard(false);
       if (Input.isMouseLeftClicked) zoom(false, true);
     }
+    
     if (Input.keys['1'].clicked) {
       staticBlocksSelected = false;
       updateBlockButtons(this);
@@ -332,7 +334,7 @@ class GameEngine extends State {
     if (Input.keys['ctrl'].down && Input.keys['shift'].clicked ||
         Input.keys['ctrl'].clicked && Input.keys['shift'].down) {
       applyRewindLabelToButton();
-    }
+    } 
 
     if (contactListener.contactingBodies.isNotEmpty && Input.isMouseRightClicked
         && !isRewinding) {
@@ -501,9 +503,9 @@ class GameEngine extends State {
       if (onMouse) {
         camera.mTargetX = Input.mouseX - WIDTH / 2;
         camera.mTargetY = Input.mouseY + HEIGHT / 2;
-      }
+      } 
       camera.checkTarget();
-      //camera.updateEngine(newZoom);
+      camera.updateEngine(newZoom);
     }
 
     camera.beginZoom(newZoom, currentZoom);
