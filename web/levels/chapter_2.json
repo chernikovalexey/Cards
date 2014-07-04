@@ -281,5 +281,22 @@
             "height": 68
           }
         ]
+    },
+    {
+        "name": "Before Storm",
+        "x": -50,
+        "y": -400,
+        "width": 1600,
+        "height": 2000,
+        "blocks": [3, 0],
+        "from": {
+            "offset": 100
+        },
+        "stars": [3,3],
+        "to": {
+            "x": 1100,
+            "y": 10
+        },
+        "obstacles": []
     }
 ]}
