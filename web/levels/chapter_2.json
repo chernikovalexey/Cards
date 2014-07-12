@@ -3,8 +3,8 @@
         "name": "Multi Forest",
         "x": 0,
         "y": 0,
-        "width": 2000,
-        "height": 2000,
+        "width": 800,
+        "height": 600,
         "blocks": [0, 20],
         "from": {
             "x": 100,
@@ -55,10 +55,10 @@
     },
     {
         "name": "Double Revolution",
-        "x": -50,
-        "y": -50,
-        "width": 1600,
-        "height": 2000,
+        "x": 200,
+        "y": 0,
+        "width": 800,
+        "height": 600,
         "blocks": [0, 5],
         "from": {
             "offset": -400
@@ -72,10 +72,10 @@
     },
     {
         "name": "Vertical Politics",
-        "x": -100,
-        "y": -50,
-        "width": 1600,
-        "height": 2000,
+        "x": 200,
+        "y": 0,
+        "width": 800,
+        "height": 600,
         "blocks": [1, 10],
         "from": {
             "offset":100
