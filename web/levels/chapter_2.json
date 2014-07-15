@@ -162,13 +162,13 @@
         "name": "Galactic Loop",
         "x": 100,
         "y": -5,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [2, 5],
+        "width": 800,
+        "height": 600,
+        "blocks": [2, 7],
         "from": {
             "offset":100
         },
-        "stars": [7,7],
+        "stars": [9,9],
         "to": {
             "x": 800,
             "y": 240
@@ -177,11 +177,11 @@
     },
     {
         "name": "Boundless Room",
-        "x": -50,
-        "y": -400,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [17, 0],
+        "x": 270,
+        "y": -5,
+        "width": 800,
+        "height": 600,
+        "blocks": [0, 17],
         "from": {
             "offset": 100
         },
