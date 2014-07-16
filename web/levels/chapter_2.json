@@ -238,21 +238,21 @@
             "x": 860,
             "y": 0,
             "width": 3,
-            "height": 220
+            "height": 229
           },
           {
             "type": 1,
             "x": 890,
             "y": 0,
             "width": 3,
-            "height": 280
+            "height": 287
           },
                     {
             "type": 1,
             "x": 910,
             "y": 0,
             "width": 3,
-            "height": 200
+            "height": 191
           },
                     {
             "type": 1,
@@ -284,11 +284,11 @@
     },
     {
         "name": "Before Storm",
-        "x": -50,
-        "y": 0,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [3, 0],
+        "x": 400,
+        "y": -5,
+        "width": 800,
+        "height": 600,
+        "blocks": [0, 3],
         "from": {
             "x": 100
         },
