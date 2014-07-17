@@ -301,10 +301,10 @@
     },
     {
         "name": "Windy day",
-        "x": -50,
+        "x": 450,
         "y": 0,
-        "width": 1600,
-        "height": 2000,
+        "width": 1000,
+        "height": 800,
         "blocks": [0, 12],
         "from": {
             "x": 100
@@ -318,15 +318,15 @@
     },
     {
         "name": "Arctic tornado",
-        "x": -50,
-        "y": 0,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [0, 30],
+        "x": 750,
+        "y": 500,
+        "width": 1200,
+        "height": 800,
+        "blocks": [0, 12],
         "from": {
             "x": 100
         },
-        "stars": [3,3],
+        "stars": [12,12],
         "to": {
             "x": 1160,
             "y": 1032
@@ -335,15 +335,15 @@
     },
     {
         "name": "Funnel",
-        "x": -50,
-        "y": 0,
+        "x": 750,
+        "y": 750,
         "width": 1600,
         "height": 2000,
-        "blocks": [0, 12],
+        "blocks": [0, 1],
         "from": {
             "x": 100
         },
-        "stars": [11,12],
+        "stars": [1,1],
         "to": {
             "x": 1220,
             "y": 1032
@@ -352,11 +352,11 @@
     },
     {
         "name": "Todo: Tornado",
-        "x": 400,
-        "y": 0,
-        "width": 800,
-        "height": 800,
-        "blocks": [2, 100],
+        "x": 1000,
+        "y": 800,
+        "width": 1020,
+        "height": 1200,
+        "blocks": [3, 100],
         "from": {
             "offset": 800
         },
