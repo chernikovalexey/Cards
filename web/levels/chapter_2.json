@@ -356,7 +356,7 @@
         "y": 800,
         "width": 1020,
         "height": 1200,
-        "blocks": [3, 100],
+        "blocks": [4, 100],
         "from": {
             "offset": 800
         },

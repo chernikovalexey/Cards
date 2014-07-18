@@ -254,6 +254,7 @@ class GameEngine extends State {
     
     if (physicsEnabled) {
       bobbin.erase();
+      bobbin.enterFrame(cards);
     } else {
       (to.userData as Sprite).deactivate();
     }
