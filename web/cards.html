@@ -22,7 +22,8 @@
 <div class="level-name"></div>
 
 <div class="buttons hidden">
-    <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show">View controls</button>
+    <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show">View controls
+    </button>
     <button id="zoom-in" class="plus"></button>
     <button id="zoom-out" class="minus"></button>
     <button id="toggle-physics">Apply physics</button>
@@ -57,6 +58,7 @@
         <div class="menu-item" id="continue">Continue</div>
         <div class="menu-item" id="new-game">New Game</div>
     </div>
+    <div id="invite-friends">Friends in the game</div>
 </div>
 
 <div class="light-box hidden" id="chapter-selection">
@@ -227,12 +229,28 @@
 <div class="templates">
     <div class="friends-bar-template">
         <div class="friends">
-            <div class="card-users">
+            <div class="friends-delimiter">
+                <div class="delimiter-headline">Already in</div>
+                <div class="friends-search">
+                    <input type="text" class="search-input in-game-search" placeholder="Search through in friends ...">
+                </div>
+            </div>
+            <div class="users-block card-users">
                 <%=users%>
             </div>
-            <div class="invite-users">
-                <%=invite%>
+            <div class="friends-delimiter">
+                <div class="delimiter-headline">Not in the game</div>
+                <div class="friends-search">
+                    <input type="text" class="search-input out-of-game-search"
+                           placeholder="Search through out friends ...">
+                </div>
             </div>
+            <div class="users-block">
+                <div id="invitations-vs">
+                    <div id="invitations-es" class="invite-users"><%=invite%></div>
+                </div>
+            </div>
+            <div id="invitations-scrollbar"></div>
         </div>
     </div>
 
@@ -247,8 +265,10 @@
     <div class="invite-card-template">
         <div data-id="<%=id%>" class="invite-card">
             <div class="fr-ava"><img src="<%=ava%>"/></div>
-            <div class="fr-name"><%=name%> <%=surname%></div>
-            <button class="invite-button" data-id="<%=id%>">Invite</button>
+            <div class="fr-meta">
+                <div class="fr-name"><%=name%> <%=surname%></div>
+                <button class="invite-button" data-id="<%=id%>">Invite</button>
+            </div>
         </div>
     </div>
 </div>

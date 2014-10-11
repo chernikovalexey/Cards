@@ -22,50 +22,74 @@ var Features = {
             Api.keepAlive();
         },
 
-        showFriendsBar: function () {
+        showFriendsBar: function (callback) {
             Features.initFields(function () {
-                    Api.initialRequest(function (data) {
-                        var items = [];
+                Api.initialRequest(function (data) {
+                    var items = [];
 
-                        for (var key in data) {
-                            items.push(
-                                extendAndOverride(
-                                    {id: +key.substr(1), result: Features.calcResult(data[key])},
-                                    Features.getUserObject(+key.substr(1)))
-                            );
-                        }
+                    for (var key in data) {
+                        items.push(
+                            extendAndOverride(
+                                {id: +key.substr(1), result: Features.calcResult(data[key])},
+                                Features.getUserObject(+key.substr(1)))
+                        );
+                    }
 
+                    $('body').append(TemplateEngine.parseTemplate($('.friends-bar-template').html(), {
+                        users: (function () {
+                            var r = "";
+                            $(items).each(function () {
+                                r += TemplateEngine.parseTemplate($('.friend-card-template').html(), this);
+                            });
+                            return r;
+                        })(),
+                        invite: (function () {
+                            var r = "";
+                            $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
+                                r += TemplateEngine.parseTemplate($('.invite-card-template').html(), this);
+                            });
+                            return r;
+                        })()
+                    }));
 
-                        /* $('body').append(TemplateEngine.parseTemplate($('.friends-bar-template').html(),  {
-                         users: (function () {
-                         var r = "";
-                         $(items).each(function () {
-                         r += TemplateEngine.parseTemplate($('.friend-card-template').html(), this);
-                         console.log(this);
-                         });
-                         return r;
-                         })(),
-                         invite: (function () {
-                         var r = "";
-                         $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
-                         r += TemplateEngine.parseTemplate($('.invite-card-template').html(), this);
-                         });
-                         return r;
-                         })()
-                         }));
-                         var height = $($('.friends').get(1)).height() + 800;
-                         VK.callMethod('resizeWindow', 800, height);
-                         $('.invite-button').click(function(e) {
-                         VK.callMethod("showRequestBox", {
-                         uid: $(e.target).data('id'),
-                         message: "Test",
-                         requestKey: "RequestKey"
-                         });
-                         })*/
+                    callback();
+
+                    //var scroll = new dw_scrollObj('invitations-vs', 'invitations-es');
+                    //scroll.buildScrollControls('invitations-scrollbar', 'v', 'mouseover', true);
+
+                    var height = $($('.friends').get(1)).height();
+                    VK.callMethod('resizeWindow', 800, height);
+                    $('.invite-button').click(function (e) {
+                        VK.callMethod("showRequestBox", {
+                            uid: $(e.target).data('id'),
+                            message: "Test",
+                            requestKey: "RequestKey"
+                        });
                     });
+
+                    $('.out-of-game-search').on('keyup', function (event) {
+                        Features.friendsSearch.call(this, event, Features.OUT_SEARCH);
+                    });
+                });
+            });
+        },
+
+        IN_SEARCH: 1,
+        OUT_SEARCH: 2,
+
+        friendsSearch: function (event, type) {
+            var val = $(this).val().toLowerCase();
+
+            $('.invite-card').each(function () {
+                if ($(this).find('.fr-name').html().toLowerCase().indexOf(val) === -1 && val) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
                 }
-            )
-            ;
+            });
+
+            var height = $($('.friends').get(1)).height() + 800;
+            VK.callMethod('resizeWindow', 800, height);
         },
 
         calcResult: function (data) {
@@ -178,8 +202,13 @@ var NoFeatures = {
             Features = extendAndOverride(Features, NoFeatures);
     }
 
-    Features.load(function() {});
+    Features.load(function () {
+    });
+
+
+    $(function () {
+        Features.showFriendsBar();
+    });
+
     //setInterval(Features.keepAlive, 5000);
 })();
-
-

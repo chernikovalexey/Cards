@@ -22,11 +22,12 @@ class RatingShower {
   static bool pauseState = false;
 
   static void nextLevel(Event event) {
-    if(e.level.currentSubLevel != e.level.subLevels.length){
+    if (e.level.currentSubLevel != e.level.subLevels.length) {
       onTypeItemClick(event);
       return;
     }
-    WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false));
+    WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(
+        false));
     hide();
     StarManager.updateResult(e.level.chapter, newRating - oldRating);
     GameWizard.finish();
@@ -151,13 +152,14 @@ class RatingShower {
     }
 
     for (DivElement element in querySelectorAll(".tape-item")) {
-      if (element.classes.contains("ti-" + (e.level.currentSubLevel + 1).toString()) && !element.classes.contains("locked")) {
-              element.removeEventListener("click", nextLevel);
-              element.addEventListener("click", nextLevel);
-            } else if (!element.classes.contains('locked')) {
+      if (element.classes.contains("ti-" + (e.level.currentSubLevel +
+          1).toString()) && !element.classes.contains("locked")) {
+        element.removeEventListener("click", nextLevel);
+        element.addEventListener("click", nextLevel);
+      } else if (!element.classes.contains('locked')) {
         element.removeEventListener("click", onTypeItemClick);
         element.addEventListener("click", onTypeItemClick);
-      }  
+      }
     }
 
     querySelector("#clear-level").addEventListener('click', (e) {
@@ -243,6 +245,7 @@ class RatingShower {
     hide();
     e.isPaused = false;
     e.saveCurrentProgress();
+    print("clicked on level " + evt.currentTarget.dataset['level']);
     Level.navigateToLevel(int.parse(evt.currentTarget.dataset['level']), e);
   }
 
