@@ -35,27 +35,22 @@ var Features = {
                         );
                     }
 
-                    $('body').append(TemplateEngine.parseTemplate($('.friends-bar-template').html(), {
-                        users: (function () {
-                            var r = "";
-                            $(items).each(function () {
-                                r += TemplateEngine.parseTemplate($('.friend-card-template').html(), this);
-                            });
-                            return r;
-                        })(),
-                        invite: (function () {
-                            var r = "";
-                            $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
-                                r += TemplateEngine.parseTemplate($('.invite-card-template').html(), this);
-                            });
-                            return r;
-                        })()
-                    }));
+                    var counter = 0;
+                    $(items).each(function () {
+                        ++counter;
+                        $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
+                            last: counter % 3 === 0 ? 'last-card' : ''
+                        })));
+                    });
+                    counter = 0;
+                    $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
+                        ++counter;
+                        $('.out-people').append(TemplateEngine.parseTemplate($('.invite-card-template').html(), $.extend(this, {
+                            last: counter % 3 === 0 ? 'last-card' : ''
+                        })));
+                    });
 
                     callback();
-
-                    //var scroll = new dw_scrollObj('invitations-vs', 'invitations-es');
-                    //scroll.buildScrollControls('invitations-scrollbar', 'v', 'mouseover', true);
 
                     var height = $($('.friends').get(1)).height();
                     VK.callMethod('resizeWindow', 800, height);
@@ -67,8 +62,13 @@ var Features = {
                         });
                     });
 
+                    var search_delay;
                     $('.out-of-game-search').on('keyup', function (event) {
-                        Features.friendsSearch.call(this, event, Features.OUT_SEARCH);
+                        clearTimeout(search_delay);
+                        var that = this;
+                        search_delay = setTimeout(function () {
+                            Features.friendsSearch.call(that, event, Features.OUT_SEARCH);
+                        }, 525);
                     });
                 });
             });

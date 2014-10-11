@@ -1012,7 +1012,6 @@ div.active-step {
 }
 
 .users-block {
-    padding: 15px;
 }
 
 .friends-delimiter {
@@ -1031,13 +1030,14 @@ div.active-step {
     float: right;
     position: relative;
     top: -6px;
+    right: 10px;
 }
 
 .search-input {
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    background: rgba(255, 255, 255, 0.125);
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    background: rgba(255, 255, 255, 0.075);
     padding: 10px 15px;
-    border-radius: 3px;
+    border-radius: 29px;
     width: 250px;
     color: #fff;
     font-family: Tahoma;
@@ -1053,11 +1053,16 @@ div.active-step {
 }
 
 .invite-card {
-    width: 222px;
+    width: 236px;
     display: inline-block;
     padding: 10px;
     border-right: 1px solid rgba(255, 255, 255, 0.125);
     margin-right: 10px;
+}
+
+.last-card {
+    margin-right: 0;
+    border-right: none;
 }
 
 .fr-ava {
@@ -1078,7 +1083,7 @@ div.active-step {
 .fr-name {
     font-family: Tahoma;
     color: silver;
-    width: 161px;
+    width: 175px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -1106,28 +1111,26 @@ div.active-step {
 #invitations-vs {
     position: relative;
     width: 800px;
-    height: 524px;
+    height: 600px;
     overflow: hidden;
 }
 
 #invitations-es {
-    width: 535px;
-    padding: 0 125px;
+    width: 100%;
 }
 
 #invitations-scrollbar {
     position: absolute;
     width: 11px;
     font-size: 1px;
-    top: 210px;
+    top: 0px;
 }
 
 #invitations-scrollbar .track {
     position: absolute;
-    top: -130px;
     left: 790px;
     width: 8px;
-    height: 524px;
+    height: 600px;
     background-color: rgba(44, 44, 44, 0.5);
     border-radius: 1px;
 }

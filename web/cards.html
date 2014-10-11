@@ -226,18 +226,16 @@
 </div>
 </div>
 
-<div class="templates">
-    <div class="friends-bar-template">
-        <div class="friends">
+<div class="friends hidden">
+    <div id="invitations-vs">
+        <div id="invitations-es" class="invite-users">
             <div class="friends-delimiter">
                 <div class="delimiter-headline">Already in</div>
                 <div class="friends-search">
                     <input type="text" class="search-input in-game-search" placeholder="Search through in friends ...">
                 </div>
             </div>
-            <div class="users-block card-users">
-                <%=users%>
-            </div>
+            <div class="users-block card-users"></div>
             <div class="friends-delimiter">
                 <div class="delimiter-headline">Not in the game</div>
                 <div class="friends-search">
@@ -245,17 +243,15 @@
                            placeholder="Search through out friends ...">
                 </div>
             </div>
-            <div class="users-block">
-                <div id="invitations-vs">
-                    <div id="invitations-es" class="invite-users"><%=invite%></div>
-                </div>
-            </div>
-            <div id="invitations-scrollbar"></div>
+            <div class="users-block out-people"></div>
         </div>
     </div>
+    <div id="invitations-scrollbar"></div>
+</div>
 
+<div class="templates">
     <div class="friend-card-template">
-        <div data-id="<%=id%>" class="friend-card">
+        <div data-id="<%=id%>" class="friend-card <%=last%>">
             <div class="fr-ava"><img src="<%=ava%>"/></div>
             <div class="fr-name"><%=name%> <%=surname%></div>
             <div class="fr-result"><%=result%></div>
@@ -263,7 +259,7 @@
     </div>
 
     <div class="invite-card-template">
-        <div data-id="<%=id%>" class="invite-card">
+        <div data-id="<%=id%>" class="invite-card <%=last%>">
             <div class="fr-ava"><img src="<%=ava%>"/></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>

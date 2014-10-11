@@ -75,13 +75,14 @@ void main() {
     }, false);
 
     querySelector("#invite-friends").addEventListener("click", (event) {
-        context['Features'].callMethod('showFriendsBar', [() {
-            print("setting up the scroll");
-            var bar = Scroll.setup('invitations-vs', 'invitations-es', 'invitations-scrollbar');
-            context['dw_Scrollbar_Co'].callMethod('addEvent', [bar, 'on_scroll', (var x, var y) {
-                print("scrolling");
+        fadeBoxIn(querySelector('.friends'), 250, () {
+            context['Features'].callMethod('showFriendsBar', [() {
+                var bar = Scroll.setup('invitations-vs', 'invitations-es', 'invitations-scrollbar');
+                context['dw_Scrollbar_Co'].callMethod('addEvent', [bar, 'on_scroll', (var x, var y) {
+                    print("scrolling");
+                }]);
             }]);
-        }]);
+        });
     });
 
     querySelector('#toggle-physics').addEventListener("click", (event) {
