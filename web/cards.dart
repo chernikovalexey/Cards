@@ -74,12 +74,27 @@ void main() {
         });
     }, false);
 
+    querySelector(".close-friends").addEventListener("click", (event) {
+        querySelector('.game-box').classes.remove('blurred');
+        animate(querySelector('.friends'), properties: {
+            'top': 800, 'opacity': 0.0
+        }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+    }, false);
+
     querySelector("#invite-friends").addEventListener("click", (event) {
-        fadeBoxIn(querySelector('.friends'), 250, () {
+        querySelector('.friends').classes.remove("hidden");
+        animate(querySelector('.friends'), properties: {
+            'top': 0, 'opacity': 1.0
+        }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+
+        //fadeBoxIn(querySelector(".friends"), 250, () {
+        new Timer(new Duration(milliseconds: 125), () {
             context['Features'].callMethod('showFriendsBar', [() {
+                querySelector(".game-box").classes.add("blurred");
+
                 var bar = Scroll.setup('invitations-vs', 'invitations-es', 'invitations-scrollbar');
                 context['dw_Scrollbar_Co'].callMethod('addEvent', [bar, 'on_scroll', (var x, var y) {
-                    print("scrolling");
+                    //print("scrolling");
                 }]);
             }]);
         });
@@ -106,7 +121,6 @@ void main() {
             el.classes.add("current");
         }, false);
     });
-
 
     hints = new HintManager(engine);
     querySelector("#hint").addEventListener("click", hints.onClick);

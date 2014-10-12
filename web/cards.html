@@ -28,6 +28,7 @@
     <button id="zoom-out" class="minus"></button>
     <button id="toggle-physics">Apply physics</button>
     <button id="restart" class="hidden">Restart</button>
+    <div class=""></div>
     <button id="hint" class="hidden">Hint (<span id="hint-count">1</span>)</button>
 </div>
 
@@ -227,20 +228,25 @@
 </div>
 
 <div class="friends hidden">
+    <div class="friends-topbar">
+        <div class="friends-headline">Choose Chapter</div>
+        <div class="close-friends">close</div>
+    </div>
+
     <div id="invitations-vs">
         <div id="invitations-es" class="invite-users">
             <div class="friends-delimiter">
                 <div class="delimiter-headline">Already in</div>
                 <div class="friends-search">
-                    <input type="text" class="search-input in-game-search" placeholder="Search through in friends ...">
+                    <input type="text" class="search-input in-game-search" placeholder="Search ...">
                 </div>
             </div>
             <div class="users-block card-users"></div>
             <div class="friends-delimiter">
-                <div class="delimiter-headline">Not in the game</div>
+                <div class="delimiter-headline">Not in the game<span class="invite-all">invite all</span></div>
                 <div class="friends-search">
                     <input type="text" class="search-input out-of-game-search"
-                           placeholder="Search through out friends ...">
+                           placeholder="Search ...">
                 </div>
             </div>
             <div class="users-block out-people"></div>
@@ -252,15 +258,17 @@
 <div class="templates">
     <div class="friend-card-template">
         <div data-id="<%=id%>" class="friend-card <%=last%>">
-            <div class="fr-ava"><img src="<%=ava%>"/></div>
-            <div class="fr-name"><%=name%> <%=surname%></div>
-            <div class="fr-result"><%=result%></div>
+            <div class="fr-ava"><img src="<%=ava%>"></div>
+            <div class="fr-meta">
+                <div class="fr-name"><%=name%> <%=surname%></div>
+                <div class="fr-result"><%=result%></div>
+            </div>
         </div>
     </div>
 
     <div class="invite-card-template">
         <div data-id="<%=id%>" class="invite-card <%=last%>">
-            <div class="fr-ava"><img src="<%=ava%>"/></div>
+            <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
                 <button class="invite-button" data-id="<%=id%>">Invite</button>

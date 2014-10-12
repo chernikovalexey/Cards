@@ -36,6 +36,9 @@ canvas {
     z-index: 2;
 }
 
+.slightly-blurred {
+}
+
 .blurred {
     -webkit-backface-visibility: hidden;
     -webkit-filter: blur(3px);
@@ -994,7 +997,33 @@ div.active-step {
     display: none;
 }
 
+.friends-topbar {
+    text-align: center;
+    padding: 25px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.friends-headline {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.close-friends {
+    color: #fff;
+    position: absolute;
+    z-index: 1000;
+    top: 15px;
+    right: 15px;
+    font-size: 14px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    padding: 15px;
+}
+
 .friends {
+    top: 800px;
+    opacity: 0.0;
     background: rgba(0, 0, 0, 0.95);
     width: 800px;
     height: 600px;
@@ -1008,7 +1037,6 @@ div.active-step {
 }
 
 .card-users {
-    display: none;
 }
 
 .users-block {
@@ -1023,6 +1051,13 @@ div.active-step {
     color: #fff;
     font-size: 24px;
     display: inline-block;
+}
+
+.invite-all {
+    margin-left: 20px;
+    font-size: 15px;
+    position: relative;
+    top: -2px;
 }
 
 .friends-search {
@@ -1102,6 +1137,22 @@ div.active-step {
     color: #fff;
 }
 
+.friend-card {
+
+}
+
+.friend-card .fr-ava {
+
+}
+
+.friend-card .fr-ava img {
+
+}
+
+.friend-card .fr-name {
+
+}
+
 .fr-result {
     color: #ffffff;
 }
@@ -1123,14 +1174,14 @@ div.active-step {
     position: absolute;
     width: 11px;
     font-size: 1px;
-    top: 0px;
+    top: 81px;
 }
 
 #invitations-scrollbar .track {
     position: absolute;
     left: 790px;
     width: 8px;
-    height: 600px;
+    height: 517px;
     background-color: rgba(44, 44, 44, 0.5);
     border-radius: 1px;
 }
