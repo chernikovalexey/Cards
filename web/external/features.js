@@ -18,127 +18,126 @@ var extendAndOverride = function (o1, o2) {
 
 
 var Features = {
-        keepAlive: function () {
-            Api.keepAlive();
-        },
+    keepAlive: function () {
+        Api.keepAlive();
+    },
 
-        repaintFriendsInvitations: function () {
-            $('#invitations-scroll').empty();
-            var scroll = new dw_scrollObj('invitations-vs', 'invitations-es');
-            scroll.buildScrollControls('invitations-scrollbar', 'v', 'mouseover', true);
-        },
+    repaintFriendsInvitations: function () {
+        $('#invitations-scroll').empty();
+        var scroll = new dw_scrollObj('invitations-vs', 'invitations-es');
+        scroll.buildScrollControls('invitations-scrollbar', 'v', 'mouseover', true);
+    },
 
-        friends_cache: {},
+    friends_cache: {},
 
-        showFriendsBar: function (callback) {
-            var show = function (items) {
-                var counter = 0;
-                $('.card-users').empty();
-                $(items).each(function () {
-                    ++counter;
-                    $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
-                        last: counter % 3 === 0 ? 'last-card' : ''
-                    })));
-                });
-
-                counter = 0;
-                $('.out-people').empty();
-                $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
-                    ++counter;
-                    $('.out-people').append(TemplateEngine.parseTemplate($('.invite-card-template').html(), $.extend(this, {
-                        last: counter % 3 === 0 ? 'last-card' : ''
-                    })));
-                });
-
-                callback();
-
-                var height = $($('.friends').get(1)).height();
-                VK.callMethod('resizeWindow', 800, height);
-                $('.invite-button').off('click').on('click', function (e) {
-                    VK.callMethod("showRequestBox", {
-                        uid: $(e.target).data('id'),
-                        message: "Test",
-                        requestKey: "RequestKey"
-                    });
-                });
-
-                var search_delay;
-                $('.out-of-game-search').off('keyup').on('keyup', function (event) {
-                    clearTimeout(search_delay);
-                    var that = this;
-                    search_delay = setTimeout(function () {
-                        Features.friendsSearch.call(that, event, Features.OUT_SEARCH);
-                    }, 525);
-                });
-            };
-
-            if (!$.isEmptyObject(Features.friends_cache)) {
-                show(Features.friends_cache);
-            } else {
-                Features.initFields(function () {
-                    Api.initialRequest(function (data) {
-                        var items = [];
-
-                        for (var key in data) {
-                            items.push(
-                                extendAndOverride(
-                                    {id: +key.substr(1), result: Features.calcResult(data[key])},
-                                    Features.getUserObject(+key.substr(1)))
-                            );
-                        }
-
-                        Features.friends_cache = items;
-
-                        show(items);
-                    });
-                });
-            }
-        },
-
-        IN_SEARCH: 1,
-        OUT_SEARCH: 2,
-
-        friendsSearch: function (event, type) {
-            var val = $(this).val().toLowerCase();
-
-            $('.invite-card').each(function () {
-                if ($(this).find('.fr-name').html().toLowerCase().indexOf(val) === -1 && val) {
-                    $(this).hide();
-                } else {
-                    $(this).show();
-                }
+    showFriendsBar: function (callback) {
+        var show = function (items) {
+            var counter = 0;
+            $('.card-users').empty();
+            $(items).each(function () {
+                ++counter;
+                $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
+                    last: counter % 3 === 0 ? 'last-card' : ''
+                })));
             });
 
-            Features.repaintFriendsInvitations();
+            counter = 0;
+            $('.out-people').empty();
+            $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
+                ++counter;
+                $('.out-people').append(TemplateEngine.parseTemplate($('.invite-card-template').html(), $.extend(this, {
+                    last: counter % 3 === 0 ? 'last-card' : ''
+                })));
+            });
 
-            var height = $($('.friends').get(1)).height() + 800;
+            callback();
+
+            var height = $($('.friends').get(1)).height();
             VK.callMethod('resizeWindow', 800, height);
-        },
-
-        calcResult: function (data) {
-            var r = 0;
-            $(data).each(function () {
-                r += +this.result;
-            });
-            return r;
-        },
-
-        toIdArray: function (data) {
-            var r = [];
-            $(data).each(function () {
-                r.push(this.uid || this.id);
+            $('.invite-button').off('click').on('click', function (e) {
+                VK.callMethod("showRequestBox", {
+                    uid: $(e.target).data('id'),
+                    message: "Test",
+                    requestKey: "RequestKey"
+                });
             });
 
-            return r;
-        },
-
-        onLevelFinish: function (chapter, level, result, numStatic, numDynamic, attempts, timeSpent) {
-            Api.finishLevel(chapter, level, result, numStatic, numDynamic, attempts, timeSpent, function (data) {
-                console.log(data);
+            var search_delay;
+            $('.out-of-game-search').off('keyup').on('keyup', function (event) {
+                clearTimeout(search_delay);
+                var that = this;
+                search_delay = setTimeout(function () {
+                    Features.friendsSearch.call(that, event, Features.OUT_SEARCH);
+                }, 525);
             });
+        };
+
+        if (!$.isEmptyObject(Features.friends_cache)) {
+            show(Features.friends_cache);
+        } else {
+            //Features.initFields(function () {
+            Api.initialRequest(function (data) {
+                var items = [];
+
+                for (var key in data) {
+                    items.push(
+                        extendAndOverride(
+                            {id: +key.substr(1), result: Features.calcResult(data[key])},
+                            Features.getUserObject(+key.substr(1)))
+                    );
+                }
+
+                Features.friends_cache = items;
+
+                show(items);
+            });
+            //});
         }
+    },
+
+    IN_SEARCH: 1,
+    OUT_SEARCH: 2,
+
+    friendsSearch: function (event, type) {
+        var val = $(this).val().toLowerCase();
+
+        $('.invite-card').each(function () {
+            if ($(this).find('.fr-name').html().toLowerCase().indexOf(val) === -1 && val) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        });
+
+        Features.repaintFriendsInvitations();
+
+        var height = $($('.friends').get(1)).height() + 800;
+        VK.callMethod('resizeWindow', 800, height);
+    },
+
+    calcResult: function (data) {
+        var r = 0;
+        $(data).each(function () {
+            r += +this.result;
+        });
+        return r;
+    },
+
+    toIdArray: function (data) {
+        var r = [];
+        $(data).each(function () {
+            r.push(this.uid || this.id);
+        });
+
+        return r;
+    },
+
+    onLevelFinish: function (chapter, level, result, numStatic, numDynamic, attempts, timeSpent) {
+        Api.finishLevel(chapter, level, result, numStatic, numDynamic, attempts, timeSpent, function (data) {
+            console.log(data);
+        });
     }
-    ;
+};
 
 var VKFeatures = {
     friends: null,
@@ -184,7 +183,9 @@ var VKFeatures = {
     },
 
     load: function (callback) {
-        $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", callback);
+        $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", function () {
+            VKFeatures.initFields(callback);
+        });
     }
 };
 
@@ -204,7 +205,7 @@ var NoFeatures = {
     },
 
     load: function (callback) {
-        this.initFields(callback)
+        this.initFields(callback);
     },
 
     showFriendsBar: function () {
@@ -214,7 +215,6 @@ var NoFeatures = {
         })
     }
 };
-
 
 (function () {
     switch (qs['platform']) {
@@ -226,11 +226,7 @@ var NoFeatures = {
     }
 
     Features.load(function () {
-    });
-
-
-    $(function () {
-        Features.showFriendsBar();
+        console.log('loaded!');
     });
 
     //setInterval(Features.keepAlive, 5000);

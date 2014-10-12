@@ -27,6 +27,7 @@ var Api = {
         });
     },
     finishLevel: function (chapter, level, result, numStatic, numDynamic, attempts, timeSpent, callback) {
+        console.log(Api.platform, Api.personalId);
         WebApi(this.platform + ".finishLevel", {
             userId: this.personalId,
             chapter: chapter,
