@@ -51,6 +51,9 @@ class DB
 
         $arr = $sql->fetchAll(PDO::FETCH_ASSOC);
         $result = array();
+        foreach($users as $u)
+            $result['u'.$u['platformUserId']] = array();
+
         foreach ($arr as $t) {
             if (!isset($result['u' . $users[$t['userId']]['platformUserId']]))
                 $result['u' . $users[$t['userId']]['platformUserId']] = array();
