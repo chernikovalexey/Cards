@@ -16,7 +16,6 @@ var extendAndOverride = function (o1, o2) {
     return o1;
 };
 
-
 var Features = {
     keepAlive: function () {
         Api.keepAlive();
@@ -28,13 +27,25 @@ var Features = {
         scroll.buildScrollControls('invitations-scrollbar', 'v', 'mouseover', true);
     },
 
-    friends_cache: {},
+    chapters: {},
+    friends_in_game: [],
+
+    showFinishedFriends: function (chapter, level, callback) {
+        $('.finished-friends').empty();
+        $.each(Features.chapters[chapter][level], function (k, v) {
+            $('.finished-friends').append(TemplateEngine.parseTemplate($('.finished-friend-template').html(), $.extend(v, {
+                id: k.replace("u", "")
+            })));
+        });
+
+        callback();
+    },
 
     showFriendsBar: function (callback) {
-        var show = function (items) {
+        if (!$.isEmptyObject(Features.friends_in_game)) {
             var counter = 0;
             $('.card-users').empty();
-            $(items).each(function () {
+            $(Features.friends_in_game).each(function () {
                 ++counter;
                 $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
                     last: counter % 3 === 0 ? 'last-card' : ''
@@ -43,7 +54,7 @@ var Features = {
 
             counter = 0;
             $('.out-people').empty();
-            $(Features.getNotGameFriends(Features.toIdArray(items))).each(function () {
+            $(Features.getNotGameFriends(Features.toIdArray(Features.friends_in_game))).each(function () {
                 ++counter;
                 $('.out-people').append(TemplateEngine.parseTemplate($('.invite-card-template').html(), $.extend(this, {
                     last: counter % 3 === 0 ? 'last-card' : ''
@@ -63,35 +74,17 @@ var Features = {
             });
 
             var search_delay;
-            $('.out-of-game-search').off('keyup').on('keyup', function (event) {
+            $('.search-input').off('keyup').on('keyup', function (event) {
                 clearTimeout(search_delay);
                 var that = this;
                 search_delay = setTimeout(function () {
-                    Features.friendsSearch.call(that, event, Features.OUT_SEARCH);
+                    var type = Features.OUT_SEARCH;
+                    if ($(that).hasClass('in-game-search')) {
+                        type = Features.IN_SEARCH;
+                    }
+                    Features.friendsSearch.call(that, event, type);
                 }, 525);
             });
-        };
-
-        if (!$.isEmptyObject(Features.friends_cache)) {
-            show(Features.friends_cache);
-        } else {
-            //Features.initFields(function () {
-            Api.initialRequest(function (data) {
-                var items = [];
-
-                for (var key in data) {
-                    items.push(
-                        extendAndOverride(
-                            {id: +key.substr(1), result: Features.calcResult(data[key])},
-                            Features.getUserObject(+key.substr(1)))
-                    );
-                }
-
-                Features.friends_cache = items;
-
-                show(items);
-            });
-            //});
         }
     },
 
@@ -101,7 +94,7 @@ var Features = {
     friendsSearch: function (event, type) {
         var val = $(this).val().toLowerCase();
 
-        $('.invite-card').each(function () {
+        $(type === Features.OUT_SEARCH ? '.invite-card' : '.friend-card').each(function () {
             if ($(this).find('.fr-name').html().toLowerCase().indexOf(val) === -1 && val) {
                 $(this).hide();
             } else {
@@ -110,9 +103,6 @@ var Features = {
         });
 
         Features.repaintFriendsInvitations();
-
-        var height = $($('.friends').get(1)).height() + 800;
-        VK.callMethod('resizeWindow', 800, height);
     },
 
     calcResult: function (data) {
@@ -153,7 +143,6 @@ var VKFeatures = {
         });
     },
 
-
     getNotGameFriends: function (inGameFriendsIds) {
         var r = [];
         $(Features.friends).each(function () {
@@ -182,9 +171,51 @@ var VKFeatures = {
         }
     },
 
+
     load: function (callback) {
         $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", function () {
-            VKFeatures.initFields(callback);
+            VKFeatures.initFields(function () {
+                Api.initialRequest(function (data) {
+                    for (var key in data) {
+                        $.each(data[key], function (i, v) {
+                            var user_obj = Features.getUserObject(+key.replace("u", ""));
+                            Features.chapters[v.chapterId] = Features.chapters[v.chapterId] || {};
+                            Features.chapters[v.chapterId][v.levelId] = Features.chapters[v.chapterId][v.levelId] || {};
+                            Features.chapters[v.chapterId][v.levelId][key] = $.extend(user_obj, {
+                                'dynamic': +v.numDynamic,
+                                'static': +v.numStatic,
+                                'result': +v.result,
+                                'time': +v.time
+                            }, true);
+                        });
+                    }
+
+                    console.log(Features.chapters);
+
+                    //
+
+                    var friends_in_game = [];
+
+                    for (var key in data) {
+                        friends_in_game.push(
+                            extendAndOverride(
+                                {id: +key.substr(1), result: Features.calcResult(data[key])},
+                                Features.getUserObject(+key.substr(1)))
+                        );
+                    }
+
+                    // Descending sort by stars amount
+                    friends_in_game.sort(function (a, b) {
+                        return a.result === b.result
+                            ? 0
+                            : (a.result > b.result ? -1 : 1);
+                    });
+
+                    Features.friends_in_game = friends_in_game;
+                });
+
+                callback();
+            });
         });
     }
 };

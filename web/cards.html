@@ -28,7 +28,7 @@
     <button id="zoom-out" class="minus"></button>
     <button id="toggle-physics">Apply physics</button>
     <button id="restart" class="hidden">Restart</button>
-    <div class=""></div>
+    <div class="friends-finished"></div>
     <button id="hint" class="hidden">Hint (<span id="hint-count">1</span>)</button>
 </div>
 
@@ -227,14 +227,28 @@
 </div>
 </div>
 
+<div class="hidden" id="friends-finished">
+    <div class="friends-topbar">
+        <div class="friends-headline">Friends Finished This Level</div>
+        <div class="close-finished">close</div>
+    </div>
+
+    <div id="finished-vs" class="bottom-sliding-vs">
+        <div id="finished-es" class="bottom-sliding-es invite-users">
+            <div class="users-block card-users finished-friends"></div>
+        </div>
+    </div>
+    <div id="finished-scrollbar" class="bottom-sliding-scrollbar"></div>
+</div>
+
 <div class="friends hidden">
     <div class="friends-topbar">
-        <div class="friends-headline">Choose Chapter</div>
+        <div class="friends-headline">Invite Friends</div>
         <div class="close-friends">close</div>
     </div>
 
-    <div id="invitations-vs">
-        <div id="invitations-es" class="invite-users">
+    <div id="invitations-vs" class="bottom-sliding-vs">
+        <div id="invitations-es" class="bottom-sliding-es invite-users">
             <div class="friends-delimiter">
                 <div class="delimiter-headline">Already in</div>
                 <div class="friends-search">
@@ -252,10 +266,22 @@
             <div class="users-block out-people"></div>
         </div>
     </div>
-    <div id="invitations-scrollbar"></div>
+    <div id="invitations-scrollbar" class="bottom-sliding-scrollbar"></div>
 </div>
 
 <div class="templates">
+    <div class="finished-friend-template">
+        <div data-id="<%=id%>" class="friend-card">
+            <div class="fr-ava"><img src="<%=ava%>"></div>
+            <div class="fr-meta">
+                <div class="fr-name"><%=name%> <%=surname%></div>
+                <div class="fr-result"><%=result%></div>
+                <div class="fr-dynamic"><%=dynamic%></div>
+                <div class="fr-static"><%=static%></div>
+            </div>
+        </div>
+    </div>
+
     <div class="friend-card-template">
         <div data-id="<%=id%>" class="friend-card <%=last%>">
             <div class="fr-ava"><img src="<%=ava%>"></div>

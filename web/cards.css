@@ -115,6 +115,19 @@ button:hover:not([disabled]) {
     position: relative;
 }
 
+.friends-finished {
+    display: inline-block;
+    float: right;
+    padding: 0;
+    position: absolute;
+    right: 15px;
+    top: 17px;
+    opacity: 0.5;
+    font-weight: 400;
+    font-size: 14px;
+    color: #fff;
+}
+
 #hint {
     position: absolute;
     right: 15px;
@@ -1009,7 +1022,7 @@ div.active-step {
     font-weight: 700;
 }
 
-.close-friends {
+.close-friends, .close-finished {
     color: #fff;
     position: absolute;
     z-index: 1000;
@@ -1021,7 +1034,7 @@ div.active-step {
     padding: 15px;
 }
 
-.friends {
+.friends, #friends-finished {
     top: 800px;
     opacity: 0.0;
     background: rgba(0, 0, 0, 0.95);
@@ -1037,6 +1050,7 @@ div.active-step {
 }
 
 .card-users {
+    text-align: center;
 }
 
 .users-block {
@@ -1138,19 +1152,28 @@ div.active-step {
 }
 
 .friend-card {
-
+    padding: 15px;
 }
 
 .friend-card .fr-ava {
-
+    width: 64px;
 }
 
 .friend-card .fr-ava img {
+    width: 64px;
+    border-radius: 36px;
+}
 
+.friend-card .fr-meta {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+    height: 64px;
+    width: calc(100% - 300px);
+    text-align: left;
+    padding-bottom: 5px;
 }
 
 .friend-card .fr-name {
-
+    width: 100%;
 }
 
 .fr-result {
@@ -1159,25 +1182,25 @@ div.active-step {
 
 /* invitations scroll */
 
-#invitations-vs {
+.bottom-sliding-vs {
     position: relative;
     width: 800px;
     height: 600px;
     overflow: hidden;
 }
 
-#invitations-es {
+.bottom-sliding-es {
     width: 100%;
 }
 
-#invitations-scrollbar {
+.bottom-sliding-scrollbar {
     position: absolute;
     width: 11px;
     font-size: 1px;
     top: 81px;
 }
 
-#invitations-scrollbar .track {
+.bottom-sliding-scrollbar .track {
     position: absolute;
     left: 790px;
     width: 8px;
@@ -1186,7 +1209,7 @@ div.active-step {
     border-radius: 1px;
 }
 
-#invitations-scrollbar .dragBar {
+.bottom-sliding-scrollbar .dragBar {
     position: absolute;
     left: 1px;
     top: 1px;
@@ -1196,11 +1219,11 @@ div.active-step {
     border-radius: 1px;
 }
 
-#invitations-scrollbar {
+.bottom-sliding-scrollbar {
     -moz-user-select: none;
     -khtml-user-select: none;
 }
 
-#invitations-vs:focus, #invitations-scrollbar:focus, #invitations-scrollbar .track:focus, #invitations-scrollbar .dragBar:focus {
+.bottom-sliding-vs:focus, .bottom-sliding-scrollbar:focus, .bottom-sliding-scrollbar .track:focus, .bottom-sliding-scrollbar .dragBar:focus {
     outline: none;
 }
