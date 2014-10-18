@@ -7,6 +7,7 @@
  */
 
 session_start();
+error_reporting(E_ALL);
 
 require_once "Router.php";
 require_once "dbconnect.php";

@@ -25,20 +25,24 @@ class Router {
         }
 
         $Api = new Api($this->db,$platform);
-
-        $rm = new ReflectionMethod($Api, $method);
         try {
+            $rm = new ReflectionMethod($Api, $method);
             //todo: Add clause if user not valid
             $user = $this->db->validateUser($arguments['userId'], $platform);
             $arguments['userId'] = $user;
-
             Analytics::init($user['userId'], $platform);
 
             if($user['isNew'])
                 Analytics::push(new AnalyticsEvent("user", "new", array('platform'=>$platform)));
-
             return $rm->invokeArgs($Api, $arguments);
-        } catch(Exception $e) {
+        }
+        catch(ApiException $e) {
+            $e->api = $platform;
+            $e->args = $arguments;
+            $e->method = $method;
+            return $e;
+        }
+        catch(Exception $e) {
             return new ApiException("404 method not found", $platform, $method, $arguments);
         }
     }
