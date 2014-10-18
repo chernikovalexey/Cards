@@ -74,14 +74,11 @@ class DB
             if (isset($scores[$r['userId']])) $scores[$r['userId']] = array('userId' => $users[$r['userId']]['platformUserId'], 'value' => 0);
             $scores[$r['userId']]['value'] += $r['result'];
         }
-        usort($scores, "DB::cmpScores");
+        usort($scores, function($v1, $v2) {
+            return ($v1['value'] > $v2['value']) ? 1 : ($v1['value'] == $v2['value']) ? 0 : -1;
+        });
 
         return $scores;
-    }
-
-    public static function cmpScores($v1, $v2)
-    {
-        return ($v1['value'] > $v2['value']) ? 1 : ($v1['value'] == $v2['value']) ? 0 : -1;
     }
 
     public function getPlatformUsers(array $users, $platform, $selector = null)
@@ -154,5 +151,13 @@ class DB
         $sql->execute();
 
         return array('userId' => +$this->db->lastInsertId(), 'platformId' => $platform, 'platformUserId' => $uid, 'isNew' => true);
+    }
+
+    public function setUserBalance(array $user)
+    {
+        $sql = $this->db->prepare("UPDATE tcardusers SET balance = ? WHERE userId = ?");
+        $sql->bindValue(1, $user['balance']);
+        $sql->bindValue(2, $user['userId']);
+        $sql->execute();
     }
 } 

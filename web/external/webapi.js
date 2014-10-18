@@ -42,6 +42,13 @@ var Api = {
         WebApi(this.platform + ".keepAlive", {
             userId: this.personalId
         });
-    }
+    },
 
+    call: function (method, data, callback) {
+        data = extendAndOverride({userId: this.personalId}, data)
+        callback = callback || function (r) {
+            console.log(r);
+        };
+        WebApi(this.platform + "." + method, data, callback);
+    }
 };

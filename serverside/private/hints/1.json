@@ -440,6 +440,112 @@
             "static": false,
             "energy": 1
         }
+    ],
+    [
+        {
+            "x": 13.47,
+            "y": 0.868,
+            "angle": -1.579,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 13.473,
+            "y": 1.413,
+            "angle": -4.714,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 13.051,
+            "y": 0.618,
+            "angle": -3.142,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.243,
+            "y": 1.677,
+            "angle": -3.142,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 13.693,
+            "y": 1.694,
+            "angle": -3.206,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.78,
+            "y": 1.699,
+            "angle": -3.224,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.317,
+            "y": 1.699,
+            "angle": -3.224,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.854,
+            "y": 1.709,
+            "angle": -3.186,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 13.155,
+            "y": 0.662,
+            "angle": -6.284,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.938,
+            "y": 0.865,
+            "angle": -7.854,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.937,
+            "y": 1.41,
+            "angle": -7.854,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.827,
+            "y": 0.571,
+            "angle": -9.425,
+            "static": true,
+            "energy": 0
+        },
+        {
+            "x": 15.641,
+            "y": 0.618,
+            "angle": -9.436,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.096,
+            "y": 0.618,
+            "angle": -9.425,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.812,
+            "y": 0.66,
+            "angle": 0.161,
+            "static": false,
+            "energy": 1
+        }
     ]
-        [{"x": 13.47, "y": 0.868, "angle": -1.579, "static": false, "energy": 1}, {"x": 13.473, "y": 1.413, "angle": -4.714, "static": false, "energy": 1}, {"x": 13.051, "y": 0.618, "angle": -3.142, "static": false, "energy": 1}, {"x": 14.243, "y": 1.677, "angle": -3.142, "static": false, "energy": 1}, {"x": 13.693, "y": 1.694, "angle": -3.206, "static": false, "energy": 1}, {"x": 14.78, "y": 1.699, "angle": -3.224, "static": false, "energy": 1}, {"x": 15.317, "y": 1.699, "angle": -3.224, "static": false, "energy": 1}, {"x": 15.854, "y": 1.709, "angle": -3.186, "static": false, "energy": 1}, {"x": 13.155, "y": 0.662, "angle": -6.284, "static": false, "energy": 1}, {"x": 15.938, "y": 0.865, "angle": -7.854, "static": false, "energy": 1}, {"x": 15.937, "y": 1.41, "angle": -7.854, "static": false, "energy": 1}, {"x": 15.827, "y": 0.571, "angle": -9.425, "static": true, "energy": 0}, {"x": 15.641, "y": 0.618, "angle": -9.436, "static": false, "energy": 1}, {"x": 15.096, "y": 0.618, "angle": -9.425, "static": false, "energy": 1}, {"x": 14.812, "y": 0.66, "angle": 0.161, "static": false, "energy": 1}]
 ]
