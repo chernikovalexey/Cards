@@ -48,6 +48,7 @@ var Features = {
             $(Features.friends_in_game).each(function () {
                 ++counter;
                 $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
+                    pos: counter,
                     last: counter % 3 === 0 ? 'last-card' : ''
                 })));
             });
@@ -171,7 +172,6 @@ var VKFeatures = {
         }
     },
 
-
     load: function (callback) {
         $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", function () {
             VKFeatures.initFields(function () {
@@ -189,8 +189,6 @@ var VKFeatures = {
                             }, true);
                         });
                     }
-
-                    console.log(Features.chapters);
 
                     //
 
@@ -257,7 +255,7 @@ var NoFeatures = {
     }
 
     Features.load(function () {
-        console.log('loaded!');
+        //console.log('loaded!');
     });
 
     //setInterval(Features.keepAlive, 5000);

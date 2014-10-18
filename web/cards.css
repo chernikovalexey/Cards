@@ -120,12 +120,19 @@ button:hover:not([disabled]) {
     float: right;
     padding: 0;
     position: absolute;
-    right: 15px;
+    right: 25px;
     top: 17px;
     opacity: 0.5;
     font-weight: 400;
     font-size: 14px;
     color: #fff;
+    opacity: 0.5;
+    transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.friends-finished:hover {
+    cursor: pointer;
+    opacity: 0.75;
 }
 
 #hint {
@@ -1114,6 +1121,14 @@ div.active-step {
     border-right: none;
 }
 
+.fr-pos {
+    display: inline-block;
+    color: #fff;
+    font-size: 12px;
+    padding: 25px 10px;
+    vertical-align: top;
+}
+
 .fr-ava {
     display: inline-block;
     width: 50px;
@@ -1177,6 +1192,14 @@ div.active-step {
 }
 
 .fr-result {
+    color: #ffffff;
+}
+
+.fr-dynamic {
+    color: #ffffff;
+}
+
+.fr-static {
     color: #ffffff;
 }
 

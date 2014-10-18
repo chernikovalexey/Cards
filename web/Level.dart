@@ -99,16 +99,25 @@ class Level {
 
         // Check friends
 
+        toggleFinishedFriends();
+    }
+
+    void toggleFinishedFriends() {
+        DivElement finished = querySelector('.friends-finished') as DivElement;
         Map fchapter = context['Features']['chapters'][engine.level.chapter.toString()];
 
         if (fchapter != null) {
-            print(fchapter[engine.level.currentSubLevel.toString()] is JsObject);
-            JsMap flevel = new JsMap.fromJsObject(fchapter[engine.level.currentSubLevel.toString()]);
+            animate(finished, properties: {
+                'opacity': 1.0
+            }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
 
-            if (flevel != null) {
-                print(flevel);
+            JsObject flevel_js = fchapter[engine.level.currentSubLevel.toString()];
 
-                DivElement finished = querySelector('.friends-finished') as DivElement;
+            if (flevel_js != null) {
+                JsMap flevel = new JsMap.fromJsObject(flevel_js);
+
+                print("This level was finished by friends: " + engine.level.currentSubLevel.toString());
+
                 finished.innerHtml = flevel.length.toString() + " friend(s) finished this level";
 
                 finished.addEventListener("click", (event) {
@@ -132,11 +141,15 @@ class Level {
 
                 querySelector(".close-finished").addEventListener("click", (event) {
                     querySelector('.game-box').classes.remove('blurred');
-                    animate(querySelector('.friends'), properties: {
+                    animate(querySelector('#friends-finished'), properties: {
                         'top': 800, 'opacity': 0.0
                     }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
                 }, false);
             }
+        } else {
+            animate(finished, properties: {
+                'opacity': 0.0
+            }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
         }
     }
 
