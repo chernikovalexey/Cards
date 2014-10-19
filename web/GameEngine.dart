@@ -199,7 +199,7 @@ class GameEngine extends State {
         return !Input.keys['z'].down && !Input.isAltDown && !Input.keys['space'].down && Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty && (ignorePhysics || !physicsEnabled);
     }
 
-    Body addCard(double x, double y, double angle, [bool isStatic =false, SubLevel sub = null]) {
+    Body addCard(double x, double y, double angle, [bool isStatic = false, SubLevel sub = null, Color4 col = null]) {
         PolygonShape cs = new PolygonShape();
         cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
 
@@ -223,8 +223,13 @@ class GameEngine extends State {
         EnergySprite sprite = Sprite.card(world);
         sprite.isStatic = isStatic;
         sprite.energySupport = (!isStatic || sub != null);
-        if (isStatic) {
-            sprite.color = new Color4.fromRGB(217, 214, 179);
+
+        if (col != null) {
+            sprite.color = col;
+        } else {
+            if (isStatic) {
+                sprite.color = new Color4.fromRGB(217, 214, 179);
+            }
         }
 
         card.userData = sprite;

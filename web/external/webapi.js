@@ -4,7 +4,9 @@ function WebApi(method, data, callback) {
         type: 'POST',
         url: "/twocubes/serverside/index.php",
         data: {arguments: json, method: method},
-        success: callback
+        success: function (r) {
+            callback(r);
+        }
     });
 }
 
@@ -45,7 +47,7 @@ var Api = {
     },
 
     call: function (method, data, callback) {
-        data = extendAndOverride({userId: this.personalId}, data)
+        data = extendAndOverride({userId: this.personalId}, data || {});
         callback = callback || function (r) {
             console.log(r);
         };

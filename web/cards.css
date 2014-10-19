@@ -1,5 +1,5 @@
 body {
-    margin: 10px 0;
+    margin: 0;
     font-family: Tahoma;
 }
 
@@ -1249,4 +1249,44 @@ div.active-step {
 
 .bottom-sliding-vs:focus, .bottom-sliding-scrollbar:focus, .bottom-sliding-scrollbar .track:focus, .bottom-sliding-scrollbar .dragBar:focus {
     outline: none;
+}
+
+/* Prompt window */
+
+.prompt-window {
+    position: absolute;
+    z-index: 999;
+    width: 350px;
+    left: calc(50% - 175px);
+    top: 200px;
+    background: rgba(255, 255, 255, 0.075);
+}
+
+.prompt-headline {
+    color: #fff;
+    padding: 15px;
+    padding-bottom: 0;
+}
+
+.prompt-message {
+    padding: 15px;
+    padding-bottom: 0;
+    color: #c7c6c2;
+    font-size: 13px;
+}
+
+.prompt-buttons {
+    padding: 15px;
+}
+
+.prompt-button {
+
+}
+
+.prompt-positive {
+
+}
+
+.prompt-negative {
+
 }

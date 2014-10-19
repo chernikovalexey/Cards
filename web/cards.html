@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="cards.css"/>
-    <title>Cards</title>
+    <title>Two Cubes</title>
 
     <meta charset="utf-8">
 
-    <script type="application/javascript" src="external/scrollbar.js"></script>
-    <script type="application/javascript" src="external/html2canvas.js"></script>
-    <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
-    <script id="jQuery" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script type="application/javascript" src="external/TemplateEngine.js"></script>
-    <script type="application/javascript" src="external/webapi.js"></script>
-    <script type="application/javascript" src="external/features.js"></script>
+    <link rel="stylesheet" type="text/css" href="cards.css"/>
 
+    <script src="external/scrollbar.js"></script>
+    <script src="external/html2canvas.js"></script>
+    <script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="external/TemplateEngine.js"></script>
+    <script src="external/webapi.js"></script>
+    <script src="external/features.js"></script>
 
     <script type="application/dart" src="cards.dart"></script>
 </head>
@@ -29,7 +29,7 @@
     <button id="toggle-physics">Apply physics</button>
     <button id="restart" class="hidden">Restart</button>
     <div class="friends-finished"></div>
-    <button id="hint" class="hidden">Hint (<span id="hint-count">1</span>)</button>
+    <button id="hint">Get hint</button>
 </div>
 
 <div class="selectors hidden">
@@ -299,6 +299,17 @@
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
                 <button class="invite-button" data-id="<%=id%>">Invite</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="prompt-window-template">
+        <div class="prompt-window p-<%=id%>">
+            <div class="prompt-headline"><%=headline%></div>
+            <div class="prompt-message"><%=message%></div>
+            <div class="prompt-buttons">
+                <button class="prompt-button prompt-positive pp-<%=id%>"><%=positive%></button>
+                <button class="prompt-button prompt-negative pn-<%=id%>"><%=negative%></button>
             </div>
         </div>
     </div>
