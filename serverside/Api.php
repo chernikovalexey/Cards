@@ -58,16 +58,16 @@ class Api
     {
         if ($user['balance'] > 0) {
             $chapter = intval($chapter);
-            $level = intval($level);
+            $levelIndex = intval($level) - 1;
             $filename = "private/hints/" . $chapter . ".json";
             if (file_exists($filename)) {
                 $chapterHints = json_decode(file_get_contents($filename), true);
-                if (!isset($chapterHints[$level]))
+                if (!isset($chapterHints[$levelIndex]))
                     throw new ApiException("There is no hint for this level in specified file!");
                 $user['balance']--;
                 $this->db->setUserBalance($user);
 
-                return array("user" => $user, "hint" => $chapterHints[$level]);
+                return array("user" => $user, "hint" => $chapterHints[$levelIndex]);
             }
             throw new ApiException("Hint file is not available, chapter name is not valid!");
         }
