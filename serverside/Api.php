@@ -29,7 +29,7 @@ class Api
         Analytics::push(new AnalyticsEvent("session", "start", array('user' => $user['userId'])));
 
         if (count($friends) > 0)
-            return $this->db->getResults($friends, $this->platform);
+            return array('user' => $user, 'results' =>  $this->db->getResults($friends, $this->platform));
         else
             return array();
     }
