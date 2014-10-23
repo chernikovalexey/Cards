@@ -24,12 +24,12 @@
 <div class="buttons hidden">
     <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show">View controls
     </button>
-    <button id="zoom-in" class="plus"></button>
-    <button id="zoom-out" class="minus"></button>
+    <button id="zoom-in" class="plus" title="Zoom camera in"></button>
+    <button id="zoom-out" class="minus" title="Zoom camera out"></button>
     <button id="toggle-physics">Apply physics</button>
     <button id="restart" class="hidden">Restart</button>
-    <div class="friends-finished"></div>
-    <button id="hint">Get hint</button>
+    <!--<div class="friends-finished"></div>-->
+    <button id="hint"><span id="hints-label">Use hint</span><span id="hints-amount">2</span></button>
 </div>
 
 <div class="selectors hidden">
@@ -100,6 +100,10 @@
 </div>
 
 <div class="light-box hidden" id="rating-box">
+    <div class="tutorial-layout hidden">
+        <div class="tutorial-compliment">You're gorgeous!</div>
+        <div class="tutorial-goal">That's what you should do in this game!</div>
+    </div>
     <div class="rating-inner-layout">
         <div class="pause-title hidden">Game paused</div>
         <div class="rating-wrap">
@@ -227,10 +231,73 @@
 </div>
 </div>
 
-<div class="hidden" id="friends-finished">
-    <div class="friends-topbar">
-        <div class="friends-headline">Friends Finished This Level</div>
-        <div class="close-finished">close</div>
+<div class="bs-screen" id="purchases">
+    <div class="bs-screen-topbar">
+        <div class="bs-screen-headline friends-headline">Purchases</div>
+        <div class="bs-screen-close close-purchases">close</div>
+    </div>
+
+    <div class="purchase-block">
+        <div class="purchase-block-head">
+            <div class="purchase-headline">Hints</div>
+            <div class="balance-layout">you have <span class="current-balance" id="hints-balance">2</span></div>
+        </div>
+        <div class="purchase-options hint-options">
+            <div class="purchase-option">
+                <div class="text-overlay">1 hint</div>
+                <span class="purchase-price">0.5$</span>
+            </div>
+
+            <div class="purchase-option">
+                <div class="text-overlay">5 hints</div>
+                <span class="purchase-price">1$</span>
+            </div>
+
+            <div class="purchase-option">
+                <div class="text-overlay">10 hints</div>
+                <span class="purchase-price">2$</span>
+            </div>
+
+            <div class="purchase-option">
+                <div class="text-overlay">25 hints</div>
+                <span class="purchase-price">3$</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="purchase-block">
+        <div class="purchase-block-head">
+            <div class="purchase-headline">Attempts</div>
+            <div class="balance-layout">you have <span class="current-balance" id="attemps-balance">200</span></div>
+        </div>
+        <div class="purchase-options attempt-options">
+            <div class="purchase-option">
+                <div class="text-overlay">+10 attempts</div>
+                <span class="purchase-price">0.25$</span>
+            </div>
+
+            <div class="purchase-option">
+                <div class="text-overlay">+25 attempts</div>
+                <span class="purchase-price">0.5$</span>
+            </div>
+
+            <div class="purchase-option">
+                <div class="text-overlay">+50 attempts</div>
+                <span class="purchase-price">1$</span>
+            </div>
+
+            <div class="purchase-option">
+                <div class="text-overlay">+100 attempts</div>
+                <span class="purchase-price">1.5$</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden" id="bs-screen friends-finished">
+    <div class="bs-screen-topbar">
+        <div class="bs-screen-headline">Friends Finished This Level</div>
+        <div class="bs-screen-close close-finished">close</div>
     </div>
 
     <div id="finished-vs" class="bottom-sliding-vs">
@@ -241,10 +308,10 @@
     <div id="finished-scrollbar" class="bottom-sliding-scrollbar"></div>
 </div>
 
-<div class="friends hidden">
-    <div class="friends-topbar">
-        <div class="friends-headline">Invite Friends</div>
-        <div class="close-friends">close</div>
+<div class="bs-screen friends hidden">
+    <div class="bs-screen-topbar">
+        <div class="bs-screen-headline">Invite Friends</div>
+        <div class="bs-screen-close close-friends">close</div>
     </div>
 
     <div id="invitations-vs" class="bottom-sliding-vs">

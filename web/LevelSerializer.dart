@@ -8,69 +8,63 @@ import 'GameEngine.dart';
 import 'cards.dart';
 
 class LevelSerializer {
-  static double roundDouble(double n) {
-    return (n * 1000.0).round() / 1000.0;
-  }
-
-  static String toJSON(List<Body> cards, List<List> frames, bool physicsEnabled) {
-    Map map = new Map();
-    map['physics_enabled'] = physicsEnabled;
-    map['cards'] = new List<Map>();
-    map['frames'] = new List();
-
-    for (Body body in cards) {
-      (map['cards'] as List).add({
-        'x': roundDouble(body.position.x),
-        'y': roundDouble(body.position.y),
-        'angle': roundDouble(body.angle),
-        'static': (body.userData as EnergySprite).isStatic,
-        'energy': roundDouble((body.userData as EnergySprite).energy)
-      });
+    static double roundDouble(double n) {
+        return (n * 1000.0).round() / 1000.0;
     }
 
-    for (int i = 0, len = frames.length; i < len; ++i) {
-      map['frames'].add(new List());
-      for (var t in frames[i]) {
-        map['frames'][i].add({
-          'x': roundDouble(t.pos.x),
-          'y': roundDouble(t.pos.y),
-          'angle': roundDouble(t.angle)
-        });
-      }
+    static String toJSON(List<Body> cards, List<List> frames, bool physicsEnabled) {
+        Map map = new Map();
+        map['physics_enabled'] = physicsEnabled;
+        map['cards'] = new List<Map>();
+        map['frames'] = new List();
+
+        for (Body body in cards) {
+            if (!(body.userData as EnergySprite).isHint) {
+                (map['cards'] as List).add({
+                    'x': roundDouble(body.position.x), 'y': roundDouble(body.position.y), 'angle': roundDouble(body.angle), 'static': (body.userData as EnergySprite).isStatic, 'energy': roundDouble((body.userData as EnergySprite).energy)
+                });
+            }
+        }
+
+        for (int i = 0, len = frames.length; i < len; ++i) {
+            map['frames'].add(new List());
+            for (var t in frames[i]) {
+                map['frames'][i].add({
+                    'x': roundDouble(t.pos.x), 'y': roundDouble(t.pos.y), 'angle': roundDouble(t.angle)
+                });
+            }
+        }
+
+        return JSON.encode(map);
     }
 
-    return JSON.encode(map);
-  }
+    static void fromJSON(String json, GameEngine e, SubLevel subLevel) {
+        Map state = JSON.decode(json);
 
-  static void fromJSON(String json, GameEngine e, SubLevel subLevel) {
-    Map state = JSON.decode(json);
+        for (Map card in state['cards']) {
+            Body b = e.addCard(card['x'].toDouble(), card['y'].toDouble(), card['angle'].toDouble(), card['static'], subLevel);
+            if (subLevel != null) b.type = BodyType.STATIC;
 
-    for (Map card in state['cards']) {
-      Body b = e.addCard(card['x'].toDouble(), card['y'].toDouble(),
-          card['angle'].toDouble(), card['static'], subLevel);
-      if (subLevel != null) b.type = BodyType.STATIC;
+            (b.userData as EnergySprite).energy = card['energy'].toDouble();
+        }
 
-      (b.userData as EnergySprite).energy = card['energy'].toDouble();
+        applyPhysicsLabelToButton();
+
+        List frames = new List();
+        for (int i = 0, len = state['frames'].length; i < len; ++i) {
+            frames.add(new List());
+            for (Map t in state['frames'][i]) {
+                frames[i].add(new BTransform(new Vector2(t['x'].toDouble(), t['y'].toDouble()), t['angle'].toDouble()));
+            }
+        }
+
+        if (subLevel != null) {
+            subLevel.frames = frames;
+            subLevel.enable(false);
+        } else {
+            e.bobbin.list = frames;
+        }
+
+        if (subLevel != null) subLevel.loadRating();
     }
-
-    applyPhysicsLabelToButton();
-
-    List frames = new List();
-    for (int i = 0, len = state['frames'].length; i < len; ++i) {
-      frames.add(new List());
-      for (Map t in state['frames'][i]) {
-        frames[i].add(new BTransform(new Vector2(t['x'].toDouble(),
-            t['y'].toDouble()), t['angle'].toDouble()));
-      }
-    }
-
-    if (subLevel != null) {
-      subLevel.frames = frames;
-      subLevel.enable(false);
-    } else {
-      e.bobbin.list = frames;
-    }
-
-    if (subLevel != null) subLevel.loadRating();
-  }
 }

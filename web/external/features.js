@@ -176,6 +176,7 @@ var VKFeatures = {
         $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", function () {
             VKFeatures.initFields(function () {
                 Api.initialRequest(function (data) {
+                    console.log(data);
                     for (var key in data) {
                         $.each(data[key], function (i, v) {
                             var user_obj = Features.getUserObject(+key.replace("u", ""));

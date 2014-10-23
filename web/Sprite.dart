@@ -12,6 +12,7 @@ class Sprite {
     bool connectedToEnergy = false;
     bool energySupport = false;
     bool isStatic = false;
+    bool isHint = false;
     bool enabled = true;
 
     Body bFrom;

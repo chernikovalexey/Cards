@@ -103,7 +103,7 @@ class Level {
     }
 
     void toggleFinishedFriends() {
-        DivElement finished = querySelector('.friends-finished') as DivElement;
+        /*DivElement finished = querySelector('.friends-finished') as DivElement;
         Map fchapter = context['Features']['chapters'][engine.level.chapter.toString()];
 
         if (fchapter != null) {
@@ -150,7 +150,7 @@ class Level {
             animate(finished, properties: {
                 'opacity': 0.0
             }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
-        }
+        }*/
     }
 
     void previous() {

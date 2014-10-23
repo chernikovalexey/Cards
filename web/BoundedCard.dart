@@ -31,6 +31,10 @@ class BoundedCard {
         b.userData = Sprite.card(e.world);
     }
 
+    bool hasContacts() {
+
+    }
+
     void update() {
         double angle = b.angle;
         angle += Input.wheelDirection * Math.PI / 24;

@@ -54,15 +54,14 @@ canvas {
 
 button {
     background: rgba(255, 255, 255, 0.125);
-    padding: 8px 15px;
+    padding: 10px 20px;
     color: #fff;
     font-family: Tahoma;
-    font-size: 13px;
-    font-weight: 700;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 14px;
+    border: none;
     -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
     transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
-    border-radius: 2px;
+    border-radius: 28px;
     z-index: 6;
 }
 
@@ -71,27 +70,25 @@ button:focus {
 }
 
 button:active:not([disabled]), .active-button {
-    border: 1px solid rgba(61, 95, 150, 0.5);
-    box-shadow: 0 0 3px rgba(61, 95, 150, 0.25);
+    background-color: rgba(61, 95, 150, 0.425);
 }
 
 button:hover:not([disabled]) {
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.25);
     cursor: pointer;
 }
 
 .error-blink {
     background: rgba(63, 55, 55, 1.0);
-    border: 1px solid rgba(220, 16, 16, 0.35) !important;
     box-shadow: 0 0 12px rgba(220, 16, 16, 0.75);
 }
 
 #zoom-in, #zoom-out {
     background-repeat: no-repeat;
     height: 34px;
-    width: 47px;
+    width: 52px;
     vertical-align: middle;
-    background-position: 15px 8px;
+    background-position: 22px 8px;
     position: relative;
     top: -1px;
 }
@@ -105,9 +102,10 @@ button:hover:not([disabled]) {
 .minus {
     background-image: url(img/icon_minus.png);
     left: -5px;
-    border-left: none;
-    border-bottom-left-radius: 0;
     border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.075);
+    background-position-x: 16px !important;
 }
 
 #toggle-physics {
@@ -138,6 +136,17 @@ button:hover:not([disabled]) {
 #hint {
     position: absolute;
     right: 15px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#hints-label {
+    padding: 8px 15px 8px 20px;
+}
+
+#hints-amount {
+    padding: 8px 20px 8px 15px;
+    border-left: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .selectors {
@@ -264,6 +273,27 @@ button:hover:not([disabled]) {
     margin: 0 auto;
 }
 
+.tutorial-layout {
+    top: 0;
+    position: absolute;
+    width: 300px;
+    padding: 15px;
+    left: calc(50% - 150px - 15px);
+    background: rgba(255, 255, 255, 0.125);
+}
+
+.tutorial-compliment {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.tutorial-goal {
+    color: #c7c6c2;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
 .chapter-rating-wrap {
     margin: 0 auto;
 }
@@ -326,7 +356,7 @@ button:hover:not([disabled]) {
 .instructions {
     color: #fff;
     margin-bottom: 115px;
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 1px;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.125);
     opacity: 0.85;
@@ -355,8 +385,9 @@ button:hover:not([disabled]) {
 #invite-friends {
     color: rgb(211, 211, 211);
     position: absolute;
+    font-size: 14px;
     left: 50%;
-    margin-left: -70px;
+    margin-left: -65px;
     bottom: 25px;
     -webkit-text-stroke: 1px rgba(211, 211, 211, 0.05);
     -webkit-transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
@@ -934,10 +965,24 @@ div.active-step {
     opacity: 0.5;
     font-weight: 400;
     font-size: 14px;
+    border-radius: 0;
 }
 
 .topbar-show-controls:hover {
     opacity: 0.75;
+}
+
+.simple-tooltip {
+    position: absolute;
+    z-index: 888;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.simple-tooltip-text {
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #c7c6c2;
 }
 
 .tooltip {
@@ -950,15 +995,15 @@ div.active-step {
     border: 1px solid rgba(255, 255, 255, 0.05);
     -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
     transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
-    padding: 10px 15px;
-    font-size: 13px;
-    color: #fff;
+    font-size: 14px;
+    color: #c7c6c2;
     text-align: center;
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 .tooltip-text {
     text-align: left;
+    padding: 15px;
 }
 
 .got-it {
@@ -966,7 +1011,8 @@ div.active-step {
     font-size: 13px;
     color: #fff;
     background: rgba(255, 255, 255, 0.05);
-    margin-top: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
     padding: 10px 15px;
     font-weight: 700;
     -webkit-user-select: none;
@@ -1011,25 +1057,109 @@ div.active-step {
     -webkit-transform: rotate(90deg);
 }
 
+/* Balance and In-app Purchases */
+
+#purchases {
+    top: 0 !important;
+    opacity: 1.0 !important;
+}
+
+.purchase-block {
+    width: 399px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.purchase-block:last-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+.purchase-block-head {
+    width: 370px;
+    padding: 15px;
+}
+
+.purchase-headline {
+    color: #fff;
+    display: inline-block;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.balance-layout {
+    display: inline-block;
+    float: right;
+    color: #fff;
+    font-size: 14px;
+    position: relative;
+    top: 2px;
+    color: #c7c6c2;
+}
+
+.current-balance {
+    padding: 5px 15px;
+    background: rgba(255, 255, 255, 0.125);
+    margin-left: 5px;
+    border-radius: 3px;
+    color: #fff;
+}
+
+.purchase-options {
+
+}
+
+.purchase-option {
+    width: 364px;
+    margin-left: 15px;
+    padding: 50px 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.125);
+    font-size: 16px;
+    -webkit-user-select: none;
+    -webkit-transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.purchase-option:last-child {
+    border-bottom: none;
+}
+
+.purchase-option:hover {
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.125);
+}
+
+.text-overlay {
+    display: inline-block;
+    color: #fff;
+}
+
+.purchase-price {
+    display: inline-block;
+    float: right;
+    color: #c7c6c2;
+    font-weight: 700;
+}
+
 /* VK Friends Integration */
 
 .templates {
     display: none;
 }
 
-.friends-topbar {
+.bs-screen-topbar {
     text-align: center;
     padding: 25px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.friends-headline {
+.bs-screen-headline {
     color: #fff;
     font-size: 24px;
     font-weight: 700;
 }
 
-.close-friends, .close-finished {
+.bs-screen-close {
     color: #fff;
     position: absolute;
     z-index: 1000;
@@ -1041,7 +1171,7 @@ div.active-step {
     padding: 15px;
 }
 
-.friends, #friends-finished {
+.bs-screen {
     top: 800px;
     opacity: 0.0;
     background: rgba(0, 0, 0, 0.95);
@@ -1266,17 +1396,19 @@ div.active-step {
     color: #fff;
     padding: 15px;
     padding-bottom: 0;
+    font-size: 16px;
+    font-weight: 700;
 }
 
 .prompt-message {
     padding: 15px;
-    padding-bottom: 0;
     color: #c7c6c2;
     font-size: 13px;
 }
 
 .prompt-buttons {
     padding: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .prompt-button {

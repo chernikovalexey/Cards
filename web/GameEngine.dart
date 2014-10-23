@@ -199,7 +199,7 @@ class GameEngine extends State {
         return !Input.keys['z'].down && !Input.isAltDown && !Input.keys['space'].down && Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty && (ignorePhysics || !physicsEnabled);
     }
 
-    Body addCard(double x, double y, double angle, [bool isStatic = false, SubLevel sub = null, Color4 col = null]) {
+    Body addCard(double x, double y, double angle, [bool isStatic = false, SubLevel sub = null, Color4 col = null, bool isHint = false]) {
         PolygonShape cs = new PolygonShape();
         cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
 
@@ -223,6 +223,7 @@ class GameEngine extends State {
         EnergySprite sprite = Sprite.card(world);
         sprite.isStatic = isStatic;
         sprite.energySupport = (!isStatic || sub != null);
+        sprite.isHint = isHint;
 
         if (col != null) {
             sprite.color = col;
@@ -241,22 +242,25 @@ class GameEngine extends State {
             sub.cards.add(card);
         }
 
-        if (isStatic) {
-            --sub.staticBlocksRemaining;
+        if (!isHint) {
+            if (isStatic) {
+                --sub.staticBlocksRemaining;
 
-            if (sub.staticBlocksRemaining == 0) {
-                this.staticBlocksSelected = false;
+                if (sub.staticBlocksRemaining == 0) {
+                    this.staticBlocksSelected = false;
+                }
+            } else {
+                --sub.dynamicBlocksRemaining;
             }
-        } else {
-            --sub.dynamicBlocksRemaining;
+
+             updateBlockButtons(this);
         }
-        updateBlockButtons(this);
 
         return card;
     }
 
-    int getBodyType(bool activeness, [bool isStatic = false]) {
-        return activeness && !isStatic ? BodyType.DYNAMIC : BodyType.STATIC;
+    int getBodyType(bool activeness, [bool isStatic = false, bool isHint = false]) {
+        return activeness && !isStatic && !isHint ? BodyType.DYNAMIC : BodyType.STATIC;
     }
 
     void togglePhysics(bool active) {
@@ -270,8 +274,9 @@ class GameEngine extends State {
         }
 
         for (Body body in cards) {
-            body.type = getBodyType(active, (body.userData as EnergySprite).isStatic);
-            if (!physicsEnabled) (body.userData as Sprite).deactivate();
+            EnergySprite sprite = body.userData as EnergySprite;
+            body.type = getBodyType(active, sprite.isStatic, sprite.isHint);
+            if (!physicsEnabled) sprite.deactivate();
         }
     }
 
@@ -290,8 +295,6 @@ class GameEngine extends State {
         }
         RatingShower.wasJustPaused = false;
 
-        world.step(1.0 / 60, 10, 10);
-
         setCanvasCursor('none');
 
         bcard.update();
@@ -300,6 +303,8 @@ class GameEngine extends State {
         if (physicsEnabled) {
             bobbin.enterFrame(cards);
         }
+
+        world.step(1.0 / 60, 10, 10);
 
         if (isRewinding) {
             isRewinding = bobbin.previousFrame(cards);
