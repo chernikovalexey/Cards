@@ -29,7 +29,7 @@ class Api
         Analytics::push(new AnalyticsEvent("session", "start", array('user' => $user['userId'])));
 
         if (count($friends) > 0)
-            return $this->db->getResults($friends, $this->platform);
+            return array('user' => $user, 'results' =>  $this->db->getResults($friends, $this->platform));
         else
             return array();
     }
@@ -58,19 +58,26 @@ class Api
     {
         if ($user['balance'] > 0) {
             $chapter = intval($chapter);
-            $level = intval($level);
+            $levelIndex = intval($level) - 1;
             $filename = "private/hints/" . $chapter . ".json";
             if (file_exists($filename)) {
                 $chapterHints = json_decode(file_get_contents($filename), true);
-                if (!isset($chapterHints[$level]))
+                if (!isset($chapterHints[$levelIndex]))
                     throw new ApiException("There is no hint for this level in specified file!");
                 $user['balance']--;
                 $this->db->setUserBalance($user);
 
-                return array("user" => $user, "hint" => $chapterHints[$level]);
+                return array("user" => $user, "hint" => $chapterHints[$levelIndex]);
             }
             throw new ApiException("Hint file is not available, chapter name is not valid!");
         }
         throw new ApiException("To use hint you must have at least 1 hint on your balance!");
+    }
+
+    public function addAttempts(array $user, $numAttempts) {
+
+        $user['allAttempts'] -= $numAttempts;
+        $this->db->addAttempts($user, $numAttempts);
+        return $user;
     }
 } 

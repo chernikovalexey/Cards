@@ -160,4 +160,34 @@ class DB
         $sql->bindValue(2, $user['userId']);
         $sql->execute();
     }
+
+    public function countAttempts(array &$user)
+    {
+        $sql = $this->db->prepare("CALL GetAttempts(?);");
+        $sql->bindParam(1, $user['userId'], PDO::PARAM_INT);
+        $sql->execute();
+        $data = $sql->fetch();
+        $user['dayAttempts'] = $data['attempts'];
+        $user['allAttempts'] = $user['attempts'] + $user['dayAttempts'];
+        $user['dayAttemptsId'] = $data['id'];
+
+    }
+
+    public function addAttempts(array &$user, $delta)
+    {
+        $sql = $this->db->prepare("UPDATE tcardattempts SET attempts = ? WHERE id=?");
+        $sql->bindParam(2, $user['dayAttemptsId'], PDO::PARAM_INT);
+        if($delta < $user['dayAttempts'])
+            $user['dayAttempts'] = $user['dayAttempts'] - $delta;
+        else {
+            $user['attempts'] = $user['attempts'] - $delta + $user['dayAttempts'];
+            $user['dayAttempts'] = 0;
+            $sql1 = $this->db->prepare("UPDATE tcardusers SET attempts = ? WHERE userId = ?");
+            $sql1->bindParam(1, $user['attempts'], PDO::PARAM_INT);
+            $sql1->bindParam(2, $user['userId'], PDO::PARAM_INT);
+            $sql1->execute();
+        }
+        $sql->bindParam(1, $user['dayAttempts'], PDO::PARAM_INT);
+        $sql->execute();
+    }
 } 
