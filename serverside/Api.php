@@ -73,4 +73,11 @@ class Api
         }
         throw new ApiException("To use hint you must have at least 1 hint on your balance!");
     }
+
+    public function addAttempts(array $user, $numAttempts) {
+
+        $user['allAttempts'] -= $numAttempts;
+        $this->db->addAttempts($user, $numAttempts);
+        return $user;
+    }
 } 

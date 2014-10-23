@@ -29,6 +29,7 @@ class Router {
             $rm = new ReflectionMethod($Api, $method);
             //todo: Add clause if user not valid
             $user = $this->db->validateUser($arguments['userId'], $platform);
+            $this->db->countAttempts($user);
             $arguments['userId'] = $user;
             Analytics::init($user['userId'], $platform);
 
