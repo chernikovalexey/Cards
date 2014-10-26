@@ -622,5 +622,455 @@
             "static": false,
             "energy": 1
         }
+    ],
+    [
+        {
+            "x": 14.757,
+            "y": 12.582,
+            "angle": -0.022,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.498,
+            "y": 12.63,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.053,
+            "y": 12.617,
+            "angle": -0.05,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 13.943,
+            "y": 12.627,
+            "angle": 0,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.292,
+            "y": 12.649,
+            "angle": -0.057,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.731,
+            "y": 12.674,
+            "angle": -0.003,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.178,
+            "y": 12.674,
+            "angle": 0.002,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.027,
+            "y": 12.716,
+            "angle": -0.007,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.472,
+            "y": 12.718,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.744,
+            "y": 12.762,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.843,
+            "y": 12.654,
+            "angle": 0.072,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.096,
+            "y": 12.626,
+            "angle": 0.063,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.659,
+            "y": 12.634,
+            "angle": -0.027,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.41,
+            "y": 12.685,
+            "angle": -0.026,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.464,
+            "y": 12.588,
+            "angle": 0,
+            "static": true,
+            "energy": 0
+        },
+        {
+            "x": 16.966,
+            "y": 12.671,
+            "angle": -0.027,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.157,
+            "y": 12.736,
+            "angle": -0.026,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.73,
+            "y": 12.721,
+            "angle": -0.026,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 13.908,
+            "y": 12.718,
+            "angle": 0.002,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.178,
+            "y": 12.763,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.437,
+            "y": 12.807,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 17.286,
+            "y": 12.716,
+            "angle": 0.011,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 17.023,
+            "y": 12.763,
+            "angle": -0.008,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 17.585,
+            "y": 12.676,
+            "angle": 0.015,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 17.867,
+            "y": 12.635,
+            "angle": 0.015,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 18.139,
+            "y": 12.591,
+            "angle": 0,
+            "static": true,
+            "energy": 0
+        },
+        {
+            "x": 18.412,
+            "y": 12.635,
+            "angle": -0.014,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 18.145,
+            "y": 12.684,
+            "angle": 0.014,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 18.699,
+            "y": 12.675,
+            "angle": -0.043,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 17.845,
+            "y": 12.724,
+            "angle": 0.014,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 18.409,
+            "y": 12.732,
+            "angle": 0.014,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 18.986,
+            "y": 12.718,
+            "angle": -0.002,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 18.115,
+            "y": 12.772,
+            "angle": 0.014,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 19.26,
+            "y": 12.674,
+            "angle": 0.039,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 19.501,
+            "y": 12.635,
+            "angle": 0.026,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 19.826,
+            "y": 12.591,
+            "angle": 0,
+            "static": true,
+            "energy": 0
+        },
+        {
+            "x": 20.061,
+            "y": 12.639,
+            "angle": -0.012,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 19.826,
+            "y": 12.687,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 19.548,
+            "y": 12.732,
+            "angle": 0.005,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 20.386,
+            "y": 12.683,
+            "angle": 0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 20.102,
+            "y": 12.732,
+            "angle": -0.007,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 18.107,
+            "y": 12.816,
+            "angle": 0.014,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 18.106,
+            "y": 12.861,
+            "angle": 0.014,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 19.826,
+            "y": 12.778,
+            "angle": 0,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.433,
+            "y": 12.85,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 15.601,
+            "y": 12.695,
+            "angle": 0.019,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 14.434,
+            "y": 12.895,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.434,
+            "y": 12.774,
+            "angle": -0.026,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.428,
+            "y": 12.818,
+            "angle": -0.026,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 16.434,
+            "y": 12.862,
+            "angle": -0.026,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 20.852,
+            "y": 12.636,
+            "angle": -0.001,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 20.847,
+            "y": 12.592,
+            "angle": 0,
+            "static": true,
+            "energy": 0
+        },
+        {
+            "x": 21.068,
+            "y": 12.93,
+            "angle": -1.573,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 21.068,
+            "y": 13.474,
+            "angle": -1.573,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 21.07,
+            "y": 14.018,
+            "angle": -1.574,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 21.071,
+            "y": 14.562,
+            "angle": -1.573,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 21.072,
+            "y": 15.107,
+            "angle": -1.571,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 21.071,
+            "y": 15.651,
+            "angle": -1.567,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 21.068,
+            "y": 16.195,
+            "angle": -1.565,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 21.316,
+            "y": 16.478,
+            "angle": -0.049,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 21.841,
+            "y": 16.491,
+            "angle": -0.086,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 22.341,
+            "y": 16.49,
+            "angle": -0.095,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 22.84,
+            "y": 16.489,
+            "angle": -0.089,
+            "static": false,
+            "energy": 1
+        },
+        {
+            "x": 23.347,
+            "y": 16.488,
+            "angle": -0.088,
+            "static": false,
+            "energy": 1
+        }
     ]
 ]
