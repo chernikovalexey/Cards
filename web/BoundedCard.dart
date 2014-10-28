@@ -31,20 +31,23 @@ class BoundedCard {
         b.userData = Sprite.card(e.world);
     }
 
-    bool hasContacts() {
-
-    }
-
     void update() {
         double angle = b.angle;
-        angle += Input.wheelDirection * Math.PI / 24;
+        double delta = Math.PI / 24;
+
+        if(Input.keys['q'].down) {
+            angle += delta / 3;
+        } else if (Input.keys['e'].down) {
+            angle -= delta / 3;
+        } else {
+            angle -= Input.wheelDirection * delta;
+        }
+
         b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
 
         if (e.level.current != null) {
             Color4 col;
-            if (!e.contactListener.contactingBodies.isEmpty) {
-                col = new Color4.fromRGBA(255, 0, 0, 0.5);
-            } else if (e.staticBlocksSelected) {
+            if (e.staticBlocksSelected) {
                 col = new Color4.fromRGB(217, 214, 179);
                 if (e.physicsEnabled || e.level.current.staticBlocksRemaining == 0) col = new Color4.fromRGB(134, 133, 119);
             } else {

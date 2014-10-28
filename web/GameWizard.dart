@@ -134,6 +134,8 @@ class GameWizard {
             showOverview();
         } else if (chapter == 1 && level == 3) {
             showHintsTooltip();
+        } else if (chapter == 1 && level == 5) {
+            showZoom();
         } else if (chapter == 1 && level == 8) {
             showStaticAppear();
         }
@@ -148,12 +150,12 @@ class GameWizard {
 
         var bodyStream = querySelector("body").onClick.listen((event) {
             Tooltip.closeAll();
+            hints.clearHintCards();
 
             Tooltip.show(querySelector("#toggle-physics"), TOGGLE_PHYSICS, Tooltip.BOTTOM, maxWidth: 300);
 
             var toggleStream = querySelector("#toggle-physics").onClick.listen((event) {
                 Tooltip.closeAll();
-                hints.clearHintCards();
             });
 
             querySelector("#toggle-physics").onClick.listen((event) {
@@ -166,10 +168,41 @@ class GameWizard {
         });
     }
 
+    static void showRunout() {
+        Storage storage = window.localStorage;
+        if (!storage.containsKey("runout_occured")) {
+            Tooltip.show(querySelector(".dynamic"), "Amount of blocks is limited", Tooltip.RIGHT, maxWidth: 300);
+            storage["runout_occured"] = "true";
+        }
+    }
+
     static void showHintsTooltip() {
         new Timer(new Duration(seconds: 1), () {
-            engine.bobbin.rewindComplete = null;
             Tooltip.show(querySelector("#hint"), "If you are in trouble with accomplishing this level, <b>use hints</b>", Tooltip.BOTTOM, maxWidth: 300, xOffset: -90);
+
+            var stream = querySelector("#hint").onClick.listen((event) {
+                Tooltip.closeAll();
+            });
+
+            querySelector("#hint").onClick.listen((event) {
+                stream.cancel();
+            });
+        });
+    }
+
+    static void showZoom() {
+        new Timer(new Duration(seconds: 1), () {
+            Tooltip.show(querySelector("#zoom-out"), "<b>Use zoom</b> for accuracy", Tooltip.BOTTOM, maxWidth: 300, xOffset: -30, xArrowOffset: -25);
+
+            querySelectorAll(".zb").forEach((el) {
+                var stream = el.onClick.listen((event) {
+                    Tooltip.closeAll();
+                });
+
+                el.onClick.listen((event) {
+                    stream.cancel();
+                });
+            });
         });
     }
 

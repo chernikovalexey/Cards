@@ -9,192 +9,182 @@ import 'EnergySprite.dart';
 import 'Color4.dart';
 
 class SubLevel {
-  String name;
+    String name;
 
-  List frames = new List();
-  List cards = new List();
-  List<Body> obstacles = new List<Body>();
-  List stars;
+    List frames = new List();
+    List cards = new List();
+    List<Body> obstacles = new List<Body>();
+    List stars;
 
-  GameEngine e;
+    GameEngine e;
 
-  Object fSprite, tSprite;
-  Object levelData;
+    Object fSprite, tSprite;
+    Object levelData;
 
-  Function levelApplied;
+    Function levelApplied;
 
-  double x, y, w, h;
-  int rating = 0;
-  int index;
-  int staticBlocksRemaining;
-  int dynamicBlocksRemaining;
+    double x, y, w, h;
+    int rating = 0;
+    int index;
+    int staticBlocksRemaining;
+    int dynamicBlocksRemaining;
 
-  Body from;
-  Body to;
+    Body from;
+    Body to;
 
-  SubLevel(GameEngine e, Map l, int index) {
-    this.index = index;
-    this.e = e;
-    this.name = l["name"];
-    levelData = l;
-    x = l['x'].toDouble();
-    y = l['y'].toDouble();
-    w = l['width'].toDouble();
-    h = l['height'].toDouble();
-    
-    this.staticBlocksRemaining = l["blocks"][0];
-    this.dynamicBlocksRemaining = l["blocks"][1];
-    this.stars = l['stars'];
+    SubLevel(GameEngine e, Map l, int index) {
+        this.index = index;
+        this.e = e;
+        this.name = l["name"];
+        levelData = l;
+        x = l['x'].toDouble();
+        y = l['y'].toDouble();
+        w = l['width'].toDouble();
+        h = l['height'].toDouble();
 
-    double boundsOffset = 0.0;
-    if (index > 1) {
-      x += e.to.position.x - GameEngine.ENERGY_BLOCK_WIDTH / 2;
-      y += e.to.position.y - GameEngine.ENERGY_BLOCK_HEIGHT / 2;
-      this.from = e.to;
-      this.from.userData = Sprite.from(e.world);
-      //boundsOffset = x - (to.position.x - l["from"]["offset"].toDouble() / GameEngine.scale;);
-    } else {
-      this.from = e.createPolygonShape(l["from"]["x"].toDouble() /
-          GameEngine.NSCALE, l["from"]["y"].toDouble() / GameEngine.NSCALE,
-          GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
-      this.from.userData = Sprite.from(e.world);
+        this.staticBlocksRemaining = l["blocks"][0];
+        this.dynamicBlocksRemaining = l["blocks"][1];
+        this.stars = l['stars'];
+
+        double boundsOffset = 0.0;
+        if (index > 1) {
+            x += e.to.position.x - GameEngine.ENERGY_BLOCK_WIDTH / 2;
+            y += e.to.position.y - GameEngine.ENERGY_BLOCK_HEIGHT / 2;
+            this.from = e.to;
+            this.from.userData = Sprite.from(e.world);
+            //boundsOffset = x - (to.position.x - l["from"]["offset"].toDouble() / GameEngine.scale;);
+        } else {
+            this.from = e.createPolygonShape(l["from"]["x"].toDouble() / GameEngine.NSCALE, l["from"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
+            this.from.userData = Sprite.from(e.world);
+        }
+
+        e.camera.reset();
+        e.camera.setBounds(x, y, x + w, y + h);
+
+        this.to = e.createPolygonShape(l["to"]["x"].toDouble() / GameEngine.NSCALE, l["to"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
+        this.to.userData = Sprite.to(e.world);
+
+        for (var obstacle in l["obstacles"]) {
+            Body o;
+            if (obstacle["type"] == 1) {
+                o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE, obstacle["y"].toDouble() / GameEngine.NSCALE, obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble() / GameEngine.NSCALE);
+            } else {
+                List<Vector2> points = new List();
+                for (var p in obstacle["points"]) {
+                    points.add(new Vector2(p['x'] / GameEngine.NSCALE, p['y'] / GameEngine.NSCALE));
+                }
+                o = e.createMultiShape(points);
+            }
+            o.userData = Sprite.byType(1, e.world);
+            obstacles.add(o);
+        }
+
+        e.from = this.from;
+        e.to = this.to;
     }
 
-    e.camera.reset();
-    e.camera.setBounds(x, y, x + w, y + h);
 
-    this.to = e.createPolygonShape(l["to"]["x"].toDouble() / GameEngine.NSCALE,
-        l["to"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH,
-        GameEngine.ENERGY_BLOCK_HEIGHT);
-    this.to.userData = Sprite.to(e.world);
+    int getRating() {
+        if (stars[0] >= e.cards.length) rating = 3; else if (stars[1] >= e.cards.length) rating = 2; else rating = 1;
 
-    for (var obstacle in l["obstacles"]) {
-      Body o;
-      if(obstacle["type"] == 1) {
-        o = e.createPolygonShape(obstacle["x"].toDouble() /
-            GameEngine.NSCALE, obstacle["y"].toDouble() / GameEngine.NSCALE,
-            obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble()
-            / GameEngine.NSCALE);
-      } else {
-          List<Vector2> points = new List();
-          for(var p in obstacle["points"]) {
-              points.add(new Vector2(p['x'] / GameEngine.NSCALE, p['y'] / GameEngine.NSCALE));
-          }
-          o = e.createMultiShape(points);
-      }
-      o.userData = Sprite.byType(1);
-      obstacles.add(o);
+        return rating;
     }
 
-    e.from = this.from;
-    e.to = this.to;
-  }
-
-
-  int getRating() {
-    if (stars[0] >= e.cards.length) rating = 3; else if (stars[1] >=
-        e.cards.length) rating = 2; else rating = 1;
-
-    return rating;
-  }
-
-  void loadRating() {
-    if (stars[0] >= cards.length) rating = 3; else if (stars[1] >= cards.length)
-        rating = 2;
-    else rating = 1;
-  }
-
-  void finish() {
-    saveState();
-    for (Body b in e.cards) {
-      b.type = BodyType.STATIC;
+    void loadRating() {
+        if (stars[0] >= cards.length) rating = 3; else if (stars[1] >= cards.length)rating = 2; else rating = 1;
     }
 
-    e.physicsEnabled = false;
-    e.bobbin.erase();
-    e.cards.clear();
+    void finish() {
+        saveState();
+        for (Body b in e.cards) {
+            b.type = BodyType.STATIC;
+        }
 
-    applyPhysicsLabelToButton();
-  }
+        e.physicsEnabled = false;
+        e.bobbin.erase();
+        e.cards.clear();
 
-  void saveState() {
-    cards = new List();
-    cards.addAll(e.cards);
-    
-    frames = new List();
-    frames.addAll(e.bobbin.list);
-
-    from = e.from;
-    to = e.to;
-    fSprite = e.from.userData;
-    tSprite = e.to.userData;
-  }
-
-  void fromData(GameEngine e) {
-    e.bobbin.list = frames;
-  }
-
-  void enable(bool v) {
-    for (Body b in cards) {
-      b.userData.enabled = v;
+        applyPhysicsLabelToButton();
     }
 
-    e.from.userData.enabled = v;
-    e.to.userData.enabled = v;
-  }
+    void saveState() {
+        cards = new List();
+        cards.addAll(e.cards);
 
-  void apply() {
-    //analytics.levelStart(e.level.chapter, index);
-    Function f = () {
-      e.camera.setBounds(x, y, x + w, y + h);
-      e.camera.mTargetX = x/GameEngine.NSCALE;
-      e.camera.mTargetY = y /GameEngine.NSCALE;
-      e.bobbin.list = this.frames;
-      e.cards = this.cards;
+        frames = new List();
+        frames.addAll(e.bobbin.list);
 
-      e.from = from;
-      e.from.userData = Sprite.from(e.world);
-
-      e.to = to;
-
-      if (tSprite != null) e.to.userData = tSprite; else tSprite =
-          e.to.userData;
-
-      if (e.frontRewind) {
-        applyRewindLabelToButton();
-      } else {
-          e.rewind();
-          e.bobbin.rewindComplete = () {
-              e.bobbin.rewindComplete = null;
-              this.frames.clear();
-              if (levelApplied != null) levelApplied();
-              levelApplied = null;
-          };
-      }
-    };
-
-    if (e.physicsEnabled) {
-      if(!e.frontRewind) {
-        e.bobbin.rewindComplete = f;
-        e.rewind();
-      } else f();
-    } else f();
-  }
-
-  void complete() {
-    for (Body b in cards) {
-      (b.userData as EnergySprite).alwaysAnimate = true;
-      (b.userData as EnergySprite).activate();
-      (b.userData as EnergySprite).connectedToEnergy = true;
+        from = e.from;
+        to = e.to;
+        fSprite = e.from.userData;
+        tSprite = e.to.userData;
     }
-  }
-  
-  void online(bool online) {
-    //print("SubLevel::online("+online.toString()+")");
-    for(Body c in e.cards) {
-      (c.userData as EnergySprite).makeSensor(!online, c);
+
+    void fromData(GameEngine e) {
+        e.bobbin.list = frames;
     }
-    
-    (e.to.userData as EnergySprite).makeSensor(!online, e.to);
-  }
+
+    void enable(bool v) {
+        print("enable so:" + v.toString());
+        for (Body b in cards) {
+            b.userData.enabled = v;
+        }
+
+        e.from.userData.enabled = v;
+        e.to.userData.enabled = v;
+    }
+
+    void apply() {
+        //analytics.levelStart(e.level.chapter, index);
+        Function f = () {
+            e.camera.setBounds(x, y, x + w, y + h);
+            e.camera.mTargetX = x / GameEngine.scale;
+            e.camera.mTargetY = y / GameEngine.scale;
+            e.bobbin.list = this.frames;
+            e.cards = this.cards;
+
+            e.from = from;
+            e.from.userData = Sprite.from(e.world);
+
+            e.to = to;
+
+            if (tSprite != null) e.to.userData = tSprite; else tSprite = e.to.userData;
+
+            if (e.frontRewind) {
+                applyRewindLabelToButton();
+            } else {
+                e.rewind();
+                e.bobbin.rewindComplete = () {
+                    e.bobbin.rewindComplete = null;
+                    this.frames.clear();
+                    if (levelApplied != null) levelApplied();
+                    levelApplied = null;
+                };
+            }
+        };
+
+        if (e.physicsEnabled) {
+            if (!e.frontRewind) {
+                e.bobbin.rewindComplete = f;
+                e.rewind();
+            } else f();
+        } else f();
+    }
+
+    void complete() {
+        for (Body b in cards) {
+            (b.userData as EnergySprite).alwaysAnimate = true;
+            (b.userData as EnergySprite).activate();
+            (b.userData as EnergySprite).connectedToEnergy = true;
+        }
+    }
+
+    void online(bool online) {
+        //print("SubLevel::online("+online.toString()+")");
+        for (Body c in e.cards) {
+            (c.userData as EnergySprite).makeSensor(!online, c);
+        }
+
+        (e.to.userData as EnergySprite).makeSensor(!online, e.to);
+    }
 }

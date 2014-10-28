@@ -79,8 +79,10 @@ class GameEngine extends State {
     bool isRewinding = false;
     bool frontRewind = false;
 
-    Function frontRewindLevelComplete;
-    Function frontRewindLevelFailed;
+    Function frontRewindLevelComplete = () {
+    };
+    Function frontRewindLevelFailed = () {
+    };
     Function onLevelEndCallback = () {
     };
 
@@ -253,7 +255,7 @@ class GameEngine extends State {
                 --sub.dynamicBlocksRemaining;
             }
 
-             updateBlockButtons(this);
+            updateBlockButtons(this);
         }
 
         return card;
@@ -297,14 +299,11 @@ class GameEngine extends State {
 
         setCanvasCursor('none');
 
-        bcard.update();
         camera.update(delta);
 
         if (physicsEnabled) {
             bobbin.enterFrame(cards);
         }
-
-        world.step(1.0 / 60, 10, 10);
 
         if (isRewinding) {
             isRewinding = bobbin.previousFrame(cards);
@@ -314,6 +313,9 @@ class GameEngine extends State {
             }
         }
 
+        world.step(1.0 / 60, 10, 10);
+        bcard.update();
+
         if (level.current != null && ((staticBlocksSelected && level.current.staticBlocksRemaining > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
             if (canPut()) {
                 recentlyRemovedCards.clear();
@@ -321,6 +323,10 @@ class GameEngine extends State {
             } else if (canPut(true)) {
                 blinkPhysicsButton();
             }
+        }
+
+        if (canPut() && (level.current.dynamicBlocksRemaining == 0 || level.current.staticBlocksRemaining == 0)) {
+            GameWizard.showRunout();
         }
 
         //
@@ -499,26 +505,52 @@ class GameEngine extends State {
         updateBlockButtons(this);
     }
 
+    bool zoomDisabled = false;
+
     void zoom(bool zoomIn, [bool onMouse = false]) {
+        if (zoomDisabled) return;
+
+        double zoomDelta = 0.2;
         double newZoom;
 
         if (zoomIn) {
-            newZoom = currentZoom < 3 ? currentZoom + 0.2 : currentZoom;
+            newZoom = currentZoom <= 3 - zoomDelta ? currentZoom + zoomDelta : currentZoom;
         } else {
-            newZoom = currentZoom >= 1.2 ? currentZoom - 0.2 : currentZoom;
+            newZoom = currentZoom >= 1.0 + zoomDelta ? currentZoom - zoomDelta : currentZoom;
         }
 
         if (newZoom != currentZoom) {
-            if (onMouse) {
-                camera.mTargetX = Input.mouseX - WIDTH / 2;
-                camera.mTargetY = Input.mouseY + HEIGHT / 2;
-            }
-            camera.checkTarget();
-            camera.updateEngine(newZoom);
-        }
+            zoomDisabled = true;
+            camera.beginZoom(newZoom, currentZoom);
+            camera.updateZoom();
 
-        camera.beginZoom(newZoom, currentZoom);
-        currentZoom = newZoom;
+            if (newZoom > currentZoom) {
+                if (onMouse) {
+                    camera.mTargetX = camera.mTargetX + Input.mouseX / 2;
+                    camera.mTargetY = camera.mTargetY - Input.mouseY / 2;
+                } else {
+                    camera.mTargetX = camera.mTargetX + WIDTH / 2;
+                    camera.mTargetY = camera.mTargetY - HEIGHT / 2;
+                }
+            } else {
+                if (onMouse) {
+                    camera.mTargetX = camera.mTargetX - Input.mouseX / 2;
+                    camera.mTargetY = camera.mTargetY - Input.mouseY / 2;
+                } else {
+                    camera.mTargetX = camera.mTargetX - WIDTH / 2;
+                    camera.mTargetY = camera.mTargetY - HEIGHT / 2;
+                }
+            }
+
+            camera.checkTarget();
+            camera.updateEngine();
+
+            currentZoom = newZoom;
+
+            camera.zoomEnd = () {
+                zoomDisabled = false;
+            };
+        }
     }
 
     void clear() {

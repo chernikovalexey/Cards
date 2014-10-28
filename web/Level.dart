@@ -13,6 +13,7 @@ import 'dart:js';
 import 'JsMap.dart';
 import 'package:animation/animation.dart';
 import 'Scroll.dart';
+import 'UserManager.dart';
 
 class Level {
     GameEngine engine;
@@ -71,7 +72,9 @@ class Level {
     }
 
     void next() {
+        print("in next method");
         if (hasNext()) {
+            print("has next");
             if (current != null) {
                 current.enable(false);
             }
@@ -100,6 +103,7 @@ class Level {
         // Check friends
 
         toggleFinishedFriends();
+        updateHints();
     }
 
     void toggleFinishedFriends() {
@@ -151,6 +155,10 @@ class Level {
                 'opacity': 0.0
             }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
         }*/
+    }
+
+    void updateHints() {
+        querySelector("#hints-amount").innerHtml = UserManager.get("balance");
     }
 
     void previous() {
@@ -210,19 +218,22 @@ class Level {
             eng.level.current.levelApplied = onLevelApplied;
         } else {
             eng.frontRewind = true;
-            if (!eng.physicsEnabled) {
-                applyRewindLabelToButton();
-                eng.frontRewindLevelComplete = onFrontRewindLevelComplete;
-                eng.frontRewindLevelFailed = onFrontRewindLevelFailed;
-            }
+            print("front rewind");
+            //if (!eng.physicsEnabled) {
+            print("physics not enabled");
+            applyRewindLabelToButton();
+            eng.frontRewindLevelComplete = onFrontRewindLevelComplete;
+            eng.frontRewindLevelFailed = onFrontRewindLevelFailed;
+            //}
             //eng.level.next();
         }
     }
 
     static void onFrontRewindLevelComplete() {
-        //print("onFrontRewindLevelComplete");
-        //print("target: "+targetLevel.toString()+" current: "+ eng.level.currentSubLevel.toString());
+        print("onFrontRewindLevelComplete");
+        print("target: " + targetLevel.toString() + " current: " + eng.level.currentSubLevel.toString());
         if (targetLevel != eng.level.currentSubLevel) {
+            eng.level.current.finish();
             eng.level.next();
             applyRewindLabelToButton();
         } else {
@@ -232,6 +243,7 @@ class Level {
     }
 
     static void onFrontRewindLevelFailed() {
+        //PromptWindow.showSimple("System is broken!", "Please, repair this level to continue.");
         window.alert("The system is broken! Please repair this level to continue.");
         eng.frontRewind = false;
         applyPhysicsLabelToButton();

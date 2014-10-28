@@ -22,7 +22,9 @@ class RatingShower {
     static bool pauseState = false;
 
     static void nextLevel(Event event) {
+        print("next level");
         if (e.level.currentSubLevel != e.level.subLevels.length) {
+            print("in condition");
             onTypeItemClick(event);
             return;
         }
@@ -119,6 +121,8 @@ class RatingShower {
             }
         };
 
+        querySelector(".rating-wrap").classes.remove("hidden");
+        querySelector(".chapter-rating-wrap").classes.add("hidden");
         querySelector(".level-rating").innerHtml = getStars(rating);
         querySelector(".s-level-name").innerHtml = e.level.current.name;
 
@@ -242,8 +246,18 @@ class RatingShower {
         hide();
         e.isPaused = false;
         e.saveCurrentProgress();
-        print("clicked on level " + evt.currentTarget.dataset['level']);
-        Level.navigateToLevel(int.parse(evt.currentTarget.dataset['level']), e);
+
+        int level;
+
+        if (evt.currentTarget is DivElement) {
+            level = int.parse((evt.currentTarget as DivElement).dataset['level']);
+        } else if (evt.currentTarget is ButtonElement) {
+            level = int.parse(querySelector(".tape-current-item").dataset['level']) + 1;
+        }
+
+        print(level);
+
+        Level.navigateToLevel(level, e);
     }
 
     static void hide() {

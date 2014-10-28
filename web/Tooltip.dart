@@ -44,7 +44,7 @@ class Tooltip {
         ++index;
     }
 
-    static void show(Element rel, String code, int alignment, {num maxWidth: 800, num xOffset: 0, num yOffset: 0, num xArrowOffset: 0, num yArrowOffset: 0}) {
+    static int show(Element rel, String code, int alignment, {num maxWidth: 800, num xOffset: 0, num yOffset: 0, num xArrowOffset: 0, num yArrowOffset: 0}) {
         Element body = querySelector(".game-box");
         body.appendHtml('<div class="tt tooltip"><div class="arrow top-arrow" hidden></div><div class="arrow left-arrow" hidden></div><div class="tooltip-contents"><div class="tooltip-text">' + code + '</div><button class="got-it">OK</button></div><div class="arrow bottom-arrow" hidden></div></div>');
 
@@ -95,7 +95,27 @@ class Tooltip {
             closeByIndex(int.parse(getParent(event.target, "tooltip").dataset["index"]));
         }, false);
 
+        addChildClasses();
+
+        querySelector("body").onClick.listen((event) {
+            Element el = event.currentTarget as Element;
+            if (!el.classes.contains("tt-child")) {
+                Tooltip.closeAll();
+            }
+        });
+
+        int _index = index;
         ++index;
+
+        return _index;
+    }
+
+    static void addChildClasses() {
+        querySelectorAll(".tt *")
+            ..classes.add("tt-child")
+            ..forEach((el) {
+            el.classes.add("tt-child");
+        });
     }
 
     static void addCloseListener(Function listener) {
@@ -185,7 +205,6 @@ class Tooltip {
         opened.remove(i);
         int time = 175;
         DivElement tooltip = querySelector(".t-" + i.toString());
-        print(tooltip);
         animate(tooltip, properties: {
             'opacity': 0.0
         }, duration: time, easing: Easing.SINUSOIDAL_EASY_IN_OUT);

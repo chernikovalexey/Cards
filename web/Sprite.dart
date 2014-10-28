@@ -13,6 +13,7 @@ class Sprite {
     bool energySupport = false;
     bool isStatic = false;
     bool isHint = false;
+    bool contactOverlay = false;
     bool enabled = true;
 
     Body bFrom;
@@ -36,6 +37,10 @@ class Sprite {
         Transform tf = new Transform();
         tf.setFrom(b.originTransform);
         drawShape(b.fixtureList, tf, color);
+
+        if(contactOverlay) {
+            drawShape(b.fixtureList, tf, new Color4.fromRGBA(220, 30, 30, 0.425));
+        }
     }
 
     void drawShape(Fixture fixture, Transform xf, Color4 color) {
@@ -126,14 +131,14 @@ class Sprite {
         return s;
     }
     
-    static Sprite byType(int type) {
+    static Sprite byType(int type, World w) {
       switch(type) {
         case 1:
           return ground();
         case 2:
-          return from();
+          return from(w);
         case 3:
-          return to();
+          return to(w);
       }
       return null;
     }
