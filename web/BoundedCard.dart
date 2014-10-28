@@ -11,12 +11,14 @@ class BoundedCard {
     Body b;
     GameEngine e;
 
+    Vector2 pos = new Vector2(0.0, 0.0);
+
     BoundedCard(GameEngine e) {
         this.e = e;
 
         BodyDef bd = new BodyDef();
         bd.type = BodyType.DYNAMIC;
-        bd.position = new Vector2(0.0, 0.0);
+        bd.position = pos;
         bd.bullet = true;
 
         FixtureDef fd = new FixtureDef();
@@ -35,15 +37,37 @@ class BoundedCard {
         double angle = b.angle;
         double delta = Math.PI / 24;
 
-        if(Input.keys['q'].down) {
-            angle += delta / 3;
+        if (Input.keys['q'].down) {
+            angle += delta / 2;
         } else if (Input.keys['e'].down) {
-            angle -= delta / 3;
+            angle -= delta / 2;
         } else {
             angle -= Input.wheelDirection * delta;
         }
 
-        b.setTransform(new Vector2(Input.mouseX, Input.mouseY), angle);
+        double speed = 1.0 / GameEngine.scale;
+
+        if (Input.mouseDeltaX != 0.0 || Input.mouseDeltaY != 0.0) {
+            pos = new Vector2(Input.mouseX, Input.mouseY);
+        } else {
+            if (Input.keys['w'].down) {
+                pos.y += speed;
+            }
+
+            if (Input.keys['a'].down) {
+                pos.x -= speed;
+            }
+
+            if (Input.keys['s'].down) {
+                pos.y -= speed;
+            }
+
+            if (Input.keys['d'].down) {
+                pos.x += speed;
+            }
+        }
+
+        b.setTransform(pos, angle);
 
         if (e.level.current != null) {
             Color4 col;

@@ -45,7 +45,7 @@ class Camera {
     Function zoomEnd = () {
     };
 
-    DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, FRAME_COUNT/3);
+    DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, FRAME_COUNT / 3);
     DoubleAnimation xAnim = new DoubleAnimation(0.0, 0.0, FRAME_COUNT);
     DoubleAnimation yAnim = new DoubleAnimation(0.0, 0.0, FRAME_COUNT);
 
@@ -66,7 +66,7 @@ class Camera {
     void beginZoom(double finalZoom, double currentZoom) {
         this.finalZoom = finalZoom;
         this.startZoom = currentZoom;
-        zoomAnimation = new DoubleAnimation(currentZoom, finalZoom, FRAME_COUNT/3);
+        zoomAnimation = new DoubleAnimation(currentZoom, finalZoom, FRAME_COUNT / 3);
     }
 
     void update(num delta) {
@@ -90,11 +90,11 @@ class Camera {
         }
 
         if (xAnim.isFinished) {
-            //xAnim.setStart(targetOffsetX);
+            xAnim.setStart(targetOffsetX);
             xAnim.setFrames(FRAME_COUNT);
         }
         if (yAnim.isFinished) {
-            //yAnim.setStart(targetOffsetY);
+            yAnim.setStart(targetOffsetY);
             yAnim.setFrames(FRAME_COUNT);
         }
 
@@ -157,8 +157,6 @@ class Camera {
             double dx = Input.getMouseDeltaX() * GameEngine.scale;
             double dy = Input.getMouseDeltaY() * GameEngine.scale;
 
-            print(dx.toString() + ", " + dy.toString());
-
             if (Input.isMouseLeftDown) {
                 if (dx != 0.0) {
                     targetOffsetX -= dx;
@@ -170,26 +168,29 @@ class Camera {
                 }
             }
 
+            xAnim.setFrames(3000);
+            yAnim.setFrames(3000);
+
             e.toggleBoundedCard(false);
         } else {
             e.toggleBoundedCard(true);
 
-            if (Input.keys['w'].down || Input.keys['arrow_up'].down) {
+            if (/*Input.keys['w'].down || */Input.keys['arrow_up'].down) {
                 targetOffsetY -= speed;
                 updated = true;
             }
 
-            if (Input.keys['a'].down || Input.keys['arrow_left'].down) {
+            if (/*Input.keys['a'].down || */Input.keys['arrow_left'].down) {
                 targetOffsetX -= speed;
                 updated = true;
             }
 
-            if (Input.keys['s'].down || Input.keys['arrow_down'].down) {
+            if (/*Input.keys['s'].down || */Input.keys['arrow_down'].down) {
                 targetOffsetY += speed;
                 updated = true;
             }
 
-            if (Input.keys['d'].down || Input.keys['arrow_right'].down) {
+            if (/*Input.keys['d'].down || */Input.keys['arrow_right'].down) {
                 targetOffsetX += speed;
                 updated = true;
             }

@@ -23,6 +23,13 @@ import "SuperCanvasDraw.dart";
 import "StarManager.dart";
 import 'GameWizard.dart';
 
+class HItem {
+    bool remove = false;
+    Body card;
+
+    HItem(this.card, this.remove);
+}
+
 class GameEngine extends State {
     static const double NSCALE = 85.0;
 
@@ -69,6 +76,8 @@ class GameEngine extends State {
     Level level;
 
     Body from, to;
+
+    List<HItem> history = new List<HItem>();
 
     List<Body> cards = new List<Body>();
     List<Body> recentlyRemovedCards = new List<Body>();
@@ -198,7 +207,7 @@ class GameEngine extends State {
     }
 
     bool canPut([bool ignorePhysics = false]) {
-        return !Input.keys['z'].down && !Input.isAltDown && !Input.keys['space'].down && Input.isMouseLeftClicked && contactListener.contactingBodies.isEmpty && (ignorePhysics || !physicsEnabled);
+        return !Input.keys['z'].down && !Input.isAltDown && !Input.keys['space'].down && (Input.isMouseLeftClicked || Input.keys['enter'].clicked) && contactListener.contactingBodies.isEmpty && (ignorePhysics || !physicsEnabled);
     }
 
     Body addCard(double x, double y, double angle, [bool isStatic = false, SubLevel sub = null, Color4 col = null, bool isHint = false]) {
@@ -319,7 +328,8 @@ class GameEngine extends State {
         if (level.current != null && ((staticBlocksSelected && level.current.staticBlocksRemaining > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
             if (canPut()) {
                 recentlyRemovedCards.clear();
-                addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle, staticBlocksSelected);
+                Body put = addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle, staticBlocksSelected);
+                history.add(new HItem(put, false));
             } else if (canPut(true)) {
                 blinkPhysicsButton();
             }
@@ -354,20 +364,23 @@ class GameEngine extends State {
             applyRewindLabelToButton();
         }
 
-        if (contactListener.contactingBodies.isNotEmpty && Input.isMouseRightClicked && !isRewinding) {
+        if (contactListener.contactingBodies.isNotEmpty && (Input.isMouseRightClicked || Input.keys['delete'].clicked) && !isRewinding) {
             List<Body> cardsToRemove = new List<Body>();
             cardsToRemove.addAll(contactListener.contactingBodies);
             contactListener.contactingBodies.clear();
             for (Body contacting in cardsToRemove) {
                 if (cards.contains(contacting)) {
                     removeCard(contacting);
+                    history.add(new HItem(contacting, true));
                 }
             }
-        } else if (Input.keys['ctrl'].down && Input.keys['z'].clicked) {
-            for (Body card in recentlyRemovedCards) {
-                addCard(card.position.x, card.position.y, card.angle, (card.userData as EnergySprite).isStatic);
+        } else if (Input.keys['ctrl'].down && Input.keys['z'].clicked && history.length > 0) {
+            HItem last = history.removeLast();
+            if (last.remove) {
+                addCard(last.card.position.x, last.card.position.y, last.card.angle, (last.card.userData as EnergySprite).isStatic);
+            } else {
+                removeCard(last.card);
             }
-            recentlyRemovedCards.clear();
         }
 
         for (Body c in cards) {
@@ -494,7 +507,6 @@ class GameEngine extends State {
     void removeCard(Body c) {
         world.destroyBody(c);
         cards.remove(c);
-        recentlyRemovedCards.add(c);
 
         EnergySprite sprite = c.userData as EnergySprite;
         if (sprite.isStatic) {

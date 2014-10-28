@@ -13,6 +13,8 @@ class Key {
 class Input {
     static final Map<String, Key> keys = {
         'space': new Key(32),
+        'enter': new Key(13),
+        'delete': new Key(46),
         'z': new Key(90),
         'w': new Key(87), 'a': new Key(65), 's': new Key(83), 'd': new Key(68),
         'n': new Key(78), 'p': new Key(80),
