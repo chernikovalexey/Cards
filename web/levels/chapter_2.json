@@ -351,7 +351,7 @@
         "obstacles": []
     },
     {
-        "name": "Todo: Tornado",
+        "name": "Tornado",
         "x": 1000,
         "y": 800,
         "width": 1020,
@@ -360,17 +360,17 @@
         "from": {
             "offset": 800
         },
-        "stars": [11, 12],
+        "stars": [64, 104],
         "to": {
             "x": 2000,
-            "y": 1332
+            "y": 1362
         },
         "obstacles": [
             {
-                "x": 1800,
+                "x": 1810,
                 "y": 967,
                 "width": 200,
-                "height": 400,
+                "height": 430,
                 "type": 1
             }
         ]
