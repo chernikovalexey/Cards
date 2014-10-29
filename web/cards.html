@@ -371,11 +371,24 @@
 
     <div class="prompt-window-template">
         <div class="prompt-window p-<%=id%>">
-            <div class="prompt-headline"><%=headline%></div>
-            <div class="prompt-message"><%=message%></div>
-            <div class="prompt-buttons">
-                <button class="prompt-button prompt-positive pp-<%=id%>"><%=positive%></button>
-                <button class="prompt-button prompt-negative pn-<%=id%>"><%=negative%></button>
+            <div class="prompt-white-overlay">
+                <div class="prompt-headline"><%=headline%></div>
+                <div class="prompt-message"><%=message%></div>
+                <div class="prompt-offer"><span class="prompt-offer-text"><%=offer_text%></span><span class="prompt-offer-button"><%=offer_button%></span></div>
+                <div class="prompt-buttons">
+                    <button class="prompt-button prompt-positive pp-<%=id%>"><%=positive%></button>
+                    <button class="prompt-button prompt-negative pn-<%=id%>"><%=negative%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simple-window-template">
+        <div class="prompt-window p-<%=id%>">
+            <div class="prompt-white-overlay">
+                <div class="prompt-headline"><%=headline%></div>
+                <div class="prompt-message"><%=message%></div>
+                <button class="simple-button btn-<%=id%>"><%=buttonLabel%></button>
             </div>
         </div>
     </div>

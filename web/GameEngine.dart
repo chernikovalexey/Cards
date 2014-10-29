@@ -325,14 +325,19 @@ class GameEngine extends State {
         world.step(1.0 / 60, 10, 10);
         bcard.update();
 
+        bool cp = canPut();
         if (level.current != null && ((staticBlocksSelected && level.current.staticBlocksRemaining > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
-            if (canPut()) {
+            if (cp) {
                 recentlyRemovedCards.clear();
                 Body put = addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle, staticBlocksSelected);
                 history.add(new HItem(put, false));
             } else if (canPut(true)) {
                 blinkPhysicsButton();
             }
+        } else if (cp && staticBlocksSelected && level.current.staticBlocksRemaining == 0) {
+            blink(".static");
+        } else if (cp && !staticBlocksSelected && level.current.dynamicBlocksRemaining == 0) {
+            blink(".dynamic");
         }
 
         if (canPut() && (level.current.dynamicBlocksRemaining == 0 || level.current.staticBlocksRemaining == 0)) {
@@ -361,7 +366,7 @@ class GameEngine extends State {
             updateBlockButtons(this);
         }
         if (Input.keys['ctrl'].down && Input.keys['shift'].clicked || Input.keys['ctrl'].clicked && Input.keys['shift'].down) {
-            applyRewindLabelToButton();
+            togglePhysicsLabel();
         }
 
         if (contactListener.contactingBodies.isNotEmpty && (Input.isMouseRightClicked || Input.keys['delete'].clicked) && !isRewinding) {
@@ -509,12 +514,14 @@ class GameEngine extends State {
         cards.remove(c);
 
         EnergySprite sprite = c.userData as EnergySprite;
-        if (sprite.isStatic) {
-            ++level.current.staticBlocksRemaining;
-        } else {
-            ++level.current.dynamicBlocksRemaining;
+        if (!sprite.isHint) {
+            if (sprite.isStatic) {
+                ++level.current.staticBlocksRemaining;
+            } else {
+                ++level.current.dynamicBlocksRemaining;
+            }
+            updateBlockButtons(this);
         }
-        updateBlockButtons(this);
     }
 
     bool zoomDisabled = false;

@@ -6,6 +6,7 @@ import 'package:box2d/box2d_browser.dart';
 import 'EnergySprite.dart';
 import 'Color4.dart';
 import 'dart:async';
+import 'package:animation/animation.dart';
 
 class HintManager {
     GameEngine engine;
@@ -14,10 +15,8 @@ class HintManager {
     HintManager(this.engine);
 
     void onClick(Event e) {
-        if (hintsRemaining > 0) {
-
-
-            PromptWindow.show("Use hint?", "You surely want?", (bool positive) {
+        if (!(hintsRemaining > 0)) {
+            PromptWindow.show("Use hint?", "You surely want?", "Only " + hintsRemaining.toString() + " left", "get more", (bool positive) {
                 if (positive) {
                     context['Api'].callMethod('call', ['getHint', new JsObject.jsify({
                         'chapter': engine.level.chapter, 'level': engine.level.currentSubLevel
@@ -39,7 +38,23 @@ class HintManager {
                     PromptWindow.close();
                 }
             });
+        } else {
+            PromptWindow.showSimple("Lack of hints", "You've unfortunately spent all available hints.", "Get hints", getMoreHints);
         }
+    }
+
+    void getMoreHints([Event event]) {
+        querySelector('#purchases').classes.remove("hidden");
+        animate(querySelector('#purchases'), properties: {
+            'top': 0, 'opacity': 1.0
+        }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+
+        querySelector(".close-purchases").addEventListener("click", (event) {
+            //querySelector('.game-box').classes.remove('blurred');
+            animate(querySelector('#purchases'), properties: {
+                'top': 800, 'opacity': 0.0
+            }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+        }, false);
     }
 
     void addHintCard(double x, double y, double angle, double energy, bool static) {

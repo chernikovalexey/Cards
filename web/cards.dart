@@ -162,14 +162,17 @@ void updateCanvasPositionAndDimension([Event event = null]) {
     }
 }
 
+void togglePhysicsLabel() {
+    var btn = querySelector("#toggle-physics");
+    if (btn.classes.contains("rewind")) {
+        applyPhysicsLabelToButton();
+    } else {
+        applyRewindLabelToButton();
+    }
+}
+
 void applyPhysicsLabelToButton() {
     var btn = querySelector("#toggle-physics");
-    if (engine.manuallyControlled) {
-        btn.classes.add("active-button");
-        new Timer(new Duration(milliseconds: 125), () {
-            btn.classes.remove("active-button");
-        });
-    }
     btn.classes.remove("rewind");
     btn.text = "Apply physics";
 
@@ -181,12 +184,6 @@ void applyRewindLabelToButton([List list]) {
         WebApi.addAttempt();
 
         var btn = querySelector("#toggle-physics");
-        if (engine.manuallyControlled) {
-            btn.classes.add("active-button");
-            new Timer(new Duration(milliseconds: 125), () {
-                btn.classes.remove("active-button");
-            });
-        }
         btn.classes.add("rewind");
         btn.text = "Rewind blocks";
 
@@ -217,12 +214,16 @@ void showMainMenu() {
     fadeBoxIn(querySelector("#menu-box"));
 }
 
-void blinkPhysicsButton() {
-    ButtonElement btn = querySelector("#toggle-physics");
+void blink(String selector) {
+    Element btn = querySelector(selector);
     btn.classes.add("error-blink");
     new Timer(new Duration(milliseconds: 450), () {
         btn.classes.remove("error-blink");
     });
+}
+
+void blinkPhysicsButton() {
+    blink("#toggle-physics");
 }
 
 void fadeBoxIn(DivElement box, [int duration = 500, Function callback]) {

@@ -125,7 +125,6 @@ class SubLevel {
     }
 
     void enable(bool v) {
-        print("enable so:" + v.toString());
         for (Body b in cards) {
             b.userData.enabled = v;
         }

@@ -13,11 +13,11 @@ class CardContactListener extends ContactListener {
 
     @override
     void endContact(Contact contact) {
-        if (!e.physicsEnabled) {
+        //if (!e.physicsEnabled) {
             contact.fixtureA.body.userData.contactOverlay = false;
             contact.fixtureB.body.userData.contactOverlay = false;
             contactingBodies.remove(contact.fixtureB.body);
-        }
+        //}
     }
 
     @override

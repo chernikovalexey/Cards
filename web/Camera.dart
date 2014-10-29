@@ -168,8 +168,8 @@ class Camera {
                 }
             }
 
-            xAnim.setFrames(3000);
-            yAnim.setFrames(3000);
+            xAnim.setFrames(3000/2);
+            yAnim.setFrames(3000/2);
 
             e.toggleBoundedCard(false);
         } else {

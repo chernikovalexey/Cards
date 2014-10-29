@@ -80,7 +80,11 @@ button:hover:not([disabled]) {
 
 .error-blink {
     background: rgba(63, 55, 55, 1.0);
-    box-shadow: 0 0 12px rgba(220, 16, 16, 0.75);
+    box-shadow: 0 0 12px rgba(220, 16, 16, 0.75) !important;
+}
+
+.selector.error-blink {
+    border: 1px solid rgba(220, 16, 16, 0.5) !important;
 }
 
 #zoom-in, #zoom-out {
@@ -166,7 +170,7 @@ button:hover:not([disabled]) {
     border: 1px solid rgba(255, 255, 255, 0.15);
     background-color: rgba(255, 255, 255, 0.05);
     padding: 5px;
-    border-radius: 2px;
+    border-radius: 4px;
     -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
     transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -1393,7 +1397,13 @@ div.active-step {
     width: 350px;
     left: calc(50% - 175px);
     top: 200px;
-    background: rgba(255, 255, 255, 0.075);
+    background: rgba(0, 0, 0, 0.875);
+    border-radius: 4px;
+}
+
+.prompt-white-overlay {
+    background: rgba(255, 255, 255, 0.125);
+    border-radius: 4px;
 }
 
 .prompt-headline {
@@ -1410,13 +1420,34 @@ div.active-step {
     font-size: 13px;
 }
 
+.prompt-offer {
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.075);
+}
+
+.prompt-offer-text {
+    color: #fff;
+}
+
+.prompt-offer-button {
+    float: right;
+    color: #fff;
+    opacity: 0.5;
+}
+
+.prompt-offer-button:hover {
+    cursor: pointer;
+    opacity: 0.75;
+}
+
 .prompt-buttons {
     padding: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .prompt-button {
-
+    border-radius: 4px;
+    width: 152px;
+    margin-right: 10px;
 }
 
 .prompt-positive {
@@ -1424,5 +1455,14 @@ div.active-step {
 }
 
 .prompt-negative {
+    margin-right: 0;
+}
 
+.simple-button {
+    border-radius: 4px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin: 0;
+    width: 100%;
+    padding: 15px 20px;
 }
