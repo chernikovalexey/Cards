@@ -7,22 +7,24 @@ import 'EnergySprite.dart';
 import 'Color4.dart';
 import 'dart:async';
 import 'package:animation/animation.dart';
+import 'UserManager.dart';
 
 class HintManager {
     GameEngine engine;
-    int hintsRemaining = 1;
 
     HintManager(this.engine);
 
     void onClick(Event e) {
-        if (!(hintsRemaining > 0)) {
-            PromptWindow.show("Use hint?", "You surely want?", "Only " + hintsRemaining.toString() + " left", "get more", (bool positive) {
+        int balance = UserManager.getAsInt("balance");
+
+        if (balance > 0) {
+            PromptWindow.show("Use hint?", "You surely want?", "Only <b>" + balance.toString() + "</b> left", "get more", getMoreHints, (bool positive) {
                 if (positive) {
                     context['Api'].callMethod('call', ['getHint', new JsObject.jsify({
                         'chapter': engine.level.chapter, 'level': engine.level.currentSubLevel
                     }), (Map hints) {
-                        hintsRemaining = hints['user']['balance'].toInt();
-                        querySelector("#hints-amount").innerHtml = hintsRemaining.toString();
+                        UserManager.set("balance", hints['user']['balance']);
+                        querySelector("#hints-amount").innerHtml = hints['user']['balance'];
 
                         for (Map card in hints['hint']) {
                             addHintCard(card['x'].toDouble(), card['y'].toDouble(), card['angle'].toDouble(), card['energy'].toDouble(), card['static']);
@@ -44,6 +46,8 @@ class HintManager {
     }
 
     void getMoreHints([Event event]) {
+        PromptWindow.close();
+
         querySelector('#purchases').classes.remove("hidden");
         animate(querySelector('#purchases'), properties: {
             'top': 0, 'opacity': 1.0

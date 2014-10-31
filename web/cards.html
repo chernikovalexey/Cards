@@ -104,6 +104,13 @@
         <div class="tutorial-compliment">You're gorgeous!</div>
         <div class="tutorial-goal">That's what you should do in this game!</div>
     </div>
+
+    <div class="attempts-layout">
+        <div class="attempts-left">Only <span id="attempts-remaining"></span> attempts left</div>
+        <div class="attempts-note">every day you acquire 200 free attempts</div>
+        <button class="get-attempts-button">get more</button>
+    </div>
+
     <div class="rating-inner-layout">
         <div class="pause-title hidden">Game paused</div>
         <div class="rating-wrap">
@@ -131,18 +138,18 @@
             <button id="cm-menu">Menu</button>
             <button id="cc-list">Choose another chapter</button>
         </div>
+    </div>
 
-        <div class="tape">
-            <div class="chapter-level">
-                <div class="finished-levels"></div>
-                of
-                <div class="all-levels"></div>
-            </div>
-            <div id="tape-vs">
-                <div id="tape-es"></div>
-            </div>
-            <div id="tape-scrollbar"></div>
+    <div class="tape">
+        <div class="chapter-level">
+            <div class="finished-levels"></div>
+            of
+            <div class="all-levels"></div>
         </div>
+        <div id="tape-vs">
+            <div id="tape-es"></div>
+        </div>
+        <div id="tape-scrollbar"></div>
     </div>
 </div>
 
@@ -267,7 +274,7 @@
     <div class="purchase-block">
         <div class="purchase-block-head">
             <div class="purchase-headline">Attempts</div>
-            <div class="balance-layout">you have <span class="current-balance" id="attemps-balance">200</span></div>
+            <div class="balance-layout">you have <span class="current-balance" id="attempts-balance">200</span></div>
         </div>
         <div class="purchase-options attempt-options">
             <div class="purchase-option">
@@ -373,8 +380,12 @@
         <div class="prompt-window p-<%=id%>">
             <div class="prompt-white-overlay">
                 <div class="prompt-headline"><%=headline%></div>
+                <div class="prompt-close">close</div>
                 <div class="prompt-message"><%=message%></div>
-                <div class="prompt-offer"><span class="prompt-offer-text"><%=offer_text%></span><span class="prompt-offer-button"><%=offer_button%></span></div>
+                <div class="prompt-offer">
+                    <span class="prompt-offer-text"><%=offer_text%></span>
+                    <span class="prompt-offer-button po-<%=id%>"><%=offer_button%></span>
+                </div>
                 <div class="prompt-buttons">
                     <button class="prompt-button prompt-positive pp-<%=id%>"><%=positive%></button>
                     <button class="prompt-button prompt-negative pn-<%=id%>"><%=negative%></button>
@@ -387,6 +398,7 @@
         <div class="prompt-window p-<%=id%>">
             <div class="prompt-white-overlay">
                 <div class="prompt-headline"><%=headline%></div>
+                <div class="prompt-close">close</div>
                 <div class="prompt-message"><%=message%></div>
                 <button class="simple-button btn-<%=id%>"><%=buttonLabel%></button>
             </div>

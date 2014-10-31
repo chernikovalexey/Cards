@@ -11,10 +11,12 @@ import 'ChapterShower.dart';
 import 'dart:js';
 import "StarManager.dart";
 import "HintManager.dart";
+import 'UserManager.dart';
 import 'FeatureManager.dart';
 import 'WebApi.dart';
 import 'GameWizard.dart';
 import 'Scroll.dart';
+import 'PromptWindow.dart';
 
 CanvasElement canvas;
 GameEngine engine;
@@ -100,9 +102,32 @@ void main() {
         });
     });
 
+    int attempts = UserManager.getAsInt("allAttempts");
+    if (attempts == 0) {
+        querySelector("#toggle-physics")
+            ..classes.add("faded")
+            ..title = "You've spent all attempts for today";
+        //WebApi.attemptsRanOut(engine.level.current.attemptsUsed);
+    }
+
     querySelector('#toggle-physics').addEventListener("click", (event) {
         if (!(event.target as ButtonElement).classes.contains("rewind")) {
-            applyRewindLabelToButton();
+            int attempts = UserManager.getAsInt("allAttempts");
+            if (attempts > 0) {
+                UserManager.decrement("allAttempts");
+                applyRewindLabelToButton();
+                ++engine.level.current.attemptsUsed;
+
+                if (attempts - 1 == 0) {
+                    querySelector("#toggle-physics")
+                        ..classes.add("faded")
+                        ..title = "You've spent all attempts for today";
+                    WebApi.attemptsRanOut(engine.level.current.attemptsUsed);
+                }
+            } else {
+                PromptWindow.showSimple("Lack of attempts", "You've unfortunately spent all attempts for today. Come back tomorrow, or:", "Get more attempts", hints.getMoreHints);
+                WebApi.attemptsRanOut(engine.level.current.attemptsUsed);
+            }
         } else {
             applyPhysicsLabelToButton();
         }
@@ -181,7 +206,7 @@ void applyPhysicsLabelToButton() {
 
 void applyRewindLabelToButton([List list]) {
     if (!engine.isRewinding) {
-        WebApi.addAttempt();
+        //WebApi.addAttempt();
 
         var btn = querySelector("#toggle-physics");
         btn.classes.add("rewind");

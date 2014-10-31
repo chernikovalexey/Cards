@@ -6,8 +6,8 @@ class UserManager {
         return context['Features']['user'][key];
     }
 
-    static String getAsInt(String key) {
-        return int.parse(get(key));
+    static int getAsInt(String key) {
+        return get(key) is int ? get(key) : int.parse(get(key));
     }
 
     static void set(String key, String val) {

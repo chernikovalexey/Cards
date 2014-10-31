@@ -22,6 +22,10 @@ class PromptWindow {
         win.style.opacity = "0.0";
         win.style.top = "150px";
 
+        win.querySelector(".prompt-close").addEventListener("click", (event) {
+            PromptWindow.close();
+        }, true);
+
         animate(win, properties: {
             'opacity': 1.0, 'top': 200
         }, duration: 125, easing:Easing.SINUSOIDAL_EASY_IN);
@@ -31,10 +35,12 @@ class PromptWindow {
         return id - 1;
     }
 
-    static void show(String headline, String message, String offer_text, String offer_button, Function callback, [String positive="Yes", String negative="No"]) {
+    static void show(String headline, String message, String offer_text, String offer_button, Function offerCallback, Function callback, [String positive="Yes", String negative="No"]) {
         String nid = __show(".prompt-window-template", {
             'id': id, 'headline': headline, 'message': message, 'offer_text': offer_text, 'offer_button': offer_button, 'positive': positive, 'negative': negative
         }).toString();
+
+        querySelector(".po-" + nid).addEventListener("click", offerCallback, true);
 
         querySelector(".pp-" + nid).addEventListener("click", (event) {
             callback(true);
@@ -57,6 +63,8 @@ class PromptWindow {
     }
 
     static void close() {
+        if (!opened) return;
+
         opened = false;
 
         Element win = querySelector(".p-" + (id - 1).toString());

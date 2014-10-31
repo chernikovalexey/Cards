@@ -16,6 +16,8 @@ class SubLevel {
     List<Body> obstacles = new List<Body>();
     List stars;
 
+    int attemptsUsed = 0;
+
     GameEngine e;
 
     Object fSprite, tSprite;

@@ -128,6 +128,12 @@ var Features = {
         Api.finishLevel(chapter, level, result, numStatic, numDynamic, attempts, timeSpent, function (data) {
             console.log(data);
         });
+    },
+
+    addAttempts: function (delta) {
+        Api.addAttempts(delta, function (data) {
+            console.log('add attempts', data);
+        });
     }
 };
 
@@ -178,6 +184,7 @@ var VKFeatures = {
             VKFeatures.initFields(function () {
                 Api.initialRequest(function (data) {
                     Features.user = data.user;
+                    Features.user.allAttempts = 1;
 
                     for (var key in data) {
                         $.each(data[key], function (i, v) {

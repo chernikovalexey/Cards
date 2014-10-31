@@ -8,6 +8,7 @@ import "Scroll.dart";
 import 'package:animation/animation.dart';
 import 'dart:async';
 import "StarManager.dart";
+import 'UserManager.dart';
 import 'GameWizard.dart';
 import 'WebApi.dart';
 import 'Tooltip.dart';
@@ -23,17 +24,26 @@ class RatingShower {
 
     static void nextLevel(Event event) {
         print("next level");
+
+        int attempts = e.level.current.attemptsUsed;
+        e.level.current.attemptsUsed = 0;
+
         if (e.level.currentSubLevel != e.level.subLevels.length) {
             print("in condition");
             onTypeItemClick(event);
             return;
         }
-        WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false));
+
+        WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false), attempts);
+
         hide();
+
         StarManager.updateResult(e.level.chapter, newRating - oldRating);
         GameWizard.finish();
+
         e.nextLevel();
         e.isPaused = false;
+
         updateBlockButtons(e);
         event.stopPropagation();
     }
@@ -189,6 +199,10 @@ class RatingShower {
             querySelector(".pause-title").classes.add('hidden');
         }
 
+        querySelector("#attempts-remaining").innerHtml = UserManager.get("allAttempts").toString();
+        querySelector(".get-attempts-button").removeEventListener("click", showPurchases);
+        querySelector(".get-attempts-button").addEventListener("click", showPurchases, true);
+
         querySelector("#tape-es").style.width = (e.level.levels.length * 172 + 10).toString() + "px";
         Scroll.setup('tape-vs', 'tape-es', 'tape-scrollbar', 'h');
         Scroll.scrollTo('tape-vs', e.level.chapter.toString() + '-' + (e.level.currentSubLevel > 0 ? e.level.currentSubLevel - 1 : 0).toString());
@@ -196,6 +210,11 @@ class RatingShower {
         if (!e.level.hasNext() && !pauseState) {
             chapterComplete();
         }
+    }
+
+    static void showPurchases([Event event]) {
+        hide();
+        hints.getMoreHints();
     }
 
     static void blurGameBox() {
