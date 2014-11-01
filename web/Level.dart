@@ -107,13 +107,11 @@ class Level {
     }
 
     void toggleFinishedFriends() {
-        /*DivElement finished = querySelector('.friends-finished') as DivElement;
+        DivElement finished = querySelector('.friends-finished-button') as DivElement;
         Map fchapter = context['Features']['chapters'][engine.level.chapter.toString()];
 
         if (fchapter != null) {
-            animate(finished, properties: {
-                'opacity': 1.0
-            }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+            finished.classes.remove("hidden");
 
             JsObject flevel_js = fchapter[engine.level.currentSubLevel.toString()];
 
@@ -122,7 +120,7 @@ class Level {
 
                 print("This level was finished by friends: " + engine.level.currentSubLevel.toString());
 
-                finished.innerHtml = flevel.length.toString() + " friend(s) finished this level";
+                querySelector(".friends-finished-amount").innerHtml = flevel.length.toString();
 
                 finished.addEventListener("click", (event) {
                     DivElement box = querySelector('#friends-finished') as DivElement;
@@ -151,10 +149,8 @@ class Level {
                 }, false);
             }
         } else {
-            animate(finished, properties: {
-                'opacity': 0.0
-            }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
-        }*/
+            finished.classes.add("hidden");
+        }
     }
 
     void updateHints() {

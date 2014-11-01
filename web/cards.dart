@@ -50,7 +50,10 @@ void main() {
     window.onKeyDown.listen(Input.onKeyDown);
     window.onKeyUp.listen(Input.onKeyUp);
     window.onResize.listen(updateCanvasPositionAndDimension);
-    window.onBeforeUnload.listen((Event event) => engine.saveCurrentProgress());
+    window.onBeforeUnload.listen((Event event) {
+        engine.saveCurrentProgress();
+        WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
+    });
 
     showMainMenu();
 
@@ -122,11 +125,11 @@ void main() {
                     querySelector("#toggle-physics")
                         ..classes.add("faded")
                         ..title = "You've spent all attempts for today";
-                    WebApi.attemptsRanOut(engine.level.current.attemptsUsed);
+                    WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
                 }
             } else {
                 PromptWindow.showSimple("Lack of attempts", "You've unfortunately spent all attempts for today. Come back tomorrow, or:", "Get more attempts", hints.getMoreHints);
-                WebApi.attemptsRanOut(engine.level.current.attemptsUsed);
+                WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
             }
         } else {
             applyPhysicsLabelToButton();

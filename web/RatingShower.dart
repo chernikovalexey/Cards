@@ -122,14 +122,7 @@ class RatingShower {
         });
         fadeBoxIn(querySelector("#rating-box"), 175);
 
-        Input.keyDown = (KeyboardEvent e) {
-            if (e.keyCode == Input.keys['esc'].code) {
-                Input.keys['esc'].clicked = false;
-                Input.keys['esc'].down = false;
-                hide();
-                Input.keyDown = null;
-            }
-        };
+        Input.attachSingleEscClickCallback(hide);
 
         querySelector(".rating-wrap").classes.remove("hidden");
         querySelector(".chapter-rating-wrap").classes.add("hidden");

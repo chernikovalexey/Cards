@@ -24,7 +24,7 @@ class HintManager {
                         'chapter': engine.level.chapter, 'level': engine.level.currentSubLevel
                     }), (Map hints) {
                         UserManager.set("balance", hints['user']['balance']);
-                        querySelector("#hints-amount").innerHtml = hints['user']['balance'];
+                        querySelector("#hints-amount").innerHtml = hints['user']['balance'].toString();
 
                         for (Map card in hints['hint']) {
                             addHintCard(card['x'].toDouble(), card['y'].toDouble(), card['angle'].toDouble(), card['energy'].toDouble(), card['static']);
@@ -52,6 +52,9 @@ class HintManager {
         animate(querySelector('#purchases'), properties: {
             'top': 0, 'opacity': 1.0
         }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+
+        querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
+        querySelector("#attempts-balance").innerHtml = UserManager.getAsString("allAttempts");
 
         querySelector(".close-purchases").addEventListener("click", (event) {
             //querySelector('.game-box').classes.remove('blurred');

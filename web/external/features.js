@@ -184,10 +184,11 @@ var VKFeatures = {
             VKFeatures.initFields(function () {
                 Api.initialRequest(function (data) {
                     Features.user = data.user;
-                    Features.user.allAttempts = 1;
+//                    Features.user.allAttempts = 0;
 
-                    for (var key in data) {
-                        $.each(data[key], function (i, v) {
+                    for (var key in data.results) {
+                        $.each(data.results[key], function (i, v) {
+                            console.log(i,v);
                             var user_obj = Features.getUserObject(+key.replace("u", ""));
                             Features.chapters[v.chapterId] = Features.chapters[v.chapterId] || {};
                             Features.chapters[v.chapterId][v.levelId] = Features.chapters[v.chapterId][v.levelId] || {};

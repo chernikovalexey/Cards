@@ -125,29 +125,44 @@ button:hover:not([disabled]) {
     opacity: 0.5;
 }
 
-.friends-finished {
-    display: inline-block;
-    float: right;
-    padding: 0;
+.right-buttons {
     position: absolute;
-    right: 25px;
-    top: 17px;
-    opacity: 0.5;
-    font-weight: 400;
-    font-size: 14px;
-    color: #fff;
-    opacity: 0.5;
-    transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
+    top: 8px;
+    right: 15px;
 }
 
-.friends-finished:hover {
-    cursor: pointer;
+.friends-finished-button {
+    display: inline-block;
+    padding: 0;
+    position: relative;
+    top: 2px;
+    margin-right: 10px;
     opacity: 0.75;
+    transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.friends-finished-button:hover {
+    cursor: pointer;
+    opacity: 1.0;
+}
+
+.friends-finished-amount {
+    display: inline-block;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    position: relative;
+    top: -3px;
+}
+
+.friends-finished-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: url(img/friends.png);
 }
 
 #hint {
-    position: absolute;
-    right: 15px;
     padding-left: 0;
     padding-right: 0;
 }
@@ -311,7 +326,7 @@ button:hover:not([disabled]) {
     position: absolute;
     width: 300px;
     left: calc(50% - 150px);
-    background: rgba(255, 255, 255, 0.125);
+    background: rgba(44, 44, 44, 0.5);
     color: #fff;
 }
 
@@ -333,9 +348,15 @@ button:hover:not([disabled]) {
 .get-attempts-button {
     border-radius: 0;
     width: 100%;
-    padding: 15px !important;
     text-transform: uppercase;
+    font-size: 13px;
     margin: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.075);
+    background: transparent;
+}
+
+.get-attempts-button:hover {
+    background: rgba(255, 255, 255, 0.075) !important;
 }
 
 .chapter-rating-wrap {
@@ -658,6 +679,7 @@ button:hover:not([disabled]) {
     font-size: 36px;
     color: #fff;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
+    letter-spacing: 2px;
 }
 
 .tape {
@@ -667,7 +689,6 @@ button:hover:not([disabled]) {
     font-size: 14px;
     background: rgba(44, 44, 44, 0.5);
     padding: 10px 0;
-    border-top: 1px solid rgba(44, 44, 44, 0.5);
     padding-bottom: 0;
 }
 

@@ -19,8 +19,10 @@ class WebApi {
         (context['Features'] as JsObject).callMethod('onLevelFinish', [chapter, level, result, _dynamic, nStatic, attempts, time]);
     }
 
-    static void attemptsRanOut(int delta) {
-        context['Features'].callMethod('addAttempts', [delta]);
+    static void updateAttemptsAmount(int delta) {
+        context['Api'].callMethod('call', ['addAttempts', new JsObject.jsify({
+            'attemptsUsed': delta
+        })]);
     }
 
     static void showFriends() {

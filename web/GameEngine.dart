@@ -23,6 +23,7 @@ import "SuperCanvasDraw.dart";
 import "StarManager.dart";
 import 'GameWizard.dart';
 
+// Actions history item
 class HItem {
     bool remove = false;
     Body card;
@@ -302,7 +303,13 @@ class GameEngine extends State {
         }
 
         if (Input.keys['esc'].clicked) {
-            RatingShower.pause(this);
+
+            // Close controls viewer first
+            if (querySelector("#wizard-controls").classes.contains("hidden")) {
+                RatingShower.pause(this);
+            } else {
+                querySelector(".wizard-try").click();
+            }
         }
         RatingShower.wasJustPaused = false;
 

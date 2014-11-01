@@ -28,8 +28,13 @@
     <button id="zoom-out" class="zb minus" title="Zoom camera out"></button>
     <button id="toggle-physics">Apply physics</button>
     <button id="restart" class="hidden">Restart</button>
-    <!--<div class="friends-finished"></div>-->
-    <button id="hint"><span id="hints-label">Use hint</span><span id="hints-amount">2</span></button>
+    <div class="right-buttons">
+        <div class="friends-finished-button" title="Some of your friends have already finished this level!">
+            <div class="friends-finished-amount"></div>
+            <div class="friends-finished-icon"></div>
+        </div>
+        <button id="hint"><span id="hints-label">Use hint</span><span id="hints-amount">2</span></button>
+    </div>
 </div>
 
 <div class="selectors hidden">
@@ -300,7 +305,7 @@
     </div>
 </div>
 
-<div class="hidden" id="bs-screen friends-finished">
+<div class="bs-screen hidden" id="friends-finished">
     <div class="bs-screen-topbar">
         <div class="bs-screen-headline">Friends Finished This Level</div>
         <div class="bs-screen-close close-finished">close</div>

@@ -111,17 +111,16 @@ class GameWizard {
                 });
             } else if (event.target.classes.contains("wizard-try")) {
                 enterStep(querySelector("#wizard-try"), () {
-
                     // Show tooltip just in case player is in tutorial
                     // Otherwise, just fade the screen out
-                    if (showing) {
-                        //engine.removeOnLevelEndCallback();
-                        //engine.bobbin.rewindComplete = null;
-                        //applyPhysicsLabelToButton();
-                        //engine.manuallyControlled = false;
+                    /*if (showing) {
+                        engine.removeOnLevelEndCallback();
+                        engine.bobbin.rewindComplete = null;
+                        applyPhysicsLabelToButton();
+                        engine.manuallyControlled = false;
 
                         Tooltip.show(querySelector(".dynamic"), DYNAMIC, Tooltip.RIGHT, maxWidth: 300, yOffset: -9, yArrowOffset: -12);
-                    }
+                    }*/
 
                     RatingShower.unblurGameBox();
                 });
