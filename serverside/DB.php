@@ -101,7 +101,7 @@ class DB
     public function getUser($userId, $platform)
     {
         $r = $this->getPlatformUsers(array($userId), $platform);
-        return $r[0];
+        return reset($r);
     }
 
     public function result($chapter, $level, $result, $numStatic, $numDynamic,array $user, $platform)

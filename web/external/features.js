@@ -149,15 +149,21 @@ var Features = {
         return html;
     },
 
+    makePurchase: function() {
+
+    },
+
     loadPurchasesWindow: function () {
 
         var purchases = this.getPurchases();
         console.log(purchases);
         var attemptsHtml = this.getPurchaseOptionsPresentation(purchases.attempts);
-        var hintsHtml = this.getPurchaseOptionsPresentation(purchases.attempts);
+        var hintsHtml = this.getPurchaseOptionsPresentation(purchases.hints);
 
         $('.hint-options').html(hintsHtml);
         $('.attempt-options').html(attemptsHtml);
+
+        $('.purchase-option').click(this.makePurchase);
     }
 };
 
@@ -252,8 +258,14 @@ var VKFeatures = {
         });
     },
 
+    appendUserId: function(data) {
+        $(data).each(function() {
+            this.data+=Features.user.platformUserId;
+        })
+    },
+
     getPurchases: function () {
-        return {
+        var data = {
             hints: [
                 {
                     name: "1 hint",
@@ -321,6 +333,17 @@ var VKFeatures = {
                 }
             ]
         }
+        this.appendUserId(data.attempts);
+        this.appendUserId(data.hints);
+        this.appendUserId(data.chapters);
+        return data;
+    },
+
+    makePurchase: function() {
+        VK.callMethod("showOrderBox", {
+            type: 'item',
+            item: $(this).data('item')
+        });
     }
 };
 
