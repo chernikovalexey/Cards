@@ -28,4 +28,8 @@ class WebApi {
     static void showFriends() {
         (context['Features'] as JsObject).callMethod('showFriendsBar');
     }
+
+    static void loadPurchasesWindow() {
+        (context['Features'] as JsObject).callMethod('loadPurchasesWindow');
+    }
 }

@@ -134,6 +134,30 @@ var Features = {
         Api.addAttempts(delta, function (data) {
             console.log('add attempts', data);
         });
+    },
+
+    getPurchases: function () {
+        return [];
+    },
+
+    getPurchaseOptionsPresentation: function (options) {
+        var html = "";
+        var template = $('.purchase-option-template').html();
+        $(options).each(function () {
+            html += TemplateEngine.parseTemplate(template, this);
+        });
+        return html;
+    },
+
+    loadPurchasesWindow: function () {
+
+        var purchases = this.getPurchases();
+        console.log(purchases);
+        var attemptsHtml = this.getPurchaseOptionsPresentation(purchases.attempts);
+        var hintsHtml = this.getPurchaseOptionsPresentation(purchases.attempts);
+
+        $('.hint-options').html(hintsHtml);
+        $('.attempt-options').html(attemptsHtml);
     }
 };
 
@@ -188,7 +212,7 @@ var VKFeatures = {
 
                     for (var key in data.results) {
                         $.each(data.results[key], function (i, v) {
-                            console.log(i,v);
+                            console.log(i, v);
                             var user_obj = Features.getUserObject(+key.replace("u", ""));
                             Features.chapters[v.chapterId] = Features.chapters[v.chapterId] || {};
                             Features.chapters[v.chapterId][v.levelId] = Features.chapters[v.chapterId][v.levelId] || {};
@@ -226,6 +250,77 @@ var VKFeatures = {
                 callback();
             });
         });
+    },
+
+    getPurchases: function () {
+        return {
+            hints: [
+                {
+                    name: "1 hint",
+                    price: "4 votes",
+                    data: "h.1."
+                },
+                {
+                    name: "2 hints",
+                    price: "8 votes",
+                    data: "h.5."
+                },
+                {
+                    name: "5 hints",
+                    price: "16 votes",
+                    data: "h.10."
+                },
+                {
+                    name: "10 hints",
+                    price: "24 votes",
+                    data: "h.25."
+                }
+            ],
+            attempts: [
+                {
+                    name: "+10 attempts",
+                    price: "2 votes",
+                    data: "a.10."
+                },
+                {
+                    name: "+25 attempts",
+                    price: "4 votes",
+                    data: "a.25."
+                },
+                {
+                    name: "+50 attempts",
+                    price: "8 votes",
+                    data: "a.50."
+                },
+                {
+                    name: "+100 attempts",
+                    price: "12 votes",
+                    data: "a.100."
+                }
+            ],
+            chapters: [
+                {
+                    stars: 0.5,
+                    price: "100 votes",
+                    data: "c.5."
+                },
+                {
+                    stars: 0.33,
+                    price: "50 votes",
+                    data: "c.3."
+                },
+                {
+                    stars: 0.2,
+                    price: "30 votes",
+                    data: "c.2."
+                },
+                {
+                    stars: 0,
+                    price: "10 votes",
+                    data: "c.0."
+                }
+            ]
+        }
     }
 };
 

@@ -9,6 +9,7 @@
 class DB
 {
     private $db;
+    const DAY_ATTEMPTS = 200;
 
     public function DB(PDO $db)
     {
@@ -45,7 +46,7 @@ class DB
         $qMarks = $this->qString(count($users));
 
         $sql = $this->bindArray($users, 0, PDO::PARAM_INT, 'userId',
-            $this->db->prepare("SELECT * FROM tcardresults WHERE userId IN($qMarks)"));
+            $this->db->prepare("SELECT * FROM twocubes.tcardresults WHERE userId IN($qMarks)"));
 
         $sql->execute();
 
@@ -85,7 +86,7 @@ class DB
     {
         $qMarks = $this->qString(count($users));
 
-        $sql = $this->db->prepare("SELECT * FROM tcardusers WHERE platformUserId IN($qMarks) AND platformId=?");
+        $sql = $this->db->prepare("SELECT * FROM twocubes.tcardusers WHERE platformUserId IN($qMarks) AND platformId=?");
         $this->bindArray($users, 0, PDO::PARAM_INT, $selector, $sql);
         $sql->bindValue(count($users) + 1, $platform, PDO::PARAM_STR);
         $sql->execute();
@@ -105,13 +106,13 @@ class DB
 
     public function result($chapter, $level, $result, $numStatic, $numDynamic,array $user, $platform)
     {
-        $sql = $this->db->prepare("SELECT * FROM tcardresults WHERE userId=? AND chapterId=? AND levelId=?");
+        $sql = $this->db->prepare("SELECT * FROM twocubes.tcardresults WHERE userId=? AND chapterId=? AND levelId=?");
         $sql->bindValue(1, $user['userId'], PDO::PARAM_INT);
         $sql->bindValue(2, $chapter, PDO::PARAM_INT);
         $sql->bindValue(3, $level, PDO::PARAM_INT);
         $sql->execute();
         if ($rslt = $sql->fetch()) {
-            $sql = $this->db->prepare("UPDATE tcardresults SET result = ?, `time`=?, `numStatic`=?, `numDynamic`=? WHERE id=?");
+            $sql = $this->db->prepare("UPDATE twocubes.tcardresults SET result = ?, `time`=?, `numStatic`=?, `numDynamic`=? WHERE id=?");
             $sql->bindValue(1, $result, PDO::PARAM_INT);
             $sql->bindValue(2, time(), PDO::PARAM_INT);
             $sql->bindValue(3, $numStatic, PDO::PARAM_INT);
@@ -119,7 +120,7 @@ class DB
             $sql->bindParam(5, $rslt['id'], PDO::PARAM_INT);
             $sql->execute();
         } else {
-            $sql = $this->db->prepare("INSERT INTO tcardresults(`userId`, `chapterId`, `levelId`, `result`, `time`, `numStatic`, `numDynamic`) VALUES(?,?,?,?,?,?,?)");
+            $sql = $this->db->prepare("INSERT INTO twocubes.tcardresults(`userId`, `chapterId`, `levelId`, `result`, `time`, `numStatic`, `numDynamic`) VALUES(?,?,?,?,?,?,?)");
             $sql->bindValue(1, $user['userId'], PDO::PARAM_INT);
             $sql->bindValue(2, $chapter, PDO::PARAM_INT);
             $sql->bindValue(3, $level, PDO::PARAM_INT);
@@ -134,7 +135,7 @@ class DB
 
     public function validateUser($uid, $platform)
     {
-        $sql = $this->db->prepare("SELECT * FROM tcardusers WHERE platformUserId=? AND platformId=?");
+        $sql = $this->db->prepare("SELECT * FROM twocubes.tcardusers WHERE platformUserId=? AND platformId=?");
         $sql->bindValue(1, $uid, PDO::PARAM_INT);
         $sql->bindValue(2, $platform, PDO::PARAM_STR);
         $sql->execute();
@@ -144,7 +145,7 @@ class DB
             return $u;
         }
 
-        $sql = $this->db->prepare("INSERT INTO tcardusers(platformId, platformUserId) VALUES (?,?)");
+        $sql = $this->db->prepare("INSERT INTO twocubes.tcardusers(platformId, platformUserId) VALUES (?,?)");
         $sql->bindValue(1, $platform, PDO::PARAM_STR);
         $sql->bindValue(2, $uid, PDO::PARAM_INT);
 
@@ -153,41 +154,43 @@ class DB
         return array('userId' => +$this->db->lastInsertId(), 'platformId' => $platform, 'platformUserId' => $uid, 'isNew' => true);
     }
 
-    public function setUserBalance(array $user)
-    {
-        $sql = $this->db->prepare("UPDATE tcardusers SET balance = ? WHERE userId = ?");
-        $sql->bindValue(1, $user['balance']);
-        $sql->bindValue(2, $user['userId']);
-        $sql->execute();
-    }
-
     public function countAttempts(array &$user)
     {
-        $sql = $this->db->prepare("CALL GetAttempts(?);");
-        $sql->bindParam(1, $user['userId'], PDO::PARAM_INT);
-        $sql->execute();
-        $data = $sql->fetch();
-        $user['dayAttempts'] = $data['attempts'];
-        $user['allAttempts'] = $user['attempts'] + $user['dayAttempts'];
-        $user['dayAttemptsId'] = $data['id'];
-
+        $user['dayAttempts'] = self::DAY_ATTEMPTS - $user['dayAttemptsUsed'];
+        $user['allAttempts'] = $user['dayAttempts'] + $user['boughtAttempts'] - $user['boughtAttemptsUsed'];
     }
 
     public function addAttempts(array &$user, $delta)
     {
-        $sql = $this->db->prepare("UPDATE tcardattempts SET attempts = ? WHERE id=?");
-        $sql->bindParam(2, $user['dayAttemptsId'], PDO::PARAM_INT);
-        if($delta < $user['dayAttempts'])
-            $user['dayAttempts'] = $user['dayAttempts'] - $delta;
-        else {
-            $user['attempts'] = $user['attempts'] - $delta + $user['dayAttempts'];
-            $user['dayAttempts'] = 0;
-            $sql1 = $this->db->prepare("UPDATE tcardusers SET attempts = ? WHERE userId = ?");
-            $sql1->bindParam(1, $user['attempts'], PDO::PARAM_INT);
-            $sql1->bindParam(2, $user['userId'], PDO::PARAM_INT);
-            $sql1->execute();
-        }
-        $sql->bindParam(1, $user['dayAttempts'], PDO::PARAM_INT);
+       if($user['dayAttemptsUsed'] + $delta > self::DAY_ATTEMPTS) {
+           $delta -= $user['dayAttempts'];
+           $user['dayAttemptsUsed'] = self::DAY_ATTEMPTS;
+           if($user['boughtAttemptsUsed'] + $delta > $user['boughtAttempts']) {
+               $user['boughtAttemptsUsed'] = $user['boughtAttempts'];
+           } else {
+               $user['boughtAttemptsUsed'] += $delta;
+           }
+       } else {
+           $user['dayAttemptsUsed'] += $delta;
+       }
+       $this->countAttempts($user);
+       $this->submitUser($user);
+    }
+
+    public function submitUser(array &$user) {
+
+         $sql = $this->db->prepare("UPDATE twocubes.tcardusers
+                                      SET
+                                        balance = ?
+                                        ,boughtAttempts = ?
+                                        ,dayAttemptsUsed = ?
+                                        ,boughtAttemptsUsed = ?
+                                         WHERE userId = ?");
+        $sql->bindValue(1, $user['balance'], PDO::PARAM_INT);
+        $sql->bindValue(2, $user['boughtAttempts'], PDO::PARAM_INT);
+        $sql->bindValue(3, $user['dayAttemptsUsed'], PDO::PARAM_INT);
+        $sql->bindValue(4, $user['boughtAttemptsUsed'], PDO::PARAM_INT);
+        $sql->bindValue(5, $user['userId'], PDO::PARAM_INT);
         $sql->execute();
     }
 } 

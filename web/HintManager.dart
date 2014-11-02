@@ -8,9 +8,11 @@ import 'Color4.dart';
 import 'dart:async';
 import 'package:animation/animation.dart';
 import 'UserManager.dart';
+import 'WebApi.dart';
 
 class HintManager {
     GameEngine engine;
+    bool purchasesWindowLoaded = false;
 
     HintManager(this.engine);
 
@@ -46,6 +48,11 @@ class HintManager {
     }
 
     void getMoreHints([Event event]) {
+
+        if(!purchasesWindowLoaded) {
+            WebApi.loadPurchasesWindow();
+            purchasesWindowLoaded = true;
+        }
         PromptWindow.close();
 
         querySelector('#purchases').classes.remove("hidden");

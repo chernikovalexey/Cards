@@ -253,27 +253,7 @@
             <div class="purchase-headline">Hints</div>
             <div class="balance-layout">you have <span class="current-balance" id="hints-balance">2</span></div>
         </div>
-        <div class="purchase-options hint-options">
-            <div class="purchase-option">
-                <div class="text-overlay">1 hint</div>
-                <span class="purchase-price">0.5$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">5 hints</div>
-                <span class="purchase-price">1$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">10 hints</div>
-                <span class="purchase-price">2$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">25 hints</div>
-                <span class="purchase-price">3$</span>
-            </div>
-        </div>
+        <div class="purchase-options hint-options"></div>
     </div>
 
     <div class="purchase-block">
@@ -281,27 +261,7 @@
             <div class="purchase-headline">Attempts</div>
             <div class="balance-layout">you have <span class="current-balance" id="attempts-balance">200</span></div>
         </div>
-        <div class="purchase-options attempt-options">
-            <div class="purchase-option">
-                <div class="text-overlay">+10 attempts</div>
-                <span class="purchase-price">0.25$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">+25 attempts</div>
-                <span class="purchase-price">0.5$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">+50 attempts</div>
-                <span class="purchase-price">1$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">+100 attempts</div>
-                <span class="purchase-price">1.5$</span>
-            </div>
-        </div>
+        <div class="purchase-options attempt-options"></div>
     </div>
 </div>
 
@@ -407,6 +367,13 @@
                 <div class="prompt-message"><%=message%></div>
                 <button class="simple-button btn-<%=id%>"><%=buttonLabel%></button>
             </div>
+        </div>
+    </div>
+
+    <div class="purchase-option-template">
+        <div class="purchase-option" data-item="<%=data%>">
+            <div class="text-overlay"><%=name%></div>
+            <span class="purchase-price"><%=price%></span>
         </div>
     </div>
 </div>
