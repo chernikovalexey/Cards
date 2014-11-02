@@ -6,6 +6,7 @@ import 'GameEngine.dart';
 import "Sprite.dart";
 import "Color4.dart";
 import 'GameWizard.dart';
+import 'Tooltip.dart';
 
 class BoundedCard {
     Body b;
@@ -36,6 +37,7 @@ class BoundedCard {
     void update() {
         double angle = b.angle;
         double delta = Math.PI / 24;
+        double prev_angle = angle;
 
         if (Input.keys['q'].down) {
             angle += delta / 2;
@@ -43,6 +45,10 @@ class BoundedCard {
             angle -= delta / 2;
         } else {
             angle -= Input.wheelDirection * delta;
+        }
+
+        if (angle != prev_angle) {
+            GameWizard.onBlockRotate();
         }
 
         double speed = 1.0 / GameEngine.scale;

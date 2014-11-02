@@ -99,11 +99,6 @@ class Level {
         GameWizard.manage(chapter, current.index);
         handleLevelChange();
         updateBlockButtons(engine);
-
-        // Check friends
-
-        toggleFinishedFriends();
-        updateHints();
     }
 
     void toggleFinishedFriends() {
@@ -147,6 +142,8 @@ class Level {
                         'top': 800, 'opacity': 0.0
                     }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
                 }, false);
+            } else {
+                finished.classes.add("hidden");
             }
         } else {
             finished.classes.add("hidden");
@@ -154,7 +151,7 @@ class Level {
     }
 
     void updateHints() {
-        querySelector("#hints-amount").innerHtml = UserManager.get("balance");
+        querySelector("#hints-amount").innerHtml = UserManager.getAsString("balance");
     }
 
     void previous() {
@@ -170,6 +167,8 @@ class Level {
 
     void handleLevelChange() {
         showLevelName(subLevels[currentSubLevel - 1].name);
+        toggleFinishedFriends();
+        updateHints();
 
         window.localStorage["last"] = JSON.encode({
             'chapter': chapter, 'level': currentSubLevel

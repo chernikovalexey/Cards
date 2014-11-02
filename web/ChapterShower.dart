@@ -4,10 +4,15 @@ import 'Scroll.dart';
 import 'dart:js';
 import 'Chapter.dart';
 import "StarManager.dart";
+import 'Input.dart';
 
 class ChapterShower {
     static void show(List chapters) {
         querySelector("#chapter-es").innerHtml = "";
+
+        Input.attachSingleEscClickCallback(() {
+            querySelector(".go-to-menu-button").click();
+        });
 
         int id = 0;
         for (Map chapter in chapters) {

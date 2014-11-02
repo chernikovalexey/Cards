@@ -103,9 +103,11 @@ class RatingShower {
     static void show(GameEngine engine, int rating, [int oldR = 0]) {
         if (GameWizard.showing) {
             querySelector(".tutorial-layout").classes.remove("hidden");
+            querySelector(".attempts-layout").classes.add("hidden");
             GameWizard.finish();
         } else {
             querySelector(".tutorial-layout").classes.add("hidden");
+            querySelector(".attempts-layout").classes.remove("hidden");
         }
 
         oldRating = oldR;

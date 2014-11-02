@@ -12,15 +12,12 @@ import 'EnergySprite.dart';
 class GameWizard {
     static const int ANIM_TIME = 175;
 
+    static Storage storage = window.localStorage;
+
     static Element currentBox;
 
     // current box
     static Element progress = querySelector(".tutorial-progress");
-
-    static const String DYNAMIC = "Block type. Dynamic conduct energy. Pay attention to the remaining amount.";
-    static const String STATIC = "Static blocks. They don't fall when physics applied. But, as well, they <b>don't convey the energy</b>.";
-    static const String ZOOM = "Use two these buttons to zoom camera in and out, accordingly.";
-    static const String TOGGLE_PHYSICS = "Apply physics to drop blocks";
 
     static bool showing = false;
 
@@ -36,11 +33,6 @@ class GameWizard {
             } else {
                 setNewBox();
             }
-
-            querySelectorAll(".progress-step").forEach((Element el) {
-                el.classes.remove("active-step");
-            });
-            querySelector(".tutorial-progress ." + box.id).classes.add("active-step");
         }
     }
 
@@ -66,62 +58,13 @@ class GameWizard {
 
     static void init() {
         querySelectorAll(".progress-step").onClick.listen((event) {
-            if (event.target.classes.contains("wizard-overview")) {
-                /*enterStep(querySelector("#wizard-overview"), () {
-                    Tooltip.closeAll();
-                    RatingShower.unblurGameBox();
-
-                    engine.manuallyControlled = true;
-              engine.clear();
-              engine.addCard(150.0 / GameEngine.scale, 200.0 / GameEngine.scale,
-                  engine.bcard.b.angle);
-
-              int delay = 850;
-              bool rEnd = false;
-
-              engine.bobbin.rewindComplete = () {
-                if (!rEnd) {
-                  rEnd = true;
-
-                  new Timer(new Duration(milliseconds: delay), () {
-                    if (engine.manuallyControlled) {
-                      applyRewindLabelToButton();
-                    }
-                  });
-                }
-              };
-
-              engine.addOnLevelEndCallback(() {
-                rEnd = false;
-                new Timer(new Duration(milliseconds: delay), () {
-                  if (engine.manuallyControlled) {
-                    applyPhysicsLabelToButton();
-                  }
-                });
-              });
-
-              applyRewindLabelToButton();
-
-                    Tooltip.show(querySelector("#toggle-physics"), TOGGLE_PHYSICS, Tooltip.BOTTOM, maxWidth: 300);
-                });*/
-            } else if (event.target.classes.contains("wizard-controls")) {
+            if (event.target.classes.contains("wizard-controls")) {
                 enterStep(querySelector("#wizard-controls"), () {
                     Tooltip.closeAll();
                     RatingShower.blurGameBox();
                 });
             } else if (event.target.classes.contains("wizard-try")) {
                 enterStep(querySelector("#wizard-try"), () {
-                    // Show tooltip just in case player is in tutorial
-                    // Otherwise, just fade the screen out
-                    /*if (showing) {
-                        engine.removeOnLevelEndCallback();
-                        engine.bobbin.rewindComplete = null;
-                        applyPhysicsLabelToButton();
-                        engine.manuallyControlled = false;
-
-                        Tooltip.show(querySelector(".dynamic"), DYNAMIC, Tooltip.RIGHT, maxWidth: 300, yOffset: -9, yArrowOffset: -12);
-                    }*/
-
                     RatingShower.unblurGameBox();
                 });
             }
@@ -132,6 +75,8 @@ class GameWizard {
         if (chapter == 1 && level == 1) {
             showOverview();
         } else if (chapter == 1 && level == 3) {
+            showRotation();
+        } else if (chapter == 1 && level == 6) {
             showHintsTooltip();
         } else if (chapter == 1 && level == 5) {
             showZoom();
@@ -143,35 +88,63 @@ class GameWizard {
     static void showOverview() {
         showing = true;
 
-        hints.addHintCard(1.671, 2.5, 0.0, 1.0, false);
+        if (engine.cards.isEmpty) {
+            hints.addHintCard(1.671, 2.5, 0.0, 1.0, false);
 
-        Tooltip.showSimple("Left-click to place a block", 225, 335);
-
-        var bodyStream = querySelector("body").onClick.listen((event) {
-            Tooltip.closeAll();
-            hints.clearHintCards();
-
-            Tooltip.show(querySelector("#toggle-physics"), TOGGLE_PHYSICS, Tooltip.BOTTOM, maxWidth: 300);
-
-            var toggleStream = querySelector("#toggle-physics").onClick.listen((event) {
+            var cb = ([Event event]) {
                 Tooltip.closeAll();
-            });
+                hints.clearHintCards();
 
-            querySelector("#toggle-physics").onClick.listen((event) {
-                toggleStream.cancel();
-            });
-        });
+                Tooltip.show(querySelector("#toggle-physics"), "Apply physics to drop blocks", Tooltip.BOTTOM, maxWidth: 300);
 
-        querySelector("body").onClick.listen((event) {
-            bodyStream.cancel();
-        });
+                var toggleStream = querySelector("#toggle-physics").onClick.listen((event) {
+                    Tooltip.closeAll();
+                });
+
+                querySelector("#toggle-physics").onClick.listen((event) {
+                    toggleStream.cancel();
+                });
+            };
+
+            Tooltip.showSimple("Left-click to place a block", 225, 335);
+
+            var bodyStream = querySelector("body").onClick.listen(cb);
+
+            querySelector("body").onClick.listen((event) {
+                bodyStream.cancel();
+            });
+        }
     }
 
     static void showRunout() {
-        Storage storage = window.localStorage;
         if (!storage.containsKey("runout_occured")) {
-            Tooltip.show(querySelector(".dynamic"), "Amount of blocks is limited", Tooltip.RIGHT, maxWidth: 300);
+            Tooltip.show(querySelector(".dynamic"), "Amount of blocks is limited", Tooltip.RIGHT, maxWidth: 300, closeDelay: 1500);
             storage["runout_occured"] = "true";
+        }
+    }
+
+    static void showRewind() {
+        if (!storage.containsKey("apply_fail_occured")) {
+            Tooltip.show(querySelector("#toggle-physics"), "Rewind to try again", Tooltip.BOTTOM, maxWidth: 300);
+            storage["apply_fail_occured"] = "true";
+        }
+    }
+
+    static bool showingRotation = false;
+
+    static void showRotation() {
+        new Timer(new Duration(seconds: 1), () {
+            showingRotation = true;
+            Tooltip.showSimple("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E", 100, 285);
+        });
+    }
+
+    static void onBlockRotate() {
+        if (showingRotation) {
+            showingRotation = false;
+            new Timer(new Duration(milliseconds: 475), () {
+                Tooltip.closeAll();
+            });
         }
     }
 
@@ -190,7 +163,7 @@ class GameWizard {
     }
 
     static void showZoom() {
-        new Timer(new Duration(seconds: 1), () {
+        new Timer(new Duration(seconds: 3), () {
             Tooltip.show(querySelector("#zoom-out"), "<b>Use zoom</b> for accuracy", Tooltip.BOTTOM, maxWidth: 300, xOffset: -30, xArrowOffset: -25);
 
             querySelectorAll(".zb").forEach((el) {
@@ -206,6 +179,8 @@ class GameWizard {
     }
 
     static void showStaticAppear() {
-        Tooltip.show(querySelector(".static"), STATIC, Tooltip.RIGHT, maxWidth: 300, yOffset: -9, yArrowOffset: -12);
+        new Timer(new Duration(seconds: 1), () {
+            Tooltip.show(querySelector(".static"), "Static blocks don't fall when physics applied, and don't conduct energy.", Tooltip.RIGHT, maxWidth: 300, yOffset: 0, yArrowOffset: -3);
+        });
     }
 }

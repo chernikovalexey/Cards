@@ -81,7 +81,6 @@ class GameEngine extends State {
     List<HItem> history = new List<HItem>();
 
     List<Body> cards = new List<Body>();
-    List<Body> recentlyRemovedCards = new List<Body>();
     List<int> stars;
     List levels;
 
@@ -138,15 +137,18 @@ class GameEngine extends State {
 
         this.bobbin = new Bobbin(() {
             traverser.reset();
+
             if (from.contactList != null) {
                 traverser.traverseEdges(from.contactList);
-                //print("traverser.hasPath: " + traverser.hasPath.toString());
             }
+
+            print(traverser.hasPath);
+
             if (!traverser.hasPath) {
+                GameWizard.showRewind();
+
                 for (Body card in cards) {
-
                     if (traverser.checkEnergyConnection(card)) {
-
                         traverser.traverseEdges(card.contactList);
                     }
                 }
@@ -335,7 +337,6 @@ class GameEngine extends State {
         bool cp = canPut();
         if (level.current != null && ((staticBlocksSelected && level.current.staticBlocksRemaining > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
             if (cp) {
-                recentlyRemovedCards.clear();
                 Body put = addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle, staticBlocksSelected);
                 history.add(new HItem(put, false));
             } else if (canPut(true)) {
@@ -403,6 +404,7 @@ class GameEngine extends State {
             EnergySprite sprite = to.userData as EnergySprite;
             if (physicsEnabled) {
                 sprite.update(this);
+
                 if (sprite.isFull() && level.current != null) {
                     onLevelEndCallback();
 

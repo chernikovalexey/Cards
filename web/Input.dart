@@ -58,6 +58,7 @@ class Input {
         } else if (event.which == 3) {
             isMouseRightDown = false;
             isMouseRightClicked = false;
+            event.preventDefault();
         }
     }
 
