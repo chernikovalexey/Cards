@@ -1,14 +1,15 @@
 import "dart:html";
 import "dart:async";
 import 'dart:convert';
+import 'WebApi.dart';
 
 class Chapter {
   static List chapters;
 
   static void load(Function ready) {
-    HttpRequest.getString("levels/chapters.json").then((String str) {
-      chapters = JSON.decode(str)["chapters"];
-      ready(chapters);
+    WebApi.getChapters((JsObject obj, String str) {
+        chapters = JSON.decode(str)["chapters"];
+        ready(chapters);
     });
   }
 

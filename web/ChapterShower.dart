@@ -4,6 +4,7 @@ import 'Scroll.dart';
 import 'dart:js';
 import 'Chapter.dart';
 import "StarManager.dart";
+import "WebApi.dart";
 
 class ChapterShower {
     static void show(List chapters) {
@@ -43,7 +44,7 @@ class ChapterShower {
                     querySelector(".buttons").classes.remove("hidden");
                     querySelector(".selectors").classes.remove("hidden");
                 } else {
-                    //print("Man, it's still locked, ok?");
+                    WebApi.unlockChapter(e.dataset['id']);
                 }
             }, false);
         });
@@ -61,7 +62,7 @@ class ChapterShower {
         el.querySelector(".chapter-title").innerHtml = chapter["name"];
 
         int totalStars = StarManager.total;
-        bool unlocked = totalStars >= chapter["unlock_stars"];
+        bool unlocked = chapter["unlocked"];
 
         if (!unlocked) {
             int left = chapter["unlock_stars"] - totalStars;

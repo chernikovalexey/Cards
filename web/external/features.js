@@ -149,7 +149,7 @@ var Features = {
         return html;
     },
 
-    makePurchase: function() {
+    makePurchase: function () {
 
     },
 
@@ -164,6 +164,9 @@ var Features = {
         $('.attempt-options').html(attemptsHtml);
 
         $('.purchase-option').click(this.makePurchase);
+    },
+
+    unlockChapter: function () {
     }
 };
 
@@ -207,6 +210,13 @@ var VKFeatures = {
                 return this.toUserObject(fr);
             }
         }
+    },
+
+    unlockChapter: function (chapter) {
+        VK.callMethod("showOrderBox", {
+            type: 'item',
+            item: 'c.' + chapter + '.' + this.user.platformUserId
+        });
     },
 
     load: function (callback) {
@@ -258,9 +268,9 @@ var VKFeatures = {
         });
     },
 
-    appendUserId: function(data) {
-        $(data).each(function() {
-            this.data+=Features.user.platformUserId;
+    appendUserId: function (data) {
+        $(data).each(function () {
+            this.data += Features.user.platformUserId;
         })
     },
 
@@ -339,10 +349,19 @@ var VKFeatures = {
         return data;
     },
 
-    makePurchase: function() {
+    makePurchase: function () {
         VK.callMethod("showOrderBox", {
             type: 'item',
             item: $(this).data('item')
+        });
+    },
+
+    chapterCallback: null,
+
+    chapters: function(callback) {
+        this.chapterCallback = callback;
+        Api.call('chapters', {}, function(r) {
+            Features.chapterCallback(JSON.stringify(r));
         });
     }
 };

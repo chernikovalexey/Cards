@@ -193,4 +193,31 @@ class DB
         $sql->bindValue(5, $user['userId'], PDO::PARAM_INT);
         $sql->execute();
     }
+
+    public function getTotalStars($userId)
+    {
+        $sql = $this->db->prepare("SELECT SUM(result) FROM twocubes.tcardresults WHERE userId = ?");
+        $sql->bindValue(1, $userId, PDO::PARAM_INT);
+        $sql->execute();
+        return reset($sql->fetch());
+    }
+
+    public function unlockChapter($user, $chapter)
+    {
+        $sql = $this->db->prepare("INSERT INTO twocubes.tunlockedchapters(chapter, userId) VALUES(?, ?)");
+        $sql->bindValue(1, $chapter, PDO::PARAM_INT);
+        $sql->bindValue(2, $user['userId'], PDO::PARAM_INT);
+        $sql->execute();
+    }
+
+    public function getUnlocked($userId)
+    {
+        $sql = $this->db->prepare("SELECT chapter FROM twocubes.tunlockedchapters WHERE userId = ?");
+        $sql->bindValue(1, $userId, PDO::PARAM_INT);
+        $sql->execute();
+        $r = array();
+        foreach($sql->fetchAll() as $c)
+            $r[] = $c['chapter'];
+        return $r;
+    }
 } 
