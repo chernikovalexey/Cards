@@ -15,7 +15,7 @@ class Api
     {
         $this->db = $db;
         $this->platform = $platform;
-
+        define("CHAPTER_FILE", "../web/levels/chapters.json", true);
     }
 
     public static function validatePlatform(&$platform)
@@ -86,5 +86,18 @@ class Api
 
         $payments = Payments::create($this->platform, $this->db);
         return $payments->perform($_POST);
+    }
+
+    public function chapters(array $user) {
+
+        $total = $this->db->getTotalStars($user['userId']);
+        $unlocked = $this->db->getUnlocked($user['userId']);
+        $chapters = json_decode(file_get_contents(CHAPTER_FILE), true);
+        $r = array();
+        foreach($chapters['chapters'] as $i => $c) {
+            $c['unlocked'] = $c['unlock_stars'] < $total ||  in_array($i + 1, $unlocked);
+            $r[] = $c;
+        }
+        return array('chapters' => $r);
     }
 } 

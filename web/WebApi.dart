@@ -2,6 +2,7 @@ import "dart:js";
 import "dart:core";
 
 class WebApi {
+
     WebApi() {
     }
 
@@ -31,5 +32,13 @@ class WebApi {
 
     static void loadPurchasesWindow() {
         (context['Features'] as JsObject).callMethod('loadPurchasesWindow');
+    }
+
+    static void unlockChapter(id) {
+        (context['Features'] as JsObject).callMethod('unlockChapter', [id]);
+    }
+
+    static void getChapters(Function callback) {
+        (context['Features'] as JsObject).callMethod('chapters', [new JsFunction.withThis(callback)]);
     }
 }

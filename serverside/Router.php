@@ -61,10 +61,13 @@ class Router
 
     public function prepare($data)
     {
-
         $result = array();
-        foreach ($data as $key => $value)
-            $result[$key] = is_numeric($value) ? intval($value) : $value;
+        foreach ($data as $key => $value) {
+            if(is_array($value))
+                $result[$key] = $this->prepare($value);
+            else
+                $result[$key] = is_numeric($value) ? +$value : $value;
+        }
 
         return $result;
     }
