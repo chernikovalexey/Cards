@@ -51,6 +51,7 @@ class Api
             'timeSpent' => $timeSpent
         )));
 
+        $this->db->addAttempts($user ,$attempts);
         return array('result' => $this->db->result($chapter, $level, $result, $numStatic, $numDynamic, $user, $this->platform));
     }
 
@@ -65,7 +66,7 @@ class Api
                 if (!isset($chapterHints[$levelIndex]))
                     throw new ApiException("There is no hint for this level in specified file!");
                 $user['balance']--;
-                $this->db->setUserBalance($user);
+                $this->db->submitUser($user);
 
                 return array("user" => $user, "hint" => $chapterHints[$levelIndex]);
             }
@@ -79,5 +80,11 @@ class Api
         $user['allAttempts'] -= $numAttempts;
         $this->db->addAttempts($user, $numAttempts);
         return $user;
+    }
+
+    public function payments() {
+
+        $payments = Payments::create($this->platform, $this->db);
+        return $payments->perform($_POST);
     }
 } 
