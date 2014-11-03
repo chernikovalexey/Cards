@@ -99,8 +99,18 @@ void main() {
 
                 var bar = Scroll.setup('invitations-vs', 'invitations-es', 'invitations-scrollbar');
                 context['dw_Scrollbar_Co'].callMethod('addEvent', [bar, 'on_scroll', (var x, var y) {
-                    //print("scrolling");
+                    querySelector("#invitations-blur-g").style.transform = "translatey(" + (y + 80).toString() + "px)";
                 }]);
+
+                context.callMethod('html2canvas', [querySelector('#invitations-es'), new JsObject.jsify({
+                    'onrendered': (CanvasElement canvas) {
+                        canvas.id = "invitations-blur-g";
+                        querySelector(".friends .bs-screen-blurry-bar").append(canvas);
+                        CanvasRenderingContext2D g = canvas.getContext('2d');
+                        g.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                        g.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+                })]);
             }]);
         });
     });

@@ -2,7 +2,7 @@ import "dart:html";
 import 'dart:js';
 
 class UserManager {
-    static String get(String key) {
+    static dynamic get(String key) {
         return context['Features']['user'][key];
     }
 

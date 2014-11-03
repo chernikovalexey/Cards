@@ -32,7 +32,8 @@ class HintManager {
                             addHintCard(card['x'].toDouble(), card['y'].toDouble(), card['angle'].toDouble(), card['energy'].toDouble(), card['static']);
                         }
 
-                        new Timer(new Duration(seconds: 5), () {
+                        // 6.5 sec enough?
+                        new Timer(new Duration(milliseconds: 6500), () {
                             clearHintCards();
                         });
 
@@ -49,7 +50,7 @@ class HintManager {
 
     void getMoreHints([Event event]) {
 
-        if(!purchasesWindowLoaded) {
+        if (!purchasesWindowLoaded) {
             WebApi.loadPurchasesWindow();
             purchasesWindowLoaded = true;
         }
@@ -71,8 +72,12 @@ class HintManager {
         }, false);
     }
 
-    void addHintCard(double x, double y, double angle, double energy, bool static) {
-        Body b = engine.addCard(x, y, angle, static, null, new Color4.fromRGBA(255, 255, 255, 0.25), true);
+    void addHintCard(double x, double y, double angle, double energy, bool _static) {
+        Color4 col = new Color4.fromRGBA(235, 175, 130, 0.25);
+        if (_static) {
+            col = new Color4.fromRGBA(235, 235, 215, 0.25);
+        }
+        Body b = engine.addCard(x, y, angle, _static, null, col, true);
         b.type = BodyType.STATIC;
         (b.userData as EnergySprite).energy = energy;
     }

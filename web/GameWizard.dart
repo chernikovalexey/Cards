@@ -179,8 +179,11 @@ class GameWizard {
     }
 
     static void showStaticAppear() {
+        Element _static = querySelector(".static");
         new Timer(new Duration(seconds: 1), () {
-            Tooltip.show(querySelector(".static"), "Static blocks don't fall when physics applied, and don't conduct energy.", Tooltip.RIGHT, maxWidth: 300, yOffset: 0, yArrowOffset: -3);
+            if (!_static.hidden) {
+                Tooltip.show(_static, "Static blocks don't fall when physics applied, and don't conduct energy.", Tooltip.RIGHT, maxWidth: 300, yOffset: 0, yArrowOffset: -3);
+            }
         });
     }
 }

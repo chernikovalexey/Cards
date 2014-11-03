@@ -142,10 +142,10 @@ class GameEngine extends State {
                 traverser.traverseEdges(from.contactList);
             }
 
-            print(traverser.hasPath);
-
             if (!traverser.hasPath) {
-                GameWizard.showRewind();
+                if (!cards.isEmpty) {
+                    GameWizard.showRewind();
+                }
 
                 for (Body card in cards) {
                     if (traverser.checkEnergyConnection(card)) {

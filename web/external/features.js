@@ -48,6 +48,7 @@ var Features = {
             $('.card-users').empty();
             $(Features.friends_in_game).each(function () {
                 ++counter;
+                console.log(this);
                 $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
                     pos: counter,
                     last: counter % 3 === 0 ? 'last-card' : ''
@@ -55,13 +56,13 @@ var Features = {
             });
 
             counter = 0;
-            $('.out-people').empty();
+            /*$('.out-people').empty();
             $(Features.getNotGameFriends(Features.toIdArray(Features.friends_in_game))).each(function () {
                 ++counter;
                 $('.out-people').append(TemplateEngine.parseTemplate($('.invite-card-template').html(), $.extend(this, {
                     last: counter % 3 === 0 ? 'last-card' : ''
                 })));
-            });
+            });*/
 
             callback();
 
@@ -228,7 +229,6 @@ var VKFeatures = {
 
                     for (var key in data.results) {
                         $.each(data.results[key], function (i, v) {
-                            console.log(i, v);
                             var user_obj = Features.getUserObject(+key.replace("u", ""));
                             Features.chapters[v.chapterId] = Features.chapters[v.chapterId] || {};
                             Features.chapters[v.chapterId][v.levelId] = Features.chapters[v.chapterId][v.levelId] || {};
@@ -245,10 +245,10 @@ var VKFeatures = {
 
                     var friends_in_game = [];
 
-                    for (var key in data) {
+                    for (var key in data.results) {
                         friends_in_game.push(
                             extendAndOverride(
-                                {id: +key.substr(1), result: Features.calcResult(data[key])},
+                                {id: +key.substr(1), result: Features.calcResult(data.results[key])},
                                 Features.getUserObject(+key.substr(1)))
                         );
                     }
@@ -358,9 +358,9 @@ var VKFeatures = {
 
     chapterCallback: null,
 
-    chapters: function(callback) {
+    chapters: function (callback) {
         this.chapterCallback = callback;
-        Api.call('chapters', {}, function(r) {
+        Api.call('chapters', {}, function (r) {
             Features.chapterCallback(JSON.stringify(r));
         });
     }

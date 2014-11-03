@@ -1208,7 +1208,10 @@ div.active-step {
 .bs-screen-topbar {
     text-align: center;
     padding: 25px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    position: fixed;
+    z-index: 999;
+    width: 800px;
+    height: 30px;
 }
 
 .bs-screen-headline {
@@ -1227,6 +1230,26 @@ div.active-step {
     cursor: pointer;
     -webkit-user-select: none;
     padding: 15px;
+}
+
+.bs-screen-blurry-bar {
+    position: fixed;
+    background: #000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    z-index: 998;
+    width: 800px;
+    height: 80px;
+    overflow: hidden;
+}
+
+#invitations-blur-g {
+    opacity: 1.0;
+    z-index: 100;
+    position: absolute;
+    display: block;
+    top: 0px;
+    -webkit-transform: translateY(80px);
+    -webkit-filter: blur(10px);
 }
 
 .bs-screen {
@@ -1398,6 +1421,7 @@ div.active-step {
     width: 800px;
     height: 600px;
     overflow: hidden;
+    margin-top: 80px;
 }
 
 .bottom-sliding-es {
