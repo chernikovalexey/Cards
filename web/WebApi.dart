@@ -38,6 +38,10 @@ class WebApi {
         (context['Features'] as JsObject).callMethod('unlockChapter', [id]);
     }
 
+    static void scrollParentTop() {
+        context['Features'].callMethod("scrollParentTop");
+    }
+
     static void getChapters(Function callback) {
         (context['Features'] as JsObject).callMethod('chapters', [new JsFunction.withThis(callback)]);
     }

@@ -206,7 +206,8 @@
 
         <div class="control-block">
             <div class="ctrl-icon dragging"></div>
-            <div class="ctrl-instruction">To move the camera,</b> use arrows on the keyboard or press Space and drag the mouse.
+            <div class="ctrl-instruction">To move the camera,</b> use arrows on the keyboard or press Space and drag the
+                mouse.
             </div>
         </div>
 
@@ -267,9 +268,10 @@
 
 <div class="bs-screen hidden" id="friends-finished">
     <div class="bs-screen-topbar">
-        <div class="bs-screen-headline">Friends Finished This Level</div>
+        <div class="bs-screen-headline">Friends completed this level</div>
         <div class="bs-screen-close close-finished">close</div>
     </div>
+    <div class="bs-screen-blurry-bar"></div>
 
     <div id="finished-vs" class="bottom-sliding-vs">
         <div id="finished-es" class="bottom-sliding-es invite-users">
@@ -281,19 +283,20 @@
 
 <div class="bs-screen friends hidden">
     <div class="bs-screen-topbar">
-        <div class="bs-screen-headline">Invite Friends</div>
+        <div class="friends-invite-more">invite more</div>
+        <div class="bs-screen-headline">Friends Playing</div>
         <div class="bs-screen-close close-friends">close</div>
     </div>
     <div class="bs-screen-blurry-bar"></div>
 
     <div id="invitations-vs" class="bottom-sliding-vs">
         <div id="invitations-es" class="bottom-sliding-es invite-users">
-            <div class="friends-delimiter">
+            <!--<div class="friends-delimiter">
                 <div class="delimiter-headline">Already in</div>
                 <div class="friends-search">
                     <input type="text" class="search-input in-game-search" placeholder="Search ...">
                 </div>
-            </div>
+            </div>-->
             <div class="users-block card-users"></div>
             <!--<div class="friends-delimiter">
                 <div class="delimiter-headline">Not in the game<span class="invite-all">invite all</span></div>
@@ -310,13 +313,25 @@
 
 <div class="templates">
     <div class="finished-friend-template">
-        <div data-id="<%=id%>" class="friend-card">
+        <div data-id="<%=id%>" class="friend-card finished-friend">
             <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
-                <div class="fr-result"><%=result%></div>
-                <div class="fr-dynamic"><%=dynamic%></div>
-                <div class="fr-static"><%=static%></div>
+                <div class="usage-statistics">
+                    <div class="fr-dynamic">
+                        <div class="fr-num fr-nd"><%=dynamic%></div>
+                        <div class="fr-block fr-db"></div>
+                    </div>
+
+                    <div class="fr-static">
+                        <div class="fr-num fr-ns"><%=static%></div>
+                        <div class="fr-block fr-sb"></div>
+                    </div>
+                </div>
+                <div class="fr-result">
+                    <div class="fr-res-num"><%=result%></div>
+                    <div class="fr-res-ico"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -327,17 +342,13 @@
             <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
-                <div class="fr-result"><%=result%></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="invite-card-template">
-        <div data-id="<%=id%>" class="invite-card <%=last%>">
-            <div class="fr-ava"><img src="<%=ava%>"></div>
-            <div class="fr-meta">
-                <div class="fr-name"><%=name%> <%=surname%></div>
-                <button class="invite-button" data-id="<%=id%>">Invite</button>
+                <div class="fr-succeeded">completed <%=levels_amount%> level<%=level_ending%> in <%=chapters_amount%>
+                    chapter<%=chapter_ending%>
+                </div>
+                <div class="fr-result">
+                    <div class="fr-res-num"><%=result%></div>
+                    <div class="fr-res-ico"></div>
+                </div>
             </div>
         </div>
     </div>

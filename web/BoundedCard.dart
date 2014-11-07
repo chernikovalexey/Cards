@@ -1,5 +1,6 @@
 import 'dart:html';
 import 'dart:math' as Math;
+import 'WebApi.dart';
 import 'package:box2d/box2d_browser.dart';
 import 'Input.dart';
 import 'GameEngine.dart';
@@ -49,6 +50,7 @@ class BoundedCard {
 
         if (angle != prev_angle) {
             GameWizard.onBlockRotate();
+            WebApi.scrollParentTop();
         }
 
         double speed = 1.0 / GameEngine.scale;

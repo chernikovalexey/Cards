@@ -79,6 +79,10 @@ void main() {
         });
     }, false);
 
+    querySelector(".friends-invite-more").addEventListener("click", (event) {
+        context['VK'].callMethod("callMethod", ["showInviteBox"]);
+    }, true);
+
     querySelector(".close-friends").addEventListener("click", (event) {
         querySelector('.game-box').classes.remove('blurred');
         animate(querySelector('.friends'), properties: {
@@ -91,6 +95,10 @@ void main() {
         animate(querySelector('.friends'), properties: {
             'top': 0, 'opacity': 1.0
         }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+
+        Input.attachSingleEscClickCallback(() {
+            querySelector(".close-friends").click();
+        });
 
         //fadeBoxIn(querySelector(".friends"), 250, () {
         new Timer(new Duration(milliseconds: 125), () {

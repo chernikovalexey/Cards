@@ -16,6 +16,21 @@ var extendAndOverride = function (o1, o2) {
     return o1;
 };
 
+var getObjectLength = function (obj) {
+    var len = 0;
+    for (var key in obj) {
+        ++len
+    }
+    return len;
+};
+
+var getNumberAsWord = function (num) {
+    var words = {
+        1: "one", 2: "two", 3: "three", 4: "four"
+    };
+    return num in words ? words[num] : num;
+};
+
 var Features = {
     keepAlive: function () {
         Api.keepAlive();
@@ -29,6 +44,7 @@ var Features = {
 
     user: {},
     chapters: {},
+    results_by_chapters: {},
     friends_in_game: [],
 
     showFinishedFriends: function (chapter, level, callback) {
@@ -45,24 +61,26 @@ var Features = {
     showFriendsBar: function (callback) {
         if (!$.isEmptyObject(Features.friends_in_game)) {
             var counter = 0;
+
             $('.card-users').empty();
             $(Features.friends_in_game).each(function () {
                 ++counter;
-                console.log(this);
+
+                var levels_amount = Features.results_by_chapters[this.id]
+                    ? Features.results_by_chapters[this.id].levels
+                    : 0;
+                var chapters_amount = Features.results_by_chapters[this.id]
+                    ? Features.results_by_chapters[this.id].chapters
+                    : 0;
+
                 $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
                     pos: counter,
-                    last: counter % 3 === 0 ? 'last-card' : ''
+                    levels_amount: levels_amount,
+                    chapters_amount: getNumberAsWord(chapters_amount),
+                    level_ending: levels_amount === 1 ? '' : 's',
+                    chapter_ending: chapters_amount === 1 ? '' : 's'
                 })));
             });
-
-            counter = 0;
-            /*$('.out-people').empty();
-            $(Features.getNotGameFriends(Features.toIdArray(Features.friends_in_game))).each(function () {
-                ++counter;
-                $('.out-people').append(TemplateEngine.parseTemplate($('.invite-card-template').html(), $.extend(this, {
-                    last: counter % 3 === 0 ? 'last-card' : ''
-                })));
-            });*/
 
             callback();
 
@@ -168,11 +186,17 @@ var Features = {
     },
 
     unlockChapter: function () {
+    },
+
+    scrollParentTop: function () {
     }
 };
 
 var VKFeatures = {
     friends: null,
+
+    scrollParentTop: function () {
+    },
 
     initFields: function (callback) {
         VK.api("friends.get", {fields: "domain, photo_50"}, function (data) {
@@ -227,9 +251,14 @@ var VKFeatures = {
                     Features.user = data.user;
 //                    Features.user.allAttempts = 0;
 
+                    var results_by_chapters = {};
+
                     for (var key in data.results) {
                         $.each(data.results[key], function (i, v) {
-                            var user_obj = Features.getUserObject(+key.replace("u", ""));
+                            var user_id = +key.replace("u", "");
+                            var user_obj = Features.getUserObject(user_id);
+                            results_by_chapters[user_id] = results_by_chapters[user_id] || {};
+                            results_by_chapters[user_id][v.chapterId] = (results_by_chapters[user_id][v.chapterId] || 0) + 1;
                             Features.chapters[v.chapterId] = Features.chapters[v.chapterId] || {};
                             Features.chapters[v.chapterId][v.levelId] = Features.chapters[v.chapterId][v.levelId] || {};
                             Features.chapters[v.chapterId][v.levelId][key] = $.extend(user_obj, {
@@ -240,6 +269,20 @@ var VKFeatures = {
                             }, true);
                         });
                     }
+
+                    for (var user in results_by_chapters) {
+                        var levels = 0;
+                        for (var chapter in results_by_chapters[user]) {
+                            levels += results_by_chapters[user][chapter];
+                        }
+
+                        Features.results_by_chapters[user] = {
+                            levels: levels,
+                            chapters: getObjectLength(results_by_chapters[user])
+                        };
+                    }
+
+                    delete results_by_chapters;
 
                     //
 

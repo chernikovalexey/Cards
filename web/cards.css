@@ -1126,6 +1126,8 @@ div.active-step {
     width: 399px;
     display: inline-block;
     vertical-align: top;
+    margin-top: 80px;
+    border-top: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .purchase-block:last-child {
@@ -1214,6 +1216,23 @@ div.active-step {
     height: 30px;
 }
 
+.friends-invite-more {
+    float: left;
+    color: #fff;
+    position: absolute;
+    left: 15px;
+    top: 30px;
+    font-size: 15px;
+    opacity: 0.5;
+    -webkit-transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+}
+
+.friends-invite-more:hover {
+    opacity: 0.75;
+}
+
 .bs-screen-headline {
     color: #fff;
     font-size: 24px;
@@ -1227,9 +1246,16 @@ div.active-step {
     top: 15px;
     right: 15px;
     font-size: 14px;
-    cursor: pointer;
     -webkit-user-select: none;
     padding: 15px;
+    opacity: 0.5;
+    -webkit-transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer;
+}
+
+.bs-screen-close:hover {
+    opacity: 0.75;
 }
 
 .bs-screen-blurry-bar {
@@ -1242,7 +1268,7 @@ div.active-step {
     overflow: hidden;
 }
 
-#invitations-blur-g {
+#invitations-blur-g, #finished-blur-g {
     opacity: 1.0;
     z-index: 100;
     position: absolute;
@@ -1319,29 +1345,24 @@ div.active-step {
     color: #c7c6c2;
 }
 
-.invite-card {
-    width: 236px;
-    display: inline-block;
-    padding: 10px;
-    border-right: 1px solid rgba(255, 255, 255, 0.125);
-    margin-right: 10px;
-}
-
-.last-card {
-    margin-right: 0;
-    border-right: none;
+.friend-card {
+    padding: 15px;
+    padding-bottom: 0;
+    width: 500px;
+    margin: 0 auto;
 }
 
 .fr-pos {
-    display: inline-block;
+    display: table-cell;
     color: #fff;
     font-size: 12px;
-    padding: 25px 10px;
+    padding: 18px 10px;
     vertical-align: top;
+    opacity: 0.5;
 }
 
 .fr-ava {
-    display: inline-block;
+    display: table-cell;
     width: 50px;
 }
 
@@ -1350,68 +1371,104 @@ div.active-step {
 }
 
 .fr-meta {
-    display: inline-block;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+    height: 50px;
+    width: calc(100% - 300px);
+    text-align: left;
     vertical-align: top;
-    margin-left: 6px;
+    padding-bottom: 5px;
+    display: table-cell;
+    padding-left: 10px;
 }
 
 .fr-name {
     font-family: Tahoma;
     color: silver;
-    width: 175px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    display: inline-block;
+    width: 400px;
+    font-size: 16px;
+    position: relative;
 }
 
-.invite-button {
-    font-weight: 400;
-    background: transparent !important;
-    border: none !important;
-    font-size: 14px;
-    padding-left: 0;
-    color: rgba(255, 255, 255, 0.5);
+.finished-friend .fr-name {
+    width: 430px;
 }
 
-.invite-button:hover {
+.fr-succeeded {
     color: #fff;
-}
-
-.friend-card {
-    padding: 15px;
-}
-
-.friend-card .fr-ava {
-    width: 64px;
-}
-
-.friend-card .fr-ava img {
-    width: 64px;
-    border-radius: 36px;
-}
-
-.friend-card .fr-meta {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.075);
-    height: 64px;
-    width: calc(100% - 300px);
-    text-align: left;
-    padding-bottom: 5px;
-}
-
-.friend-card .fr-name {
-    width: 100%;
+    font-size: 12px;
+    opacity: 0.5;
+    margin-top: 5px;
 }
 
 .fr-result {
-    color: #ffffff;
+    color: #fff;
+    display: inline-block;
+    float: right;
+    text-align: right;
+    width: 60px;
+    position: absolute;
+    margin-top: -30px;
+    right: 165px;
+}
+
+.fr-res-num {
+    display: inline-block;
+    font-size: 18px;
+    position: relative;
+    top: -2px;
+}
+
+.fr-res-ico {
+    display: inline-block;
+    width: 20px;
+    height: 19px;
+    background-image: url(img/new_star.png);
+    background-size: contain;
+}
+
+.usage-statistics {
+    color: #fff;
+    margin-top: 5px;
+    font-size: 13px;
 }
 
 .fr-dynamic {
-    color: #ffffff;
+    display: inline-block;
+}
+
+.fr-num {
+    display: inline-block;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.fr-block {
+    display: inline-block;
+    width: 34px;
+    height: 6px;
+    background-repeat: repeat-y;
+    background-position: 50%;
+    position: relative;
+    top: -2px;
+}
+
+.fr-db {
+    background-image: url(img/dynamic_block.png);
+}
+
+.fr-sb {
+    background-image: url(img/static_block.png);
 }
 
 .fr-static {
-    color: #ffffff;
+    display: inline-block;
+    border-left: 1px solid rgba(255, 255, 255, 0.125);
+    padding-left: 8px;
 }
 
 /* invitations scroll */

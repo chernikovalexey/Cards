@@ -14,6 +14,7 @@ import 'JsMap.dart';
 import 'package:animation/animation.dart';
 import 'Scroll.dart';
 import 'UserManager.dart';
+import 'Input.dart';
 
 class Level {
     GameEngine engine;
@@ -106,14 +107,14 @@ class Level {
         Map fchapter = context['Features']['chapters'][engine.level.chapter.toString()];
 
         if (fchapter != null) {
-            finished.classes.remove("hidden");
-
             JsObject flevel_js = fchapter[engine.level.currentSubLevel.toString()];
 
             if (flevel_js != null) {
+                finished.classes.remove("hidden");
+
                 JsMap flevel = new JsMap.fromJsObject(flevel_js);
 
-                print("This level was finished by friends: " + engine.level.currentSubLevel.toString());
+                print("Amount of friends finished this level: " + flevel.length.toString());
 
                 querySelector(".friends-finished-amount").innerHtml = flevel.length.toString();
 
@@ -128,10 +129,24 @@ class Level {
                         context['Features'].callMethod('showFinishedFriends', [engine.level.chapter, engine.level.currentSubLevel, () {
                             querySelector(".game-box").classes.add("blurred");
 
+                            Input.attachSingleEscClickCallback(() {
+                                querySelector(".close-finished").click();
+                            });
+
                             var bar = Scroll.setup('finished-vs', 'finished-es', 'finished-scrollbar');
                             context['dw_Scrollbar_Co'].callMethod('addEvent', [bar, 'on_scroll', (var x, var y) {
-                                //print("scrolling");
+                                querySelector("#finished-blur-g").style.transform = "translatey(" + (y + 80).toString() + "px)";
                             }]);
+
+                            context.callMethod('html2canvas', [querySelector('#finished-es'), new JsObject.jsify({
+                                'onrendered': (CanvasElement canvas) {
+                                    canvas.id = "finished-blur-g";
+                                    querySelector("#friends-finished .bs-screen-blurry-bar").append(canvas);
+                                    CanvasRenderingContext2D g = canvas.getContext('2d');
+                                    g.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                                    g.fillRect(0, 0, canvas.width, canvas.height);
+                                }
+                            })]);
                         }]);
                     });
                 }, true);
@@ -145,8 +160,6 @@ class Level {
             } else {
                 finished.classes.add("hidden");
             }
-        } else {
-            finished.classes.add("hidden");
         }
     }
 
