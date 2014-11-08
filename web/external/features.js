@@ -46,6 +46,7 @@ var Features = {
     chapters: {},
     results_by_chapters: {},
     friends_in_game: [],
+    orderListener: null,
 
     showFinishedFriends: function (chapter, level, callback) {
         $('.finished-friends').empty();
@@ -188,6 +189,15 @@ var Features = {
     unlockChapter: function () {
     },
 
+    chapterCallback: null,
+
+    getChapters: function(callback) {
+        this.chapterCallback = callback;
+        Api.call('chapters', {}, function(r) {
+            Features.chapterCallback(JSON.stringify(r));
+        });
+    },
+
     scrollParentTop: function () {
     }
 };
@@ -305,7 +315,7 @@ var VKFeatures = {
 
                     Features.friends_in_game = friends_in_game;
                 });
-
+                VK.addCallback('onOrderSuccess', this.onOrderSuccess);
                 callback();
             });
         });
@@ -399,6 +409,12 @@ var VKFeatures = {
         });
     },
 
+    onOrderSuccess: function() {
+        if(this.orderListener != null) {
+            this.orderListener();
+        }
+    },
+    
     chapterCallback: null,
 
     chapters: function (callback) {

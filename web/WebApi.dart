@@ -7,6 +7,7 @@ class WebApi {
     }
 
     static DateTime startTime;
+
     static int chapter, level;
 
     static void levelStart(int _chapter, int _level) {
@@ -43,6 +44,13 @@ class WebApi {
     }
 
     static void getChapters(Function callback) {
-        (context['Features'] as JsObject).callMethod('chapters', [new JsFunction.withThis(callback)]);
+        (context['Features'] as JsObject).callMethod('getChapters', [new JsFunction.withThis(callback)]);
+    }
+
+    static void onOrderSuccess(Function callback) {
+        (context['Features'] as JsObject)['orderListener'] = new JsFunction.withThis((JsObject obj) {
+            callback();
+            (context['Features'] as JsObject)['orderListener'] = null;
+        });
     }
 }
