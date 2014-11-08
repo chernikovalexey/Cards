@@ -160,6 +160,13 @@ var Features = {
         return [];
     },
 
+    getUser: function(callback) {
+        Api.call("getUser", {}, function(result) {
+            Features.user = result;
+            callback();
+        });
+    },
+
     getPurchaseOptionsPresentation: function (options) {
         var html = "";
         var template = $('.purchase-option-template').html();
@@ -315,7 +322,7 @@ var VKFeatures = {
 
                     Features.friends_in_game = friends_in_game;
                 });
-                VK.addCallback('onOrderSuccess', this.onOrderSuccess);
+                VK.addCallback('onOrderSuccess', Features.onOrderSuccess);
                 callback();
             });
         });
@@ -410,8 +417,10 @@ var VKFeatures = {
     },
 
     onOrderSuccess: function() {
-        if(this.orderListener != null) {
-            this.orderListener();
+        console.log("JS order success!");
+        if(Features.orderListener != null) {
+            console.log("callback!=null");
+            Features.orderListener();
         }
     },
     

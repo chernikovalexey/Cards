@@ -59,32 +59,115 @@ class VKPayments implements IPayments
         return null;
     }
 
-    private function getPrice($hints)
+    private function getPrice($type, $count)
     {
-        switch ($hints) {
-            case 10:
-                return 1;
-            case 25:
-                return 2;
-            case 50:
-                return 4;
-            case 100:
-                return 6;
+        switch ($type) {
+            case 'h':
+                switch ($count) {
+                    case 1:
+                        return 4;
+                    case 2:
+                        return 8;
+                    case 5:
+                        return 16;
+                    case 10:
+                        return 24;
+                }
+                break;
+            case 'c':
+                switch ($count) {
+                    case 0:
+                        return 10;
+                    case 2:
+                        return 30;
+                    case 3:
+                        return 50;
+                    case 5:
+                        return 100;
+                }
+                break;
+            case 'a':
+                switch ($count) {
+                    case 10:
+                        return 2;
+                    case 25:
+                        return 4;
+                    case 50:
+                        return 8;
+                    case 100:
+                        return 12;
+                }
         }
+
         return -1;
+    }
+
+    private function getChapterPrice($platformUserId, $chapter)
+    {
+        $user = $this->db->getUser($platformUserId, 'vk');
+        $totalStars = $this->db->getTotalStars($user['userId'], $chapter);
+        $toUnlock = $chapter['unlock_stars'];
+
+        $coefficient = ($toUnlock - $totalStars) / floatval($toUnlock);
+
+        if ($coefficient < 0.2)
+            return 10;
+        else if ($coefficient < 0.33)
+            return 30;
+        else if ($coefficient < 0.5)
+            return 50;
+        else
+            return 100;
+    }
+
+    private function getChapterInfo($platformUserId, $chapter)
+    {
+
+        $chapters = json_decode(file_get_contents(CHAPTER_FILE), true);
+
+        $chapter = $chapters['chapters'][$chapter - 1];
+        return array(
+            'name' => $chapter['name'],
+            'price' => $this->getChapterPrice($platformUserId, $chapter)
+        );
+    }
+
+    private function getItemInfo($item)
+    {
+        list($type, $count, $platformUserId) = explode('.', $item);
+        return array('type' => $type, 'count' => $count, 'platformUserId' => $platformUserId);
     }
 
     private function getItem($item)
     {
         // todo: Add a special method to get this info from item id
-        list($hints, $userId) = explode('.', $item);
-        return array(
-            //todo: make item id int
-            'item_id' => $item,
-            'title' => "Buy {$hints}-hints-pack!",
-            'photo_url' => 'http://thumbs.dreamstime.com/thumb_370/1235836831WEhmZf.jpg',
-            'price' => $this->getPrice($hints)
-        );
+        $info = $this->getItemInfo($item);
+
+        switch ($info['type']) {
+            case 'h':
+                return array(
+                    //todo: make item id int
+                    'item_id' => $item,
+                    'title' => "Buy {$info['count']}-hints-pack!",
+                    'photo_url' => 'http://thumbs.dreamstime.com/thumb_370/1235836831WEhmZf.jpg',
+                    'price' => $this->getPrice($info['type'], $info['count'])
+                );
+            case 'a':
+                return array(
+                    'item_id' => $item,
+                    'title' => "Buy {$info['count']}-attempts-pack!",
+                    'photo_url' => 'http://thumbs.dreamstime.com/thumb_370/1235836831WEhmZf.jpg',
+                    'price' => $this->getPrice($info['type'], $info['count'])
+                );
+            case 'c':
+                $data = $this->getChapterInfo($info['platformUserId'], $info['count']);
+                return array(
+                    'item_id' => $item,
+                    'title' => "Unlock chapter #" . $info['count'] . " " . $data['name'],
+                    'photo_url' => 'http://thumbs.dreamstime.com/thumb_370/1235836831WEhmZf.jpg',
+                    'price' => $data['price']
+                );
+        }
     }
 
     private function orderStatusChange($status)
@@ -97,13 +180,28 @@ class VKPayments implements IPayments
             );
 
         // todo: Add special table to mysql to store data about purchases
-        list($hints, $userId) = explode('.', $this->input['order_id']);
-        $user = $this->db->getUser($userId, 'vk');
-        $user['balance'] += $hints;
+        $info = $this->getItemInfo($this->input['item']);
+        $user = $this->db->getUser($info['platformUserId'], 'vk');
+        switch ($info['type']) {
+            case 'a':
+                $user['boughtAttempts'] += $info['count'];
+                break;
+            case 'h':
+                $user['balance'] += $info['count'];
+                break;
+            case 'c':
+                $this->unlockChapter($user, $info['count']);
+        }
         $this->db->submitUser($user);
+
         return array(
             'order_id' => $this->input['order_id'],
             'app_order_id' => 1
         );
+    }
+
+    private function unlockChapter(array $user, $chapter)
+    {
+        $this->db->unlockChapter($user, $chapter);
     }
 }

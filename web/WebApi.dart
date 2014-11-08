@@ -53,4 +53,10 @@ class WebApi {
             (context['Features'] as JsObject)['orderListener'] = null;
         });
     }
+
+    static void getUser(Function callback) {
+        (context['Features'] as JsObject).callMethod('getUser', [new JsFunction.withThis((JsObject obj) {
+            callback();
+        })]);
+    }
 }
