@@ -12,6 +12,7 @@ import 'UserManager.dart';
 import 'GameWizard.dart';
 import 'WebApi.dart';
 import 'Tooltip.dart';
+import 'Chapter.dart';
 
 class RatingShower {
     static const int FADE_TIME = 450;
@@ -187,11 +188,16 @@ class RatingShower {
                 ..removeEventListener("click", resume)
                 ..addEventListener("click", resume, false);
             querySelector(".level-rating").classes.add('hidden');
+
+            querySelector(".rating-inner-layout").classes.remove("small-margin");
         } else {
             querySelector(".level-controls").classes.remove('hidden');
             querySelector(".pause-controls").classes.add('hidden');
             querySelector(".level-rating").classes.remove('hidden');
             querySelector(".pause-title").classes.add('hidden');
+
+            //
+            querySelector(".rating-inner-layout").classes.add("small-margin");
         }
 
         querySelector("#attempts-remaining").innerHtml = UserManager.get("allAttempts").toString();
@@ -203,7 +209,7 @@ class RatingShower {
         Scroll.scrollTo('tape-vs', e.level.chapter.toString() + '-' + (e.level.currentSubLevel > 0 ? e.level.currentSubLevel - 1 : 0).toString());
 
         if (!e.level.hasNext() && !pauseState) {
-            chapterComplete();
+            chapterComplete(engine, rating);
         }
     }
 
@@ -235,7 +241,7 @@ class RatingShower {
         pauseState = false;
     }
 
-    static void chapterComplete() {
+    static void chapterComplete(GameEngine engine, int rating) {
         querySelector(".rating-wrap").classes.add("hidden");
         querySelector(".chapter-rating-wrap").classes.remove("hidden");
         querySelector(".pause-controls").classes.add("hidden");
@@ -246,7 +252,22 @@ class RatingShower {
             totalStars += l.rating;
         }
         querySelector(".chapter-rating").innerHtml = totalStars.toString();
-        querySelector("#cm-menu").addEventListener('click', mainMenu);
+        //querySelector("#cm-menu").addEventListener('click', mainMenu);
+
+        querySelector(".current-level-name")
+            ..classes.remove("hidden")
+            ..innerHtml = engine.level.current.name;
+        querySelector(".current-level-rating").innerHtml = getStars(rating);
+
+        print("Finished chapter: " + engine.level.chapter.toString());
+
+        querySelector(".current-chapter-name")
+            ..classes.remove("hidden")
+            ..innerHtml = Chapter.chapters[engine.level.chapter]['name'];
+//        querySelector("").classes.add("");
+//        querySelector("").classes.add("");
+//        querySelector("").classes.add("");
+//        querySelector("").classes.add("");
 
         window.localStorage.remove("last");
     }

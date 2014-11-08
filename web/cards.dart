@@ -75,6 +75,7 @@ void main() {
         fadeBoxIn(querySelector("#chapter-selection"));
 
         Chapter.load((List chapters) {
+            print(chapters);
             ChapterShower.show(chapters);
         });
     }, false);

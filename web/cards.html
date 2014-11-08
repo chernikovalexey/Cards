@@ -111,7 +111,7 @@
     </div>
 
     <div class="attempts-layout">
-        <div class="attempts-left">Only <span id="attempts-remaining"></span> attempts left</div>
+        <div class="attempts-left"><span id="attempts-remaining"></span> attempts left</div>
         <div class="attempts-note">every day you acquire 200 free attempts</div>
         <button class="get-attempts-button">get more</button>
     </div>
@@ -122,10 +122,20 @@
             <div class="s-level-name"></div>
             <div class="level-rating"></div>
         </div>
-        <div class="chapter-rating-wrap hidden">
-            <div class="chapter-rating"></div>
 
-            <div class="star-ico"></div>
+        <div class="chapter-rating-wrap hidden">
+            <div class="current-level-cr">
+                <div class="cr-label">Level</div>
+                <div class="current-level-name"></div>
+                <div class="current-level-rating"></div>
+            </div>
+
+            <div class="current-chapter-cr">
+                <div class="cr-label">Chapter</div>
+                <div class="current-chapter-name"></div>
+                <div class="chapter-rating"></div>
+                <div class="star-ico"></div>
+            </div>
         </div>
 
         <div class="level-controls controls">
@@ -140,7 +150,7 @@
         </div>
 
         <div class="chapter-controls controls hidden">
-            <button id="cm-menu">Menu</button>
+            <!--<button id="cm-menu">Menu</button>-->
             <button id="cc-list">Choose another chapter</button>
         </div>
     </div>

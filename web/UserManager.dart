@@ -11,6 +11,7 @@ class UserManager {
     }
 
     static int getAsInt(String key) {
+        print(get(key) is int);
         return get(key) is int ? get(key) : int.parse(get(key));
     }
 
