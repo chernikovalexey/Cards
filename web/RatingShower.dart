@@ -115,7 +115,7 @@ class RatingShower {
         newRating = rating;
         e = engine;
         e.isPaused = true;
-        querySelector(".chapter-controls").classes.add("hidden");
+        //querySelector(".chapter-controls").classes.add("hidden");
 
         querySelector(".game-box").classes.add("paused");
         querySelector(".level-name").style.display = "none";
@@ -181,7 +181,7 @@ class RatingShower {
             querySelector(".pause-controls").classes.remove('hidden');
             querySelector(".pause-title").classes.remove('hidden');
             querySelector(".chapter-rating-wrap").classes.add("hidden");
-            querySelector(".chapter-controls").classes.add("hidden");
+            //querySelector(".chapter-controls").classes.add("hidden");
             querySelector("#pm-menu").removeEventListener("click", mainMenu);
             querySelector("#pm-menu").addEventListener("click", mainMenu);
             querySelector("#resume-game")
@@ -246,24 +246,31 @@ class RatingShower {
         querySelector(".chapter-rating-wrap").classes.remove("hidden");
         querySelector(".pause-controls").classes.add("hidden");
         querySelector(".level-controls").classes.add("hidden");
-        querySelector(".chapter-controls").classes.remove("hidden");
+        //querySelector(".chapter-controls").classes.remove("hidden");
         int totalStars = 0;
         for (SubLevel l in e.level.subLevels) {
             totalStars += l.rating;
         }
         querySelector(".chapter-rating").innerHtml = totalStars.toString();
         //querySelector("#cm-menu").addEventListener('click', mainMenu);
+        querySelector("#cc-list").addEventListener("click", (event) {
+            hide();
+            manager.removeState(engine);
+            querySelector(".buttons").classes.add("hidden");
+            querySelector(".selectors").classes.add("hidden");
+            fadeBoxIn(querySelector("#chapter-selection"));
+        }, true);
+
+        querySelector(".attempts-layout").classes.add("hidden");
 
         querySelector(".current-level-name")
             ..classes.remove("hidden")
             ..innerHtml = engine.level.current.name;
         querySelector(".current-level-rating").innerHtml = getStars(rating);
 
-        print("Finished chapter: " + engine.level.chapter.toString());
-
         querySelector(".current-chapter-name")
             ..classes.remove("hidden")
-            ..innerHtml = Chapter.chapters[engine.level.chapter]['name'];
+            ..innerHtml = Chapter.chapters[engine.level.chapter - 1]['name'];
 //        querySelector("").classes.add("");
 //        querySelector("").classes.add("");
 //        querySelector("").classes.add("");
