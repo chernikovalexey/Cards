@@ -48,6 +48,13 @@ class HintManager {
         }
     }
 
+    void orderSuccessCallback() {
+        WebApi.getUser((){
+            querySelector("#hints-amount").innerHtml = querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
+            WebApi.onOrderSuccess(orderSuccessCallback);
+        });
+    }
+
     void getMoreHints([Event event]) {
 
         if (!purchasesWindowLoaded) {
@@ -55,6 +62,8 @@ class HintManager {
             purchasesWindowLoaded = true;
         }
         PromptWindow.close();
+
+        WebApi.onOrderSuccess(orderSuccessCallback);
 
         querySelector('#purchases').classes.remove("hidden");
         animate(querySelector('#purchases'), properties: {

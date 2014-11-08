@@ -2,7 +2,6 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" hash="245008099">
     <data-source source="LOCAL" name="MySQL - twocubes@104.131.127.236" uuid="884a7394-72bf-4ac9-92e9-3deb2ab271e6">
-      <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://104.131.127.236:3306/twocubes</jdbc-url>
@@ -13,6 +12,18 @@
         <property name="tinyInt1isBit" value="false" />
       </driver-properties>
       <libraries />
+    </data-source>
+    <data-source source="LOCAL" name="Data Source" uuid="08ccedd5-3165-44b8-b8d9-b4693be3d0f6">
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.gjt.mm.mysql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://104.131.127.236/twocubes</jdbc-url>
+      <user-name>twocubes</user-name>
+      <user-password>dfc5dfd2dfe8df99dfdfdfffdffddfcd</user-password>
+      <libraries>
+        <library>
+          <url>file://$PROJECT_DIR$/../mysql-connector-java-5.1.31-bin.jar</url>
+        </library>
+      </libraries>
     </data-source>
   </component>
 </project>

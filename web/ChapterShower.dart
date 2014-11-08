@@ -50,6 +50,10 @@ class ChapterShower {
                     querySelector(".selectors").classes.remove("hidden");
                 } else {
                     WebApi.unlockChapter(e.dataset['id']);
+                    WebApi.onOrderSuccess(() {
+                        print("order success!");
+                        Chapter.load(show);
+                    });
                 }
             }, false);
         });

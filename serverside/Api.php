@@ -100,4 +100,8 @@ class Api
         }
         return array('chapters' => $r);
     }
+
+    public function getUser(array $user) {
+        return $user;
+    }
 } 
