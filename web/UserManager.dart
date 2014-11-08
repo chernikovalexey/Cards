@@ -24,6 +24,8 @@ class UserManager {
         int attempts = getAsInt(key);
         if (attempts > 0) {
             set(key, attempts - 1);
+            return true;
         }
+        return false;
     }
 }

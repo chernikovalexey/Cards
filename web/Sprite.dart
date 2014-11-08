@@ -49,9 +49,7 @@ class Sprite {
             else return;
         }
         switch (fixture.type) {
-            case ShapeType
-        .
-        CIRCLE:
+            case ShapeType.CIRCLE:
                 final CircleShape circle = fixture.shape;
 
 // Vector2 center = Mul(xf, circle.p);
@@ -66,9 +64,7 @@ class Sprite {
                 }
                 break;
 
-            case ShapeType
-        .
-        POLYGON:
+            case ShapeType.POLYGON:
                 final PolygonShape poly = fixture.shape;
                 int vertexCount = poly.vertexCount;
                 assert (vertexCount <= Settings.MAX_POLYGON_VERTICES);
