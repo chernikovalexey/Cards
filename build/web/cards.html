@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>Two Cubes</title>
@@ -16,6 +16,7 @@
     <script src="external/features.js"></script>
 
     <script type="application/dart" src="cards.dart"></script>
+    <script type="text/javascript" src="cards.dart.js"></script>
 </head>
 <body>
 <div class="game-box">
@@ -24,12 +25,17 @@
 <div class="buttons hidden">
     <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show">View controls
     </button>
-    <button id="zoom-in" class="plus" title="Zoom camera in"></button>
-    <button id="zoom-out" class="minus" title="Zoom camera out"></button>
+    <button id="zoom-in" class="zb plus" title="Zoom camera in"></button>
+    <button id="zoom-out" class="zb minus" title="Zoom camera out"></button>
     <button id="toggle-physics">Apply physics</button>
     <button id="restart" class="hidden">Restart</button>
-    <!--<div class="friends-finished"></div>-->
-    <button id="hint"><span id="hints-label">Use hint</span><span id="hints-amount">2</span></button>
+    <div class="right-buttons">
+        <div class="friends-finished-button" title="Some of your friends have already finished this level!">
+            <div class="friends-finished-amount"></div>
+            <div class="friends-finished-icon"></div>
+        </div>
+        <button id="hint"><span id="hints-label">Use hint</span><span id="hints-amount">2</span></button>
+    </div>
 </div>
 
 <div class="selectors hidden">
@@ -104,16 +110,37 @@
         <div class="tutorial-compliment">You're gorgeous!</div>
         <div class="tutorial-goal">That's what you should do in this game!</div>
     </div>
+
+    <div class="attempts-layout">
+        <div class="attempts-left"><span id="attempts-remaining"></span> attempts left</div>
+        <div class="attempts-note">every day you acquire 200 free attempts</div>
+        <button class="get-attempts-button">get more</button>
+    </div>
+
     <div class="rating-inner-layout">
         <div class="pause-title hidden">Game paused</div>
         <div class="rating-wrap">
             <div class="s-level-name"></div>
             <div class="level-rating"></div>
         </div>
-        <div class="chapter-rating-wrap hidden">
-            <div class="chapter-raring"></div>
 
-            <div class="star-ico"></div>
+        <div class="chapter-rating-wrap hidden">
+            <div class="current-level-cr">
+                <div class="cr-label">Level</div>
+                <div class="current-level-name"></div>
+                <div class="current-level-rating"></div>
+            </div>
+
+            <div class="current-chapter-cr">
+                <div class="cr-label">Chapter</div>
+                <div class="current-chapter-name"></div>
+                <div class="chapter-rating"></div>
+                <div class="star-ico"></div>
+            </div>
+
+            <div class="chapter-controls controls">
+                <button id="cc-list">Choose another chapter</button>
+            </div>
         </div>
 
         <div class="level-controls controls">
@@ -126,23 +153,18 @@
             <button class="step-button" id="clear-level">Restart</button>
             <button class="step-button" id="pm-menu">Menu</button>
         </div>
+    </div>
 
-        <div class="chapter-controls controls hidden">
-            <button id="cm-menu">Menu</button>
-            <button id="cc-list">Choose another chapter</button>
+    <div class="tape">
+        <div class="chapter-level">
+            <div class="finished-levels"></div>
+            of
+            <div class="all-levels"></div>
         </div>
-
-        <div class="tape">
-            <div class="chapter-level">
-                <div class="finished-levels"></div>
-                of
-                <div class="all-levels"></div>
-            </div>
-            <div id="tape-vs">
-                <div id="tape-es"></div>
-            </div>
-            <div id="tape-scrollbar"></div>
+        <div id="tape-vs">
+            <div id="tape-es"></div>
         </div>
+        <div id="tape-scrollbar"></div>
     </div>
 </div>
 
@@ -179,39 +201,40 @@
     <div class="controls-layout">
         <div class="control-block">
             <div class="ctrl-icon rotate"></div>
-            <div class="ctrl-instruction">Use your mouse wheel or arrows to rotate the block</div>
+            <div class="ctrl-instruction"><b>To rotate the block,</b> use your mouse wheel or buttons Q/E</div>
         </div>
 
         <div class="control-block">
             <div class="ctrl-icon zoom-in"></div>
-            <div class="ctrl-instruction">Hold Alt and left-click to zoom camera in</div>
+            <div class="ctrl-instruction"><b>To zoom camera in,</b> hold Z and left-click</div>
         </div>
 
         <div class="control-block">
             <div class="ctrl-icon zoom-out"></div>
-            <div class="ctrl-instruction">Hold Alt+Z and left-click to zoom camera out</div>
+            <div class="ctrl-instruction"><b>To zoom camera out,</b> hold Alt and left-click</div>
         </div>
 
         <div class="control-block">
             <div class="ctrl-icon dragging"></div>
-            <div class="ctrl-instruction">Hold Space and drag the mouse to move the camera. Or, use WASD instead.
+            <div class="ctrl-instruction">To move the camera,</b> use arrows on the keyboard or press Space and drag the
+                mouse.
             </div>
         </div>
 
         <div class="control-block">
             <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction">Press Ctrl+Shift to apply physics or rewind.
+            <div class="ctrl-instruction"><b>To apply physics or rewind,</b> press Ctrl+Shift.
             </div>
         </div>
 
         <div class="control-block">
             <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction">Press Ctrl+Z to undo the most recent action.</div>
+            <div class="ctrl-instruction"><b>To undo the most recent action,</b> press Ctrl+Z.</div>
         </div>
 
         <div class="control-block">
             <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction">Hover a desired block and right-click to remove it.</div>
+            <div class="ctrl-instruction"><b>To remove a block,</b> place mouse over it and right-click.</div>
         </div>
 
         <div class="next-button-layout">
@@ -241,63 +264,24 @@
             <div class="purchase-headline">Hints</div>
             <div class="balance-layout">you have <span class="current-balance" id="hints-balance">2</span></div>
         </div>
-        <div class="purchase-options hint-options">
-            <div class="purchase-option">
-                <div class="text-overlay">1 hint</div>
-                <span class="purchase-price">0.5$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">5 hints</div>
-                <span class="purchase-price">1$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">10 hints</div>
-                <span class="purchase-price">2$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">25 hints</div>
-                <span class="purchase-price">3$</span>
-            </div>
-        </div>
+        <div class="purchase-options hint-options"></div>
     </div>
 
     <div class="purchase-block">
         <div class="purchase-block-head">
             <div class="purchase-headline">Attempts</div>
-            <div class="balance-layout">you have <span class="current-balance" id="attemps-balance">200</span></div>
+            <div class="balance-layout">you have <span class="current-balance" id="attempts-balance">200</span></div>
         </div>
-        <div class="purchase-options attempt-options">
-            <div class="purchase-option">
-                <div class="text-overlay">+10 attempts</div>
-                <span class="purchase-price">0.25$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">+25 attempts</div>
-                <span class="purchase-price">0.5$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">+50 attempts</div>
-                <span class="purchase-price">1$</span>
-            </div>
-
-            <div class="purchase-option">
-                <div class="text-overlay">+100 attempts</div>
-                <span class="purchase-price">1.5$</span>
-            </div>
-        </div>
+        <div class="purchase-options attempt-options"></div>
     </div>
 </div>
 
-<div class="hidden" id="bs-screen friends-finished">
+<div class="bs-screen hidden" id="friends-finished">
     <div class="bs-screen-topbar">
-        <div class="bs-screen-headline">Friends Finished This Level</div>
+        <div class="bs-screen-headline">Friends completed this level</div>
         <div class="bs-screen-close close-finished">close</div>
     </div>
+    <div class="bs-screen-blurry-bar"></div>
 
     <div id="finished-vs" class="bottom-sliding-vs">
         <div id="finished-es" class="bottom-sliding-es invite-users">
@@ -309,27 +293,29 @@
 
 <div class="bs-screen friends hidden">
     <div class="bs-screen-topbar">
-        <div class="bs-screen-headline">Invite Friends</div>
+        <div class="friends-invite-more">invite more</div>
+        <div class="bs-screen-headline">Friends Playing</div>
         <div class="bs-screen-close close-friends">close</div>
     </div>
+    <div class="bs-screen-blurry-bar"></div>
 
     <div id="invitations-vs" class="bottom-sliding-vs">
         <div id="invitations-es" class="bottom-sliding-es invite-users">
-            <div class="friends-delimiter">
+            <!--<div class="friends-delimiter">
                 <div class="delimiter-headline">Already in</div>
                 <div class="friends-search">
                     <input type="text" class="search-input in-game-search" placeholder="Search ...">
                 </div>
-            </div>
+            </div>-->
             <div class="users-block card-users"></div>
-            <div class="friends-delimiter">
+            <!--<div class="friends-delimiter">
                 <div class="delimiter-headline">Not in the game<span class="invite-all">invite all</span></div>
                 <div class="friends-search">
                     <input type="text" class="search-input out-of-game-search"
                            placeholder="Search ...">
                 </div>
             </div>
-            <div class="users-block out-people"></div>
+            <div class="users-block out-people"></div>-->
         </div>
     </div>
     <div id="invitations-scrollbar" class="bottom-sliding-scrollbar"></div>
@@ -337,13 +323,25 @@
 
 <div class="templates">
     <div class="finished-friend-template">
-        <div data-id="<%=id%>" class="friend-card">
+        <div data-id="<%=id%>" class="friend-card finished-friend">
             <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
-                <div class="fr-result"><%=result%></div>
-                <div class="fr-dynamic"><%=dynamic%></div>
-                <div class="fr-static"><%=static%></div>
+                <div class="usage-statistics">
+                    <div class="fr-dynamic">
+                        <div class="fr-num fr-nd"><%=dynamic%></div>
+                        <div class="fr-block fr-db"></div>
+                    </div>
+
+                    <div class="fr-static">
+                        <div class="fr-num fr-ns"><%=static%></div>
+                        <div class="fr-block fr-sb"></div>
+                    </div>
+                </div>
+                <div class="fr-result">
+                    <div class="fr-res-num"><%=result%></div>
+                    <div class="fr-res-ico"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -354,29 +352,50 @@
             <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
-                <div class="fr-result"><%=result%></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="invite-card-template">
-        <div data-id="<%=id%>" class="invite-card <%=last%>">
-            <div class="fr-ava"><img src="<%=ava%>"></div>
-            <div class="fr-meta">
-                <div class="fr-name"><%=name%> <%=surname%></div>
-                <button class="invite-button" data-id="<%=id%>">Invite</button>
+                <div class="fr-succeeded">completed <%=levels_amount%> level<%=level_ending%> in <%=chapters_amount%>
+                    chapter<%=chapter_ending%>
+                </div>
+                <div class="fr-result">
+                    <div class="fr-res-num"><%=result%></div>
+                    <div class="fr-res-ico"></div>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="prompt-window-template">
         <div class="prompt-window p-<%=id%>">
-            <div class="prompt-headline"><%=headline%></div>
-            <div class="prompt-message"><%=message%></div>
-            <div class="prompt-buttons">
-                <button class="prompt-button prompt-positive pp-<%=id%>"><%=positive%></button>
-                <button class="prompt-button prompt-negative pn-<%=id%>"><%=negative%></button>
+            <div class="prompt-white-overlay">
+                <div class="prompt-headline"><%=headline%></div>
+                <div class="prompt-close">close</div>
+                <div class="prompt-message"><%=message%></div>
+                <div class="prompt-offer">
+                    <span class="prompt-offer-text"><%=offer_text%></span>
+                    <span class="prompt-offer-button po-<%=id%>"><%=offer_button%></span>
+                </div>
+                <div class="prompt-buttons">
+                    <button class="prompt-button prompt-positive pp-<%=id%>"><%=positive%></button>
+                    <button class="prompt-button prompt-negative pn-<%=id%>"><%=negative%></button>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="simple-window-template">
+        <div class="prompt-window p-<%=id%>">
+            <div class="prompt-white-overlay">
+                <div class="prompt-headline"><%=headline%></div>
+                <div class="prompt-close">close</div>
+                <div class="prompt-message"><%=message%></div>
+                <button class="simple-button btn-<%=id%>"><%=buttonLabel%></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="purchase-option-template">
+        <div class="purchase-option" data-item="<%=data%>">
+            <div class="text-overlay"><%=name%></div>
+            <span class="purchase-price"><%=price%></span>
         </div>
     </div>
 </div>

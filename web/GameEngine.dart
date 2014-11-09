@@ -22,6 +22,8 @@ import "Color4.dart";
 import "SuperCanvasDraw.dart";
 import "StarManager.dart";
 import 'GameWizard.dart';
+import 'Tooltip.dart';
+import 'PromptWindow.dart';
 
 // Actions history item
 class HItem {
@@ -168,7 +170,7 @@ class GameEngine extends State {
         FixtureDef fd = new FixtureDef();
         fd.isSensor = true;
         PolygonShape s = new PolygonShape();
-        s.setAsBox(w / 2 + .01, h / 2 + .01);
+        s.setAsBox(w / 2, h / 2);
         fd.shape = s;
         fd.userData = false;
 
@@ -305,6 +307,8 @@ class GameEngine extends State {
         }
 
         if (Input.keys['esc'].clicked) {
+            PromptWindow.close();
+            Tooltip.closeAll();
 
             // Close controls viewer first
             if (querySelector("#wizard-controls").classes.contains("hidden")) {

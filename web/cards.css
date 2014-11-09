@@ -3,6 +3,10 @@ body {
     font-family: Tahoma;
 }
 
+img {
+    pointer-events: none;
+}
+
 .game-box {
     width: 800px;
     height: 600px;

@@ -130,4 +130,8 @@ class Input {
             }
         };
     }
+
+    static void removeSingleEscClickCallback() {
+        Input.keyDown = null;
+    }
 }

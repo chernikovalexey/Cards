@@ -26,12 +26,13 @@ class BoundedCard {
         FixtureDef fd = new FixtureDef();
 
         PolygonShape sd = new PolygonShape();
-        sd.setAsBox(GameEngine.CARD_WIDTH / 2, GameEngine.CARD_HEIGHT / 2);
+        sd.setAsBox(GameEngine.CARD_WIDTH / 2 * e.currentZoom, GameEngine.CARD_HEIGHT / 2 * e.currentZoom);
         fd.shape = sd;
         fd.isSensor = true;
 
         b = e.world.createBody(bd);
         b.createFixture(fd);
+        //b.createFixture(e.createHelperFixture(GameEngine.CARD_WIDTH, GameEngine.CARD_HEIGHT));
         b.userData = Sprite.card(e.world);
     }
 

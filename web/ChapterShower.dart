@@ -38,6 +38,7 @@ class ChapterShower {
         querySelectorAll(".chapter").forEach((DivElement e) {
             e.addEventListener("click", (event) {
                 if (!e.classes.contains("chapter-locked")) {
+                    Input.removeSingleEscClickCallback();
                     int chapter = int.parse(e.dataset["id"]);
                     manager.removeState(engine); // ???
                     manager.addState(engine, {

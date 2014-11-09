@@ -6,5 +6,4 @@ dependencies:
   animation: any
   box2d: any
   browser: any
-  source_maps: any
   vector_math: any

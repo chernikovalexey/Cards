@@ -13,6 +13,7 @@ import 'GameWizard.dart';
 import 'WebApi.dart';
 import 'Tooltip.dart';
 import 'Chapter.dart';
+import 'ChapterShower.dart';
 
 class RatingShower {
     static const int FADE_TIME = 450;
@@ -259,6 +260,7 @@ class RatingShower {
             querySelector(".buttons").classes.add("hidden");
             querySelector(".selectors").classes.add("hidden");
             fadeBoxIn(querySelector("#chapter-selection"));
+            ChapterShower.show(Chapter.chapters);
         }, true);
 
         querySelector(".attempts-layout").classes.add("hidden");
@@ -271,10 +273,6 @@ class RatingShower {
         querySelector(".current-chapter-name")
             ..classes.remove("hidden")
             ..innerHtml = Chapter.chapters[engine.level.chapter - 1]['name'];
-//        querySelector("").classes.add("");
-//        querySelector("").classes.add("");
-//        querySelector("").classes.add("");
-//        querySelector("").classes.add("");
 
         window.localStorage.remove("last");
     }
@@ -282,6 +280,11 @@ class RatingShower {
     static void mainMenu(Event e) {
         hide();
         showMainMenu();
+
+        // If the level name is being shown currently, hide it swift
+        animate(querySelector(".level-name"), properties: {
+            'margin-top': -20, 'opacity': 0.0, 'font-size': 32
+        }, duration: 1, easing: Easing.SINUSOIDAL_EASY_IN_OUT);
     }
 
     static void onTypeItemClick(Event evt) {

@@ -14,20 +14,25 @@ var Api = {
     platform: "nil",
     friendsList: null,
     personalId: null,
+
     setPlatform: function (platform) {
         this.platform = platform;
     },
+
     setFriendsList: function (listOfFriends) {
         this.friendsList = listOfFriends;
     },
+
     setPersonalId: function (personalId) {
         this.personalId = personalId;
     },
+
     initialRequest: function (callback) {
         WebApi(this.platform + ".initialRequest", {userId: this.personalId, friends: this.friendsList}, function (data) {
             callback(data);
         });
     },
+
     finishLevel: function (chapter, level, result, numStatic, numDynamic, attempts, timeSpent, callback) {
         WebApi(this.platform + ".finishLevel", {
             userId: this.personalId,
@@ -40,6 +45,13 @@ var Api = {
             timeSpent: timeSpent
         }, callback);
     },
+
+    addAttempts: function (delta, callback) {
+        WebApi(this.platform + ".addAttempts", {
+            delta: delta
+        }, callback);
+    },
+
     keepAlive: function () {
         WebApi(this.platform + ".keepAlive", {
             userId: this.personalId

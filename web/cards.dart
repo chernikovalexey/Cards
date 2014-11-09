@@ -31,9 +31,14 @@ void main() {
     featureManager = new FeatureManager();
 
     canvas = (querySelector("#graphics") as CanvasElement);
+    print(canvas);
     CanvasRenderingContext2D g = canvas.getContext('2d');
 
     updateCanvasPositionAndDimension();
+
+    // Load immediately because it is also used on the chapter end screen
+    // In case `New Game` button is not pressed it will be also available
+    Chapter.load();
 
     manager = new StateManager(g);
     engine = new GameEngine(g);
@@ -73,11 +78,7 @@ void main() {
         querySelector("#menu-box").classes.add("hidden");
 
         fadeBoxIn(querySelector("#chapter-selection"));
-
-        Chapter.load((List chapters) {
-            print(chapters);
-            ChapterShower.show(chapters);
-        });
+        ChapterShower.show(Chapter.chapters);
     }, false);
 
     querySelector(".friends-invite-more").addEventListener("click", (event) {

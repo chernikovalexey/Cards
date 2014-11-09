@@ -13,18 +13,6 @@ packages:
     description: browser
     source: hosted
     version: "0.10.0+1"
-  path:
-    description: path
-    source: hosted
-    version: "1.3.0"
-  source_maps:
-    description: source_maps
-    source: hosted
-    version: "0.10.0"
-  source_span:
-    description: source_span
-    source: hosted
-    version: "1.0.0"
   vector_math:
     description: vector_math
     source: hosted
