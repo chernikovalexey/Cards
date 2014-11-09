@@ -18,6 +18,14 @@
     <script type="application/dart" src="cards.dart"></script>
     <script type="text/javascript" src="packages/browser/interop.js"></script>
     <script type="text/javascript" src="packages/browser/dart.js"></script>
+
+    <script type="text/javascript">
+        window.onmousewheel = function (e) {
+            if (e.preventDefault) e.preventDefault();
+            e.returnValue = false;
+            return false;
+        };
+    </script>
 </head>
 <body>
 <div class="game-box">

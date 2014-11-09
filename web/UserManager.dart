@@ -12,6 +12,7 @@ class UserManager {
 
     static int getAsInt(String key) {
         print(get(key) is int);
+        print(get(key));
         return get(key) is int ? get(key) : int.parse(get(key));
     }
 
