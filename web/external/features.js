@@ -26,7 +26,7 @@ var getObjectLength = function (obj) {
 
 var getNumberAsWord = function (num) {
     var words = {
-        1: "one", 2: "two", 3: "three", 4: "four"
+        1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"
     };
     return num in words ? words[num] : num;
 };
@@ -76,7 +76,7 @@ var Features = {
 
                 $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
                     pos: counter,
-                    levels_amount: levels_amount,
+                    levels_amount: getNumberAsWord(levels_amount),
                     chapters_amount: getNumberAsWord(chapters_amount),
                     level_ending: levels_amount === 1 ? '' : 's',
                     chapter_ending: chapters_amount === 1 ? '' : 's'
@@ -160,8 +160,8 @@ var Features = {
         return [];
     },
 
-    getUser: function(callback) {
-        Api.call("getUser", {}, function(result) {
+    getUser: function (callback) {
+        Api.call("getUser", {}, function (result) {
             Features.user = result;
             callback();
         });
@@ -198,9 +198,9 @@ var Features = {
 
     chapterCallback: null,
 
-    getChapters: function(callback) {
+    getChapters: function (callback) {
         this.chapterCallback = callback;
-        Api.call('chapters', {}, function(r) {
+        Api.call('chapters', {}, function (r) {
             Features.chapterCallback(JSON.stringify(r));
         });
     },
@@ -416,14 +416,14 @@ var VKFeatures = {
         });
     },
 
-    onOrderSuccess: function() {
+    onOrderSuccess: function () {
         console.log("JS order success!");
-        if(Features.orderListener != null) {
+        if (Features.orderListener != null) {
             console.log("callback!=null");
             Features.orderListener();
         }
     },
-    
+
     chapterCallback: null,
 
     chapters: function (callback) {

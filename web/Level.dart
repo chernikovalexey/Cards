@@ -99,7 +99,7 @@ class Level {
 
         GameWizard.manage(chapter, current.index);
         handleLevelChange();
-        updateBlockButtons(engine);
+        //updateBlockButtons(engine);
     }
 
     void toggleFinishedFriends() {
@@ -182,6 +182,7 @@ class Level {
         showLevelName(subLevels[currentSubLevel - 1].name);
         toggleFinishedFriends();
         updateHints();
+        updateBlockButtons(engine);
 
         window.localStorage["last"] = JSON.encode({
             'chapter': chapter, 'level': currentSubLevel

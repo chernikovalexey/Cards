@@ -49,7 +49,7 @@ class Tooltip {
         return _index;
     }
 
-    static int show(Element rel, String code, int alignment, {num maxWidth: 800, num xOffset: 0, num yOffset: 0, num xArrowOffset: 0, num yArrowOffset: 0, int closeDelay: 0}) {
+    static int show(Element rel, String code, int alignment, {num maxWidth: 800, num xOffset: 0, num yOffset: 0, num xArrowOffset: 0, num yArrowOffset: 0, int closeDelay: 0, Function callback: null}) {
         Element body = querySelector(".game-box");
         body.appendHtml('<div class="tt tooltip"><div class="arrow top-arrow" hidden></div><div class="arrow left-arrow" hidden></div><div class="tooltip-contents"><div class="tooltip-text">' + code + '</div><button class="got-it">OK</button></div><div class="arrow bottom-arrow" hidden></div></div>');
 
@@ -96,19 +96,29 @@ class Tooltip {
         tooltip.style.left = x.toString() + "px";
         tooltip.style.top = y.toString() + "px";
 
-        tooltip.querySelector(".tooltip .got-it").addEventListener("click", (event) {
+        tooltip.querySelector(".t-" + index.toString() + " .got-it").addEventListener("click", (event) {
             closeByIndex(int.parse(getParent(event.target, "tooltip").dataset["index"]));
+            if (callback != null) {
+                callback();
+            }
         }, false);
 
         addChildClasses();
 
-        querySelector("body").onClick.listen((event) {
+        var stream = querySelector("body").onClick.listen((event) {
             Element el = event.currentTarget as Element;
             if (!el.classes.contains("tt-child")) {
                 new Timer(new Duration(milliseconds: closeDelay), () {
                     Tooltip.closeAll();
+                    if (callback != null) {
+                        callback();
+                    }
                 });
             }
+        });
+
+        querySelector("body").onClick.listen((event) {
+            stream.cancel();
         });
 
         int _index = index;

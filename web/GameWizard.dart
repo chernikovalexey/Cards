@@ -125,7 +125,17 @@ class GameWizard {
 
     static void showRewind() {
         if (!storage.containsKey("apply_fail_occured")) {
-            Tooltip.show(querySelector("#toggle-physics"), "Rewind to try again", Tooltip.BOTTOM, maxWidth: 300);
+            Tooltip.show(querySelector("#toggle-physics"), "Rewind to try again", Tooltip.BOTTOM, maxWidth: 300, callback: () {
+                Tooltip.showSimple("To remove the selected block, <b>right-click</b> or <b>press Delete</b>", 200, 225);
+
+                var bodyStream = querySelector("body").onContextMenu.listen((event) {
+                    Tooltip.closeAll();
+                });
+
+                querySelector("body").onContextMenu.listen((event) {
+                    bodyStream.cancel();
+                });
+            });
             storage["apply_fail_occured"] = "true";
         }
     }
