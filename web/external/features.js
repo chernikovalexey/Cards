@@ -243,7 +243,7 @@ var VKFeatures = {
             if (data.response) {
                 var upload_url = data.response.upload_url;
                 console.log(upload_url);
-                Api.call("uploadPhotoVK", {upload_url: upload_url});
+                Api.call("uploadPhotoReserved", {server: upload_url, name: 'logo'});
             }
         });
     },
@@ -467,6 +467,24 @@ var VKFeatures = {
     }
 };
 
+var FBFeatures = {
+
+    initFields: function() {
+        FB.init({appID: 614090422033888, status: true, cookie: true, xfbml: true});
+        FB.api('/me/friends', {fields: 'name, first_name, cover'}, function(response) {
+            console.log(response);
+        });
+    },
+
+    load: function() {
+        $.getScript(document.location.protocol + "//connect.facebook.net/en_US/all.js", function() {
+           FBFeatures.initFields(function(data) {
+
+           });
+        });
+    }
+};
+
 var NoFeatures = {
     getPersonalId: function () {
         if (localStorage['userId'] == null) {
@@ -498,6 +516,9 @@ var NoFeatures = {
     switch (qs['platform']) {
         case 'vk':
             Features = extendAndOverride(Features, VKFeatures);
+            break;
+        case 'fb':
+            Features = extendAndOverride(Features, FBFeatures);
             break;
         default:
             Features = extendAndOverride(Features, NoFeatures);

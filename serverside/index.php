@@ -7,6 +7,7 @@
  */
 
 session_start();
+define('SITE_PATH', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 error_reporting(E_ALL);
 
 require_once "Router.php";

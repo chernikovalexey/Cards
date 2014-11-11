@@ -109,31 +109,27 @@ class Api
         return $user;
     }
 
-    public function uploadPhotoVK($server)
+    public function uploadPhoto(array $user, $server, $base64Image)
     {
-        $filename = 'https://twopeoplesoftware.com/twocubes/web/img/logo.png';
-        $paramname = 'photo';
+        $filename = FileHelper::saveTempImage($base64Image);
+        return $this->uploadPhotoInternal($user, $server, $filename);
+    }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-        curl_setopt($ch, CURLOPT_URL, $server);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array($paramname => $filename));
-        $result = curl_exec($ch);
-        $error = curl_error($ch);
-        curl_close ($ch);
-        if (!$result) {
-            return json_encode(array('error'=> 'Curl error: ' . $error));
+    public function uploadPhotoReserved(array $user, $server, $reservedName) {
+
+        $reservedNames = array('logo' => SITE_PATH . "web/img/logo.png");
+        return $this->uploadPhotoInternal($user, $server, $reservedNames[$reservedName]);
+    }
+
+    private function uploadPhotoInternal(array $user, $server, $filename) {
+
+        $server = urldecode($server);
+
+        switch($this->platform) {
+            case 'vk':
+                VkPhotoUploader::upload($server, $filename);
+                break;
         }
-
-        $curl_res = json_decode($result);
-        $result = array( 'response' => $curl_res);
-
-        if ($curl_res->server == '' || $curl_res->photo == '' || $curl_res->hash == '')
-        {
-            $result = array( 'error' => json_decode($curl_res) );
-        }
-        return json_encode($result);
+        return null;
     }
 }
