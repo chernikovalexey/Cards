@@ -7,6 +7,7 @@ import "cards.dart";
 import "Scroll.dart";
 import 'package:animation/animation.dart';
 import 'dart:async';
+import 'dart:js';
 import "StarManager.dart";
 import 'UserManager.dart';
 import 'GameWizard.dart';
@@ -199,6 +200,11 @@ class RatingShower {
 
             //
             querySelector(".rating-inner-layout").classes.add("small-margin");
+
+            //
+            querySelector("#share-level").addEventListener("click", (event) {
+                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, rating]);
+            }, true);
         }
 
         querySelector("#attempts-remaining").innerHtml = UserManager.get("allAttempts").toString();

@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: podko_000
  * Date: 05.06.14
  * Time: 16:01
  */
-
 class Api
 {
     protected $db;
@@ -29,7 +29,7 @@ class Api
         Analytics::push(new AnalyticsEvent("session", "start", array('user' => $user['userId'])));
 
         if (count($friends) > 0)
-            return array('user' => $user, 'results' =>  $this->db->getResults($friends, $this->platform));
+            return array('user' => $user, 'results' => $this->db->getResults($friends, $this->platform));
         else
             return array();
     }
@@ -51,7 +51,7 @@ class Api
             'timeSpent' => $timeSpent
         )));
 
-        $this->db->addAttempts($user ,$attempts);
+        $this->db->addAttempts($user, $attempts);
         return array('result' => $this->db->result($chapter, $level, $result, $numStatic, $numDynamic, $user, $this->platform));
     }
 
@@ -75,33 +75,65 @@ class Api
         throw new ApiException("To use hint you must have at least 1 hint on your balance!");
     }
 
-    public function addAttempts(array $user, $numAttempts) {
+    public function addAttempts(array $user, $numAttempts)
+    {
 
         $user['allAttempts'] -= $numAttempts;
         $this->db->addAttempts($user, $numAttempts);
         return $user;
     }
 
-    public function payments() {
+    public function payments()
+    {
 
         $payments = Payments::create($this->platform, $this->db);
         return $payments->perform($_POST);
     }
 
-    public function chapters(array $user) {
+    public function chapters(array $user)
+    {
 
         $total = $this->db->getTotalStars($user['userId']);
         $unlocked = $this->db->getUnlocked($user['userId']);
         $chapters = json_decode(file_get_contents(CHAPTER_FILE), true);
         $r = array();
-        foreach($chapters['chapters'] as $i => $c) {
-            $c['unlocked'] = $c['unlock_stars'] < $total ||  in_array($i + 1, $unlocked);
+        foreach ($chapters['chapters'] as $i => $c) {
+            $c['unlocked'] = $c['unlock_stars'] < $total || in_array($i + 1, $unlocked);
             $r[] = $c;
         }
         return array('chapters' => $r);
     }
 
-    public function getUser(array $user) {
+    public function getUser(array $user)
+    {
         return $user;
     }
-} 
+
+    public function uploadPhotoVK($server)
+    {
+        $filename = 'https://twopeoplesoftware.com/twocubes/web/img/logo.png';
+        $paramname = 'photo';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+        curl_setopt($ch, CURLOPT_URL, $server);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, array($paramname => $filename));
+        $result = curl_exec($ch);
+        $error = curl_error($ch);
+        curl_close ($ch);
+        if (!$result) {
+            return json_encode(array('error'=> 'Curl error: ' . $error));
+        }
+
+        $curl_res = json_decode($result);
+        $result = array( 'response' => $curl_res);
+
+        if ($curl_res->server == '' || $curl_res->photo == '' || $curl_res->hash == '')
+        {
+            $result = array( 'error' => json_decode($curl_res) );
+        }
+        return json_encode($result);
+    }
+}

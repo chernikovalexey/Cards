@@ -209,10 +209,43 @@ var Features = {
     }
 };
 
+function postForm(path, params, callback) {
+    var form = $("<form>").attr({
+        method: "POST",
+        action: path,
+        target: "hidden_iframe"
+    });
+
+    for (var key in params) {
+        form.append($("<input>").attr({
+            type: "hidden",
+            name: key,
+            value: params[key]
+        }));
+    }
+
+    $("<iframe>").attr("name", "hidden_iframe").hide().appendTo("body");
+    form.appendTo("body");
+
+    form.submit();
+}
+
 var VKFeatures = {
     friends: null,
 
     scrollParentTop: function () {
+    },
+
+    prepareLevelWallPost: function (level_name, stars) {
+        VK.api('wall.getPhotoUploadServer', {
+            wall_id: 40295905
+        }, function (data) {
+            if (data.response) {
+                var upload_url = data.response.upload_url;
+                console.log(upload_url);
+                Api.call("uploadPhotoVK", {upload_url: upload_url});
+            }
+        });
     },
 
     initFields: function (callback) {
