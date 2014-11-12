@@ -1264,6 +1264,10 @@ div.active-step {
     display: none;
 }
 
+.wall-posts {
+    visibility: hidden;
+}
+
 .bs-screen-topbar {
     text-align: center;
     padding: 25px 0;

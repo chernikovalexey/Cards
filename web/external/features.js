@@ -237,13 +237,44 @@ var VKFeatures = {
     },
 
     prepareLevelWallPost: function (level_name, stars) {
-        VK.api('wall.getPhotoUploadServer', {
-            wall_id: 40295905
-        }, function (data) {
-            if (data.response) {
-                var upload_url = data.response.upload_url;
-                console.log(upload_url);
-                Api.call("uploadPhotoReserved", {server: upload_url, name: 'logo'});
+        var upload = function (permission) {
+            if (!(permission & 4)) {
+                return false;
+            } else {
+                VK.api('photos.getWallUploadServer', {}, function (data) {
+                    if (data.response) {
+                        var upload_url = data.response.upload_url;
+
+                        // Prepare photo
+                        html2canvas($('.level-wall-post-template').get(0), {
+                            onrendered: function (canvas) {
+                                console.log(canvas.toDataURL());
+                                Api.call("uploadPhoto", {server: upload_url, base64image: canvas.toDataURL()}, function (upload_response) {
+                                    console.log(upload_response);
+                                    VK.api("photos.saveWallPhoto", {
+                                        user_id: Features.user.platformUserId,
+                                        photo: upload_response.photo,
+                                        server: upload_response.server,
+                                        hash: upload_response.hash
+                                    }, function (save_response) {
+                                        VK.api("wall.post", {
+                                            message: "Пацаны, я, кароче, очень крутой. Зацените!",
+                                            attachments: save_response.response[0].id
+                                        });
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+                return true;
+            }
+        };
+
+        VK.api('account.getAppPermissions', function (r) {
+            if (!upload(r.response)) {
+                VK.callMethod("showSettingsBox", 4);
+                VK.addCallback("onSettingsChanged", upload);
             }
         });
     },
@@ -469,18 +500,18 @@ var VKFeatures = {
 
 var FBFeatures = {
 
-    initFields: function() {
+    initFields: function () {
         FB.init({appID: 614090422033888, status: true, cookie: true, xfbml: true});
-        FB.api('/me/friends', {fields: 'name, first_name, cover'}, function(response) {
+        FB.api('/me/friends', {fields: 'name, first_name, cover'}, function (response) {
             console.log(response);
         });
     },
 
-    load: function() {
-        $.getScript(document.location.protocol + "//connect.facebook.net/en_US/all.js", function() {
-           FBFeatures.initFields(function(data) {
+    load: function () {
+        $.getScript(document.location.protocol + "//connect.facebook.net/en_US/all.js", function () {
+            FBFeatures.initFields(function (data) {
 
-           });
+            });
         });
     }
 };
