@@ -3,7 +3,7 @@ import 'dart:js';
 
 class UserManager {
     static dynamic get(String key) {
-        return context['Features']['user'][key];
+        return context['Features']['user'].hasProperty(key) ? context['Features']['user'][key] : 0;
     }
 
     static int getAsString(String key) {
@@ -17,6 +17,7 @@ class UserManager {
     }
 
     // sets an integer
+
     static void set(String key, int val) {
         context['Features']['user'][key] = val;
     }

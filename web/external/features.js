@@ -435,15 +435,28 @@ var VKFeatures = {
         Api.call('chapters', {}, function (r) {
             Features.chapterCallback(JSON.stringify(r));
         });
+    },
+
+    showInviteBox: function () {
+        VK.callMethod("showInviteBox");
     }
 };
 
 var FBFeatures = {
-    initFields: function () {
+    initFields: function (callback) {
+        FB.api("/me/friends", function (response) {
+            console.log("Friends:", response);
+            Api.setFriendsList(Features.toIdArray(response.data));
+            Features.friends = response.data;
 
+            Api.setPersonalId(response.id);
+            Api.setPlatform('fb');
+
+            callback();
+        });
     },
 
-    load: function () {
+    load: function (callback) {
         $.getScript("//connect.facebook.net/en_US/sdk.js", function () {
             FB.init({
                 appId: 614090422033888,
@@ -452,6 +465,24 @@ var FBFeatures = {
                 xfbml: false,
                 version: 'v2.1'
             });
+
+            FB.login(function () {
+                Features.initFields(function () {
+                    Api.initialRequest(function (data) {
+                        console.log("initial request:", data);
+
+                        callback();
+                    });
+                });
+            });
+        });
+    },
+
+    showInviteBox: function () {
+        FB.ui({method: 'apprequests',
+            message: 'Check out this new puzzle!'
+        }, function (response) {
+            console.log(response);
         });
     }
 };
