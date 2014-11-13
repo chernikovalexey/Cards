@@ -84,47 +84,7 @@ var Features = {
             });
 
             callback();
-
-            var height = $($('.friends').get(1)).height();
-            VK.callMethod('resizeWindow', 800, height);
-            $('.invite-button').off('click').on('click', function (e) {
-                VK.callMethod("showRequestBox", {
-                    uid: $(e.target).data('id'),
-                    message: "Test",
-                    requestKey: "RequestKey"
-                });
-            });
-
-            var search_delay;
-            $('.search-input').off('keyup').on('keyup', function (event) {
-                clearTimeout(search_delay);
-                var that = this;
-                search_delay = setTimeout(function () {
-                    var type = Features.OUT_SEARCH;
-                    if ($(that).hasClass('in-game-search')) {
-                        type = Features.IN_SEARCH;
-                    }
-                    Features.friendsSearch.call(that, event, type);
-                }, 525);
-            });
         }
-    },
-
-    IN_SEARCH: 1,
-    OUT_SEARCH: 2,
-
-    friendsSearch: function (event, type) {
-        var val = $(this).val().toLowerCase();
-
-        $(type === Features.OUT_SEARCH ? '.invite-card' : '.friend-card').each(function () {
-            if ($(this).find('.fr-name').html().toLowerCase().indexOf(val) === -1 && val) {
-                $(this).hide();
-            } else {
-                $(this).show();
-            }
-        });
-
-        Features.repaintFriendsInvitations();
     },
 
     calcResult: function (data) {
@@ -209,27 +169,6 @@ var Features = {
     }
 };
 
-function postForm(path, params, callback) {
-    var form = $("<form>").attr({
-        method: "POST",
-        action: path,
-        target: "hidden_iframe"
-    });
-
-    for (var key in params) {
-        form.append($("<input>").attr({
-            type: "hidden",
-            name: key,
-            value: params[key]
-        }));
-    }
-
-    $("<iframe>").attr("name", "hidden_iframe").hide().appendTo("body");
-    form.appendTo("body");
-
-    form.submit();
-}
-
 var VKFeatures = {
     friends: null,
 
@@ -249,7 +188,7 @@ var VKFeatures = {
                         html2canvas($('.level-wall-post-template').get(0), {
                             onrendered: function (canvas) {
                                 console.log(canvas.toDataURL());
-                                Api.call("uploadPhoto", {server: upload_url, base64image: canvas.toDataURL()}, function (upload_response) {
+                                Api.call("uploadPhoto", {server: upload_url, base64image: canvas.toDataURL().replace("data:image/png;base64,", "")}, function (upload_response) {
                                     console.log(upload_response);
                                     VK.api("photos.saveWallPhoto", {
                                         user_id: Features.user.platformUserId,
@@ -257,6 +196,7 @@ var VKFeatures = {
                                         server: upload_response.server,
                                         hash: upload_response.hash
                                     }, function (save_response) {
+                                        console.log(save_response);
                                         VK.api("wall.post", {
                                             message: "Пацаны, я, кароче, очень крутой. Зацените!",
                                             attachments: save_response.response[0].id
@@ -499,18 +439,18 @@ var VKFeatures = {
 };
 
 var FBFeatures = {
-
     initFields: function () {
-        FB.init({appID: 614090422033888, status: true, cookie: true, xfbml: true});
-        FB.api('/me/friends', {fields: 'name, first_name, cover'}, function (response) {
-            console.log(response);
-        });
+
     },
 
     load: function () {
-        $.getScript(document.location.protocol + "//connect.facebook.net/en_US/all.js", function () {
-            FBFeatures.initFields(function (data) {
-
+        $.getScript("//connect.facebook.net/en_US/sdk.js", function () {
+            FB.init({
+                appId: 614090422033888,
+                status: true,
+                cookie: true,
+                xfbml: false,
+                version: 'v2.1'
             });
         });
     }
