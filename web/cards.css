@@ -99,6 +99,7 @@ button:hover:not([disabled]) {
     background-position: 21px 9px;
     position: relative;
     top: -1px;
+    background-size: 16px 16px;
 }
 
 .plus {
@@ -164,6 +165,7 @@ button:hover:not([disabled]) {
     width: 16px;
     height: 16px;
     background: url(img/friends.png);
+    background-size: 16px 16px;
 }
 
 #hint {
@@ -193,7 +195,6 @@ button:hover:not([disabled]) {
     border: 1px solid rgba(255, 255, 255, 0.15);
     background-color: rgba(255, 255, 255, 0.05);
     padding: 5px;
-    border-radius: 4px;
     -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
     transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -214,6 +215,7 @@ button:hover:not([disabled]) {
     background-repeat: repeat-y;
     background-position: 50%;
     margin: 5px auto 0 auto;
+    background-size: 24px 4px;
 }
 
 .current .icon {
@@ -270,6 +272,7 @@ button:hover:not([disabled]) {
     width: 100px;
     height: 96px;
     background-image: url(img/new_star.png);
+    background-size: 100px 96px;
     margin-right: 5px;
 }
 
@@ -458,7 +461,8 @@ button:hover:not([disabled]) {
 
 .logo {
     width: 304px;
-    height: 93px;
+    height: 97px;
+    background-size: 304px 97px;
     background: url(img/logo.png);
     background-repeat: no-repeat;
     margin: 50px auto 20px auto;
@@ -678,6 +682,7 @@ button:hover:not([disabled]) {
 .chapter-locked .chapter-thumbnail {
     background-image: url(img/lock.png);
     background-position: 57px 16px;
+    background-size: 128px 128px;
 }
 
 .unlock-stars {
@@ -735,7 +740,6 @@ button:hover:not([disabled]) {
 .s-level-name {
     font-size: 36px;
     color: #fff;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
     letter-spacing: 2px;
 }
 
@@ -753,24 +757,37 @@ button:hover:not([disabled]) {
     width: 160px;
     height: 80px;
     display: inline-block;
-    border: 1px solid rgba(255, 255, 255, 0.05);
     margin: 5px 1px 0 5px;
     cursor: pointer;
     -webkit-user-select: none;
-    background: rgba(255, 255, 255, 0.125);
+    background: rgba(255, 255, 255, 0.075);
+    padding-bottom: 2px;
 }
 
 .locked {
-    opacity: 0.45;
+    background: transparent;
+    border: none;
 }
 
 .tape-name {
     margin-top: 10px;
+    font-size: 15px;
+}
+
+.locked .tape-name {
+    opacity: 0.5;
 }
 
 .tape-rating {
     height: 38px;
-    margin-top: 7px;
+    margin-top: 8px;
+}
+
+.locked .tape-rating {
+    background: url(img/small_lock.png);
+    background-size: 38px;
+    background-position: 50%;
+    background-repeat: no-repeat;
 }
 
 .locked .stars-layout {
@@ -790,7 +807,7 @@ button:hover:not([disabled]) {
 .tape-current-item {
     border: 1px solid rgba(61, 95, 150, 1.0);
     background-color: rgba(61, 95, 150, 0.25);
-    box-shadow: 0 0 3px rgba(61, 95, 150, 0.75);
+    box-shadow: 0 0 5px rgba(61, 95, 150, 0.75);
 }
 
 .chapter-level {
@@ -1012,6 +1029,7 @@ button:hover:not([disabled]) {
     margin-right: 10px;
     vertical-align: top;
     position: relative;
+    background-size: 16px;
 }
 
 .rotate {
@@ -1156,6 +1174,7 @@ div.active-step {
     background: url(img/arrow.png);
     position: absolute;
     z-index: 1000;
+    background-size: 15px 7px;
 }
 
 .top-arrow {
@@ -1679,4 +1698,50 @@ div.active-step {
     margin: 0;
     width: 100%;
     padding: 15px 20px;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (   min--moz-device-pixel-ratio: 2), only screen and (     -o-min-device-pixel-ratio: 2/1), only screen and (        min-device-pixel-ratio: 2), only screen and (                min-resolution: 192dpi), only screen and (                min-resolution: 2dppx) {
+    .logo {
+        background: url(img/logo@2x.png);
+    }
+
+    .rotate {
+        background: url(img/rotate@2x.png);
+    }
+
+    .zoom-in {
+        background: url(img/icon_plus@2x.png);
+    }
+
+    .zoom-out {
+        background: url(img/icon_minus@2x.png);
+    }
+
+    .dragging {
+        background: url(img/dragging@2x.png);
+    }
+
+    .static .icon {
+        background-image: url(img/static_block@2x.png);
+    }
+
+    .dynamic .icon {
+        background-image: url(img/dynamic_block@2x.png);
+    }
+
+    .friends-finished-icon {
+        background: url(img/friends@2x.png);
+    }
+
+    .arrow {
+        background: url(img/arrow@2x.png);
+    }
+
+    .chapter-locked .chapter-thumbnail {
+        background-image: url(img/lock@2x.png);
+    }
+
+    .locked .tape-rating {
+        background: url(img/small_lock@2x.png);
+    }
 }
