@@ -82,7 +82,7 @@ void main() {
     }, false);
 
     querySelector(".friends-invite-more").addEventListener("click", (event) {
-        context['VK'].callMethod("callMethod", ["showInviteBox"]);
+        context['Features'].callMethod("showInviteBox");
     }, true);
 
     querySelector(".close-friends").addEventListener("click", (event) {
