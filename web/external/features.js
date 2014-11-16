@@ -269,6 +269,7 @@ var VKFeatures = {
         $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", function () {
             VKFeatures.initFields(function () {
                 Api.initialRequest(function (data) {
+                    console.log("initial request vk:", data);
                     Features.user = data.user;
 //                    Features.user.allAttempts = 0;
 
@@ -444,15 +445,17 @@ var VKFeatures = {
 
 var FBFeatures = {
     initFields: function (callback) {
-        FB.api("/me/friends", function (response) {
-            console.log("Friends:", response);
-            Api.setFriendsList(Features.toIdArray(response.data));
-            Features.friends = response.data;
+        FB.api("/me", function(me_res) {
+            FB.api("/me/friends", function (fr_res) {
+                console.log("Friends:", fr_res);
+                Api.setFriendsList(Features.toIdArray(fr_res.data));
+                Features.friends = fr_res.data;
 
-            Api.setPersonalId(response.id);
-            Api.setPlatform('fb');
+                Api.setPersonalId(me_res.id);
+                Api.setPlatform('fb');
 
-            callback();
+                callback();
+            });
         });
     },
 
@@ -469,7 +472,7 @@ var FBFeatures = {
             FB.login(function () {
                 Features.initFields(function () {
                     Api.initialRequest(function (data) {
-                        console.log("initial request:", data);
+                        console.log("initial request fb:", data);
 
                         callback();
                     });

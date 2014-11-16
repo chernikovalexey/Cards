@@ -31,7 +31,7 @@ class Api
         if (count($friends) > 0)
             return array('user' => $user, 'results' => $this->db->getResults($friends, $this->platform));
         else
-            return array();
+            return array('user' => $user, 'results' => array());
     }
 
     public function keepAlive(array $user)
@@ -115,17 +115,19 @@ class Api
         return $this->uploadPhotoInternal($user, $server, $filename);
     }
 
-    public function uploadPhotoReserved(array $user, $server, $reservedName) {
+    public function uploadPhotoReserved(array $user, $server, $reservedName)
+    {
 
         $reservedNames = array('logo' => SITE_PATH . "web/img/logo.png");
         return $this->uploadPhotoInternal($user, $server, $reservedNames[$reservedName]);
     }
 
-    private function uploadPhotoInternal(array $user, $server, $filename) {
+    private function uploadPhotoInternal(array $user, $server, $filename)
+    {
 
         $server = urldecode($server);
 
-        switch($this->platform) {
+        switch ($this->platform) {
             case 'vk':
                 VkPhotoUploader::upload($server, $filename);
                 break;
