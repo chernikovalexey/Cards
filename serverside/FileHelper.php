@@ -9,8 +9,8 @@
 class FileHelper {
     public static function saveTempImage($base64Image) {
 
-        $filename = tempnam(sys_get_temp_dir(), 'File');
+        $filename = tempnam(sys_get_temp_dir(), "FileHelper.saveTempImage.") . '.png';
         file_put_contents($filename, base64_decode($base64Image));
         return $filename;
     }
-} 
+}
