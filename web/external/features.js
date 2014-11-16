@@ -470,10 +470,13 @@ var VKFeatures = {
 var FBFeatures = {
 
     initFields: function() {
-        FB.init({appID: 614090422033888, status: true, cookie: true, xfbml: true});
-        FB.api('/me/friends', {fields: 'name, first_name, cover'}, function(response) {
-            console.log(response);
-        });
+        FB.init(function () {
+            FB.login(function () {
+                FB.api('/me/friends', {fields: 'name, first_name, cover'}, function (response) {
+                    console.log(response);
+                });
+            });
+        }, {appID: 614090422033888, status: true, cookie: true, xfbml: true});
     },
 
     load: function() {
