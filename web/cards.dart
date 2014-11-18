@@ -66,6 +66,9 @@ void main() {
         manager.addState(engine, {
             'continue': true, 'chapter': JSON.decode(window.localStorage["last"])["chapter"]
         });
+
+        updateAttempts();
+
         fadeBoxOut(querySelector("#menu-box"), 250, () {
             updateCanvasPositionAndDimension();
 
@@ -125,13 +128,13 @@ void main() {
         });
     });
 
-    int attempts = UserManager.getAsInt("allAttempts");
+    /*int attempts = UserManager.getAsInt("allAttempts");
     if (attempts == 0) {
         querySelector("#toggle-physics")
             ..classes.add("faded")
             ..title = "You've spent all attempts for today";
         //WebApi.attemptsRanOut(engine.level.current.attemptsUsed);
-    }
+    }*/
 
     querySelector('#toggle-physics').addEventListener("click", (event) {
         if (!(event.target as ButtonElement).classes.contains("rewind")) {
@@ -140,11 +143,9 @@ void main() {
                 UserManager.decrement("allAttempts");
                 applyRewindLabelToButton();
                 ++engine.level.current.attemptsUsed;
+                UserManager.decrement("allAttempts");
 
-                if (attempts - 1 == 0) {
-                    querySelector("#toggle-physics")
-                        ..classes.add("faded")
-                        ..title = "You've spent all attempts for today";
+                if (!updateAttempts()) {
                     WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
                 }
             } else {
@@ -172,6 +173,17 @@ void main() {
 
     hints = new HintManager(engine);
     querySelector("#hint").addEventListener("click", hints.onClick);
+}
+
+bool updateAttempts() {
+    int attempts = UserManager.getAsInt("allAttempts");
+    if (attempts == 0) {
+        querySelector("#toggle-physics")
+            ..classes.add("faded")
+            ..title = "You've spent all attempts for today";
+        return false;
+    }
+    return true;
 }
 
 void showLevelName(String name) {

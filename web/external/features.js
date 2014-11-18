@@ -137,11 +137,9 @@ var Features = {
     },
 
     makePurchase: function () {
-
     },
 
     loadPurchasesWindow: function () {
-
         var purchases = this.getPurchases();
         console.log(purchases);
         var attemptsHtml = this.getPurchaseOptionsPresentation(purchases.attempts);
@@ -175,7 +173,7 @@ var VKFeatures = {
     scrollParentTop: function () {
     },
 
-    prepareLevelWallPost: function (level_name, stars) {
+    prepareLevelWallPost: function (level_name, stars_html) {
         var upload = function (permission) {
             if (!(permission & 4)) {
                 return false;
@@ -184,21 +182,20 @@ var VKFeatures = {
                     if (data.response) {
                         var upload_url = data.response.upload_url;
 
-                        // Prepare photo
+                        $('.level-wall-post-template').find('.s-level-name').html(level_name);
+                        $('.level-wall-post-template').find('.level-rating').html(stars_html);
+
                         html2canvas($('.level-wall-post-template').get(0), {
                             onrendered: function (canvas) {
-                                console.log(canvas.toDataURL());
                                 Api.call("uploadPhoto", {server: upload_url, base64image: canvas.toDataURL().replace("data:image/png;base64,", "")}, function (upload_response) {
-                                    console.log(upload_response);
                                     VK.api("photos.saveWallPhoto", {
                                         user_id: Features.user.platformUserId,
                                         photo: upload_response.photo,
                                         server: upload_response.server,
                                         hash: upload_response.hash
                                     }, function (save_response) {
-                                        console.log(save_response);
                                         VK.api("wall.post", {
-                                            message: "Пацаны, я, кароче, очень крутой. Зацените!",
+                                            message: "I've completed level " + level_name + " in Two Cubes!",
                                             attachments: save_response.response[0].id
                                         });
                                     });
@@ -431,13 +428,6 @@ var VKFeatures = {
 
     chapterCallback: null,
 
-    chapters: function (callback) {
-        this.chapterCallback = callback;
-        Api.call('chapters', {}, function (r) {
-            Features.chapterCallback(JSON.stringify(r));
-        });
-    },
-
     showInviteBox: function () {
         VK.callMethod("showInviteBox");
     }
@@ -445,7 +435,7 @@ var VKFeatures = {
 
 var FBFeatures = {
     initFields: function (callback) {
-        FB.api("/me", function(me_res) {
+        FB.api("/me", function (me_res) {
             FB.api("/me/friends", function (fr_res) {
                 console.log("Friends:", fr_res);
                 Api.setFriendsList(Features.toIdArray(fr_res.data));
@@ -457,6 +447,22 @@ var FBFeatures = {
                 callback();
             });
         });
+    },
+
+    toUserObject: function (fr) {
+        console.log('trying to get user object:', fr);
+        return {
+            id: fr.id
+        };
+    },
+
+    getUserObject: function (id) {
+        for (var i = 0; i < this.friends.length; i++) {
+            var fr = this.friends[i];
+            if (fr.id == id) {
+                return this.toUserObject(fr);
+            }
+        }
     },
 
     load: function (callback) {
@@ -472,14 +478,169 @@ var FBFeatures = {
             FB.login(function () {
                 Features.initFields(function () {
                     Api.initialRequest(function (data) {
-                        console.log("initial request fb:", data);
+                        Features.user = data.user;
 
-                        callback();
+                        console.log('initial request fb:', data);
+
+                        var results_by_chapters = {};
+
+                        for (var key in data.results) {
+                            $.each(data.results[key], function (i, v) {
+                                var user_id = +key.replace("u", "");
+                                var user_obj = Features.getUserObject(user_id);
+                                results_by_chapters[user_id] = results_by_chapters[user_id] || {};
+                                results_by_chapters[user_id][v.chapterId] = (results_by_chapters[user_id][v.chapterId] || 0) + 1;
+                                Features.chapters[v.chapterId] = Features.chapters[v.chapterId] || {};
+                                Features.chapters[v.chapterId][v.levelId] = Features.chapters[v.chapterId][v.levelId] || {};
+                                Features.chapters[v.chapterId][v.levelId][key] = $.extend(user_obj, {
+                                    'dynamic': +v.numDynamic,
+                                    'static': +v.numStatic,
+                                    'result': +v.result,
+                                    'time': +v.time
+                                }, true);
+                            });
+                        }
+
+                        for (var user in results_by_chapters) {
+                            var levels = 0;
+                            for (var chapter in results_by_chapters[user]) {
+                                levels += results_by_chapters[user][chapter];
+                            }
+
+                            Features.results_by_chapters[user] = {
+                                levels: levels,
+                                chapters: getObjectLength(results_by_chapters[user])
+                            };
+                        }
+
+                        delete results_by_chapters;
+
+                        //
+
+                        var friends_in_game = [];
+
+                        for (var key in data.results) {
+                            friends_in_game.push(
+                                extendAndOverride(
+                                    {id: +key.substr(1), result: Features.calcResult(data.results[key])},
+                                    Features.getUserObject(+key.substr(1)))
+                            );
+                        }
+
+                        // Descending sort by stars amount
+                        friends_in_game.sort(function (a, b) {
+                            return a.result === b.result
+                                ? 0
+                                : (a.result > b.result ? -1 : 1);
+                        });
+
+                        Features.friends_in_game = friends_in_game;
                     });
                 });
             });
         });
     },
+
+    appendUserId: function (data) {
+        $(data).each(function () {
+            this.data += Features.user.platformUserId;
+        })
+    },
+
+    getPurchases: function () {
+        var data = {
+            hints: [
+                {
+                    name: "1 hint",
+                    price: "4 votes",
+                    data: "h.1."
+                },
+                {
+                    name: "2 hints",
+                    price: "8 votes",
+                    data: "h.5."
+                },
+                {
+                    name: "5 hints",
+                    price: "16 votes",
+                    data: "h.10."
+                },
+                {
+                    name: "10 hints",
+                    price: "24 votes",
+                    data: "h.25."
+                }
+            ],
+            attempts: [
+                {
+                    name: "+10 attempts",
+                    price: "2 votes",
+                    data: "a.10."
+                },
+                {
+                    name: "+25 attempts",
+                    price: "4 votes",
+                    data: "a.25."
+                },
+                {
+                    name: "+50 attempts",
+                    price: "8 votes",
+                    data: "a.50."
+                },
+                {
+                    name: "+100 attempts",
+                    price: "12 votes",
+                    data: "a.100."
+                }
+            ],
+            chapters: [
+                {
+                    stars: 0.5,
+                    price: "100 votes",
+                    data: "c.5."
+                },
+                {
+                    stars: 0.33,
+                    price: "50 votes",
+                    data: "c.3."
+                },
+                {
+                    stars: 0.2,
+                    price: "30 votes",
+                    data: "c.2."
+                },
+                {
+                    stars: 0,
+                    price: "10 votes",
+                    data: "c.0."
+                }
+            ]
+        }
+        this.appendUserId(data.attempts);
+        this.appendUserId(data.hints);
+        this.appendUserId(data.chapters);
+        return data;
+    },
+
+    makePurchase: function () {
+        FB.ui({
+            method: 'pay',
+            action: 'purchaseitem',
+            product: $(this).data('item')
+        }, function (r) {
+            console.log(r);
+        });
+    },
+
+    onOrderSuccess: function () {
+        console.log("JS order success!");
+        if (Features.orderListener != null) {
+            console.log("callback!=null");
+            Features.orderListener();
+        }
+    },
+
+    chapterCallback: null,
 
     showInviteBox: function () {
         FB.ui({method: 'apprequests',

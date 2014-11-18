@@ -1700,6 +1700,23 @@ div.active-step {
     padding: 15px 20px;
 }
 
+/* Wall posts */
+
+.level-wall-post-template {
+    width: 500px;
+    height: 500px;
+    background: #000;
+}
+
+.level-wall-post-template .rating-wrap {
+    top: 150px;
+    position: relative;
+}
+
+.level-wall-post-template .s-level-name {
+    font-size: 48px;
+}
+
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (   min--moz-device-pixel-ratio: 2), only screen and (     -o-min-device-pixel-ratio: 2/1), only screen and (        min-device-pixel-ratio: 2), only screen and (                min-resolution: 192dpi), only screen and (                min-resolution: 2dppx) {
     .logo {
         background: url(img/logo@2x.png);

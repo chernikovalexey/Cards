@@ -49,6 +49,9 @@ class ChapterShower {
                     querySelector("#chapter-selection").classes.add("hidden");
                     querySelector(".buttons").classes.remove("hidden");
                     querySelector(".selectors").classes.remove("hidden");
+
+                    // update only on enter to the game state
+                    updateAttempts();
                 } else {
                     WebApi.unlockChapter(e.dataset['id']);
                     WebApi.onOrderSuccess(() {

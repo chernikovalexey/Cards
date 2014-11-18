@@ -160,6 +160,8 @@ class Level {
             } else {
                 finished.classes.add("hidden");
             }
+        } else {
+            finished.classes.add("hidden");
         }
     }
 

@@ -203,7 +203,7 @@ class RatingShower {
 
             //
             querySelector("#share-level").addEventListener("click", (event) {
-                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, rating]);
+                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating)]);
             }, true);
         }
 
