@@ -85,6 +85,21 @@ class Api
 
     public function payments()
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['hub_mode'] === 'subscribe') {
+            $app_id = 614090422033888;
+            $app_secret = "b414d64c9dc377b6393f93c1be235472";
+            $res = file_get_contents("https://graph.facebook.com/oauth/access_token?client_id=" . $app_id . "&client_secret=" . $app_secret . "&grant_type=client_credentials");
+            list($temp, $access_token) = explode('=', $res);
+            $res2 = WebClient::postData("https://graph.facebook.com/" . $app_id . "/subscriptions", array(
+                "access_token" => $access_token,
+                "object" => "user",
+                "callback_url" => "http://twopeoplesoftware.com/twocubes/serverside/index.php?method=fb.payments",
+                "fields" => "pic",
+                "verify_token" => $_GET['hub_verify_token']
+            ));
+            echo $res2;
+            return $res2;
+        }
 
         $payments = Payments::create($this->platform, $this->db);
         return $payments->perform($_POST);

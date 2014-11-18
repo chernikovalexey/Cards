@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by JetBrains PhpStorm.
  * User: podko_000
@@ -6,7 +7,6 @@
  * Time: 11:55
  * To change this template use File | Settings | File Templates.
  */
-
 class WebClient
 {
     public static function downloadString($url)
@@ -23,6 +23,23 @@ class WebClient
         return $result;
     }
 
+    public static function postData($url, $data)
+    {
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($ch);
+        if (!$result) {
+            echo curl_error($ch);
+        }
+        curl_close($ch);
+
+        return $result;
+    }
+
     public static function getXPath($link)
     {
         $html = WebClient::downloadString($link);
@@ -34,14 +51,14 @@ class WebClient
         return $xPath;
     }
 
-   public static function sendCurlFile($path, $server)
-   {
-       $ch = curl_init($server);
+    public static function sendCurlFile($path, $server)
+    {
+        $ch = curl_init($server);
 
-       curl_setopt($ch, CURLOPT_POST, 1);
-       curl_setopt($ch, CURLOPT_POSTFIELDS, array('photo' => '@' . $path));
-       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, array('photo' => '@' . $path));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-       return curl_exec($ch);
-   }
+        return curl_exec($ch);
+    }
 }

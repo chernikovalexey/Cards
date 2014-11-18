@@ -57,7 +57,10 @@ void main() {
     window.onResize.listen(updateCanvasPositionAndDimension);
     window.onBeforeUnload.listen((Event event) {
         engine.saveCurrentProgress();
-        WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
+
+        if (engine.level != null && engine.level.current != null) {
+            WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
+        }
     });
 
     showMainMenu();
