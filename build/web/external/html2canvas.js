@@ -2124,7 +2124,7 @@ _html2canvas.Parse = function (images, options) {
   }
 
   function isElementVisible(element) {
-    return (getCSS(element, 'display') !== "none" && getCSS(element, 'visibility') !== "hidden" && !element.hasAttribute("data-html2canvas-ignore"));
+    return (getCSS(element, 'display') !== "none" && !element.hasAttribute("data-html2canvas-ignore"));
   }
 
   function parseElement (element, stack, pseudoElement) {

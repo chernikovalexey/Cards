@@ -316,6 +316,8 @@ class GameEngine extends State {
             } else {
                 querySelector(".wizard-try").click();
             }
+
+            saveCurrentProgress();
         }
         RatingShower.wasJustPaused = false;
 
@@ -352,7 +354,7 @@ class GameEngine extends State {
             blink(".dynamic");
         }
 
-        if (canPut() && (level.current.dynamicBlocksRemaining == 0 || level.current.staticBlocksRemaining == 0)) {
+        if (canPut() && level.current.dynamicBlocksRemaining == 0 && level.current.staticBlocksRemaining == 0) {
             GameWizard.showRunout();
         }
 

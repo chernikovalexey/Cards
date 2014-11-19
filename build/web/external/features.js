@@ -26,12 +26,26 @@ var getObjectLength = function (obj) {
 
 var getNumberAsWord = function (num) {
     var words = {
-        1: "one", 2: "two", 3: "three", 4: "four"
+        1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"
     };
     return num in words ? words[num] : num;
 };
 
 var Features = {
+    hideLoading: function () {
+        Features.updateLoadingBar(100, function () {
+            $(".game-box").removeClass("blurred");
+            $(".loading-overlay").fadeOut(125, 'easeOutQuart', function () {
+                $(this).remove();
+            });
+        });
+    },
+
+    updateLoadingBar: function (percentage, callback) {
+        $('.running-bar').animate({width: 600 * percentage / 100}, 125, 'easeOutQuart', callback || function () {
+        });
+    },
+
     keepAlive: function () {
         Api.keepAlive();
     },
@@ -76,7 +90,7 @@ var Features = {
 
                 $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
                     pos: counter,
-                    levels_amount: levels_amount,
+                    levels_amount: getNumberAsWord(levels_amount),
                     chapters_amount: getNumberAsWord(chapters_amount),
                     level_ending: levels_amount === 1 ? '' : 's',
                     chapter_ending: chapters_amount === 1 ? '' : 's'
@@ -84,47 +98,7 @@ var Features = {
             });
 
             callback();
-
-            var height = $($('.friends').get(1)).height();
-            VK.callMethod('resizeWindow', 800, height);
-            $('.invite-button').off('click').on('click', function (e) {
-                VK.callMethod("showRequestBox", {
-                    uid: $(e.target).data('id'),
-                    message: "Test",
-                    requestKey: "RequestKey"
-                });
-            });
-
-            var search_delay;
-            $('.search-input').off('keyup').on('keyup', function (event) {
-                clearTimeout(search_delay);
-                var that = this;
-                search_delay = setTimeout(function () {
-                    var type = Features.OUT_SEARCH;
-                    if ($(that).hasClass('in-game-search')) {
-                        type = Features.IN_SEARCH;
-                    }
-                    Features.friendsSearch.call(that, event, type);
-                }, 525);
-            });
         }
-    },
-
-    IN_SEARCH: 1,
-    OUT_SEARCH: 2,
-
-    friendsSearch: function (event, type) {
-        var val = $(this).val().toLowerCase();
-
-        $(type === Features.OUT_SEARCH ? '.invite-card' : '.friend-card').each(function () {
-            if ($(this).find('.fr-name').html().toLowerCase().indexOf(val) === -1 && val) {
-                $(this).hide();
-            } else {
-                $(this).show();
-            }
-        });
-
-        Features.repaintFriendsInvitations();
     },
 
     calcResult: function (data) {
@@ -160,8 +134,8 @@ var Features = {
         return [];
     },
 
-    getUser: function(callback) {
-        Api.call("getUser", {}, function(result) {
+    getUser: function (callback) {
+        Api.call("getUser", {}, function (result) {
             Features.user = result;
             callback();
         });
@@ -177,11 +151,9 @@ var Features = {
     },
 
     makePurchase: function () {
-
     },
 
     loadPurchasesWindow: function () {
-
         var purchases = this.getPurchases();
         console.log(purchases);
         var attemptsHtml = this.getPurchaseOptionsPresentation(purchases.attempts);
@@ -198,9 +170,9 @@ var Features = {
 
     chapterCallback: null,
 
-    getChapters: function(callback) {
+    getChapters: function (callback) {
         this.chapterCallback = callback;
-        Api.call('chapters', {}, function(r) {
+        Api.call('chapters', {}, function (r) {
             Features.chapterCallback(JSON.stringify(r));
         });
     },
@@ -213,6 +185,49 @@ var VKFeatures = {
     friends: null,
 
     scrollParentTop: function () {
+    },
+
+    prepareLevelWallPost: function (level_name, stars_html) {
+        var upload = function (permission) {
+            if (!(permission & 4)) {
+                return false;
+            } else {
+                VK.api('photos.getWallUploadServer', {}, function (data) {
+                    if (data.response) {
+                        var upload_url = data.response.upload_url;
+
+                        $('.level-wall-post-template').find('.s-level-name').html(level_name);
+                        $('.level-wall-post-template').find('.level-rating').html(stars_html);
+
+                        html2canvas($('.level-wall-post-template').get(0), {
+                            onrendered: function (canvas) {
+                                Api.call("uploadPhoto", {server: upload_url, base64image: canvas.toDataURL().replace("data:image/png;base64,", "")}, function (upload_response) {
+                                    VK.api("photos.saveWallPhoto", {
+                                        user_id: Features.user.platformUserId,
+                                        photo: upload_response.photo,
+                                        server: upload_response.server,
+                                        hash: upload_response.hash
+                                    }, function (save_response) {
+                                        VK.api("wall.post", {
+                                            message: "I've completed level " + level_name + " in Two Cubes!",
+                                            attachments: save_response.response[0].id
+                                        });
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+                return true;
+            }
+        };
+
+        VK.api('account.getAppPermissions', function (r) {
+            if (!upload(r.response)) {
+                VK.callMethod("showSettingsBox", 4);
+                VK.addCallback("onSettingsChanged", upload);
+            }
+        });
     },
 
     initFields: function (callback) {
@@ -262,9 +277,18 @@ var VKFeatures = {
     },
 
     load: function (callback) {
+        Features.updateLoadingBar(15);
+
         $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", function () {
+            Features.updateLoadingBar(55);
+
             VKFeatures.initFields(function () {
+                Features.updateLoadingBar(70);
+
                 Api.initialRequest(function (data) {
+                    Features.updateLoadingBar(85);
+
+                    console.log("initial request vk:", data);
                     Features.user = data.user;
 //                    Features.user.allAttempts = 0;
 
@@ -321,10 +345,14 @@ var VKFeatures = {
                     });
 
                     Features.friends_in_game = friends_in_game;
+
+                    Features.updateLoadingBar(95);
+
+                    callback();
                 });
-                VK.addCallback('onOrderSuccess', Features.onOrderSuccess);
-                callback();
             });
+
+            VK.addCallback('onOrderSuccess', Features.onOrderSuccess);
         });
     },
 
@@ -416,20 +444,235 @@ var VKFeatures = {
         });
     },
 
-    onOrderSuccess: function() {
+    onOrderSuccess: function () {
         console.log("JS order success!");
-        if(Features.orderListener != null) {
+        if (Features.orderListener != null) {
             console.log("callback!=null");
             Features.orderListener();
         }
     },
-    
+
     chapterCallback: null,
 
-    chapters: function (callback) {
-        this.chapterCallback = callback;
-        Api.call('chapters', {}, function (r) {
-            Features.chapterCallback(JSON.stringify(r));
+    showInviteBox: function () {
+        VK.callMethod("showInviteBox");
+    }
+};
+
+var FBFeatures = {
+    initFields: function (callback) {
+        FB.api("/me", function (me_res) {
+            FB.api("/me/friends", function (fr_res) {
+                console.log("Friends:", fr_res);
+                Api.setFriendsList(Features.toIdArray(fr_res.data));
+                Features.friends = fr_res.data;
+
+                Api.setPersonalId(me_res.id);
+                Api.setPlatform('fb');
+
+                callback();
+            });
+        });
+    },
+
+    toUserObject: function (fr) {
+        console.log('trying to get user object:', fr);
+        return {
+            id: fr.id
+        };
+    },
+
+    getUserObject: function (id) {
+        for (var i = 0; i < this.friends.length; i++) {
+            var fr = this.friends[i];
+            if (fr.id == id) {
+                return this.toUserObject(fr);
+            }
+        }
+    },
+
+    load: function (callback) {
+        $.getScript("//connect.facebook.net/en_US/sdk.js", function () {
+            FB.init({
+                appId: 614090422033888,
+                status: true,
+                cookie: true,
+                xfbml: false,
+                version: 'v2.1'
+            });
+
+            FB.login(function () {
+                Features.initFields(function () {
+                    Api.initialRequest(function (data) {
+                        Features.user = data.user;
+
+                        console.log('initial request fb:', data);
+
+                        var results_by_chapters = {};
+
+                        for (var key in data.results) {
+                            $.each(data.results[key], function (i, v) {
+                                var user_id = +key.replace("u", "");
+                                var user_obj = Features.getUserObject(user_id);
+                                results_by_chapters[user_id] = results_by_chapters[user_id] || {};
+                                results_by_chapters[user_id][v.chapterId] = (results_by_chapters[user_id][v.chapterId] || 0) + 1;
+                                Features.chapters[v.chapterId] = Features.chapters[v.chapterId] || {};
+                                Features.chapters[v.chapterId][v.levelId] = Features.chapters[v.chapterId][v.levelId] || {};
+                                Features.chapters[v.chapterId][v.levelId][key] = $.extend(user_obj, {
+                                    'dynamic': +v.numDynamic,
+                                    'static': +v.numStatic,
+                                    'result': +v.result,
+                                    'time': +v.time
+                                }, true);
+                            });
+                        }
+
+                        for (var user in results_by_chapters) {
+                            var levels = 0;
+                            for (var chapter in results_by_chapters[user]) {
+                                levels += results_by_chapters[user][chapter];
+                            }
+
+                            Features.results_by_chapters[user] = {
+                                levels: levels,
+                                chapters: getObjectLength(results_by_chapters[user])
+                            };
+                        }
+
+                        delete results_by_chapters;
+
+                        //
+
+                        var friends_in_game = [];
+
+                        for (var key in data.results) {
+                            friends_in_game.push(
+                                extendAndOverride(
+                                    {id: +key.substr(1), result: Features.calcResult(data.results[key])},
+                                    Features.getUserObject(+key.substr(1)))
+                            );
+                        }
+
+                        // Descending sort by stars amount
+                        friends_in_game.sort(function (a, b) {
+                            return a.result === b.result
+                                ? 0
+                                : (a.result > b.result ? -1 : 1);
+                        });
+
+                        Features.friends_in_game = friends_in_game;
+                    });
+                });
+            });
+        });
+    },
+
+    appendUserId: function (data) {
+        $(data).each(function () {
+            this.data += Features.user.platformUserId;
+        })
+    },
+
+    getPurchases: function () {
+        var data = {
+            hints: [
+                {
+                    name: "1 hint",
+                    price: "4 votes",
+                    data: "h.1."
+                },
+                {
+                    name: "2 hints",
+                    price: "8 votes",
+                    data: "h.5."
+                },
+                {
+                    name: "5 hints",
+                    price: "16 votes",
+                    data: "h.10."
+                },
+                {
+                    name: "10 hints",
+                    price: "24 votes",
+                    data: "h.25."
+                }
+            ],
+            attempts: [
+                {
+                    name: "+10 attempts",
+                    price: "2 votes",
+                    data: "a.10."
+                },
+                {
+                    name: "+25 attempts",
+                    price: "4 votes",
+                    data: "a.25."
+                },
+                {
+                    name: "+50 attempts",
+                    price: "8 votes",
+                    data: "a.50."
+                },
+                {
+                    name: "+100 attempts",
+                    price: "12 votes",
+                    data: "a.100."
+                }
+            ],
+            chapters: [
+                {
+                    stars: 0.5,
+                    price: "100 votes",
+                    data: "c.5."
+                },
+                {
+                    stars: 0.33,
+                    price: "50 votes",
+                    data: "c.3."
+                },
+                {
+                    stars: 0.2,
+                    price: "30 votes",
+                    data: "c.2."
+                },
+                {
+                    stars: 0,
+                    price: "10 votes",
+                    data: "c.0."
+                }
+            ]
+        }
+        this.appendUserId(data.attempts);
+        this.appendUserId(data.hints);
+        this.appendUserId(data.chapters);
+        return data;
+    },
+
+    makePurchase: function () {
+        FB.ui({
+            method: 'pay',
+            action: 'purchaseitem',
+            product: $(this).data('item')
+        }, function (r) {
+            console.log(r);
+        });
+    },
+
+    onOrderSuccess: function () {
+        console.log("JS order success!");
+        if (Features.orderListener != null) {
+            console.log("callback!=null");
+            Features.orderListener();
+        }
+    },
+
+    chapterCallback: null,
+
+    showInviteBox: function () {
+        FB.ui({method: 'apprequests',
+            message: 'Check out this new puzzle!'
+        }, function (response) {
+            console.log(response);
         });
     }
 };
@@ -466,13 +709,12 @@ var NoFeatures = {
         case 'vk':
             Features = extendAndOverride(Features, VKFeatures);
             break;
+        case 'fb':
+            Features = extendAndOverride(Features, FBFeatures);
+            break;
         default:
             Features = extendAndOverride(Features, NoFeatures);
     }
 
-    Features.load(function () {
-        //console.log('loaded!');
-    });
-
-    //setInterval(Features.keepAlive, 5000);
+    Features.load(Features.hideLoading);
 })();

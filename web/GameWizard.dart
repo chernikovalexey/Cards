@@ -174,17 +174,19 @@ class GameWizard {
 
     static void showZoom() {
         new Timer(new Duration(seconds: 3), () {
-            Tooltip.show(querySelector("#zoom-out"), "<b>Use zoom</b> for accuracy", Tooltip.BOTTOM, maxWidth: 300, xOffset: -30, xArrowOffset: -25);
+            if (manager.states.contains(engine)) {
+                Tooltip.show(querySelector("#zoom-out"), "<b>Use zoom</b> for accuracy", Tooltip.BOTTOM, maxWidth: 300, xOffset: -30, xArrowOffset: -25);
 
-            querySelectorAll(".zb").forEach((el) {
-                var stream = el.onClick.listen((event) {
-                    Tooltip.closeAll();
-                });
+                querySelectorAll(".zb").forEach((el) {
+                    var stream = el.onClick.listen((event) {
+                        Tooltip.closeAll();
+                    });
 
-                el.onClick.listen((event) {
-                    stream.cancel();
+                    el.onClick.listen((event) {
+                        stream.cancel();
+                    });
                 });
-            });
+            }
         });
     }
 

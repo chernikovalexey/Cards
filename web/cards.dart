@@ -66,6 +66,7 @@ void main() {
     showMainMenu();
 
     querySelector("#continue").addEventListener("click", (event) {
+        manager.removeState(engine);
         manager.addState(engine, {
             'continue': true, 'chapter': JSON.decode(window.localStorage["last"])["chapter"]
         });
@@ -84,7 +85,9 @@ void main() {
         querySelector("#menu-box").classes.add("hidden");
 
         fadeBoxIn(querySelector("#chapter-selection"));
-        ChapterShower.show(Chapter.chapters);
+        Chapter.load((List chapters) {
+            ChapterShower.show(chapters);
+        });
     }, false);
 
     querySelector(".friends-invite-more").addEventListener("click", (event) {

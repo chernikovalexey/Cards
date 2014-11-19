@@ -184,8 +184,8 @@ class RatingShower {
             querySelector(".pause-title").classes.remove('hidden');
             querySelector(".chapter-rating-wrap").classes.add("hidden");
             //querySelector(".chapter-controls").classes.add("hidden");
-            querySelector("#pm-menu").removeEventListener("click", mainMenu);
-            querySelector("#pm-menu").addEventListener("click", mainMenu);
+            //querySelector("#pm-menu").removeEventListener("click", mainMenu);
+            querySelector("#pm-menu").addEventListener("click", (event) => mainMenu(engine));
             querySelector("#resume-game")
                 ..removeEventListener("click", resume)
                 ..addEventListener("click", resume, false);
@@ -283,7 +283,8 @@ class RatingShower {
         window.localStorage.remove("last");
     }
 
-    static void mainMenu(Event e) {
+    static void mainMenu(GameEngine e) {
+        //e.saveCurrentProgress();
         hide();
         showMainMenu();
 
@@ -317,6 +318,7 @@ class RatingShower {
             querySelector("#wizard-overview").classes.remove("blurred");
         }
 
+        Input.removeSingleEscClickCallback();
         e.isPaused = false;
 
         wasJustPaused = true;
