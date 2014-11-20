@@ -134,7 +134,7 @@ class Api
         $chapters = json_decode(file_get_contents(CHAPTER_FILE), true);
         $r = array();
         foreach ($chapters['chapters'] as $i => $c) {
-            $c['unlocked'] = $c['unlock_stars'] < $total || in_array($i + 1, $unlocked);
+            $c['unlocked'] = $c['unlock_stars'] <= $total || in_array($i + 1, $unlocked);
             $r[] = $c;
         }
         return array('chapters' => $r);
