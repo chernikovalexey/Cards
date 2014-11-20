@@ -148,9 +148,7 @@ class Api
     public function uploadPhoto(array $user, $server, $base64Image)
     {
         $filename = FileHelper::saveTempImage($base64Image);
-        //   header('Content-Type: image/png');
-//echo $filename;
-        //return $this->uploadPhotoInternal($user, $server, $filename);
+        return $this->uploadPhotoInternal($user, $server, $filename);
     }
 
     public function uploadPhotoReserved(array $user, $server, $reservedName)
