@@ -35,14 +35,14 @@ var Features = {
     hideLoading: function () {
         Features.updateLoadingBar(100, function () {
             $(".game-box").removeClass("blurred");
-            $(".loading-overlay").fadeOut(125, 'easeOutQuart', function () {
+            $(".loading-overlay").fadeOut(275, 'easeOutQuart', function () {
                 $(this).remove();
             });
         });
     },
 
     updateLoadingBar: function (percentage, callback) {
-        $('.running-bar').animate({width: 600 * percentage / 100}, 125, 'easeOutQuart', callback || function () {
+        $('.running-bar').animate({width: 600 * percentage / 100}, 150, 'easeOutQuart', callback || function () {
         });
     },
 
@@ -56,11 +56,22 @@ var Features = {
         scroll.buildScrollControls('invitations-scrollbar', 'v', 'mouseover', true);
     },
 
+    initialized: false,
+    onLoaded: function () {
+    },
     user: {},
     chapters: {},
     results_by_chapters: {},
     friends_in_game: [],
     orderListener: null,
+
+    setOnLoadedCallback: function (callback) {
+        this.onLoaded = callback;
+
+        if (this.initialized) {
+            callback();
+        }
+    },
 
     showFinishedFriends: function (chapter, level, callback) {
         $('.finished-friends').empty();
@@ -173,6 +184,7 @@ var Features = {
     getChapters: function (callback) {
         this.chapterCallback = callback;
         Api.call('chapters', {}, function (r) {
+            console.log('raw data:', r);
             Features.chapterCallback(JSON.stringify(r));
         });
     },
@@ -234,6 +246,8 @@ var VKFeatures = {
         VK.api("friends.get", {fields: "domain, photo_50"}, function (data) {
             Api.setFriendsList(Features.toIdArray(data.response));
             Features.friends = data.response;
+
+            Features.initialized = true;
 
             Api.setPersonalId(qs['viewer_id']);
             Api.setPlatform('vk');
@@ -716,5 +730,8 @@ var NoFeatures = {
             Features = extendAndOverride(Features, NoFeatures);
     }
 
-    Features.load(Features.hideLoading);
+    Features.load(function () {
+        Features.initialized = true;
+        Features.onLoaded();
+    });
 })();

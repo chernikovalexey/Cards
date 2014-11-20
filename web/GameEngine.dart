@@ -65,6 +65,7 @@ class GameEngine extends State {
     bool isPaused = false;
     bool ready = false;
     bool manuallyControlled = false;
+    bool finishedCurrentLevel = false;
 
     World world;
     DefaultWorldPool pool;
@@ -306,7 +307,7 @@ class GameEngine extends State {
             return;
         }
 
-        if (Input.keys['esc'].clicked) {
+        if (Input.keys['esc'].clicked && !finishedCurrentLevel) {
             PromptWindow.close();
             Tooltip.closeAll();
 
@@ -406,6 +407,7 @@ class GameEngine extends State {
             (c.userData as EnergySprite).update(this);
         }
 
+        finishedCurrentLevel = false;
         if (to != null) {
             EnergySprite sprite = to.userData as EnergySprite;
             if (physicsEnabled) {
@@ -413,6 +415,7 @@ class GameEngine extends State {
 
                 if (sprite.isFull() && level.current != null) {
                     onLevelEndCallback();
+                    finishedCurrentLevel = true;
 
                     if (!manuallyControlled) {
                         saveCurrentProgress();

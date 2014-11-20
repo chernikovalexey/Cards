@@ -127,8 +127,6 @@ class RatingShower {
         });
         fadeBoxIn(querySelector("#rating-box"), 175);
 
-        Input.attachSingleEscClickCallback(hide);
-
         querySelector(".rating-wrap").classes.remove("hidden");
         querySelector(".chapter-rating-wrap").classes.add("hidden");
         querySelector(".level-rating").innerHtml = getStars(rating);
@@ -217,6 +215,10 @@ class RatingShower {
 
         if (!e.level.hasNext() && !pauseState) {
             chapterComplete(engine, rating);
+        }
+
+        if (pauseState) {
+            Input.attachSingleEscClickCallback(hide);
         }
     }
 
@@ -317,6 +319,8 @@ class RatingShower {
             fadeBoxIn(GameWizard.progress, 175);
             querySelector("#wizard-overview").classes.remove("blurred");
         }
+
+        print("hide hide");
 
         Input.removeSingleEscClickCallback();
         e.isPaused = false;

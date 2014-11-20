@@ -27,7 +27,7 @@ img {
     background: rgba(255, 255, 255, 0.75);
     height: 1px;
     margin-left: 100px;
-    margin-top: 50px;
+    margin-top: 25px;
     width: 0;
 }
 
@@ -129,7 +129,7 @@ button:hover:not([disabled]) {
     background-position: 21px 9px;
     position: relative;
     top: -1px;
-    background-size: 16px 16px;
+    background-size: 16px 16px !important;
 }
 
 .plus {
@@ -195,7 +195,7 @@ button:hover:not([disabled]) {
     width: 16px;
     height: 16px;
     background: url(img/friends.png);
-    background-size: 16px 16px;
+    background-size: 16px 16px !important;
 }
 
 #hint {
@@ -245,7 +245,7 @@ button:hover:not([disabled]) {
     background-repeat: repeat-y;
     background-position: 50%;
     margin: 5px auto 0 auto;
-    background-size: 24px 4px;
+    background-size: 24px 4px !important;
 }
 
 .current .icon {
@@ -302,7 +302,7 @@ button:hover:not([disabled]) {
     width: 100px;
     height: 96px;
     background-image: url(img/new_star.png);
-    background-size: 100px 96px;
+    background-size: 100px 96px !important;
     margin-right: 5px;
 }
 
@@ -492,7 +492,7 @@ button:hover:not([disabled]) {
 .logo {
     width: 304px;
     height: 97px;
-    background-size: 304px 97px;
+    background-size: 304px 97px !important;
     background: url(img/logo.png);
     background-repeat: no-repeat;
     margin: 50px auto 20px auto;
@@ -662,7 +662,7 @@ button:hover:not([disabled]) {
     height: 64px;
     background-repeat: no-repeat;
     background-image: url(img/new_star.png);
-    background-size: 64px;
+    background-size: 64px !important;
 }
 
 .chapter-locked .progress-layout {
@@ -722,7 +722,7 @@ button:hover:not([disabled]) {
 .chapter-locked .chapter-thumbnail {
     background-image: url(img/lock.png);
     background-position: 57px 16px;
-    background-size: 128px 128px;
+    background-size: 128px 128px !important;
 }
 
 .unlock-stars {
@@ -825,7 +825,7 @@ button:hover:not([disabled]) {
 
 .locked .tape-rating {
     background: url(img/small_lock.png);
-    background-size: 38px;
+    background-size: 38px !important;
     background-position: 50%;
     background-repeat: no-repeat;
 }
@@ -835,7 +835,7 @@ button:hover:not([disabled]) {
 }
 
 .tape-rating .star {
-    background-size: 40px;
+    background-size: 40px !important;
     width: 40px;
     height: 38px;
 }
@@ -1070,7 +1070,7 @@ button:hover:not([disabled]) {
     margin-right: 10px;
     vertical-align: top;
     position: relative;
-    background-size: 16px;
+    background-size: 16px !important;
 }
 
 .rotate {
@@ -1215,7 +1215,7 @@ div.active-step {
     background: url(img/arrow.png);
     position: absolute;
     z-index: 1000;
-    background-size: 15px 7px;
+    background-size: 15px 7px !important;
 }
 
 .top-arrow {

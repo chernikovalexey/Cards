@@ -4,36 +4,16 @@ import 'dart:convert';
 import 'WebApi.dart';
 
 class Chapter {
-    static bool loading = false;
-    static bool loaded = false;
     static List chapters;
-    static List<Function> callbacks = new List<Function>();
 
     static void load([Function ready = null]) {
-        if (!loaded && !loading) {
-            loading = true;
-
+        WebApi.getChapters((JsObject obj, String str) {
+            print("The dart result: " + str);
+            chapters = JSON.decode(str)["chapters"];
             if (ready != null) {
-                callbacks.add(ready);
+                ready(chapters);
             }
-
-            WebApi.getChapters((JsObject obj, String str) {
-                chapters = JSON.decode(str)["chapters"];
-                fireCallbacks();
-                loaded = true;
-                loading = false;
-            });
-        } else if (loaded && ready != null) {
-            ready(chapters);
-        } else if (!loaded && loading && ready != null) {
-            callbacks.add(ready);
-        }
-    }
-
-    static void fireCallbacks() {
-        for (Function f in callbacks) {
-            f(chapters);
-        }
+        });
     }
 
     // Take skipped levels into account

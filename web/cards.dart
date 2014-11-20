@@ -1,5 +1,6 @@
 import 'dart:html';
 import 'dart:convert';
+import 'dart:isolate';
 import 'GameEngine.dart';
 import 'Input.dart';
 import 'package:animation/animation.dart';
@@ -36,10 +37,6 @@ void main() {
 
     updateCanvasPositionAndDimension();
 
-    // Load immediately because it is also used on the chapter end screen
-    // In case `New Game` button is not pressed it will be also available
-    Chapter.load();
-
     manager = new StateManager(g);
     engine = new GameEngine(g);
     manager.addState(new ParallaxManager(engine, g, 24, 175));
@@ -63,32 +60,36 @@ void main() {
         }
     });
 
-    showMainMenu();
+    context['Features'].callMethod("setOnLoadedCallback", [() {
+        showMainMenu();
 
-    querySelector("#continue").addEventListener("click", (event) {
-        manager.removeState(engine);
-        manager.addState(engine, {
-            'continue': true, 'chapter': JSON.decode(window.localStorage["last"])["chapter"]
-        });
-
-        updateAttempts();
-
-        fadeBoxOut(querySelector("#menu-box"), 250, () {
-            updateCanvasPositionAndDimension();
-
-            querySelector(".buttons").classes.remove("hidden");
-            querySelector(".selectors").classes.remove("hidden");
-        });
-    }, false);
-
-    querySelector("#new-game").addEventListener("click", (event) {
-        querySelector("#menu-box").classes.add("hidden");
-
-        fadeBoxIn(querySelector("#chapter-selection"));
         Chapter.load((List chapters) {
-            ChapterShower.show(chapters);
+            context['Features'].callMethod("hideLoading");
+
+            querySelector("#continue").addEventListener("click", (event) {
+                manager.removeState(engine);
+                manager.addState(engine, {
+                    'continue': true, 'chapter': JSON.decode(window.localStorage["last"])["chapter"]
+                });
+
+                updateAttempts();
+
+                fadeBoxOut(querySelector("#menu-box"), 250, () {
+                    updateCanvasPositionAndDimension();
+
+                    querySelector(".buttons").classes.remove("hidden");
+                    querySelector(".selectors").classes.remove("hidden");
+                });
+            }, false);
+
+            querySelector("#new-game").addEventListener("click", (event) {
+                querySelector("#menu-box").classes.add("hidden");
+
+                fadeBoxIn(querySelector("#chapter-selection"));
+                ChapterShower.show(chapters);
+            }, false);
         });
-    }, false);
+    }]);
 
     querySelector(".friends-invite-more").addEventListener("click", (event) {
         context['Features'].callMethod("showInviteBox");
