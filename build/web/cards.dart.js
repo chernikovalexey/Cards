@@ -858,7 +858,7 @@ if(y){if(q){y=this.Fv.b
 x=y.St.bM.Ev
 this.jY.push(new X.xn(!1,this.C8(x[0],x[1],y.T0.Cg,this.Q9)))}else if(this.eZ(!0))T.vX("#toggle-physics")}else if(q&&this.Q9&&J.de(this.QG.l.CF,0))T.vX(".static")
 else if(q&&!this.Q9&&J.de(this.QG.l.ru,0))T.vX(".dynamic")
-if(this.ZT()&&J.de(this.QG.l.ru,0)&&J.de(this.QG.l.CF,0))if($.QH().getItem("runout_occured")==null){A.Yi(document.querySelector(".dynamic"),"Amount of blocks is limited",2,null,1500,300,0,0,0,0)
+if(this.ZT()&&J.de(this.QG.l.ru,0)&&J.de(this.QG.l.CF,0))if($.QH().getItem("runout_occured")==null&&C.Nm.tg($.OA.C6,$.Jg)){A.Yi(document.querySelector(".dynamic"),"Amount of blocks is limited",2,null,1500,300,0,0,0,0)
 $.QH().setItem("runout_occured","true")}if(z.t(0,"z").CX&&!$.GT){J.Kk($.qN.style,"-webkit-zoom-in")
 this.iC(!1)
 if($.E7)this.kw(0,!0,!0)}else if($.GT){J.Kk($.qN.style,"-webkit-zoom-out")
@@ -1048,7 +1048,7 @@ y=H.VM(new W.xC(0,z.uv,z.Ph,W.VF(new M.Hv()),z.Sg),[H.Kp(z,0)])
 y.Zz()
 z=J.Vg(document.querySelector("body"))
 H.VM(new W.xC(0,z.uv,z.Ph,W.VF(new M.m4(y)),z.Sg),[H.Kp(z,0)]).Zz()}},"call$0","t9",0,0,null],
-HP:[function(){if($.QH().getItem("apply_fail_occured")==null){A.Yi(document.querySelector("#toggle-physics"),"Rewind to try again",3,new M.p4(),0,300,0,0,0,0)
+HP:[function(){if($.QH().getItem("apply_fail_occured")==null&&C.Nm.tg($.OA.C6,$.Jg)){A.Yi(document.querySelector("#toggle-physics"),"Rewind to try again",3,new M.p4(),0,300,0,0,0,0)
 $.QH().setItem("apply_fail_occured","true")}},"call$0","qJ",0,0,null],
 GO:[function(){P.rT(P.k5(0,0,0,0,0,1),new M.i6())},"call$0","KR",0,0,null],
 VZ:[function(){if($.Of){$.Of=!1
@@ -1122,8 +1122,8 @@ call$1:[function(a){this.a.ed()},"call$1",null,2,0,null,9,[],"call"],
 $isEH:true},
 i6:{
 "^":"d9:268;",
-call$0:[function(){$.Of=!0
-A.jY("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E",100,285,null)},"call$0",null,0,0,null,"call"],
+call$0:[function(){if(C.Nm.tg($.OA.C6,$.Jg)){$.Of=!0
+A.jY("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E",100,285,null)}},"call$0",null,0,0,null,"call"],
 $isEH:true},
 zR:{
 "^":"d9:268;",
@@ -1132,12 +1132,12 @@ $isEH:true},
 X2:{
 "^":"d9:268;",
 call$0:[function(){var z,y
-A.Yi(document.querySelector("#hint"),"If you are in trouble with accomplishing this level, <b>use hints</b>",3,null,0,300,0,-90,0,0)
+if(C.Nm.tg($.OA.C6,$.Jg)){A.Yi(document.querySelector("#hint"),"If you are in trouble with accomplishing this level, <b>use hints</b>",3,null,0,300,0,-90,0,0)
 z=J.Vg(document.querySelector("#hint"))
 y=H.VM(new W.xC(0,z.uv,z.Ph,W.VF(new M.oC()),z.Sg),[H.Kp(z,0)])
 y.Zz()
 z=J.Vg(document.querySelector("#hint"))
-H.VM(new W.xC(0,z.uv,z.Ph,W.VF(new M.Um(y)),z.Sg),[H.Kp(z,0)]).Zz()},"call$0",null,0,0,null,"call"],
+H.VM(new W.xC(0,z.uv,z.Ph,W.VF(new M.Um(y)),z.Sg),[H.Kp(z,0)]).Zz()}},"call$0",null,0,0,null,"call"],
 $isEH:true},
 oC:{
 "^":"d9:232;",

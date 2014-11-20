@@ -677,7 +677,7 @@ z.qy=!0
 this.wq=z
 z.Dk=$.OF
 this.lp=B.HT(z,this.UI)
-M.Ea()
+M.ie()
 z=b.t(0,"chapter")
 y=b.t(b,"continue")!=null&&b.t(b,"continue")===!0
 x=new Q.uK(null,null,[],null,null,null)
@@ -799,7 +799,8 @@ if(z.t(0,"esc").OE){R.JI()
 A.H2()
 if(J.pP(document.querySelector("#wizard-controls")).lF().tg(0,"hidden")){$.Po=!0
 Z.HH(this,0,0)
-$.Po=!1}else J.oc(document.querySelector(".wizard-try"))}$.dx=!1
+$.Po=!1}else J.oc(document.querySelector(".wizard-try"))
+this.OA()}$.dx=!1
 J.Kk($.qN.style,"none")
 this.kX.eC(a)
 if(this.VE)this.b1.uL(this.z7)
@@ -857,9 +858,7 @@ if(y){if(q){y=this.Fv.b
 x=y.St.bM.Ev
 this.jY.push(new X.xn(!1,this.C8(x[0],x[1],y.T0.Cg,this.Q9)))}else if(this.eZ(!0))T.vX("#toggle-physics")}else if(q&&this.Q9&&J.de(this.QG.l.CF,0))T.vX(".static")
 else if(q&&!this.Q9&&J.de(this.QG.l.ru,0))T.vX(".dynamic")
-if(this.ZT())y=J.de(this.QG.l.ru,0)||J.de(this.QG.l.CF,0)
-else y=!1
-if(y)if($.QH().getItem("runout_occured")==null){A.Yi(document.querySelector(".dynamic"),"Amount of blocks is limited",2,null,1500,300,0,0,0,0)
+if(this.ZT()&&J.de(this.QG.l.ru,0)&&J.de(this.QG.l.CF,0))if($.QH().getItem("runout_occured")==null){A.Yi(document.querySelector(".dynamic"),"Amount of blocks is limited",2,null,1500,300,0,0,0,0)
 $.QH().setItem("runout_occured","true")}if(z.t(0,"z").CX&&!$.GT){J.Kk($.qN.style,"-webkit-zoom-in")
 this.iC(!1)
 if($.E7)this.kw(0,!0,!0)}else if($.GT){J.Kk($.qN.style,"-webkit-zoom-out")
@@ -1039,7 +1038,7 @@ var z=$.fC
 if(z!=null){T.j0(z,175,null)
 T.j0($.xP(),175,null)
 A.H2()}},"call$0","ji",0,0,null],
-Ea:[function(){C.T1.vo(W.vD(document.querySelectorAll(".progress-step"),null)).yI(new M.Ks())},"call$0","KY",0,0,null],
+ie:[function(){C.T1.vo(W.vD(document.querySelectorAll(".progress-step"),null)).yI(new M.Ks())},"call$0","kd",0,0,null],
 EG:[function(){var z,y
 $.kG=!0
 if($.Jg.z7.length===0){$.cx.qb(1.671,2.5,0,1,!1)
@@ -1150,9 +1149,9 @@ call$1:[function(a){this.a.ed()},"call$1",null,2,0,null,9,[],"call"],
 $isEH:true},
 yD:{
 "^":"d9:268;",
-call$0:[function(){A.Yi(document.querySelector("#zoom-out"),"<b>Use zoom</b> for accuracy",3,null,0,300,-25,-30,0,0)
+call$0:[function(){if(C.Nm.tg($.OA.C6,$.Jg)){A.Yi(document.querySelector("#zoom-out"),"<b>Use zoom</b> for accuracy",3,null,0,300,-25,-30,0,0)
 var z=W.vD(document.querySelectorAll(".zb"),null)
-z.aN(z,new M.nL())},"call$0",null,0,0,null,"call"],
+z.aN(z,new M.nL())}},"call$0",null,0,0,null,"call"],
 $isEH:true},
 nL:{
 "^":"d9:232;",
@@ -1825,8 +1824,7 @@ if($.Po){J.pP(document.querySelector(".level-controls")).h(0,"hidden")
 J.pP(document.querySelector(".pause-controls")).Rz(0,"hidden")
 J.pP(document.querySelector(".pause-title")).Rz(0,"hidden")
 J.pP(document.querySelector(".chapter-rating-wrap")).h(0,"hidden")
-J.ln(document.querySelector("#pm-menu"),"click",Z.kd())
-J.mZ(document.querySelector("#pm-menu"),"click",Z.kd())
+J.mZ(document.querySelector("#pm-menu"),"click",new Z.fn(a))
 w=document.querySelector("#resume-game")
 v=J.RE(w)
 v.tt(w,"click",Z.Q7())
@@ -1837,7 +1835,7 @@ J.pP(document.querySelector(".pause-controls")).h(0,"hidden")
 J.pP(document.querySelector(".level-rating")).Rz(0,"hidden")
 J.pP(document.querySelector(".pause-title")).h(0,"hidden")
 J.pP(document.querySelector(".rating-inner-layout")).h(0,"small-margin")
-J.qV(document.querySelector("#share-level"),"click",new Z.fn(b),!0)}J.Qy(document.querySelector("#attempts-remaining"),J.AG(A.UF("allAttempts")))
+J.qV(document.querySelector("#share-level"),"click",new Z.Et(b),!0)}J.Qy(document.querySelector("#attempts-remaining"),J.AG(A.UF("allAttempts")))
 J.ln(document.querySelector(".get-attempts-button"),"click",Z.iJ())
 J.qV(document.querySelector(".get-attempts-button"),"click",Z.iJ(),!0)
 J.vP(document.querySelector("#tape-es").style,J.WB(J.AG(J.WB(J.p0(J.q8($.Zd.QG.M4),172),10)),"px"))
@@ -1876,9 +1874,6 @@ x=J.RE(z)
 x.gDD(z).Rz(0,"hidden")
 x.shf(z,J.UQ(J.UQ($.Zo,J.xH(a.QG.Sb,1)),"name"))
 J.V1(window.localStorage,"last")},"call$2","R7",4,0,null,42,[],43,[]],
-ie:[function(a){Z.No()
-T.a7()
-L.tV(document.querySelector(".level-name"),1,C.Fa,null,H.B7(["margin-top",-20,"opacity",0,"font-size",32],P.L5(null,null,null,null,null)))},"call$1","kd",2,0,35,18,[]],
 ij:[function(a){var z,y,x,w,v,u
 Z.No()
 z=$.Zd
@@ -1923,7 +1918,8 @@ $.Jg.vU(!0)}z=$.LO
 z.zg=Q.at()
 z.F0=Q.I1()}}},"call$1","ng",2,0,35,46,[]],
 No:[function(){if($.kG){T.dH($.xP(),175,null)
-J.pP(document.querySelector("#wizard-overview")).Rz(0,"blurred")}$.Zd.UF=!1
+J.pP(document.querySelector("#wizard-overview")).Rz(0,"blurred")}$.rW=null
+$.Zd.UF=!1
 $.dx=!0
 Z.tT()
 T.j0(document.querySelector("#rating-box"),175,new Z.Ku())},"call$0","Ai",0,0,13],
@@ -1942,7 +1938,14 @@ Z.No()},"call$1",null,2,0,null,18,[],"call"],
 $isEH:true},
 fn:{
 "^":"d9:232;b",
-call$1:[function(a){J.UQ($.cM(),"Features").V7("prepareLevelWallPost",[$.Zd.QG.l.oc,Z.w4(this.b)])},"call$1",null,2,0,null,9,[],"call"],
+call$1:[function(a){Z.No()
+T.a7()
+L.tV(document.querySelector(".level-name"),1,C.Fa,null,H.B7(["margin-top",-20,"opacity",0,"font-size",32],P.L5(null,null,null,null,null)))
+return},"call$1",null,2,0,null,9,[],"call"],
+$isEH:true},
+Et:{
+"^":"d9:232;c",
+call$1:[function(a){J.UQ($.cM(),"Features").V7("prepareLevelWallPost",[$.Zd.QG.l.oc,Z.w4(this.c)])},"call$1",null,2,0,null,9,[],"call"],
 $isEH:true},
 TJ:{
 "^":"d9:232;a",
@@ -2285,7 +2288,7 @@ v.Tn(z,y,x,w,a.a)
 v.uw(z,a.x,a.y,w,a.a)},
 yW:function(a,b){this.P6=1
 this.WP=a},
-static:{"^":"O4,ID,f7,aW,jt,cE,pQ",HT:function(a,b){var z=new B.Pf(b,null,null)
+static:{"^":"O4,ID,f7,aW,ok,cE,pQ",HT:function(a,b){var z=new B.Pf(b,null,null)
 z.yW(a,b)
 return z}}}}],["","file:///E:/Software/Cards/web/Tooltip.dart",,A,{
 "^":"",
@@ -8337,9 +8340,12 @@ Lb:{
 call$1:[function(a){var z,y,x
 z=$.OA
 y=$.Jg
+C.Nm.Rz(z.C6,y)
+y=$.OA
+z=$.Jg
 x=H.B7(["continue",!0,"chapter",J.UQ(C.xr.kV(window.localStorage.getItem("last")),"chapter")],P.L5(null,null,null,null,null))
-z.C6.push(y)
-y.xk(0,x)
+y.C6.push(z)
+z.xk(0,x)
 T.ts()
 T.j0(document.querySelector("#menu-box"),250,new T.VW())},"call$1",null,2,0,null,9,[],"call"],
 $isEH:true},
@@ -11356,7 +11362,7 @@ $iscX:true,
 $ascX:function(){return[W.KV]},
 $isXj:true,
 "%":"NodeList|RadioNodeList"},
-ok:{
+KY:{
 "^":"qE;t5:type%",
 "%":"HTMLOListElement"},
 G7:{
