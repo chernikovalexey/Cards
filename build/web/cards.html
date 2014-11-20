@@ -1,9 +1,21 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-<head>
+<head prefix=
+              "og: http://ogp.me/ns#
+     fb: http://ogp.me/ns/fb#
+     product: http://ogp.me/ns/product#">
+
     <title>Two Cubes</title>
 
     <meta charset="utf-8">
+
+    <meta property="og:type" content="og:product"/>
+    <meta property="og:title" content="Hint"/>
+    <meta property="og:image" content="http://www.friendsmash.com/images/pack_600.png"/>
+    <meta property="og:description" content="One awesome hint."/>
+    <meta property="og:url" content="http://twopeoplesoftware.com/twocubes/og/hint.html"/>
+    <meta property="product:price:amount" content="0.5"/>
+    <meta property="product:price:currency" content="USD"/>
 
     <link rel="stylesheet" type="text/css" href="cards.css"/>
 
@@ -11,246 +23,213 @@
     <script src="external/html2canvas.js"></script>
     <script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="external/jqEase.js"></script>
     <script src="external/TemplateEngine.js"></script>
     <script src="external/webapi.js"></script>
     <script src="external/features.js"></script>
 
     <script type="application/dart" src="cards.dart"></script>
-    <script type="text/javascript" src="cards.dart.js"></script>
+    <script type="text/javascript" src="packages/browser/interop.js"></script>
+    <script type="text/javascript" src="packages/browser/dart.js"></script>
+
+    <script type="text/javascript">
+        window.onmousewheel = function (e) {
+            if (e.preventDefault) e.preventDefault();
+            e.returnValue = false;
+            return false;
+        };
+    </script>
 </head>
 <body>
-<div class="game-box">
-<div class="level-name"></div>
 
-<div class="buttons hidden">
-    <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show">View controls
-    </button>
-    <button id="zoom-in" class="zb plus" title="Zoom camera in"></button>
-    <button id="zoom-out" class="zb minus" title="Zoom camera out"></button>
-    <button id="toggle-physics">Apply physics</button>
-    <button id="restart" class="hidden">Restart</button>
-    <div class="right-buttons">
-        <div class="friends-finished-button" title="Some of your friends have already finished this level!">
-            <div class="friends-finished-amount"></div>
-            <div class="friends-finished-icon"></div>
-        </div>
-        <button id="hint"><span id="hints-label">Use hint</span><span id="hints-amount">2</span></button>
-    </div>
+<div class="loading-overlay">
+    <div class="loading-label">LOADING ...</div>
+    <div class="loading-bar full-loading-bar"></div>
+    <div class="loading-bar running-bar"></div>
 </div>
 
-<div class="selectors hidden">
-    <div class="selector dynamic">
-        <div class="icon"></div>
-        <div class="bound-key">1</div>
-        <div class="caption">dynamic</div>
-        <div class="remaining"></div>
-    </div>
+<div class="game-box blurred">
+    <div class="level-name"></div>
 
-    <div class="selector static">
-        <div class="icon"></div>
-        <div class="bound-key">2</div>
-        <div class="caption">static</div>
-        <div class="remaining"></div>
-    </div>
-</div>
-
-<div class="canvas-layout">
-    <canvas width="800" height="600" id="graphics"></canvas>
-</div>
-
-<div class="light-box" id="menu-box">
-    <div class="logo"></div>
-    <div class="instructions">Don't let physics intervene the energy flow!</div>
-    <div class="menu-items">
-        <div class="menu-item" id="continue">Continue</div>
-        <div class="menu-item" id="new-game">New Game</div>
-    </div>
-    <div id="invite-friends">Friends in the game</div>
-</div>
-
-<div class="light-box hidden" id="chapter-selection">
-    <div class="go-to-menu-button">Menu</div>
-    <div class="chapter-headline">Choose Chapter</div>
-    <div class="chapter-blurry-bar"></div>
-    <div class="chapter-list">
-        <div id="chapter-vs">
-            <div id="chapter-es"></div>
+    <div class="buttons hidden">
+        <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show">View controls
+        </button>
+        <button id="zoom-in" class="zb plus" title="Zoom camera in"></button>
+        <button id="zoom-out" class="zb minus" title="Zoom camera out"></button>
+        <button id="toggle-physics">Apply physics</button>
+        <button id="restart" class="hidden">Restart</button>
+        <div class="right-buttons">
+            <div class="friends-finished-button" title="Some of your friends have already finished this level!">
+                <div class="friends-finished-amount"></div>
+                <div class="friends-finished-icon"></div>
+            </div>
+            <button id="hint"><span id="hints-label">Use hint</span><span id="hints-amount">2</span></button>
         </div>
     </div>
 
-    <div id="chapter-scrollbar"></div>
-</div>
-
-<div class="chapter-template hidden">
-    <div class="chapter">
-        <div class="star-layout">
-            <div class="earned-stars"></div>
-            <div class="star-icon"></div>
+    <div class="selectors hidden">
+        <div class="selector dynamic">
+            <div class="icon"></div>
+            <div class="bound-key">1</div>
+            <div class="caption">dynamic</div>
+            <div class="remaining"></div>
         </div>
-        <div class="progress-layout">
-            <div class="progress-caption">
+
+        <div class="selector static">
+            <div class="icon"></div>
+            <div class="bound-key">2</div>
+            <div class="caption">static</div>
+            <div class="remaining"></div>
+        </div>
+    </div>
+
+    <div class="canvas-layout">
+        <canvas width="800" height="600" id="graphics"></canvas>
+    </div>
+
+    <div class="light-box" id="menu-box">
+        <div class="logo"></div>
+        <div class="instructions">Don't let physics intervene the energy flow!</div>
+        <div class="menu-items">
+            <div class="menu-item" id="continue">Continue</div>
+            <div class="menu-item" id="new-game">New Game</div>
+        </div>
+        <div id="invite-friends">Friends in the game</div>
+    </div>
+
+    <div class="light-box hidden" id="chapter-selection">
+        <div class="go-to-menu-button">Menu</div>
+        <div class="chapter-headline">Choose chapter</div>
+        <div class="chapter-blurry-bar"></div>
+        <div class="chapter-list">
+            <div id="chapter-vs">
+                <div id="chapter-es"></div>
+            </div>
+        </div>
+
+        <div id="chapter-scrollbar"></div>
+    </div>
+
+    <div class="light-box hidden" id="rating-box">
+        <div class="tutorial-layout hidden">
+            <div class="tutorial-compliment">You're gorgeous!</div>
+            <div class="tutorial-goal">That's what you should do in this game!</div>
+        </div>
+
+        <div class="attempts-layout">
+            <div class="attempts-left"><span id="attempts-remaining"></span> attempts left</div>
+            <div class="attempts-note">every day you acquire 200 free attempts</div>
+            <button class="get-attempts-button">get more</button>
+        </div>
+
+        <div class="rating-inner-layout">
+            <div class="pause-title hidden">Game paused</div>
+            <div class="rating-wrap">
+                <div class="s-level-name"></div>
+                <div class="level-rating"></div>
+            </div>
+
+            <div class="chapter-rating-wrap hidden">
+                <div class="current-level-cr">
+                    <div class="cr-label">Level</div>
+                    <div class="current-level-name"></div>
+                    <div class="current-level-rating"></div>
+                </div>
+
+                <div class="current-chapter-cr">
+                    <div class="cr-label">Chapter</div>
+                    <div class="current-chapter-name"></div>
+                    <div class="chapter-rating"></div>
+                    <div class="star-ico"></div>
+                </div>
+
+                <div class="chapter-controls controls">
+                    <button id="cc-list">Choose another chapter</button>
+                    <button id="share-chapter">Share result</button>
+                </div>
+            </div>
+
+            <div class="level-controls controls">
+                <button class="step-button" id="restart-level">Restart</button>
+                <button class="step-button" id="next-level">Next</button>
+                <button class="step-button" id="share-level">Share result</button>
+            </div>
+
+            <div class="pause-controls controls hidden">
+                <button class="step-button" id="resume-game">Resume</button>
+                <button class="step-button" id="clear-level">Restart</button>
+                <button class="step-button" id="pm-menu">Menu</button>
+            </div>
+        </div>
+
+        <div class="tape">
+            <div class="chapter-level">
                 <div class="finished-levels"></div>
                 of
                 <div class="all-levels"></div>
             </div>
-            <div class="full-bar"></div>
-            <div class="current-bar"></div>
+            <div id="tape-vs">
+                <div id="tape-es"></div>
+            </div>
+            <div id="tape-scrollbar"></div>
         </div>
-        <div class="unlock-layout">
-            <div class="stars-left"></div>
-            star<span class="word-ending">s</span> left
-        </div>
-        <div class="chapter-thumbnail"></div>
-        <div class="chapter-title"></div>
-    </div>
-</div>
-
-<div class="light-box hidden" id="rating-box">
-    <div class="tutorial-layout hidden">
-        <div class="tutorial-compliment">You're gorgeous!</div>
-        <div class="tutorial-goal">That's what you should do in this game!</div>
     </div>
 
-    <div class="attempts-layout">
-        <div class="attempts-left"><span id="attempts-remaining"></span> attempts left</div>
-        <div class="attempts-note">every day you acquire 200 free attempts</div>
-        <button class="get-attempts-button">get more</button>
-    </div>
-
-    <div class="rating-inner-layout">
-        <div class="pause-title hidden">Game paused</div>
-        <div class="rating-wrap">
-            <div class="s-level-name"></div>
-            <div class="level-rating"></div>
-        </div>
-
-        <div class="chapter-rating-wrap hidden">
-            <div class="current-level-cr">
-                <div class="cr-label">Level</div>
-                <div class="current-level-name"></div>
-                <div class="current-level-rating"></div>
+    <div class="light-box hidden" id="wizard-controls">
+        <div class="controls-layout">
+            <div class="control-block">
+                <div class="ctrl-icon rotate"></div>
+                <div class="ctrl-instruction"><b>To rotate the block,</b> use your mouse wheel or buttons Q/E</div>
             </div>
 
-            <div class="current-chapter-cr">
-                <div class="cr-label">Chapter</div>
-                <div class="current-chapter-name"></div>
-                <div class="chapter-rating"></div>
-                <div class="star-ico"></div>
+            <div class="control-block">
+                <div class="ctrl-icon zoom-in"></div>
+                <div class="ctrl-instruction"><b>To zoom camera in,</b> hold Z and left-click</div>
             </div>
 
-            <div class="chapter-controls controls">
-                <button id="cc-list">Choose another chapter</button>
+            <div class="control-block">
+                <div class="ctrl-icon zoom-out"></div>
+                <div class="ctrl-instruction"><b>To zoom camera out,</b> hold Alt and left-click</div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon dragging"></div>
+                <div class="ctrl-instruction">To move the camera,</b> use arrows on the keyboard or press Space and drag
+                    the
+                    mouse.
+                </div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction"><b>To apply physics or rewind,</b> press Ctrl+Shift.
+                </div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction"><b>To undo the most recent action,</b> press Ctrl+Z.</div>
+            </div>
+
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction"><b>To remove a block,</b> place mouse over it and right-click.</div>
+            </div>
+
+            <div class="next-button-layout">
+                <button class="step-button try-button progress-step wizard-try">OK</button>
             </div>
         </div>
-
-        <div class="level-controls controls">
-            <button class="step-button" id="restart-level">Restart</button>
-            <button class="step-button" id="next-level">Next</button>
-        </div>
-
-        <div class="pause-controls controls hidden">
-            <button class="step-button" id="resume-game">Resume</button>
-            <button class="step-button" id="clear-level">Restart</button>
-            <button class="step-button" id="pm-menu">Menu</button>
-        </div>
     </div>
 
-    <div class="tape">
-        <div class="chapter-level">
-            <div class="finished-levels"></div>
-            of
-            <div class="all-levels"></div>
-        </div>
-        <div id="tape-vs">
-            <div id="tape-es"></div>
-        </div>
-        <div id="tape-scrollbar"></div>
+    <div class="light-box hidden" id="wizard-try"></div>
+
+    <div class="tutorial-progress hidden">
+        <div class="progress-step wizard-overview active-step"
+             title="Overview of controls, and the goal of the game"></div>
+        <div class="progress-step wizard-controls" title="Controls"></div>
+        <div class="progress-step wizard-try" title="Try to complete a level on your own"></div>
     </div>
-</div>
-
-<div class="star-template hidden">
-    <div class="stars-layout">
-        <div class="star extinct-star"></div>
-        <div class="star extinct-star"></div>
-        <div class="star extinct-star"></div>
-    </div>
-</div>
-
-<div class="tape-item-template hidden">
-    <div class="tape-item">
-        <div class="tape-rating-wrap">
-            <div class="tape-rating"></div>
-        </div>
-        <div class="tape-name"></div>
-    </div>
-</div>
-
-<div class="light-box hidden" id="wizard-overview">
-    <div class="greeting-layout">
-        <div class="tutorial-headline">Tutorial</div>
-        <div class="tutorial-description"><b>Join cubes</b> by placing blocks and applying physics.
-        </div>
-        <div class="next-button-layout">
-            <button class="step-button show-controls progress-step wizard-controls">Got it — show me controls
-            </button>
-        </div>
-    </div>
-</div>
-
-<div class="light-box hidden" id="wizard-controls">
-    <div class="controls-layout">
-        <div class="control-block">
-            <div class="ctrl-icon rotate"></div>
-            <div class="ctrl-instruction"><b>To rotate the block,</b> use your mouse wheel or buttons Q/E</div>
-        </div>
-
-        <div class="control-block">
-            <div class="ctrl-icon zoom-in"></div>
-            <div class="ctrl-instruction"><b>To zoom camera in,</b> hold Z and left-click</div>
-        </div>
-
-        <div class="control-block">
-            <div class="ctrl-icon zoom-out"></div>
-            <div class="ctrl-instruction"><b>To zoom camera out,</b> hold Alt and left-click</div>
-        </div>
-
-        <div class="control-block">
-            <div class="ctrl-icon dragging"></div>
-            <div class="ctrl-instruction">To move the camera,</b> use arrows on the keyboard or press Space and drag the
-                mouse.
-            </div>
-        </div>
-
-        <div class="control-block">
-            <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction"><b>To apply physics or rewind,</b> press Ctrl+Shift.
-            </div>
-        </div>
-
-        <div class="control-block">
-            <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction"><b>To undo the most recent action,</b> press Ctrl+Z.</div>
-        </div>
-
-        <div class="control-block">
-            <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction"><b>To remove a block,</b> place mouse over it and right-click.</div>
-        </div>
-
-        <div class="next-button-layout">
-            <button class="step-button try-button progress-step wizard-try">OK</button>
-        </div>
-    </div>
-</div>
-
-<div class="light-box hidden" id="wizard-try"></div>
-
-<div class="tutorial-progress hidden">
-    <div class="progress-step wizard-overview active-step"
-         title="Overview of controls, and the goal of the game"></div>
-    <div class="progress-step wizard-controls" title="Controls"></div>
-    <div class="progress-step wizard-try" title="Try to complete a level on your own"></div>
-</div>
 </div>
 
 <div class="bs-screen" id="purchases">
@@ -301,21 +280,7 @@
 
     <div id="invitations-vs" class="bottom-sliding-vs">
         <div id="invitations-es" class="bottom-sliding-es invite-users">
-            <!--<div class="friends-delimiter">
-                <div class="delimiter-headline">Already in</div>
-                <div class="friends-search">
-                    <input type="text" class="search-input in-game-search" placeholder="Search ...">
-                </div>
-            </div>-->
             <div class="users-block card-users"></div>
-            <!--<div class="friends-delimiter">
-                <div class="delimiter-headline">Not in the game<span class="invite-all">invite all</span></div>
-                <div class="friends-search">
-                    <input type="text" class="search-input out-of-game-search"
-                           placeholder="Search ...">
-                </div>
-            </div>
-            <div class="users-block out-people"></div>-->
         </div>
     </div>
     <div id="invitations-scrollbar" class="bottom-sliding-scrollbar"></div>
@@ -328,17 +293,17 @@
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
                 <div class="usage-statistics">
-                    <div class="fr-dynamic">
+                    <div class="fr-dynamic" title="Amount of dynamic blocks">
                         <div class="fr-num fr-nd"><%=dynamic%></div>
                         <div class="fr-block fr-db"></div>
                     </div>
 
-                    <div class="fr-static">
+                    <div class="fr-static" title="Amount of static blocks">
                         <div class="fr-num fr-ns"><%=static%></div>
                         <div class="fr-block fr-sb"></div>
                     </div>
                 </div>
-                <div class="fr-result">
+                <div class="fr-result" title="Amount of stars acquired for this level">
                     <div class="fr-res-num"><%=result%></div>
                     <div class="fr-res-ico"></div>
                 </div>
@@ -396,6 +361,65 @@
         <div class="purchase-option" data-item="<%=data%>">
             <div class="text-overlay"><%=name%></div>
             <span class="purchase-price"><%=price%></span>
+        </div>
+    </div>
+
+    <div class="star-template hidden">
+        <div class="stars-layout">
+            <div class="star extinct-star"></div>
+            <div class="star extinct-star"></div>
+            <div class="star extinct-star"></div>
+        </div>
+    </div>
+
+    <div class="tape-item-template hidden">
+        <div class="tape-item">
+            <div class="tape-rating-wrap">
+                <div class="tape-rating"></div>
+            </div>
+            <div class="tape-name"></div>
+        </div>
+    </div>
+
+    <div class="chapter-template hidden">
+        <div class="chapter">
+            <div class="star-layout">
+                <div class="earned-stars"></div>
+                <div class="star-icon"></div>
+            </div>
+            <div class="progress-layout">
+                <div class="progress-caption">
+                    <div class="finished-levels"></div>
+                    of
+                    <div class="all-levels"></div>
+                </div>
+                <div class="full-bar"></div>
+                <div class="current-bar"></div>
+            </div>
+            <div class="unlock-layout">
+                <div class="stars-left"></div>
+                star<span class="word-ending">s</span> left
+            </div>
+            <div class="chapter-thumbnail"></div>
+            <div class="chapter-title"></div>
+        </div>
+    </div>
+</div>
+
+<div class="wall-posts">
+    <div class="level-wall-post-template">
+        <div class="rating-wrap">
+            <div class="s-level-name">Captain Asteroid</div>
+            <div class="level-rating"></div>
+        </div>
+    </div>
+
+    <div class="chapter-wall-post-template">
+        <div class="current-chapter-cr">
+            <div class="cr-label">Chapter</div>
+            <div class="current-chapter-name"></div>
+            <div class="chapter-rating"></div>
+            <div class="star-ico"></div>
         </div>
     </div>
 </div>

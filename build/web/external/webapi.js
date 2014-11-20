@@ -1,5 +1,8 @@
 function WebApi(method, data, callback) {
     var json = JSON.stringify(data);
+
+    console.log("api request:", data);
+
     $.ajax({
         type: 'POST',
         url: "/twocubes/serverside/index.php",

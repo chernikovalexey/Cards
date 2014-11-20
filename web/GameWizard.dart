@@ -117,14 +117,14 @@ class GameWizard {
     }
 
     static void showRunout() {
-        if (!storage.containsKey("runout_occured")) {
+        if (!storage.containsKey("runout_occured") && manager.states.contains(engine)) {
             Tooltip.show(querySelector(".dynamic"), "Amount of blocks is limited", Tooltip.RIGHT, maxWidth: 300, closeDelay: 1500);
             storage["runout_occured"] = "true";
         }
     }
 
     static void showRewind() {
-        if (!storage.containsKey("apply_fail_occured")) {
+        if (!storage.containsKey("apply_fail_occured") && manager.states.contains(engine)) {
             Tooltip.show(querySelector("#toggle-physics"), "Rewind to try again", Tooltip.BOTTOM, maxWidth: 300, callback: () {
                 Tooltip.showSimple("To remove the selected block, <b>right-click</b> or <b>press Delete</b>", 200, 225);
 
@@ -144,8 +144,10 @@ class GameWizard {
 
     static void showRotation() {
         new Timer(new Duration(seconds: 1), () {
-            showingRotation = true;
-            Tooltip.showSimple("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E", 100, 285);
+            if (manager.states.contains(engine)) {
+                showingRotation = true;
+                Tooltip.showSimple("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E", 100, 285);
+            }
         });
     }
 
@@ -160,31 +162,35 @@ class GameWizard {
 
     static void showHintsTooltip() {
         new Timer(new Duration(seconds: 1), () {
-            Tooltip.show(querySelector("#hint"), "If you are in trouble with accomplishing this level, <b>use hints</b>", Tooltip.BOTTOM, maxWidth: 300, xOffset: -90);
+            if (manager.states.contains(engine)) {
+                Tooltip.show(querySelector("#hint"), "If you are in trouble with accomplishing this level, <b>use hints</b>", Tooltip.BOTTOM, maxWidth: 300, xOffset: -90);
 
-            var stream = querySelector("#hint").onClick.listen((event) {
-                Tooltip.closeAll();
-            });
+                var stream = querySelector("#hint").onClick.listen((event) {
+                    Tooltip.closeAll();
+                });
 
-            querySelector("#hint").onClick.listen((event) {
-                stream.cancel();
-            });
+                querySelector("#hint").onClick.listen((event) {
+                    stream.cancel();
+                });
+            }
         });
     }
 
     static void showZoom() {
         new Timer(new Duration(seconds: 3), () {
-            Tooltip.show(querySelector("#zoom-out"), "<b>Use zoom</b> for accuracy", Tooltip.BOTTOM, maxWidth: 300, xOffset: -30, xArrowOffset: -25);
+            if (manager.states.contains(engine)) {
+                Tooltip.show(querySelector("#zoom-out"), "<b>Use zoom</b> for accuracy", Tooltip.BOTTOM, maxWidth: 300, xOffset: -30, xArrowOffset: -25);
 
-            querySelectorAll(".zb").forEach((el) {
-                var stream = el.onClick.listen((event) {
-                    Tooltip.closeAll();
-                });
+                querySelectorAll(".zb").forEach((el) {
+                    var stream = el.onClick.listen((event) {
+                        Tooltip.closeAll();
+                    });
 
-                el.onClick.listen((event) {
-                    stream.cancel();
+                    el.onClick.listen((event) {
+                        stream.cancel();
+                    });
                 });
-            });
+            }
         });
     }
 

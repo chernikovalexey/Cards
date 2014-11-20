@@ -127,8 +127,6 @@ class RatingShower {
         });
         fadeBoxIn(querySelector("#rating-box"), 175);
 
-        Input.attachSingleEscClickCallback(hide);
-
         querySelector(".rating-wrap").classes.remove("hidden");
         querySelector(".chapter-rating-wrap").classes.add("hidden");
         querySelector(".level-rating").innerHtml = getStars(rating);
@@ -184,8 +182,8 @@ class RatingShower {
             querySelector(".pause-title").classes.remove('hidden');
             querySelector(".chapter-rating-wrap").classes.add("hidden");
             //querySelector(".chapter-controls").classes.add("hidden");
-            querySelector("#pm-menu").removeEventListener("click", mainMenu);
-            querySelector("#pm-menu").addEventListener("click", mainMenu);
+            //querySelector("#pm-menu").removeEventListener("click", mainMenu);
+            querySelector("#pm-menu").addEventListener("click", (event) => mainMenu(engine));
             querySelector("#resume-game")
                 ..removeEventListener("click", resume)
                 ..addEventListener("click", resume, false);
@@ -217,6 +215,10 @@ class RatingShower {
 
         if (!e.level.hasNext() && !pauseState) {
             chapterComplete(engine, rating);
+        }
+
+        if (pauseState) {
+            Input.attachSingleEscClickCallback(hide);
         }
     }
 
@@ -283,7 +285,8 @@ class RatingShower {
         window.localStorage.remove("last");
     }
 
-    static void mainMenu(Event e) {
+    static void mainMenu(GameEngine e) {
+        //e.saveCurrentProgress();
         hide();
         showMainMenu();
 
@@ -317,6 +320,9 @@ class RatingShower {
             querySelector("#wizard-overview").classes.remove("blurred");
         }
 
+        print("hide hide");
+
+        Input.removeSingleEscClickCallback();
         e.isPaused = false;
 
         wasJustPaused = true;

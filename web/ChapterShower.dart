@@ -9,6 +9,7 @@ import "WebApi.dart";
 
 class ChapterShower {
     static void show(List chapters) {
+        print(chapters);
         querySelector("#chapter-es").innerHtml = "";
 
         Input.attachSingleEscClickCallback(() {

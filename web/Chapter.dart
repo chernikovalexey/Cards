@@ -6,8 +6,9 @@ import 'WebApi.dart';
 class Chapter {
     static List chapters;
 
-    static void load([Function ready=null]) {
+    static void load([Function ready = null]) {
         WebApi.getChapters((JsObject obj, String str) {
+            print("The dart result: " + str);
             chapters = JSON.decode(str)["chapters"];
             if (ready != null) {
                 ready(chapters);

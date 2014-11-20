@@ -32,6 +32,20 @@ var getNumberAsWord = function (num) {
 };
 
 var Features = {
+    hideLoading: function () {
+        Features.updateLoadingBar(100, function () {
+            $(".game-box").removeClass("blurred");
+            $(".loading-overlay").fadeOut(275, 'easeOutQuart', function () {
+                $(this).remove();
+            });
+        });
+    },
+
+    updateLoadingBar: function (percentage, callback) {
+        $('.running-bar').animate({width: 600 * percentage / 100}, 150, 'easeOutQuart', callback || function () {
+        });
+    },
+
     keepAlive: function () {
         Api.keepAlive();
     },
@@ -42,11 +56,22 @@ var Features = {
         scroll.buildScrollControls('invitations-scrollbar', 'v', 'mouseover', true);
     },
 
+    initialized: false,
+    onLoaded: function () {
+    },
     user: {},
     chapters: {},
     results_by_chapters: {},
     friends_in_game: [],
     orderListener: null,
+
+    setOnLoadedCallback: function (callback) {
+        this.onLoaded = callback;
+
+        if (this.initialized) {
+            callback();
+        }
+    },
 
     showFinishedFriends: function (chapter, level, callback) {
         $('.finished-friends').empty();
@@ -159,6 +184,7 @@ var Features = {
     getChapters: function (callback) {
         this.chapterCallback = callback;
         Api.call('chapters', {}, function (r) {
+            console.log('raw data:', r);
             Features.chapterCallback(JSON.stringify(r));
         });
     },
@@ -221,6 +247,8 @@ var VKFeatures = {
             Api.setFriendsList(Features.toIdArray(data.response));
             Features.friends = data.response;
 
+            Features.initialized = true;
+
             Api.setPersonalId(qs['viewer_id']);
             Api.setPlatform('vk');
             callback();
@@ -263,9 +291,17 @@ var VKFeatures = {
     },
 
     load: function (callback) {
+        Features.updateLoadingBar(15);
+
         $.getScript(document.location.protocol + "//vk.com/js/api/xd_connection.js?2", function () {
+            Features.updateLoadingBar(55);
+
             VKFeatures.initFields(function () {
+                Features.updateLoadingBar(70);
+
                 Api.initialRequest(function (data) {
+                    Features.updateLoadingBar(85);
+
                     console.log("initial request vk:", data);
                     Features.user = data.user;
 //                    Features.user.allAttempts = 0;
@@ -323,10 +359,14 @@ var VKFeatures = {
                     });
 
                     Features.friends_in_game = friends_in_game;
+
+                    Features.updateLoadingBar(95);
+
+                    callback();
                 });
-                VK.addCallback('onOrderSuccess', Features.onOrderSuccess);
-                callback();
             });
+
+            VK.addCallback('onOrderSuccess', Features.onOrderSuccess);
         });
     },
 
@@ -691,8 +731,7 @@ var NoFeatures = {
     }
 
     Features.load(function () {
-        //console.log('loaded!');
+        Features.initialized = true;
+        Features.onLoaded();
     });
-
-    //setInterval(Features.keepAlive, 5000);
 })();
