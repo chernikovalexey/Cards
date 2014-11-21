@@ -155,6 +155,7 @@ var Features = {
     getPurchaseOptionsPresentation: function (options) {
         var html = "";
         var template = $('.purchase-option-template').html();
+        console.log(template);
         $(options).each(function () {
             html += TemplateEngine.parseTemplate(template, this);
         });
@@ -213,7 +214,8 @@ var VKFeatures = {
 
                         html2canvas($('.level-wall-post-template').get(0), {
                             onrendered: function (canvas) {
-                                Api.call("uploadPhoto", {server: upload_url, base64image: canvas.toDataURL().replace("data:image/png;base64,", "")}, function (upload_response) {
+                                Api.call("uploadPhoto", {server: upload_url, photo: canvas.toDataURL().replace("data:image/png;base64,", "")}, function (upload_response) {
+                                    console.log(upload_response);
                                     VK.api("photos.saveWallPhoto", {
                                         user_id: Features.user.platformUserId,
                                         photo: upload_response.photo,
@@ -221,7 +223,7 @@ var VKFeatures = {
                                         hash: upload_response.hash
                                     }, function (save_response) {
                                         VK.api("wall.post", {
-                                            message: "I've completed level " + level_name + " in Two Cubes!",
+                                            message: "I've completed level " + level_name + " in Two Cubes!/n#twocubes",
                                             attachments: save_response.response[0].id
                                         });
                                     });
@@ -506,7 +508,11 @@ var FBFeatures = {
     },
 
     load: function (callback) {
+        Features.updateLoadingBar(15);
+
         $.getScript("//connect.facebook.net/en_US/sdk.js", function () {
+            Features.updateLoadingBar(25);
+
             FB.init({
                 appId: 614090422033888,
                 status: true,
@@ -516,8 +522,14 @@ var FBFeatures = {
             });
 
             FB.login(function () {
+                Features.updateLoadingBar(40);
+
                 Features.initFields(function () {
+                    Features.updateLoadingBar(60);
+
                     Api.initialRequest(function (data) {
+                        Features.updateLoadingBar(80);
+
                         Features.user = data.user;
 
                         console.log('initial request fb:', data);
@@ -575,6 +587,10 @@ var FBFeatures = {
                         });
 
                         Features.friends_in_game = friends_in_game;
+
+                        Features.updateLoadingBar(95);
+
+                        callback();
                     });
                 });
             });
@@ -593,82 +609,79 @@ var FBFeatures = {
                 {
                     name: "1 hint",
                     price: "4 votes",
-                    data: "h.1."
+                    data: "1-h"
                 },
                 {
                     name: "2 hints",
                     price: "8 votes",
-                    data: "h.5."
+                    data: "5-h"
                 },
                 {
                     name: "5 hints",
                     price: "16 votes",
-                    data: "h.10."
+                    data: "10-h"
                 },
                 {
                     name: "10 hints",
                     price: "24 votes",
-                    data: "h.25."
+                    data: "25-h"
                 }
             ],
             attempts: [
                 {
                     name: "+10 attempts",
                     price: "2 votes",
-                    data: "a.10."
+                    data: "10-a"
                 },
                 {
                     name: "+25 attempts",
                     price: "4 votes",
-                    data: "a.25."
+                    data: "25-a"
                 },
                 {
                     name: "+50 attempts",
                     price: "8 votes",
-                    data: "a.50."
+                    data: "50-a"
                 },
                 {
                     name: "+100 attempts",
                     price: "12 votes",
-                    data: "a.100."
+                    data: "100-a"
                 }
             ],
             chapters: [
                 {
                     stars: 0.5,
                     price: "100 votes",
-                    data: "c.5."
+                    data: "5-c"
                 },
                 {
                     stars: 0.33,
                     price: "50 votes",
-                    data: "c.3."
+                    data: "3-c"
                 },
                 {
                     stars: 0.2,
                     price: "30 votes",
-                    data: "c.2."
+                    data: "2-c"
                 },
                 {
                     stars: 0,
                     price: "10 votes",
-                    data: "c.0."
+                    data: "0-c"
                 }
             ]
         }
-        this.appendUserId(data.attempts);
-        this.appendUserId(data.hints);
-        this.appendUserId(data.chapters);
         return data;
     },
 
     makePurchase: function () {
+        var item = $(this).data('item');
+        console.log(item);
         FB.ui({
             method: 'pay',
             action: 'purchaseitem',
-            product: $(this).data('item')
-        }, function (r) {
-            console.log(r);
+            product: 'https://twopeoplesoftware.com/twocubes/fb_payments/' + item + '.html'
         });
     },
 

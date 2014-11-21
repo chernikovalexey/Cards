@@ -106,7 +106,7 @@ class GameWizard {
                 });
             };
 
-            Tooltip.showSimple("Left-click to place a block", 225, 335);
+            Tooltip.showSimple("Left-click to place a block", Input.canvasX + 225, 335);
 
             var bodyStream = querySelector("body").onClick.listen(cb);
 
@@ -126,7 +126,7 @@ class GameWizard {
     static void showRewind() {
         if (!storage.containsKey("apply_fail_occured") && manager.states.contains(engine)) {
             Tooltip.show(querySelector("#toggle-physics"), "Rewind to try again", Tooltip.BOTTOM, maxWidth: 300, callback: () {
-                Tooltip.showSimple("To remove the selected block, <b>right-click</b> or <b>press Delete</b>", 200, 225);
+                Tooltip.showSimple("To remove the selected block, <b>right-click</b> or <b>press Delete</b>", Input.canvasX + 200, 225);
 
                 var bodyStream = querySelector("body").onContextMenu.listen((event) {
                     Tooltip.closeAll();
@@ -146,7 +146,7 @@ class GameWizard {
         new Timer(new Duration(seconds: 1), () {
             if (manager.states.contains(engine)) {
                 showingRotation = true;
-                Tooltip.showSimple("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E", 100, 285);
+                Tooltip.showSimple("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E", Input.canvasX + 100, 285);
             }
         });
     }

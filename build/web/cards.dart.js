@@ -1042,7 +1042,9 @@ ie:[function(){C.T1.vo(W.vD(document.querySelectorAll(".progress-step"),null)).y
 EG:[function(){var z,y
 $.kG=!0
 if($.Jg.z7.length===0){$.cx.qb(1.671,2.5,0,1,!1)
-A.jY("Left-click to place a block",225,335,null)
+z=$.Jx
+if(typeof z!=="number")return z.g()
+A.jY("Left-click to place a block",z+225,335,null)
 z=J.Vg(document.querySelector("body"))
 y=H.VM(new W.xC(0,z.uv,z.Ph,W.VF(new M.Hv()),z.Sg),[H.Kp(z,0)])
 y.Zz()
@@ -1105,7 +1107,9 @@ $isEH:true},
 AC:{
 "^":"Tp:268;",
 call$0:[function(){var z,y
-A.jY("To remove the selected block, <b>right-click</b> or <b>press Delete</b>",200,225,null)
+z=$.Jx
+if(typeof z!=="number")return z.g()
+A.jY("To remove the selected block, <b>right-click</b> or <b>press Delete</b>",z+200,225,null)
 z=J.CI(document.querySelector("body"))
 y=H.VM(new W.xC(0,z.uv,z.Ph,W.VF(new M.Bf()),z.Sg),[H.Kp(z,0)])
 y.Zz()
@@ -1123,7 +1127,9 @@ $isEH:true},
 i6:{
 "^":"Tp:268;",
 call$0:[function(){if(C.Nm.tg($.OA.C6,$.Jg)){$.Of=!0
-A.jY("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E",100,285,null)}},"call$0",null,0,0,null,"call"],
+var z=$.Jx
+if(typeof z!=="number")return z.g()
+A.jY("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E",z+100,285,null)}},"call$0",null,0,0,null,"call"],
 $isEH:true},
 zR:{
 "^":"Tp:268;",
@@ -2297,7 +2303,7 @@ jY:[function(a,b,c,d){var z,y,x,w,v
 J.IR(document.querySelector("body"),"beforeend","<div class=\"tt simple-tooltip\"><div class=\"simple-tooltip-text\">"+a+"</div><button class=\"got-it\">OK</button></div><div class=\"arrow bottom-arrow\" hidden></div>")
 z=C.t5.grZ(W.vD(document.querySelectorAll(".simple-tooltip"),null).Sn)
 y=J.RE(z)
-J.Ct(y.gS(z),C.jn.bu(b)+"px")
+J.Ct(y.gS(z),C.CD.bu(b)+"px")
 J.pR(y.gS(z),C.jn.bu(c)+"px")
 $.CT().push($.lN)
 y.gDD(z).h(0,"t-"+C.jn.bu($.lN))

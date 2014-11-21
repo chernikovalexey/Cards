@@ -213,7 +213,8 @@ var VKFeatures = {
 
                         html2canvas($('.level-wall-post-template').get(0), {
                             onrendered: function (canvas) {
-                                Api.call("uploadPhoto", {server: upload_url, base64image: canvas.toDataURL().replace("data:image/png;base64,", "")}, function (upload_response) {
+                                Api.call("uploadPhoto", {server: upload_url, photo: canvas.toDataURL().replace("data:image/png;base64,", "")}, function (upload_response) {
+                                    console.log(upload_response);
                                     VK.api("photos.saveWallPhoto", {
                                         user_id: Features.user.platformUserId,
                                         photo: upload_response.photo,
@@ -506,7 +507,11 @@ var FBFeatures = {
     },
 
     load: function (callback) {
+        Features.updateLoadingBar(15);
+
         $.getScript("//connect.facebook.net/en_US/sdk.js", function () {
+            Features.updateLoadingBar(25);
+
             FB.init({
                 appId: 614090422033888,
                 status: true,
@@ -516,8 +521,14 @@ var FBFeatures = {
             });
 
             FB.login(function () {
+                Features.updateLoadingBar(40);
+
                 Features.initFields(function () {
+                    Features.updateLoadingBar(60);
+
                     Api.initialRequest(function (data) {
+                        Features.updateLoadingBar(80);
+
                         Features.user = data.user;
 
                         console.log('initial request fb:', data);
@@ -575,6 +586,10 @@ var FBFeatures = {
                         });
 
                         Features.friends_in_game = friends_in_game;
+
+                        Features.updateLoadingBar(95);
+
+                        callback();
                     });
                 });
             });
