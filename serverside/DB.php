@@ -202,7 +202,7 @@ class DB
         return reset($sql->fetch());
     }
 
-    public function unlockChapter($user, $chapter)
+    public function unlockChapter(array $user, $chapter)
     {
         $sql = $this->db->prepare("INSERT INTO twocubes.tunlockedchapters(chapter, userId) VALUES(?, ?)");
         $sql->bindValue(1, $chapter, PDO::PARAM_INT);

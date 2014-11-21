@@ -21,5 +21,5 @@ class Payments
 
 interface IPayments
 {
-    public function perform($input);
+    public function perform();
 }

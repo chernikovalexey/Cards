@@ -85,45 +85,8 @@ class Api
 
     public function payments()
     {
-        /*if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['hub_mode'] === 'subscribe') {
-            $app_id = 614090422033888;
-            $app_secret = "b414d64c9dc377b6393f93c1be235472";
-            $res = file_get_contents("https://graph.facebook.com/oauth/access_token?client_id=" . $app_id . "&client_secret=" . $app_secret . "&grant_type=client_credentials");
-            list($temp, $access_token) = explode('=', $res);
-            $res2 = WebClient::postData("https://graph.facebook.com/" . $app_id . "/subscriptions", array(
-                "access_token" => $access_token,
-                "object" => "user",
-                "callback_url" => "http://twopeoplesoftware.com/twocubes/serverside/index.php?method=fb.payments",
-                "fields" => "pic",
-                "verify_token" => $_GET['hub_verify_token']
-            ));
-            echo $res2;
-            return $res2;
-        }*/
-
-        $verify_token = "bsdkm341omdssdfg4";
-
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if ($method == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
-            echo $_GET['hub_challenge'];
-            exit();
-        }
-        else if( $method == 'GET') {
-            echo "<h1>REAL TIME UPDATES</h1>";
-        }
-
-        if ($method == 'POST') {
-            $time_now = date("Y-m-d H:i:s");
-            $updates = json_decode(file_get_contents("php://input"), true);
-
-            log($time_now . " " . json_encode($updates) ."\n\n\n", 3, "rtudata.txt");
-            log($time_now . " " . json_encode($_REQUEST) ."\n", 3, "rtudata.txt");
-            log($time_now . " " . json_encode($_SERVER) ."\n", 3, "rtudata.txt");
-        }
-
-        //$payments = Payments::create($this->platform, $this->db);
-        //return $payments->perform($_POST);
+        $payments = Payments::create($this->platform, $this->db);
+        return $payments->perform($_POST);
     }
 
     public function chapters(array $user)

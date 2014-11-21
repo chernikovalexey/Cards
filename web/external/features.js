@@ -9,6 +9,12 @@ var qs = (function (a) {
     return b;
 })(window.location.search.substr(1).split('&'));
 
+if (typeof String.prototype.endsWith !== 'function') {
+    String.prototype.endsWith = function (suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+}
+
 var extendAndOverride = function (o1, o2) {
     for (var key in o2) {
         o1[key] = o2[key];
@@ -48,6 +54,14 @@ var Features = {
 
     keepAlive: function () {
         Api.keepAlive();
+    },
+
+    onOrderSuccess: function () {
+        console.log("JS order success!");
+        if (Features.orderListener != null) {
+            console.log("callback!=null");
+            Features.orderListener();
+        }
     },
 
     repaintFriendsInvitations: function () {
@@ -460,14 +474,6 @@ var VKFeatures = {
         });
     },
 
-    onOrderSuccess: function () {
-        console.log("JS order success!");
-        if (Features.orderListener != null) {
-            console.log("callback!=null");
-            Features.orderListener();
-        }
-    },
-
     chapterCallback: null,
 
     showInviteBox: function () {
@@ -682,6 +688,10 @@ var FBFeatures = {
             method: 'pay',
             action: 'purchaseitem',
             product: 'https://twopeoplesoftware.com/twocubes/fb_payments/' + item + '.html'
+        }, function (r) {
+            if (r.status == "initiated" || r.status == "completed") {
+                Features.onOrderSuccess();
+            }
         });
     },
 
