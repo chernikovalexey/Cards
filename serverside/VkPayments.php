@@ -37,9 +37,9 @@ class VKPayments implements IPayments
         return true;
     }
 
-    public function perform($input)
+    public function perform()
     {
-        $this->input = $input;
+        $this->input = $_POST;
         if (!$this->validate())
             return array('response' => $this->response);
 
