@@ -2,6 +2,7 @@ import 'dart:html';
 import "cards.dart";
 import 'Tooltip.dart';
 import 'dart:async';
+import 'dart:js';
 import 'RatingShower.dart';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
@@ -95,7 +96,7 @@ class GameWizard {
                 Tooltip.closeAll();
                 hints.clearHintCards();
 
-                Tooltip.show(querySelector("#toggle-physics"), "Apply physics to drop blocks", Tooltip.BOTTOM, maxWidth: 300);
+                Tooltip.show(querySelector("#toggle-physics"), context['locale']['wizard_apply'], Tooltip.BOTTOM, maxWidth: 300);
 
                 var toggleStream = querySelector("#toggle-physics").onClick.listen((event) {
                     Tooltip.closeAll();
@@ -106,7 +107,7 @@ class GameWizard {
                 });
             };
 
-            Tooltip.showSimple("Left-click to place a block", Input.canvasX + 225, 335);
+            Tooltip.showSimple(context['locale']['wizard_place'], Input.canvasX + 225, 335);
 
             var bodyStream = querySelector("body").onClick.listen(cb);
 
@@ -118,15 +119,15 @@ class GameWizard {
 
     static void showRunout() {
         if (!storage.containsKey("runout_occured") && manager.states.contains(engine)) {
-            Tooltip.show(querySelector(".dynamic"), "Amount of blocks is limited", Tooltip.RIGHT, maxWidth: 300, closeDelay: 1500);
+            Tooltip.show(querySelector(".dynamic"), context['locale']['wizard_limited_amount'], Tooltip.RIGHT, maxWidth: 300, closeDelay: 1500);
             storage["runout_occured"] = "true";
         }
     }
 
     static void showRewind() {
         if (!storage.containsKey("apply_fail_occured") && manager.states.contains(engine)) {
-            Tooltip.show(querySelector("#toggle-physics"), "Rewind to try again", Tooltip.BOTTOM, maxWidth: 300, callback: () {
-                Tooltip.showSimple("To remove the selected block, <b>right-click</b> or <b>press Delete</b>", Input.canvasX + 200, 225);
+            Tooltip.show(querySelector("#toggle-physics"), context['locale']['wizard_rewind'], Tooltip.BOTTOM, maxWidth: 300, callback: () {
+                Tooltip.showSimple(context['locale']['wizard_remove'], Input.canvasX + 200, 225);
 
                 var bodyStream = querySelector("body").onContextMenu.listen((event) {
                     Tooltip.closeAll();
@@ -146,7 +147,7 @@ class GameWizard {
         new Timer(new Duration(seconds: 1), () {
             if (manager.states.contains(engine)) {
                 showingRotation = true;
-                Tooltip.showSimple("<b>To rotate the block,</b> use your mouse wheel or buttons Q/E", Input.canvasX + 100, 285);
+                Tooltip.showSimple(context['locale']['wizard_rotate'], Input.canvasX + 100, 285);
             }
         });
     }
@@ -163,7 +164,7 @@ class GameWizard {
     static void showHintsTooltip() {
         new Timer(new Duration(seconds: 1), () {
             if (manager.states.contains(engine)) {
-                Tooltip.show(querySelector("#hint"), "If you are in trouble with accomplishing this level, <b>use hints</b>", Tooltip.BOTTOM, maxWidth: 300, xOffset: -90);
+                Tooltip.show(querySelector("#hint"), context['locale']['wizard_hints'], Tooltip.BOTTOM, maxWidth: 300, xOffset: -90);
 
                 var stream = querySelector("#hint").onClick.listen((event) {
                     Tooltip.closeAll();
@@ -179,7 +180,7 @@ class GameWizard {
     static void showZoom() {
         new Timer(new Duration(seconds: 3), () {
             if (manager.states.contains(engine)) {
-                Tooltip.show(querySelector("#zoom-out"), "<b>Use zoom</b> for accuracy", Tooltip.BOTTOM, maxWidth: 300, xOffset: -30, xArrowOffset: -25);
+                Tooltip.show(querySelector("#zoom-out"), context['locale']['wizard_zoom'], Tooltip.BOTTOM, maxWidth: 300, xOffset: -30, xArrowOffset: -25);
 
                 querySelectorAll(".zb").forEach((el) {
                     var stream = el.onClick.listen((event) {
@@ -198,7 +199,7 @@ class GameWizard {
         Element _static = querySelector(".static");
         new Timer(new Duration(seconds: 1), () {
             if (!_static.hidden) {
-                Tooltip.show(_static, "Static blocks don't fall when physics applied, and don't conduct energy.", Tooltip.RIGHT, maxWidth: 300, yOffset: 0, yArrowOffset: -3);
+                Tooltip.show(_static, context['locale']['wizard_static'], Tooltip.RIGHT, maxWidth: 300, yOffset: 0, yArrowOffset: -3);
             }
         });
     }

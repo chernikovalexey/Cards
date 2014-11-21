@@ -3,12 +3,14 @@ import "GameEngine.dart";
 import 'dart:js';
 import 'PromptWindow.dart';
 import 'package:box2d/box2d_browser.dart';
+import 'package:sprintf/sprintf.dart';
 import 'EnergySprite.dart';
 import 'Color4.dart';
 import 'dart:async';
 import 'package:animation/animation.dart';
 import 'UserManager.dart';
 import 'WebApi.dart';
+import 'Tooltip.dart';
 
 class HintManager {
     GameEngine engine;
@@ -19,8 +21,10 @@ class HintManager {
     void onClick(Event e) {
         int balance = UserManager.getAsInt("balance");
 
+        Tooltip.closeAll();
+
         if (balance > 0) {
-            PromptWindow.show("Use hint?", "You surely want?", "Only <b>" + balance.toString() + "</b> left", "get more", getMoreHints, (bool positive) {
+            PromptWindow.show(context['locale']['use_hint_question'], context['locale']['surely_want'], sprintf(context['locale']['hints_left'], [balance.toString(), context['Features'].callMethod('getNounPlural', [balance, context['locale']['hint_form1'], context['locale']['hint_form2'], context['locale']['hint_form3']])]), context['locale']['get_more'], getMoreHints, (bool positive) {
                 if (positive) {
                     context['Api'].callMethod('call', ['getHint', new JsObject.jsify({
                         'chapter': engine.level.chapter, 'level': engine.level.currentSubLevel
@@ -44,12 +48,12 @@ class HintManager {
                 }
             });
         } else {
-            PromptWindow.showSimple("Lack of hints", "You've unfortunately spent all available hints.", "Get hints", getMoreHints);
+            PromptWindow.showSimple(context['locale']['hints_lack'], context['locale']['spent_hints'], context['locale']['get_hints'], getMoreHints);
         }
     }
 
     void orderSuccessCallback() {
-        WebApi.getUser((){
+        WebApi.getUser(() {
             querySelector("#hints-amount").innerHtml = querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
             WebApi.onOrderSuccess(orderSuccessCallback);
         });

@@ -32,6 +32,10 @@ var getNumberAsWord = function (num) {
 };
 
 var Features = {
+    getNounPlural: function (num, form1, form2, form3) {
+        return num === 1 ? form2 : (num in {2: 0, 3: 0, 4: 0} ? form3 : form1);
+    },
+
     hideLoading: function () {
         Features.updateLoadingBar(100, function () {
             $(".game-box").removeClass("blurred");
@@ -675,6 +679,7 @@ var FBFeatures = {
         return data;
     },
 
+    //asus: +380666721021
     makePurchase: function () {
         var item = $(this).data('item');
         console.log(item);
@@ -682,6 +687,8 @@ var FBFeatures = {
             method: 'pay',
             action: 'purchaseitem',
             product: 'https://twopeoplesoftware.com/twocubes/fb_payments/' + item + '.html'
+        }, function (r) {
+            console.log(r);
         });
     },
 
@@ -732,9 +739,15 @@ var NoFeatures = {
 };
 
 (function () {
+    qs['app_lang'] = 'en';
+
     switch (qs['platform']) {
         case 'vk':
             Features = extendAndOverride(Features, VKFeatures);
+
+            if (+qs['language'] in {0: 0, 1: 0, 777: 0, 100: 0}) {
+                qs['app_lang'] = 'ru';
+            }
             break;
         case 'fb':
             Features = extendAndOverride(Features, FBFeatures);
@@ -743,8 +756,25 @@ var NoFeatures = {
             Features = extendAndOverride(Features, NoFeatures);
     }
 
-    Features.load(function () {
-        Features.initialized = true;
-        Features.onLoaded();
+    console.log("Loading locale:", qs['app_lang']);
+    $.getScript('external/locales/' + qs['app_lang'] + '.js', function () {
+        $('.localized').each(function () {
+            var t = locale[$(this).data('lid')];
+            if (t) {
+                $(this).html(t);
+            }
+        });
+
+        $('.localized-title').each(function () {
+            var t = locale[$(this).data('lid')];
+            if (t) {
+                $(this).attr('title', t);
+            }
+        });
+
+        Features.load(function () {
+            Features.initialized = true;
+            Features.onLoaded();
+        });
     });
 })();

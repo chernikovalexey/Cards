@@ -156,7 +156,7 @@ void main() {
                     WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
                 }
             } else {
-                PromptWindow.showSimple("Lack of attempts", "You've unfortunately spent all attempts for today. Come back tomorrow, or:", "Get more attempts", hints.getMoreHints);
+                PromptWindow.showSimple(context['locale']['attempts_lack'], context['locale']['attempts_lack_message'], context['locale']['get_attempts'], hints.getMoreHints);
                 WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
             }
         } else {
@@ -165,7 +165,7 @@ void main() {
     }, false);
     querySelector("#zoom-in").addEventListener("click", (event) => engine.zoom(true));
     querySelector("#zoom-out").addEventListener("click", (event) => engine.zoom(false));
-    querySelector("#restart").addEventListener("click", (event) => engine.clear(), false);
+    //querySelector("#restart").addEventListener("click", (event) => engine.clear(), false);
 
     //updateBlockButtons(engine);
 
@@ -187,7 +187,7 @@ bool updateAttempts() {
     if (attempts == 0) {
         querySelector("#toggle-physics")
             ..classes.add("faded")
-            ..title = "You've spent all attempts for today";
+            ..title = context['locale']['spent_all_attempts'];
         return false;
     }
     return true;
@@ -241,7 +241,7 @@ void togglePhysicsLabel() {
 void applyPhysicsLabelToButton() {
     var btn = querySelector("#toggle-physics");
     btn.classes.remove("rewind");
-    btn.text = "Apply physics";
+    btn.text = context['locale']['apply_physics'];
 
     engine.rewind();
 }
@@ -252,7 +252,7 @@ void applyRewindLabelToButton([List list]) {
 
         var btn = querySelector("#toggle-physics");
         btn.classes.add("rewind");
-        btn.text = "Rewind blocks";
+        btn.text = context['locale']['rewind'];
 
         engine.togglePhysics(true);
     }

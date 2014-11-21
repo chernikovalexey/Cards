@@ -32,6 +32,10 @@ var getNumberAsWord = function (num) {
 };
 
 var Features = {
+    getNounPlural: function (num, form1, form2, form3) {
+        return num === 1 ? form2 : (num in {2: 0, 3: 0, 4: 0} ? form3 : form1);
+    },
+
     hideLoading: function () {
         Features.updateLoadingBar(100, function () {
             $(".game-box").removeClass("blurred");
@@ -155,6 +159,7 @@ var Features = {
     getPurchaseOptionsPresentation: function (options) {
         var html = "";
         var template = $('.purchase-option-template').html();
+        console.log(template);
         $(options).each(function () {
             html += TemplateEngine.parseTemplate(template, this);
         });
@@ -222,7 +227,7 @@ var VKFeatures = {
                                         hash: upload_response.hash
                                     }, function (save_response) {
                                         VK.api("wall.post", {
-                                            message: "I've completed level " + level_name + " in Two Cubes!",
+                                            message: "I've completed level " + level_name + " in Two Cubes!/n#twocubes",
                                             attachments: save_response.response[0].id
                                         });
                                     });
@@ -608,80 +613,80 @@ var FBFeatures = {
                 {
                     name: "1 hint",
                     price: "4 votes",
-                    data: "h.1."
+                    data: "1-h"
                 },
                 {
                     name: "2 hints",
                     price: "8 votes",
-                    data: "h.5."
+                    data: "5-h"
                 },
                 {
                     name: "5 hints",
                     price: "16 votes",
-                    data: "h.10."
+                    data: "10-h"
                 },
                 {
                     name: "10 hints",
                     price: "24 votes",
-                    data: "h.25."
+                    data: "25-h"
                 }
             ],
             attempts: [
                 {
                     name: "+10 attempts",
                     price: "2 votes",
-                    data: "a.10."
+                    data: "10-a"
                 },
                 {
                     name: "+25 attempts",
                     price: "4 votes",
-                    data: "a.25."
+                    data: "25-a"
                 },
                 {
                     name: "+50 attempts",
                     price: "8 votes",
-                    data: "a.50."
+                    data: "50-a"
                 },
                 {
                     name: "+100 attempts",
                     price: "12 votes",
-                    data: "a.100."
+                    data: "100-a"
                 }
             ],
             chapters: [
                 {
                     stars: 0.5,
                     price: "100 votes",
-                    data: "c.5."
+                    data: "5-c"
                 },
                 {
                     stars: 0.33,
                     price: "50 votes",
-                    data: "c.3."
+                    data: "3-c"
                 },
                 {
                     stars: 0.2,
                     price: "30 votes",
-                    data: "c.2."
+                    data: "2-c"
                 },
                 {
                     stars: 0,
                     price: "10 votes",
-                    data: "c.0."
+                    data: "0-c"
                 }
             ]
         }
-        this.appendUserId(data.attempts);
-        this.appendUserId(data.hints);
-        this.appendUserId(data.chapters);
         return data;
     },
 
+    //asus: +380666721021
     makePurchase: function () {
+        var item = $(this).data('item');
+        console.log(item);
         FB.ui({
             method: 'pay',
             action: 'purchaseitem',
-            product: $(this).data('item')
+            product: 'https://twopeoplesoftware.com/twocubes/fb_payments/' + item + '.html'
         }, function (r) {
             console.log(r);
         });
@@ -734,9 +739,15 @@ var NoFeatures = {
 };
 
 (function () {
+    qs['app_lang'] = 'en';
+
     switch (qs['platform']) {
         case 'vk':
             Features = extendAndOverride(Features, VKFeatures);
+
+            if (+qs['language'] in {0: 0, 1: 0, 777: 0, 100: 0}) {
+                qs['app_lang'] = 'ru';
+            }
             break;
         case 'fb':
             Features = extendAndOverride(Features, FBFeatures);
@@ -745,8 +756,25 @@ var NoFeatures = {
             Features = extendAndOverride(Features, NoFeatures);
     }
 
-    Features.load(function () {
-        Features.initialized = true;
-        Features.onLoaded();
+    console.log("Loading locale:", qs['app_lang']);
+    $.getScript('external/locales/' + qs['app_lang'] + '.js', function () {
+        $('.localized').each(function () {
+            var t = locale[$(this).data('lid')];
+            if (t) {
+                $(this).html(t);
+            }
+        });
+
+        $('.localized-title').each(function () {
+            var t = locale[$(this).data('lid')];
+            if (t) {
+                $(this).attr('title', t);
+            }
+        });
+
+        Features.load(function () {
+            Features.initialized = true;
+            Features.onLoaded();
+        });
     });
 })();

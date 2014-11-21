@@ -15,6 +15,7 @@ import 'package:animation/animation.dart';
 import 'Scroll.dart';
 import 'UserManager.dart';
 import 'Input.dart';
+import 'Tooltip.dart';
 
 class Level {
     GameEngine engine;
@@ -119,6 +120,8 @@ class Level {
                 querySelector(".friends-finished-amount").innerHtml = flevel.length.toString();
 
                 finished.addEventListener("click", (event) {
+                    Tooltip.closeAll();
+
                     DivElement box = querySelector('#friends-finished') as DivElement;
                     box.classes.remove('hidden');
                     animate(box, properties: {

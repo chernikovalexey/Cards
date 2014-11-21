@@ -43,7 +43,7 @@
 <body>
 
 <div class="loading-overlay">
-    <div class="loading-label">LOADING ...</div>
+    <div class="loading-label localized" data-lid="loading">LOADING ...</div>
     <div class="loading-bar full-loading-bar"></div>
     <div class="loading-bar running-bar"></div>
 </div>
@@ -52,18 +52,19 @@
     <div class="level-name"></div>
 
     <div class="buttons hidden">
-        <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show">View controls
+        <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show localized"
+                data-lid="view_controls">View controls
         </button>
-        <button id="zoom-in" class="zb plus" title="Zoom camera in"></button>
-        <button id="zoom-out" class="zb minus" title="Zoom camera out"></button>
-        <button id="toggle-physics">Apply physics</button>
-        <button id="restart" class="hidden">Restart</button>
+        <button id="zoom-in" class="zb plus localized-title" data-lid="zoom_in" title="Zoom camera in"></button>
+        <button id="zoom-out" class="zb minus localized-title" data-lid="zoom_out" title="Zoom camera out"></button>
+        <button id="toggle-physics" class="localized" data-lid="apply_physics">Apply physics</button>
         <div class="right-buttons">
             <div class="friends-finished-button" title="Some of your friends have already finished this level!">
                 <div class="friends-finished-amount"></div>
                 <div class="friends-finished-icon"></div>
             </div>
-            <button id="hint"><span id="hints-label">Use hint</span><span id="hints-amount">2</span></button>
+            <button id="hint"><span id="hints-label" class="localized" data-lid="use_hint">Use hint</span><span
+                    id="hints-amount">2</span></button>
         </div>
     </div>
 
@@ -71,14 +72,14 @@
         <div class="selector dynamic">
             <div class="icon"></div>
             <div class="bound-key">1</div>
-            <div class="caption">dynamic</div>
+            <div class="caption localized" data-lid="dynamic">dynamic</div>
             <div class="remaining"></div>
         </div>
 
         <div class="selector static">
             <div class="icon"></div>
             <div class="bound-key">2</div>
-            <div class="caption">static</div>
+            <div class="caption localized" data-lid="static">static</div>
             <div class="remaining"></div>
         </div>
     </div>
@@ -89,17 +90,19 @@
 
     <div class="light-box" id="menu-box">
         <div class="logo"></div>
-        <div class="instructions">Don't let physics intervene the energy flow!</div>
+        <div class="instructions localized" data-lid="motto">Don't let physics intervene the energy flow!</div>
         <div class="menu-items">
-            <div class="menu-item" id="continue">Continue</div>
-            <div class="menu-item" id="new-game">New Game</div>
+            <div class="menu-item localized" data-lid="continue" id="continue">Continue</div>
+            <div class="menu-item localized" data-lid="new_game" id="new-game">New Game</div>
         </div>
-        <div id="invite-friends">Friends in the game</div>
+        <div class="invite-friends-layout">
+            <div id="invite-friends" class="localized" data-lid="friends_in_game">Friends in the game</div>
+        </div>
     </div>
 
     <div class="light-box hidden" id="chapter-selection">
-        <div class="go-to-menu-button">Menu</div>
-        <div class="chapter-headline">Choose chapter</div>
+        <div class="go-to-menu-button localized" data-lid="menu">Menu</div>
+        <div class="chapter-headline localized" data-lid="choose_chapter">Choose chapter</div>
         <div class="chapter-blurry-bar"></div>
         <div class="chapter-list">
             <div id="chapter-vs">
@@ -112,18 +115,19 @@
 
     <div class="light-box hidden" id="rating-box">
         <div class="tutorial-layout hidden">
-            <div class="tutorial-compliment">You're gorgeous!</div>
-            <div class="tutorial-goal">That's what you should do in this game!</div>
+            <div class="tutorial-compliment localized" data-lid="gorgeous">You're gorgeous!</div>
+            <div class="tutorial-goal localized" data-lid="game_goal">That's what you should do in this game!</div>
         </div>
 
         <div class="attempts-layout">
             <div class="attempts-left"><span id="attempts-remaining"></span> attempts left</div>
-            <div class="attempts-note">every day you acquire 200 free attempts</div>
-            <button class="get-attempts-button">get more</button>
+            <div class="attempts-note localized" data-lid="every_day_attempts">every day you acquire 200 free attempts
+            </div>
+            <button class="get-attempts-button localized" data-lid="get_more">get more</button>
         </div>
 
         <div class="rating-inner-layout">
-            <div class="pause-title hidden">Game paused</div>
+            <div class="pause-title hidden localized" data-lid="paused">Game paused</div>
             <div class="rating-wrap">
                 <div class="s-level-name"></div>
                 <div class="level-rating"></div>
@@ -131,34 +135,35 @@
 
             <div class="chapter-rating-wrap hidden">
                 <div class="current-level-cr">
-                    <div class="cr-label">Level</div>
+                    <div class="cr-label localized" data-lid="level">Level</div>
                     <div class="current-level-name"></div>
                     <div class="current-level-rating"></div>
                 </div>
 
                 <div class="current-chapter-cr">
-                    <div class="cr-label">Chapter</div>
+                    <div class="cr-label localized" data-lid="chapter">Chapter</div>
                     <div class="current-chapter-name"></div>
                     <div class="chapter-rating"></div>
                     <div class="star-ico"></div>
                 </div>
 
                 <div class="chapter-controls controls">
-                    <button id="cc-list">Choose another chapter</button>
-                    <button id="share-chapter">Share result</button>
+                    <button id="cc-list" class="localized" data-lid="choose_another_chapter">Choose another chapter
+                    </button>
+                    <button id="share-chapter" class="localized" data-lid="share_result">Share result</button>
                 </div>
             </div>
 
             <div class="level-controls controls">
-                <button class="step-button" id="restart-level">Restart</button>
-                <button class="step-button" id="next-level">Next</button>
-                <button class="step-button" id="share-level">Share result</button>
+                <button class="step-button localized" data-lid="restart" id="restart-level">Restart</button>
+                <button class="step-button localized" data-lid="next" id="next-level">Next</button>
+                <button class="step-button localized" data-lid="share_result" id="share-level">Share result</button>
             </div>
 
             <div class="pause-controls controls hidden">
-                <button class="step-button" id="resume-game">Resume</button>
-                <button class="step-button" id="clear-level">Restart</button>
-                <button class="step-button" id="pm-menu">Menu</button>
+                <button class="step-button localized" data-lid="resume" id="resume-game">Resume</button>
+                <button class="step-button localized" data-lid="restart" id="clear-level">Restart</button>
+                <button class="step-button localized" data-lid="menu" id="pm-menu">Menu</button>
             </div>
         </div>
 
@@ -179,22 +184,29 @@
         <div class="controls-layout">
             <div class="control-block">
                 <div class="ctrl-icon rotate"></div>
-                <div class="ctrl-instruction"><b>To rotate the block,</b> use your mouse wheel or buttons Q/E</div>
+                <div class="ctrl-instruction localized" data-lid="instruction_rotate"><b>To rotate the block,</b> use
+                    your mouse wheel or buttons Q/E
+                </div>
             </div>
 
             <div class="control-block">
                 <div class="ctrl-icon zoom-in"></div>
-                <div class="ctrl-instruction"><b>To zoom camera in,</b> hold Z and left-click</div>
+                <div class="ctrl-instruction localized" data-lid="instruction_zoom_in"><b>To zoom camera in,</b> hold Z
+                    and left-click
+                </div>
             </div>
 
             <div class="control-block">
                 <div class="ctrl-icon zoom-out"></div>
-                <div class="ctrl-instruction"><b>To zoom camera out,</b> hold Alt and left-click</div>
+                <div class="ctrl-instruction localized" data-lid="instruction_zoom_out"><b>To zoom camera out,</b> hold
+                    Alt and left-click
+                </div>
             </div>
 
             <div class="control-block">
                 <div class="ctrl-icon dragging"></div>
-                <div class="ctrl-instruction">To move the camera,</b> use arrows on the keyboard or press Space and drag
+                <div class="ctrl-instruction localized" data-lid="instruction_move">To move the camera,</b> use arrows
+                    on the keyboard or press Space and drag
                     the
                     mouse.
                 </div>
@@ -202,22 +214,27 @@
 
             <div class="control-block">
                 <div class="ctrl-icon"></div>
-                <div class="ctrl-instruction"><b>To apply physics or rewind,</b> press Ctrl+Shift.
+                <div class="ctrl-instruction localized" data-lid="instruction_apply"><b>To apply physics or rewind,</b>
+                    press Ctrl+Shift.
                 </div>
             </div>
 
             <div class="control-block">
                 <div class="ctrl-icon"></div>
-                <div class="ctrl-instruction"><b>To undo the most recent action,</b> press Ctrl+Z.</div>
+                <div class="ctrl-instruction localized" data-lid="instruction_undo"><b>To undo the most recent
+                    action,</b> press Ctrl+Z.
+                </div>
             </div>
 
             <div class="control-block">
                 <div class="ctrl-icon"></div>
-                <div class="ctrl-instruction"><b>To remove a block,</b> place mouse over it and right-click.</div>
+                <div class="ctrl-instruction localized" data-lid="instruction_remove"><b>To remove a block,</b> place
+                    mouse over it and right-click.
+                </div>
             </div>
 
             <div class="next-button-layout">
-                <button class="step-button try-button progress-step wizard-try">OK</button>
+                <button class="step-button try-button progress-step wizard-try localized" data-lid="ok">OK</button>
             </div>
         </div>
     </div>
@@ -234,22 +251,25 @@
 
 <div class="bs-screen" id="purchases">
     <div class="bs-screen-topbar">
-        <div class="bs-screen-headline friends-headline">Purchases</div>
-        <div class="bs-screen-close close-purchases">close</div>
+        <div class="bs-screen-headline friends-headline localized" data-lid="purchases">Purchases</div>
+        <div class="bs-screen-close close-purchases localized" data-lid="close">close</div>
     </div>
 
     <div class="purchase-block">
         <div class="purchase-block-head">
-            <div class="purchase-headline">Hints</div>
-            <div class="balance-layout">you have <span class="current-balance" id="hints-balance">2</span></div>
+            <div class="purchase-headline localized" data-lid="hints">Hints</div>
+            <div class="balance-layout localized" data-lid="you_have">you have <span class="current-balance"
+                                                                                     id="hints-balance">2</span></div>
         </div>
         <div class="purchase-options hint-options"></div>
     </div>
 
     <div class="purchase-block">
         <div class="purchase-block-head">
-            <div class="purchase-headline">Attempts</div>
-            <div class="balance-layout">you have <span class="current-balance" id="attempts-balance">200</span></div>
+            <div class="purchase-headline localized" data-lid="attempts">Attempts</div>
+            <div class="balance-layout localized" data-lid="you_have">you have <span class="current-balance"
+                                                                                     id="attempts-balance">200</span>
+            </div>
         </div>
         <div class="purchase-options attempt-options"></div>
     </div>
@@ -257,7 +277,7 @@
 
 <div class="bs-screen hidden" id="friends-finished">
     <div class="bs-screen-topbar">
-        <div class="bs-screen-headline">Friends completed this level</div>
+        <div class="bs-screen-headline localized" data-lid="friends_completed">Friends completed this level</div>
         <div class="bs-screen-close close-finished">close</div>
     </div>
     <div class="bs-screen-blurry-bar"></div>
@@ -272,9 +292,9 @@
 
 <div class="bs-screen friends hidden">
     <div class="bs-screen-topbar">
-        <div class="friends-invite-more">invite more</div>
-        <div class="bs-screen-headline">Friends Playing</div>
-        <div class="bs-screen-close close-friends">close</div>
+        <div class="friends-invite-more localized" data-lid="invite_more">invite more</div>
+        <div class="bs-screen-headline localized" data-lid="friends_playing">Friends Playing</div>
+        <div class="bs-screen-close close-friends localized" data-lid="close">close</div>
     </div>
     <div class="bs-screen-blurry-bar"></div>
 
@@ -293,17 +313,18 @@
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
                 <div class="usage-statistics">
-                    <div class="fr-dynamic" title="Amount of dynamic blocks">
+                    <div class="fr-dynamic localized-title" data-lid="amount_of_dynamic" title="Amount of dynamic blocks">
                         <div class="fr-num fr-nd"><%=dynamic%></div>
                         <div class="fr-block fr-db"></div>
                     </div>
 
-                    <div class="fr-static" title="Amount of static blocks">
+                    <div class="fr-static localized-title" data-lid="amount_of_static" title="Amount of static blocks">
                         <div class="fr-num fr-ns"><%=static%></div>
                         <div class="fr-block fr-sb"></div>
                     </div>
                 </div>
-                <div class="fr-result" title="Amount of stars acquired for this level">
+                <div class="fr-result localized-title" data-lid="amount_of_stars"
+                     title="Amount of stars acquired for this level">
                     <div class="fr-res-num"><%=result%></div>
                     <div class="fr-res-ico"></div>
                 </div>

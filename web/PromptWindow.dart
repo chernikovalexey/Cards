@@ -35,7 +35,10 @@ class PromptWindow {
         return id - 1;
     }
 
-    static void show(String headline, String message, String offer_text, String offer_button, Function offerCallback, Function callback, [String positive="Yes", String negative="No"]) {
+    static void show(String headline, String message, String offer_text, String offer_button, Function offerCallback, Function callback, [String positive=null, String negative=null]) {
+        if (positive == null) positive = context['locale']['yes'];
+        if (negative == null) negative = context['locale']['no'];
+
         String nid = __show(".prompt-window-template", {
             'id': id, 'headline': headline, 'message': message, 'offer_text': offer_text, 'offer_button': offer_button, 'positive': positive, 'negative': negative
         }).toString();
