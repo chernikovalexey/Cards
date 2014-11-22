@@ -2,7 +2,6 @@
 header("Content-Type: application/json; encoding=utf-8");
 
 
-
 class FBPayments implements IPayments
 {
     const SECRET_KEY = 'b414d64c9dc377b6393f93c1be235472';
@@ -38,16 +37,17 @@ class FBPayments implements IPayments
         return sprintf(self::GRAPH_API_URL, $id, self::APP_ACCESS_TOKEN);
     }
 
-    private function getChapterProduct($ch, $productUrl)
+    private function getChapterProduct($productUrl)
     {
-        $url = parse_url($productUrl);
-        $chapterId = +end(explode('=', $url['query']));
-        $s = reset(explode('-', $ch));
-        return array('chapter', $chapterId, $s);
+        $arg = 'arguments=';
+        $url = json_decode(urldecode(substr($productUrl, strpos($productUrl, $arg) + strlen($arg))), true);
+        //file_put_contents('file.json', print_r($url, true));
+        return array('chapter', $url['chapter'], '1');
     }
 
     private function getProduct($product)
     {
+        $url = $product;
         $end = end(explode('/', $product));
         $product = reset(explode('.', $end));
         switch ($product) {
@@ -68,7 +68,7 @@ class FBPayments implements IPayments
             case '100-a':
                 return array('attempt', 100);
             default:
-                return $this->getChapterProduct($end, $product);
+                return $this->getChapterProduct($url);
         }
     }
 
@@ -81,6 +81,7 @@ class FBPayments implements IPayments
 
         }
         $this->request = json_decode(file_get_contents("php://input"), true);
+
         $data = json_decode(WebClient::downloadString($this->getGraphUrl($this->request['entry'][0]['id'])), true);
         $user = $this->db->getUser($data['user']['id'], 'fb');
         $action = $data['actions'][0];
@@ -108,5 +109,41 @@ class FBPayments implements IPayments
         }
         if ($product[0] == 'hint' || $product[0] == 'attempt')
             $this->db->submitUser($user);
+    }
+
+    private function getChapterPrice(array $chapter, $totalStars)
+    {
+
+        $toUnlock = $chapter['unlock_stars'];
+        $coefficient = ($toUnlock - $totalStars) / floatval($toUnlock);
+
+        if ($coefficient < 0.2)
+            return 1;
+        else if ($coefficient < 0.33)
+            return 3;
+        else if ($coefficient < 0.5)
+            return 5;
+        else
+            return 10;
+    }
+
+    public function getChapterUnlockOg(array $user, $chapter)
+    {
+        $totalStars = $this->db->getTotalStars($user['userId']);
+        $chapters = json_decode(file_get_contents(CHAPTER_FILE), true);
+        $chapter = $chapters['chapters'][$chapter - 1];
+        $price = $this->getChapterPrice($chapter, $totalStars);
+        $actual_link = "http://{$_SERVER[HTTP_HOST]}{$_SERVER[REQUEST_URI]}";
+        echo sprintf('<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
+                <meta property="og:type" content="og:product" />
+                <meta property="og:title" content="Unlock %s chapter!"/>
+                <meta property="og:plural_title" content="%s"/>
+                <meta property="og:image" content="http://friendsmashsample.herokuapp.com/friendsmash_social_persistence_payments/images/coin.64.png" />
+                <meta property="og:url" content="%s"/>
+                <meta property="og:description" content="Unlock chapter: %s!"/>
+                <meta property="product:price:amount" content="%s"/>
+                <meta property="product:price:currency" content="USD"/>
+              </head>', $chapter['name'], $chapter['name'], $actual_link, $chapter['name'], $price);
+        exit;
     }
 }

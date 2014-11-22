@@ -27,7 +27,7 @@ class Router
 
     public function route()
     {
-        $arguments = json_decode(stripslashes($_POST['arguments']), true);
+        $arguments = json_decode(stripslashes($_REQUEST['arguments']), true);
         list($platform, $method) = explode('.', isset($_POST['method']) ? $_POST['method'] : $_GET['method']);
         if (!Api::validatePlatform($platform)) {
             return new ApiException('404 platform not found', $platform, $method, $arguments);
@@ -43,6 +43,7 @@ class Router
             $user = $this->db->validateUser($arguments['userId'], $platform);
             $this->db->countAttempts($user);
             $arguments['userId'] = $user; // что бы при вызове invokeArgs этот параметр шел первым, в методы Апи уже попадет как массив $user
+
             Analytics::init($user['userId'], $platform);
 
             if ($user['isNew'])

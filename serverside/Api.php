@@ -58,19 +58,9 @@ class Api
     public function getHint(array $user, $chapter, $level)
     {
         if ($user['balance'] > 0) {
-            $chapter = intval($chapter);
-            $levelIndex = intval($level) - 1;
-            $filename = "private/hints/" . $chapter . ".json";
-            if (file_exists($filename)) {
-                $chapterHints = json_decode(file_get_contents($filename), true);
-                if (!isset($chapterHints[$levelIndex]))
-                    throw new ApiException("There is no hint for this level in specified file!");
-                $user['balance']--;
-                $this->db->submitUser($user);
-
-                return array("user" => $user, "hint" => $chapterHints[$levelIndex]);
-            }
-            throw new ApiException("Hint file is not available, chapter name is not valid!");
+            $user['balance']--;
+            $this->db->submitUser($user);
+            return array("user" => $user, "hint" => $this->db->getHint($chapter, $level));
         }
         throw new ApiException("To use hint you must have at least 1 hint on your balance!");
     }
@@ -87,6 +77,14 @@ class Api
     {
         $payments = Payments::create($this->platform, $this->db);
         return $payments->perform($_POST);
+    }
+
+    public function fbGetChapterUnlockOg(array $user, $chapter)
+    {
+        require_once 'Payments.php';
+        $p = new FBPayments($this->db);
+        $p->getChapterUnlockOg($user, $chapter);
+        return null;
     }
 
     public function chapters(array $user)
