@@ -43,8 +43,8 @@ locale.attempts = 'Attempts';
 locale.friends_completed = 'Friends completed this level';
 locale.invite_more = 'invite more';
 locale.friends_playing = 'Friends playing';
-locale.amount_of_dynamic = 'Amount of dynamic blocks used';
-locale.amount_of_static = 'Amount of static blocks used';
+locale.amount_of_dynamic = 'Amount of jumpers used';
+locale.amount_of_static = 'Amount of shelves used';
 locale.amount_of_stars = 'Amount of stars acquired for this level';
 locale.completed_form1 = locale.completed_form2 = locale.completed_form3 = 'completed';
 locale.completed = '<%=completed%> <%=levels_amount%> <%=level_ending%> in <%=chapters_amount%> <%=chapter_ending%>';
@@ -109,4 +109,4 @@ locale.wizard_remove = "To remove the selected block, <b>right-click</b> or <b>p
 locale.wizard_rotate = "<b>To rotate the block,</b> use your mouse wheel or buttons Q/E";
 locale.wizard_hints = "If you are in trouble with accomplishing this level, <b>use hints</b>";
 locale.wizard_zoom = "<b>Use zoom</b> for accuracy";
-locale.wizard_static = "Static blocks don't fall when physics applied, and don't conduct energy.";
+locale.wizard_static = "Shelves don't fall when physics applied, and don't conduct energy.";
