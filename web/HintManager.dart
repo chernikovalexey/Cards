@@ -53,7 +53,9 @@ class HintManager {
     }
 
     void orderSuccessCallback() {
+        print("order success");
         WebApi.getUser(() {
+            print("get user success");
             querySelector("#hints-amount").innerHtml = querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
             WebApi.onOrderSuccess(orderSuccessCallback);
         });

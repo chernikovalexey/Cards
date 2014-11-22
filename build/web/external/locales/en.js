@@ -7,8 +7,8 @@ locale.zoom_out = 'Zoom camera out';
 locale.apply_physics = 'Apply';
 locale.rewind = 'Rewind';
 locale.use_hint = 'Use hint';
-locale.dynamic = 'dynamic';
-locale.static = 'static';
+locale.dynamic = 'jumper';
+locale.static = 'shelf';
 locale.motto = "Don't let physics intervene the energy flow!";
 locale.continue = 'Continue';
 locale.new_game = 'New game';
@@ -48,6 +48,7 @@ locale.amount_of_static = 'Amount of static blocks used';
 locale.amount_of_stars = 'Amount of stars acquired for this level';
 
 // Used in Dart
+locale.left = '%s left';
 locale.attempts_lack = "Lack of attempts";
 locale.attempts_lack_message = "You've unfortunately spent all attempts for today. Come back tomorrow, or:";
 locale.get_attempts = "Get more attempts";

@@ -18,6 +18,7 @@ import 'WebApi.dart';
 import 'GameWizard.dart';
 import 'Scroll.dart';
 import 'PromptWindow.dart';
+import 'package:sprintf/sprintf.dart';
 
 CanvasElement canvas;
 GameEngine engine;
@@ -60,7 +61,7 @@ void main() {
         }
     });
 
-    context['Features'].callMethod("setOnLoadedCallback", [() {
+    Function onLoadedCallback = () {
         showMainMenu();
 
         Chapter.load((List chapters) {
@@ -89,7 +90,13 @@ void main() {
                 ChapterShower.show(chapters);
             }, false);
         });
-    }]);
+    };
+
+    if (context['Features']['initialized']) {
+        onLoadedCallback();
+    } else {
+        context['Features'].callMethod("setOnLoadedCallback", [onLoadedCallback]);
+    }
 
     querySelector(".friends-invite-more").addEventListener("click", (event) {
         context['Features'].callMethod("showInviteBox");
@@ -265,8 +272,8 @@ void updateBlockButtons(GameEngine engine) {
     (querySelectorAll(".selector")[engine.staticBlocksSelected ? 1 : 0] as DivElement).classes.add("current");
 
     querySelector(".static").hidden = engine.level.current.staticBlocksRemaining == 0;
-    querySelector(".static .remaining").innerHtml = engine.level.current.staticBlocksRemaining.toString() + " left";
-    querySelector(".dynamic .remaining").innerHtml = engine.level.current.dynamicBlocksRemaining.toString() + " left";
+    querySelector(".static .remaining").innerHtml = sprintf(context['locale']['left'], [engine.level.current.staticBlocksRemaining.toString()]);
+    querySelector(".dynamic .remaining").innerHtml = sprintf(context['locale']['left'], [engine.level.current.dynamicBlocksRemaining.toString()]);
 }
 
 void showMainMenu() {
