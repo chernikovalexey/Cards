@@ -57,6 +57,7 @@ class HintManager {
         WebApi.getUser(() {
             print("get user success");
             querySelector("#hints-amount").innerHtml = querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
+            querySelector("#attempts-balance").innerHtml = querySelector("#attempts-remaining").innerHtml = UserManager.getAsString("allAttempts");
             WebApi.onOrderSuccess(orderSuccessCallback);
         });
     }
