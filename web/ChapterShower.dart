@@ -6,6 +6,7 @@ import 'Chapter.dart';
 import "StarManager.dart";
 import 'Input.dart';
 import "WebApi.dart";
+import 'package:sprintf/sprintf.dart';
 
 class ChapterShower {
     static void show(List chapters) {
@@ -80,9 +81,10 @@ class ChapterShower {
 
         if (!unlocked) {
             int left = chapter["unlock_stars"] - totalStars;
-            el.querySelector(".stars-left").innerHtml = left.toString();
-            el.querySelector(".word-ending").hidden = left == 1;
-            el.querySelector(".chapter").classes.add("chapter-locked");
+            el.querySelector(".unlock-layout").innerHtml = sprintf(context['Features'].callMethod('getNounPlural', [left, context['locale']['unlock_left1'], context['locale']['unlock_left2'], context['locale']['unlock_left3']]), [left.toString()]);
+            el.querySelector(".chapter")
+                ..classes.add("chapter-locked")
+                ..title = context['locale']['click_to_unlock'];
         } else {
             int finished = Chapter.getFinishedLevelsAmount(id, chapter["levels"]);
 

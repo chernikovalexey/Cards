@@ -46,6 +46,40 @@ locale.friends_playing = 'Friends playing';
 locale.amount_of_dynamic = 'Amount of dynamic blocks used';
 locale.amount_of_static = 'Amount of static blocks used';
 locale.amount_of_stars = 'Amount of stars acquired for this level';
+locale.completed_form1 = locale.completed_form2 = locale.completed_form3 = 'completed';
+locale.completed = '<%=completed%> <%=levels_amount%> <%=level_ending%> in <%=chapters_amount%> <%=chapter_ending%>';
+locale.not_played = "didn't play yet"
+locale.vote_form1 = 'votes';
+locale.vote_form2 = 'vote';
+locale.vote_form3 = 'votes';
+locale.attempt_form1 = 'attempts';
+locale.attempt_form2 = 'attempt';
+locale.attempt_form3 = 'attempts';
+locale.level_form1 = 'levels';
+locale.level_form2 = 'level';
+locale.level_form3 = 'levels';
+locale.chapterd_form1 = 'chapters';
+locale.chapterd_form2 = 'chapter';
+locale.chapterd_form3 = 'chapters';
+locale.unlock_left1 = '<b>%s</b> stars left';
+locale.unlock_left2 = '<b>one</b> star left';
+locale.unlock_left3 = '<b>%s</b> stars left';
+locale.of = 'of';
+locale.click_to_unlock = 'Click to unlock';
+
+locale[1] = 'one';
+locale[2] = 'two';
+locale[3] = 'three';
+locale[4] = 'four';
+locale[5] = 'five';
+locale[6] = 'six';
+
+locale['1d'] = 'one';
+locale['2d'] = 'two';
+locale['3d'] = 'three';
+locale['4d'] = 'four';
+locale['5d'] = 'five';
+locale['6d'] = 'six';
 
 // Used in Dart
 locale.left = '%s left';

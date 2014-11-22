@@ -25,7 +25,7 @@
     <script type="text/javascript" src="packages/browser/dart.js"></script>
 
     <script type="text/javascript">
-        window.onmousewheel = function (e) {
+        window.onmousewheel = window.onkeydown = function (e) {
             if (e.preventDefault) e.preventDefault();
             e.returnValue = false;
             return false;
@@ -51,7 +51,7 @@
         <button id="zoom-out" class="zb minus localized-title" data-lid="zoom_out" title="Zoom camera out"></button>
         <button id="toggle-physics" class="localized" data-lid="apply_physics">Apply physics</button>
         <div class="right-buttons">
-            <div class="friends-finished-button" title="Some of your friends have already finished this level!">
+            <div class="friends-finished-button localized-title" data-lid="some_friends" title="">
                 <div class="friends-finished-amount"></div>
                 <div class="friends-finished-icon"></div>
             </div>
@@ -162,7 +162,7 @@
         <div class="tape">
             <div class="chapter-level">
                 <div class="finished-levels"></div>
-                of
+                <span class="localized" data-lid="of">of</span>
                 <div class="all-levels"></div>
             </div>
             <div id="tape-vs">
@@ -250,8 +250,9 @@
     <div class="purchase-block">
         <div class="purchase-block-head">
             <div class="purchase-headline localized" data-lid="hints">Hints</div>
-            <div class="balance-layout"><span class="localized" data-lid="you_have">you have</span> <span class="current-balance"
-                                                                                     id="hints-balance">2</span></div>
+            <div class="balance-layout"><span class="localized" data-lid="you_have">you have</span> <span
+                    class="current-balance"
+                    id="hints-balance">2</span></div>
         </div>
         <div class="purchase-options hint-options"></div>
     </div>
@@ -259,8 +260,9 @@
     <div class="purchase-block">
         <div class="purchase-block-head">
             <div class="purchase-headline localized" data-lid="attempts">Attempts</div>
-            <div class="balance-layout"><span class="localized" data-lid="you_have">you have</span> <span class="current-balance"
-                                                                                     id="attempts-balance">200</span>
+            <div class="balance-layout"><span class="localized" data-lid="you_have">you have</span> <span
+                    class="current-balance"
+                    id="attempts-balance">200</span>
             </div>
         </div>
         <div class="purchase-options attempt-options"></div>
@@ -301,11 +303,13 @@
 <div class="templates">
     <div class="finished-friend-template">
         <div data-id="<%=id%>" class="friend-card finished-friend">
+            <div class="fr-pos">#<%=pos%></div>
             <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
                 <div class="usage-statistics">
-                    <div class="fr-dynamic localized-title" data-lid="amount_of_dynamic" title="Amount of dynamic blocks">
+                    <div class="fr-dynamic localized-title" data-lid="amount_of_dynamic"
+                         title="Amount of dynamic blocks">
                         <div class="fr-num fr-nd"><%=dynamic%></div>
                         <div class="fr-block fr-db"></div>
                     </div>
@@ -325,12 +329,13 @@
     </div>
 
     <div class="friend-card-template">
-        <div data-id="<%=id%>" class="friend-card <%=last%>">
+        <div data-id="<%=id%>" class="friend-card fr-pos-<%=pos%>">
             <div class="fr-pos">#<%=pos%></div>
             <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
-                <div class="fr-succeeded">completed <%=levels_amount%> level<%=level_ending%> in <%=chapters_amount%>
+                <div class="fr-succeeded localized" data-lid="completed">completed <%=levels_amount%>
+                    level<%=level_ending%> in <%=chapters_amount%>
                     chapter<%=chapter_ending%>
                 </div>
                 <div class="fr-result">
@@ -345,7 +350,7 @@
         <div class="prompt-window p-<%=id%>">
             <div class="prompt-white-overlay">
                 <div class="prompt-headline"><%=headline%></div>
-                <div class="prompt-close">close</div>
+                <div class="prompt-close localized" data-lid="close">close</div>
                 <div class="prompt-message"><%=message%></div>
                 <div class="prompt-offer">
                     <span class="prompt-offer-text"><%=offer_text%></span>
@@ -403,16 +408,13 @@
             <div class="progress-layout">
                 <div class="progress-caption">
                     <div class="finished-levels"></div>
-                    of
+                    <span class="localized" data-lid="of"></span>
                     <div class="all-levels"></div>
                 </div>
                 <div class="full-bar"></div>
                 <div class="current-bar"></div>
             </div>
-            <div class="unlock-layout">
-                <div class="stars-left"></div>
-                star<span class="word-ending">s</span> left
-            </div>
+            <div class="unlock-layout"></div>
             <div class="chapter-thumbnail"></div>
             <div class="chapter-title"></div>
         </div>

@@ -46,6 +46,42 @@ locale.friends_playing = 'Друзья в игре';
 locale.amount_of_dynamic = 'Количество использованных динамических блоков';
 locale.amount_of_static = 'Количество использованный статических блоков';
 locale.amount_of_stars = 'Количество звезд, приобретенных за этот уровень';
+locale.completed_form1 = 'пройдено';
+locale.completed_form2 = 'пройден';
+locale.completed_form3 = 'пройдено';
+locale.completed = '<%=completed%> <%=levels_amount%> <%=level_ending%> в <%=chapters_amount%> <%=chapter_ending%>';
+locale.not_played = 'пока ничего не пройдено';
+locale.vote_form1 = 'голосов';
+locale.vote_form2 = 'голос';
+locale.vote_form3 = 'голоса';
+locale.attempt_form1 = 'попыток';
+locale.attempt_form2 = 'попытка';
+locale.attempt_form3 = 'попытки';
+locale.level_form1 = 'уровней';
+locale.level_form2 = 'уровень';
+locale.level_form3 = 'уровня';
+locale.chapterd_form1 = 'главах';
+locale.chapterd_form2 = 'главе';
+locale.chapterd_form3 = 'главах';
+locale.unlock_left1 = 'нужно еще <b>%s</b> звезд';
+locale.unlock_left2 = 'нужна еще <b>одна</b> звезда';
+locale.unlock_left3 = 'нужно еще <b>%s</b> звезды';
+locale.of = 'из';
+locale.click_to_unlock = 'Нажмите, чтобы разблокировать';
+
+locale[1] = 'один';
+locale[2] = 'два';
+locale[3] = 'три';
+locale[4] = 'четыре';
+locale[5] = 'пять';
+locale[6] = 'шесть';
+
+locale['1d'] = 'одной';
+locale['2d'] = 'двух';
+locale['3d'] = 'трех';
+locale['4d'] = 'четырех';
+locale['5d'] = 'пяти';
+locale['6d'] = 'шести';
 
 // Used in Dart
 locale.left = 'осталось %s';

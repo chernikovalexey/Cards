@@ -15,6 +15,18 @@ if (typeof String.prototype.endsWith !== 'function') {
     };
 }
 
+if (!String.prototype.format) {
+    String.prototype.format = function () {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function (match, number) {
+            return typeof args[number] != 'undefined'
+                ? args[number]
+                : match
+                ;
+        });
+    };
+}
+
 var extendAndOverride = function (o1, o2) {
     for (var key in o2) {
         o1[key] = o2[key];
@@ -31,15 +43,37 @@ var getObjectLength = function (obj) {
 };
 
 var getNumberAsWord = function (num) {
-    var words = {
-        1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"
-    };
-    return num in words ? words[num] : num;
+    return num in locale ? locale[num] : num;
+};
+
+var user_sort = function (a, b) {
+    return a.result === b.result
+        ? 0
+        : (a.result > b.result ? -1 : 1);
 };
 
 var Features = {
     getNounPlural: function (num, form1, form2, form3) {
-        return num === 1 ? form2 : (num in {2: 0, 3: 0, 4: 0} ? form3 : form1);
+        var ending;
+
+        num %= 100;
+        if (num >= 11 && num <= 19) {
+            ending = form1;
+        } else {
+            switch (num % 10) {
+                case 1:
+                    ending = form2;
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                    ending = form3;
+                    break;
+                default:
+                    ending = form1;
+            }
+        }
+        return ending;
     },
 
     hideLoading: function () {
@@ -92,11 +126,22 @@ var Features = {
     },
 
     showFinishedFriends: function (chapter, level, callback) {
+        var users = [];
+        var counter = 0;
+
         $('.finished-friends').empty();
+
         $.each(Features.chapters[chapter][level], function (k, v) {
-            $('.finished-friends').append(TemplateEngine.parseTemplate($('.finished-friend-template').html(), $.extend(v, {
-                id: k.replace("u", "")
-            })));
+            users.push($.extend(v, {
+                id: k.replace("u", ""),
+                pos: ++counter
+            }));
+        });
+
+        users.sort(user_sort);
+
+        $(users).each(function () {
+            $('.finished-friends').append(TemplateEngine.parseTemplate($('.finished-friend-template').html(), this));
         });
 
         callback();
@@ -117,13 +162,19 @@ var Features = {
                     ? Features.results_by_chapters[this.id].chapters
                     : 0;
 
-                $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), $.extend(this, {
+                var obj = $.extend(this, {
                     pos: counter,
+                    completed: Features.getNounPlural(levels_amount, locale.completed_form1, locale.completed_form2, locale.completed_form3),
                     levels_amount: getNumberAsWord(levels_amount),
-                    chapters_amount: getNumberAsWord(chapters_amount),
-                    level_ending: levels_amount === 1 ? '' : 's',
-                    chapter_ending: chapters_amount === 1 ? '' : 's'
-                })));
+                    chapters_amount: locale[chapters_amount + 'd'] ? locale[chapters_amount + 'd'] : chapters_amount,
+                    level_ending: Features.getNounPlural(levels_amount, locale.level_form1, locale.level_form2, locale.level_form3),
+                    chapter_ending: Features.getNounPlural(chapters_amount, locale.chapterd_form1, locale.chapterd_form2, locale.chapterd_form3)
+                });
+                $('.card-users').append(TemplateEngine.parseTemplate($('.friend-card-template').html(), obj));
+
+                if (chapters_amount === 0) {
+                    $('.fr-pos-' + obj.pos).find('.fr-succeeded').html(locale.not_played);
+                }
             });
 
             callback();
@@ -400,67 +451,67 @@ var VKFeatures = {
         var data = {
             hints: [
                 {
-                    name: "1 hint",
-                    price: "4 votes",
+                    name: "1 " + locale.hint_form2,
+                    price: "4 " + locale.vote_form3,
                     data: "h.1."
                 },
                 {
-                    name: "2 hints",
-                    price: "8 votes",
+                    name: "2 " + locale.hint_form3,
+                    price: "8 " + locale.vote_form1,
                     data: "h.5."
                 },
                 {
-                    name: "5 hints",
-                    price: "16 votes",
+                    name: "5 " + locale.hint_form1,
+                    price: "16 " + locale.vote_form1,
                     data: "h.10."
                 },
                 {
-                    name: "10 hints",
-                    price: "24 votes",
+                    name: "10 " + locale.hint_form1,
+                    price: "24 " + locale.vote_form3,
                     data: "h.25."
                 }
             ],
             attempts: [
                 {
-                    name: "+10 attempts",
-                    price: "2 votes",
+                    name: "10 " + locale.attempt_form1,
+                    price: "2 " + locale.vote_form3,
                     data: "a.10."
                 },
                 {
-                    name: "+25 attempts",
-                    price: "4 votes",
+                    name: "25 " + locale.attempt_form1,
+                    price: "4 " + locale.vote_form3,
                     data: "a.25."
                 },
                 {
-                    name: "+50 attempts",
-                    price: "8 votes",
+                    name: "50 " + locale.attempt_form1,
+                    price: "8 " + locale.vote_form1,
                     data: "a.50."
                 },
                 {
-                    name: "+100 attempts",
-                    price: "12 votes",
+                    name: "100 " + locale.attempt_form1,
+                    price: "12 " + locale.vote_form1,
                     data: "a.100."
                 }
             ],
             chapters: [
                 {
                     stars: 0.5,
-                    price: "100 votes",
+                    price: "100 " + locale.vote_form1,
                     data: "c.5."
                 },
                 {
                     stars: 0.33,
-                    price: "50 votes",
+                    price: "50 " + locale.vote_form1,
                     data: "c.3."
                 },
                 {
                     stars: 0.2,
-                    price: "30 votes",
+                    price: "30 " + locale.vote_form1,
                     data: "c.2."
                 },
                 {
                     stars: 0,
-                    price: "10 votes",
+                    price: "10 " + locale.vote_form1,
                     data: "c.0."
                 }
             ]
@@ -590,11 +641,7 @@ var FBFeatures = {
                         }
 
                         // Descending sort by stars amount
-                        friends_in_game.sort(function (a, b) {
-                            return a.result === b.result
-                                ? 0
-                                : (a.result > b.result ? -1 : 1);
-                        });
+                        friends_in_game.sort(user_sort);
 
                         Features.friends_in_game = friends_in_game;
 

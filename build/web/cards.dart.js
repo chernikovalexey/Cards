@@ -484,16 +484,20 @@ t=J.U6(x)
 J.Qy(v.querySelector(".chapter-title"),t.t(x,"name"))
 s=$.fn
 if(t.t(x,"unlocked")!==!0){r=J.xH(t.t(x,"unlock_stars"),s)
-u=J.x(r)
-J.Qy(v.querySelector(".stars-left"),u.bu(r))
-v.querySelector(".word-ending").hidden=u.n(r,1)
-J.pP(v.querySelector(".chapter")).h(0,"chapter-locked")}else{q=D.Z7(y,t.t(x,"levels"))
+u=v.querySelector(".unlock-layout")
+t=$.Jn()
+q=$.cM()
+J.Qy(u,t.call$2(J.UQ(q,"Features").V7("getNounPlural",[r,J.UQ(J.UQ(q,"locale"),"unlock_left1"),J.UQ(J.UQ(q,"locale"),"unlock_left2"),J.UQ(J.UQ(q,"locale"),"unlock_left3")]),[J.AG(r)]))
+t=v.querySelector(".chapter")
+u=J.RE(t)
+u.gDD(t).h(0,"chapter-locked")
+u.smk(t,J.UQ(J.UQ(q,"locale"),"click_to_unlock"))}else{p=D.Z7(y,t.t(x,"levels"))
 J.pP(v.querySelector(".chapter")).Rz(0,"chapter-locked")
 u=v.querySelector(".current-bar").style
-p=t.t(x,"levels")
-if(typeof p!=="number")return H.s(p)
-J.vP(u,C.CD.bu(240*q/p)+"px")
-J.Qy(v.querySelector(".finished-levels"),C.jn.bu(q))
+q=t.t(x,"levels")
+if(typeof q!=="number")return H.s(q)
+J.vP(u,C.CD.bu(240*p/q)+"px")
+J.Qy(v.querySelector(".finished-levels"),C.jn.bu(p))
 J.Qy(v.querySelector(".all-levels"),J.AG(t.t(x,"levels")))
 J.Qy(v.querySelector(".earned-stars"),J.AG(T.aA(y)))}J.IR(w,"beforeend",v.innerHTML)}o=Q.fY("chapter-vs","chapter-es","chapter-scrollbar","v")
 z=$.cM()
@@ -1248,6 +1252,7 @@ iQ:[function(){P.JS("order success")
 B.GV(new X.AC(this))},"call$0","gH2",0,0,13],
 qg:[function(a){if(!this.Fr){H.Go(J.UQ($.cM(),"Features"),"$isE4").nQ("loadPurchasesWindow")
 this.Fr=!0}R.JI()
+A.H2()
 B.Ag(this.gH2())
 J.pP(document.querySelector("#purchases")).Rz(0,"hidden")
 L.tV(document.querySelector("#purchases"),125,C.KF,null,H.B7(["top",0,"opacity",1],P.L5(null,null,null,null,null)))
@@ -2037,7 +2042,7 @@ return z},"call$1","Lm",2,0,null,50,[]],Ih:[function(a,b){var z
 switch(a){case 1:z=new R.AE(0,!1,!1,!1,!1,!1,!1,!1,!1,!0,null,null,null,null,null)
 z.mD=new T.z3(new Float32Array(2))
 z.dM=new T.z3(new Float32Array(2))
-z.ih=new A.nY(78,128,0,1)
+z.ih=new A.nY(66,36,12,1)
 return z
 case 2:return R.t0(b)
 case 3:z=Q.KG(b,!1)
@@ -2402,7 +2407,7 @@ if(typeof s!=="number")return H.s(s)
 return new A.HE(w+v-u,x+t-s)},"call$1","x6",2,0,null,69,[]],
 HE:{
 "^":"a;Bb,G6"},
-w0:{
+DO:{
 "^":"d9:317;",
 call$1:[function(a){},"call$1",null,2,0,null,36,[],"call"],
 $isEH:true},
@@ -13251,17 +13256,13 @@ u=r+s
 v=C.xB.g(v,f)}return v+x.yn(a,u)},"call$2","gKu",4,0,null,496,[],492,[]],
 $isEH:true,
 static:{"^":"yD,Xx"}},
-DO:{
+lP:{
 "^":"d9:274;",
 call$2:[function(a,b){return new O.dd(a,"i",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
 $isEH:true},
-lP:{
-"^":"d9:274;",
-call$2:[function(a,b){return new O.dd(a,"d",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
-$isEH:true},
 Uf:{
 "^":"d9:274;",
-call$2:[function(a,b){return new O.dd(a,"x",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
+call$2:[function(a,b){return new O.dd(a,"d",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
 $isEH:true},
 Ra:{
 "^":"d9:274;",
@@ -13269,7 +13270,7 @@ call$2:[function(a,b){return new O.dd(a,"x",b)},"call$2",null,4,0,null,200,[],49
 $isEH:true},
 wJY:{
 "^":"d9:274;",
-call$2:[function(a,b){return new O.dd(a,"o",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
+call$2:[function(a,b){return new O.dd(a,"x",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
 $isEH:true},
 zOQ:{
 "^":"d9:274;",
@@ -13277,7 +13278,7 @@ call$2:[function(a,b){return new O.dd(a,"o",b)},"call$2",null,4,0,null,200,[],49
 $isEH:true},
 W6o:{
 "^":"d9:274;",
-call$2:[function(a,b){return O.BV(a,"e",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
+call$2:[function(a,b){return new O.dd(a,"o",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
 $isEH:true},
 MdQ:{
 "^":"d9:274;",
@@ -13285,7 +13286,7 @@ call$2:[function(a,b){return O.BV(a,"e",b)},"call$2",null,4,0,null,200,[],498,[]
 $isEH:true},
 YJG:{
 "^":"d9:274;",
-call$2:[function(a,b){return O.BV(a,"f",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
+call$2:[function(a,b){return O.BV(a,"e",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
 $isEH:true},
 DOe:{
 "^":"d9:274;",
@@ -13293,13 +13294,17 @@ call$2:[function(a,b){return O.BV(a,"f",b)},"call$2",null,4,0,null,200,[],498,[]
 $isEH:true},
 lPa:{
 "^":"d9:274;",
-call$2:[function(a,b){return O.BV(a,"g",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
+call$2:[function(a,b){return O.BV(a,"f",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
 $isEH:true},
 Ufa:{
 "^":"d9:274;",
 call$2:[function(a,b){return O.BV(a,"g",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
 $isEH:true},
 Raa:{
+"^":"d9:274;",
+call$2:[function(a,b){return O.BV(a,"g",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
+$isEH:true},
+w0:{
 "^":"d9:274;",
 call$2:[function(a,b){J.kW(b,"padding_char"," ")
 return new O.E5(a,"s",b)},"call$2",null,4,0,null,200,[],498,[],"call"],
@@ -14221,7 +14226,7 @@ I.$lazy($,"keys","QY","Nl",function(){return H.B7(["space",new A.UP(32,!1,!1),"e
 I.$lazy($,"random","Y4","pa",function(){return C.pr})
 I.$lazy($,"YELLOW","vI","uJ",function(){return new V.r9(254,251,224)})
 I.$lazy($,"CYAN","th","BD",function(){return new V.r9(125,165,253)})
-I.$lazy($,"closeListener","y0","nI",function(){return new A.w0()})
+I.$lazy($,"closeListener","y0","nI",function(){return new A.DO()})
 I.$lazy($,"opened","wq","CT",function(){return H.VM([],[J.im])})
 I.$lazy($,"globalThis","DX","jk",function(){return function() { return this; }()})
 I.$lazy($,"globalWindow","cO","C5",function(){return $.jk().window})
@@ -14277,7 +14282,7 @@ I.$lazy($,"_attributeValidators","or","NJ",function(){return H.B7([],P.L5(null,n
 I.$lazy($,"context","eo","cM",function(){return P.ND(function() { return this; }())})
 I.$lazy($,"_DART_OBJECT_PROPERTY_NAME","kt","Iq",function(){return init.getIsolateTag("_$dart_dartObject")})
 I.$lazy($,"_DART_CLOSURE_PROPERTY_NAME","Ri","Dp",function(){return init.getIsolateTag("_$dart_dartClosure")})
-I.$lazy($,"sprintf","mE","Jn",function(){return new O.B0(H.B7(["i",new O.DO(),"d",new O.lP(),"x",new O.Uf(),"X",new O.Ra(),"o",new O.wJY(),"O",new O.zOQ(),"e",new O.W6o(),"E",new O.MdQ(),"f",new O.YJG(),"F",new O.DOe(),"g",new O.lPa(),"G",new O.Ufa(),"s",new O.Raa()],P.L5(null,null,null,null,null)))})
+I.$lazy($,"sprintf","mE","Jn",function(){return new O.B0(H.B7(["i",new O.lP(),"d",new O.Uf(),"x",new O.Ra(),"X",new O.wJY(),"o",new O.zOQ(),"O",new O.W6o(),"e",new O.MdQ(),"E",new O.YJG(),"f",new O.DOe(),"F",new O.lPa(),"g",new O.Ufa(),"G",new O.Raa(),"s",new O.w0()],P.L5(null,null,null,null,null)))})
 I.$lazy($,"_number_rx","bb","Se",function(){return new H.VR(H.v4("^[\\-\\+]?(\\d+)\\.(\\d+)$",!1,!0,!1),null,null)})
 I.$lazy($,"_expo_rx","Kq","Jc",function(){return new H.VR(H.v4("^[\\-\\+]?(\\d)\\.(\\d+)e([\\-\\+]?\\d+)$",!1,!0,!1),null,null)})
 I.$lazy($,"_leading_zeroes_rx","NB","dg",function(){return new H.VR(H.v4("^(0*)[1-9]+",!1,!0,!1),null,null)})

@@ -123,7 +123,7 @@ class Sprite {
 
     static Sprite ground() {
         Sprite s = new Sprite();
-        s.color = new Color4.fromRGB(78, 128, 0);
+        s.color = new Color4.fromRGB(66, 36, 12);
         return s;
     }
     
