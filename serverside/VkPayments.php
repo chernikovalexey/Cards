@@ -140,6 +140,7 @@ class VKPayments implements IPayments
 
     private function getItem($item)
     {
+
         // todo: Add a special method to get this info from item id
         $info = $this->getItemInfo($item);
 
