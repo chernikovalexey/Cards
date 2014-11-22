@@ -38,11 +38,11 @@ locale.ok = 'OК';
 locale.purchases = 'Покупки';
 locale.close = 'закрыть';
 locale.hints = 'Подсказки';
-locale.you_have = 'у вас есть';
+locale.you_have = 'у вас';
 locale.attempts = 'Попытки';
 locale.friends_completed = 'Друзья, прошедшие уровень';
 locale.invite_more = 'пригласить ещё';
-locale.friends_playing = 'Играющие друзья';
+locale.friends_playing = 'Друзья в игре';
 locale.amount_of_dynamic = 'Количество использованных динамических блоков';
 locale.amount_of_static = 'Количество использованный статических блоков';
 locale.amount_of_stars = 'Количество звезд, приобретенных за этот уровень';
@@ -62,6 +62,8 @@ locale.hints_left = "Осталось %s %s";
 locale.hint_form1 = 'подсказок';
 locale.hint_form2 = 'подсказка';
 locale.hint_form3 = 'подсказки';
+locale.positive = 'Да';
+locale.negative = 'Нет';
 
 // Wizard
 locale.wizard_apply = "Примените физику, чтобы блоки упали";
