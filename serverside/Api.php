@@ -89,6 +89,14 @@ class Api
         return $payments->perform($_POST);
     }
 
+    public function fbGetChapterUnlockOg(array $user, $chapter)
+    {
+        require_once 'Payments.php';
+        $p = new FBPayments($this->db);
+        $p->getChapterUnlockOg($user, $chapter);
+        return null;
+    }
+
     public function chapters(array $user)
     {
 
