@@ -46,6 +46,9 @@ locale.friends_playing = 'Friends playing';
 locale.amount_of_dynamic = 'Amount of dynamic blocks used';
 locale.amount_of_static = 'Amount of static blocks used';
 locale.amount_of_stars = 'Amount of stars acquired for this level';
+locale.vote_form1 = 'votes';
+locale.vote_form2 = 'vote';
+locale.vote_form3 = 'votes';
 
 // Used in Dart
 locale.left = '%s left';

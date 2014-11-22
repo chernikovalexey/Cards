@@ -618,44 +618,44 @@ var FBFeatures = {
             hints: [
                 {
                     name: "1 hint",
-                    price: "4 votes",
+                    price: "0.5$",
                     data: "1-h"
                 },
                 {
                     name: "2 hints",
-                    price: "8 votes",
+                    price: "1$",
                     data: "5-h"
                 },
                 {
                     name: "5 hints",
-                    price: "16 votes",
+                    price: "2$",
                     data: "10-h"
                 },
                 {
                     name: "10 hints",
-                    price: "24 votes",
+                    price: "3$",
                     data: "25-h"
                 }
             ],
             attempts: [
                 {
                     name: "+10 attempts",
-                    price: "2 votes",
+                    price: "0.25$",
                     data: "10-a"
                 },
                 {
                     name: "+25 attempts",
-                    price: "4 votes",
+                    price: "0.5$",
                     data: "25-a"
                 },
                 {
                     name: "+50 attempts",
-                    price: "8 votes",
+                    price: "1$",
                     data: "50-a"
                 },
                 {
                     name: "+100 attempts",
-                    price: "12 votes",
+                    price: "3$",
                     data: "100-a"
                 }
             ],
