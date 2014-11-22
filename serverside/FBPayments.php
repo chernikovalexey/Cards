@@ -37,16 +37,17 @@ class FBPayments implements IPayments
         return sprintf(self::GRAPH_API_URL, $id, self::APP_ACCESS_TOKEN);
     }
 
-    private function getChapterProduct($ch, $productUrl)
+    private function getChapterProduct($productUrl)
     {
-        $url = parse_url($productUrl);
-        $chapterId = +end(explode('=', $url['query']));
-        $s = reset(explode('-', $ch));
-        return array('chapter', $chapterId, $s);
+        $arg = 'arguments=';
+        $url = json_decode(urldecode(substr($productUrl, strpos($productUrl, $arg) + strlen($arg))), true);
+        //file_put_contents('file.json', print_r($url, true));
+        return array('chapter', $url['chapter'], '1');
     }
 
     private function getProduct($product)
     {
+        $url = $product;
         $end = end(explode('/', $product));
         $product = reset(explode('.', $end));
         switch ($product) {
@@ -67,7 +68,7 @@ class FBPayments implements IPayments
             case '100-a':
                 return array('attempt', 100);
             default:
-                return $this->getChapterProduct($end, $product);
+                return $this->getChapterProduct($url);
         }
     }
 
@@ -80,6 +81,7 @@ class FBPayments implements IPayments
 
         }
         $this->request = json_decode(file_get_contents("php://input"), true);
+
         $data = json_decode(WebClient::downloadString($this->getGraphUrl($this->request['entry'][0]['id'])), true);
         $user = $this->db->getUser($data['user']['id'], 'fb');
         $action = $data['actions'][0];
