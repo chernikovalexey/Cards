@@ -1298,6 +1298,11 @@ y=document.querySelector("#hints-balance")
 x=A.Jq("balance")
 J.Qy(y,x)
 J.Qy(z,x)
+x=document.querySelector("#attempts-balance")
+z=document.querySelector("#attempts-remaining")
+y=A.Jq("allAttempts")
+J.Qy(z,y)
+J.Qy(x,y)
 B.Ag(this.a.gH2())},"call$0",null,0,0,null,"call"],
 $isEH:true},
 Ye:{
@@ -1661,8 +1666,8 @@ x=$.WQ+1
 $.WQ=x
 return x-1},"call$2","c9",4,0,null,23,[],24,[]],
 A0:[function(a,b,c,d,e,f,g,h){var z,y
-g=J.UQ(J.UQ($.cM(),"locale"),"yes")
-h=J.UQ(J.UQ($.cM(),"locale"),"no")
+g=J.UQ(J.UQ($.cM(),"locale"),"positive")
+h=J.UQ(J.UQ($.cM(),"locale"),"negative")
 z=C.jn.bu(R.jX(".prompt-window-template",H.B7(["id",$.WQ,"headline",a,"message",b,"offer_text",c,"offer_button",d,"positive",g,"negative",h],P.L5(null,null,null,null,null))))
 y=".po-"+z
 J.qV(document.querySelector(y),"click",e,!0)

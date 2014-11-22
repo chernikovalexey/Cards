@@ -62,6 +62,8 @@ locale.hints_left = "Осталось %s %s";
 locale.hint_form1 = 'подсказок';
 locale.hint_form2 = 'подсказка';
 locale.hint_form3 = 'подсказки';
+locale.positive = 'Да';
+locale.negative = 'Нет';
 
 // Wizard
 locale.wizard_apply = "Примените физику, чтобы блоки упали";

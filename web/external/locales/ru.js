@@ -46,6 +46,9 @@ locale.friends_playing = 'Друзья в игре';
 locale.amount_of_dynamic = 'Количество использованных динамических блоков';
 locale.amount_of_static = 'Количество использованный статических блоков';
 locale.amount_of_stars = 'Количество звезд, приобретенных за этот уровень';
+locale.vote_form1 = 'голосов';
+locale.vote_form2 = 'голос';
+locale.vote_form3 = 'голоса';
 
 // Used in Dart
 locale.left = 'осталось %s';

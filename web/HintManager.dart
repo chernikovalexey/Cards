@@ -63,12 +63,12 @@ class HintManager {
     }
 
     void getMoreHints([Event event]) {
-
         if (!purchasesWindowLoaded) {
             WebApi.loadPurchasesWindow();
             purchasesWindowLoaded = true;
         }
         PromptWindow.close();
+        Tooltip.closeAll();
 
         WebApi.onOrderSuccess(orderSuccessCallback);
 

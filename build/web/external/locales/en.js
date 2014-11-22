@@ -62,6 +62,8 @@ locale.hints_left = "%s %s left";
 locale.hint_form1 = 'hints';
 locale.hint_form2 = 'hint';
 locale.hint_form3 = 'hints';
+locale.positive = 'Yes';
+locale.negative = 'No';
 
 // Wizard
 locale.wizard_apply = "Apply physics to drop blocks";
