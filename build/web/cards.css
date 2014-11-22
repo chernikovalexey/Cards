@@ -507,6 +507,7 @@ button:hover:not([disabled]) {
     letter-spacing: 1px;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.125);
     opacity: 0.85;
+    cursor: default;
 }
 
 .menu-items {

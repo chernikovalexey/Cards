@@ -1244,7 +1244,8 @@ y=J.Wx(z)
 if(y.D(z,0)){x=$.cM()
 R.A0(J.UQ(J.UQ(x,"locale"),"use_hint_question"),J.UQ(J.UQ(x,"locale"),"surely_want"),$.Jn().call$2(J.UQ(J.UQ(x,"locale"),"hints_left"),[y.bu(z),J.UQ(x,"Features").V7("getNounPlural",[z,J.UQ(J.UQ(x,"locale"),"hint_form1"),J.UQ(J.UQ(x,"locale"),"hint_form2"),J.UQ(J.UQ(x,"locale"),"hint_form3")])]),J.UQ(J.UQ(x,"locale"),"get_more"),this.gnE(),new X.af(this),null,null)}else{y=$.cM()
 R.N0(J.UQ(J.UQ(y,"locale"),"hints_lack"),J.UQ(J.UQ(y,"locale"),"spent_hints"),J.UQ(J.UQ(y,"locale"),"get_hints"),this.gnE())}},"call$1","gVl",2,0,33,18,[]],
-iQ:[function(){B.GV(new X.AC(this))},"call$0","gH2",0,0,13],
+iQ:[function(){P.JS("order success")
+B.GV(new X.AC(this))},"call$0","gH2",0,0,13],
 qg:[function(a){if(!this.Fr){H.Go(J.UQ($.cM(),"Features"),"$isE4").nQ("loadPurchasesWindow")
 this.Fr=!0}R.JI()
 B.Ag(this.gH2())
@@ -1291,6 +1292,7 @@ $isEH:true},
 AC:{
 "^":"d9:269;a",
 call$0:[function(){var z,y,x
+P.JS("get user success")
 z=document.querySelector("#hints-amount")
 y=document.querySelector("#hints-balance")
 x=A.Jq("balance")
