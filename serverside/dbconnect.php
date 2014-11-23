@@ -30,6 +30,15 @@ try {
     } else {
         define('TEST', false, true);
     }
+
+    if (TEST) {
+        define("VK_SECRET_KEY", "e8tBn39YovCQNsKX9WKK", true);
+        define("VK_APP_ID", 4394659, true);
+    } else {
+        define("VK_SECRET_KEY", "8EBAedkNndi88TRrWyYj", true);
+        define("VK_APP_ID", 4568938, true);
+    }
+
     $db = new PDO($connectionString, "twocubes", "oxB3uUWg");
     $DB = new DB($db);
 } catch (PDOException $e) {
