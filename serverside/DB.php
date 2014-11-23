@@ -55,14 +55,14 @@ class DB
         $qMarks = $this->qString(count($users));
 
         $sql = $this->bindArray($users, 0, PDO::PARAM_INT, 'userId',
-            $this->db->prepare("SELECT * FROM twocubes.tcardresults WHERE userId IN($qMarks)"));
+            $this->db->prepare("SELECT * FROM tcardresults WHERE userId IN($qMarks)"));
 
         $sql->execute();
 
         $arr = $sql->fetchAll(PDO::FETCH_ASSOC);
         $result = array();
-        foreach($users as $u)
-            $result['u'.$u['platformUserId']] = array();
+        foreach ($users as $u)
+            $result['u' . $u['platformUserId']] = array();
 
         foreach ($arr as $t) {
             if (!isset($result['u' . $users[$t['userId']]['platformUserId']]))
@@ -84,7 +84,7 @@ class DB
             if (isset($scores[$r['userId']])) $scores[$r['userId']] = array('userId' => $users[$r['userId']]['platformUserId'], 'value' => 0);
             $scores[$r['userId']]['value'] += $r['result'];
         }
-        usort($scores, function($v1, $v2) {
+        usort($scores, function ($v1, $v2) {
             return ($v1['value'] > $v2['value']) ? 1 : ($v1['value'] == $v2['value']) ? 0 : -1;
         });
 
@@ -95,7 +95,7 @@ class DB
     {
         $qMarks = $this->qString(count($users));
 
-        $sql = $this->db->prepare("SELECT * FROM twocubes.tcardusers WHERE platformUserId IN($qMarks) AND platformId=?");
+        $sql = $this->db->prepare("SELECT * FROM tcardusers WHERE platformUserId IN($qMarks) AND platformId=?");
         $this->bindArray($users, 0, PDO::PARAM_INT, $selector, $sql);
         $sql->bindValue(count($users) + 1, $platform, PDO::PARAM_STR);
         $sql->execute();
@@ -113,15 +113,15 @@ class DB
         return reset($r);
     }
 
-    public function result($chapter, $level, $result, $numStatic, $numDynamic,array $user, $platform)
+    public function result($chapter, $level, $result, $numStatic, $numDynamic, array $user, $platform)
     {
-        $sql = $this->db->prepare("SELECT * FROM twocubes.tcardresults WHERE userId=? AND chapterId=? AND levelId=?");
+        $sql = $this->db->prepare("SELECT * FROM tcardresults WHERE userId=? AND chapterId=? AND levelId=?");
         $sql->bindValue(1, $user['userId'], PDO::PARAM_INT);
         $sql->bindValue(2, $chapter, PDO::PARAM_INT);
         $sql->bindValue(3, $level, PDO::PARAM_INT);
         $sql->execute();
         if ($rslt = $sql->fetch()) {
-            $sql = $this->db->prepare("UPDATE twocubes.tcardresults SET result = ?, `time`=?, `numStatic`=?, `numDynamic`=? WHERE id=?");
+            $sql = $this->db->prepare("UPDATE tcardresults SET result = ?, `time`=?, `numStatic`=?, `numDynamic`=? WHERE id=?");
             $sql->bindValue(1, $result, PDO::PARAM_INT);
             $sql->bindValue(2, time(), PDO::PARAM_INT);
             $sql->bindValue(3, $numStatic, PDO::PARAM_INT);
@@ -129,7 +129,7 @@ class DB
             $sql->bindParam(5, $rslt['id'], PDO::PARAM_INT);
             $sql->execute();
         } else {
-            $sql = $this->db->prepare("INSERT INTO twocubes.tcardresults(`userId`, `chapterId`, `levelId`, `result`, `time`, `numStatic`, `numDynamic`) VALUES(?,?,?,?,?,?,?)");
+            $sql = $this->db->prepare("INSERT INTO tcardresults(`userId`, `chapterId`, `levelId`, `result`, `time`, `numStatic`, `numDynamic`) VALUES(?,?,?,?,?,?,?)");
             $sql->bindValue(1, $user['userId'], PDO::PARAM_INT);
             $sql->bindValue(2, $chapter, PDO::PARAM_INT);
             $sql->bindValue(3, $level, PDO::PARAM_INT);
@@ -144,7 +144,7 @@ class DB
 
     public function validateUser($uid, $platform)
     {
-        $sql = $this->db->prepare("SELECT * FROM twocubes.tcardusers WHERE platformUserId=? AND platformId=?");
+        $sql = $this->db->prepare("SELECT * FROM tcardusers WHERE platformUserId=? AND platformId=?");
         $sql->bindValue(1, $uid, PDO::PARAM_INT);
         $sql->bindValue(2, $platform, PDO::PARAM_STR);
         $sql->execute();
@@ -154,7 +154,7 @@ class DB
             return $u;
         }
 
-        $sql = $this->db->prepare("INSERT INTO twocubes.tcardusers(platformId, platformUserId) VALUES (?,?)");
+        $sql = $this->db->prepare("INSERT INTO tcardusers(platformId, platformUserId, balance) VALUES (?, ?, 2)");
         $sql->bindValue(1, $platform, PDO::PARAM_STR);
         $sql->bindValue(2, $uid, PDO::PARAM_INT);
 
@@ -171,24 +171,25 @@ class DB
 
     public function addAttempts(array &$user, $delta)
     {
-       if($user['dayAttemptsUsed'] + $delta > self::DAY_ATTEMPTS) {
-           $delta -= $user['dayAttempts'];
-           $user['dayAttemptsUsed'] = self::DAY_ATTEMPTS;
-           if($user['boughtAttemptsUsed'] + $delta > $user['boughtAttempts']) {
-               $user['boughtAttemptsUsed'] = $user['boughtAttempts'];
-           } else {
-               $user['boughtAttemptsUsed'] += $delta;
-           }
-       } else {
-           $user['dayAttemptsUsed'] += $delta;
-       }
-       $this->countAttempts($user);
-       $this->submitUser($user);
+        if ($user['dayAttemptsUsed'] + $delta > self::DAY_ATTEMPTS) {
+            $delta -= $user['dayAttempts'];
+            $user['dayAttemptsUsed'] = self::DAY_ATTEMPTS;
+            if ($user['boughtAttemptsUsed'] + $delta > $user['boughtAttempts']) {
+                $user['boughtAttemptsUsed'] = $user['boughtAttempts'];
+            } else {
+                $user['boughtAttemptsUsed'] += $delta;
+            }
+        } else {
+            $user['dayAttemptsUsed'] += $delta;
+        }
+        $this->countAttempts($user);
+        $this->submitUser($user);
     }
 
-    public function submitUser(array &$user) {
+    public function submitUser(array &$user)
+    {
 
-         $sql = $this->db->prepare("UPDATE twocubes.tcardusers
+        $sql = $this->db->prepare("UPDATE tcardusers
                                       SET
                                         balance = ?
                                         ,boughtAttempts = ?
@@ -205,7 +206,7 @@ class DB
 
     public function getTotalStars($userId)
     {
-        $sql = $this->db->prepare("SELECT SUM(result) FROM twocubes.tcardresults WHERE userId = ?");
+        $sql = $this->db->prepare("SELECT SUM(result) FROM tcardresults WHERE userId = ?");
         $sql->bindValue(1, $userId, PDO::PARAM_INT);
         $sql->execute();
         return reset($sql->fetch());
@@ -213,7 +214,7 @@ class DB
 
     public function unlockChapter(array $user, $chapter)
     {
-        $sql = $this->db->prepare("INSERT INTO twocubes.tunlockedchapters(chapter, userId) VALUES(?, ?)");
+        $sql = $this->db->prepare("INSERT INTO tunlockedchapters(chapter, userId) VALUES(?, ?)");
         $sql->bindValue(1, $chapter, PDO::PARAM_INT);
         $sql->bindValue(2, $user['userId'], PDO::PARAM_INT);
         $sql->execute();
@@ -221,12 +222,51 @@ class DB
 
     public function getUnlocked($userId)
     {
-        $sql = $this->db->prepare("SELECT chapter FROM twocubes.tunlockedchapters WHERE userId = ?");
+        $sql = $this->db->prepare("SELECT chapter FROM tunlockedchapters WHERE userId = ?");
         $sql->bindValue(1, $userId, PDO::PARAM_INT);
         $sql->execute();
         $r = array();
-        foreach($sql->fetchAll() as $c)
+        foreach ($sql->fetchAll() as $c)
             $r[] = $c['chapter'];
         return $r;
+    }
+
+    private function getMaxLevel()
+    {
+        $arr = $this->db->query("SELECT t.chapterId, t.levelId FROM tcardresults t ORDER BY t.chapterId DESC")->fetchAll();
+        usort($arr, function ($e1, $e2) {
+            if ($e1['chapterId'] > $e2['chapterId'])
+                return 1;
+            else if ($e1['chapterId'] < $e2['chapterId'])
+                return -1;
+            else if ($e1['levelId'] > $e2['levelId'])
+                return 1;
+            else if ($e1['levelId'] > $e2['levelId'])
+                return -1;
+            return 0;
+        });
+        return $arr[count($arr) - 1];
+    }
+
+    public function getStats()
+    {
+        list($totalUsers, $totalAttempts) = $this->db->query("SELECT COUNT(u.userId), SUM(u.totalDayAttemptsUsed + u.boughtAttemptsUsed + u.dayAttemptsUsed) FROM tcardusers u")->fetch();
+        $attemptsPerUser = $totalAttempts / $totalUsers;
+        list($totalLevels, $totalStars, $totalStatic, $totalDynamic, $totalBodies) = $this->db->query("SELECT COUNT(t.id), SUM(t.result), SUM(t.numStatic), SUM(t.numDynamic), SUM(t.numDynamic + t.numStatic) FROM tcardresults t")->fetch();
+        $attemptsPerLevel = $totalAttempts / $totalLevels;
+        $maxLevel = $this->getMaxLevel();
+        $levels = $this->db->query("SELECT SUM(t.result), t.levelId, t.chapterId FROM tcardresults t GROUP BY t.levelId * t.chapterId;")->fetchAll();
+        return array(
+            'users' => $totalUsers,
+            'attempts' => $totalAttempts,
+            'attemptsPerUser' => $attemptsPerUser,
+            'attemptsPerLevel' => $attemptsPerLevel,
+            'totalStars' => $totalStars,
+            'totalStatic' => $totalStatic,
+            'totalDynamic' => $totalDynamic,
+            'totalBodies' => $totalBodies,
+            'maxLevel' => $maxLevel,
+            'levels' => $levels
+        );
     }
 } 

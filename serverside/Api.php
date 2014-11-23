@@ -119,6 +119,12 @@ class Api
         return $this->uploadPhotoInternal($user, $server, $reservedNames[$reservedName]);
     }
 
+    public function stats()
+    {
+        header('Content-Type: application/json');
+        return $this->db->getStats();
+    }
+
     private function uploadPhotoInternal(array $user, $server, $filename)
     {
 

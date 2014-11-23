@@ -77,7 +77,12 @@ class SubLevel {
                 }
                 o = e.createMultiShape(points);
             }
-            o.userData = Sprite.byType(1, e.world);
+            Sprite s = Sprite.byType(1, e.world);
+            bool isDynamicObstacle = obstacle["type"] & 4 != 0;
+            s.isStatic = !isDynamicObstacle;
+            o.userData = s;
+            o.type =
+
             obstacles.add(o);
         }
 

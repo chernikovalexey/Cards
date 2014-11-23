@@ -10,8 +10,7 @@ function __autoload($className)
 {
     if (file_exists($className . ".php"))
         require_once $className . ".php";
-    else
-    {
+    else {
         die("Class not found! $className");
     }
 }
@@ -36,7 +35,8 @@ class Router
         $Api = new Api($this->db, $platform);
         if ($method == "payments") {
             return $Api->payments();
-        }
+        } else if ($method == 'stats')
+            return $Api->stats();
         try {
             $rm = new ReflectionMethod($Api, $method);
             //todo: Add clause if user not valid
@@ -64,7 +64,7 @@ class Router
     {
         $result = array();
         foreach ($data as $key => $value) {
-            if(is_array($value))
+            if (is_array($value))
                 $result[$key] = $this->prepare($value);
             else
                 $result[$key] = is_numeric($value) ? +$value : $value;
