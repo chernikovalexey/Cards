@@ -22,21 +22,13 @@ function endsWith($haystack, $needle)
     return (substr($haystack, -$length) === $needle);
 }
 
+
 try {
     $connectionString = "mysql:host=104.131.127.236;dbname=twocubes";
-    if (endsWith(SITE_PATH, 'test')) {
+
+    if (endsWith(substr(SITE_PATH, 0, strlen(SITE_PATH) - 1), 'test')) {
         $connectionString .= '.test';
         define('TEST', true, true);
-    } else {
-        define('TEST', false, true);
-    }
-
-    if (TEST) {
-        define("VK_SECRET_KEY", "e8tBn39YovCQNsKX9WKK", true);
-        define("VK_APP_ID", 4394659, true);
-    } else {
-        define("VK_SECRET_KEY", "8EBAedkNndi88TRrWyYj", true);
-        define("VK_APP_ID", 4568938, true);
     }
 
     $db = new PDO($connectionString, "twocubes", "oxB3uUWg");

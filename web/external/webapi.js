@@ -3,9 +3,16 @@ function WebApi(method, data, callback) {
 
     console.log("api request:", data);
 
+    var url = "";
+    if (document.location.href.indexOf('test') != -1) {
+        url = "/twocubes.test/serverside/index.php";
+    } else {
+        url = "/twocubes/serverside/index.php";
+    }
+
     $.ajax({
         type: 'POST',
-        url: "/twocubes/serverside/index.php",
+        url: url,
         data: {arguments: json, method: method},
         success: function (r) {
             callback(r);
