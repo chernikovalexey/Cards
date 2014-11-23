@@ -1508,8 +1508,9 @@ div.active-step {
     vertical-align: top;
     padding-bottom: 5px;
     display: table-cell;
-    padding-left: 10px;
     cursor: default;
+    position: relative;
+    left: 10px;
 }
 
 .fr-name {
@@ -1542,8 +1543,12 @@ div.active-step {
     text-align: right;
     width: 60px;
     position: absolute;
-    margin-top: -30px;
-    right: 165px;
+    margin-top: -31px;
+    right: 15px;
+}
+
+.finished-friend .fr-result {
+    margin-top: -34px;
 }
 
 .fr-res-num {

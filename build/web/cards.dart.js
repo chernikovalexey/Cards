@@ -1847,15 +1847,17 @@ J.pP(document.querySelector(".rating-inner-layout")).Rz(0,"small-margin")}else{J
 J.pP(document.querySelector(".pause-controls")).h(0,"hidden")
 J.pP(document.querySelector(".level-rating")).Rz(0,"hidden")
 J.pP(document.querySelector(".pause-title")).h(0,"hidden")
-J.pP(document.querySelector(".rating-inner-layout")).h(0,"small-margin")
-J.qV(document.querySelector("#share-level"),"click",new Z.Hmj(b),!0)}J.Qy(document.querySelector("#attempts-remaining"),J.AG(A.UF("allAttempts")))
+J.pP(document.querySelector(".rating-inner-layout")).h(0,"small-margin")}w=document.querySelector(".attempts-left")
+v=$.Jn()
+r=$.cM()
+J.Qy(w,v.call$2(J.UQ(J.UQ(r,"locale"),"attempts_left"),[J.AG(A.UF("allAttempts")),J.UQ(r,"Features").V7("getNounPlural",[A.UF("allAttempts"),J.UQ(J.UQ(r,"locale"),"attempt_form1"),J.UQ(J.UQ(r,"locale"),"attempt_form2"),J.UQ(J.UQ(r,"locale"),"attempt_form3")])]))
 J.ln(document.querySelector(".get-attempts-button"),"click",Z.iJ())
 J.qV(document.querySelector(".get-attempts-button"),"click",Z.iJ(),!0)
 J.vP(document.querySelector("#tape-es").style,J.WB(J.AG(J.WB(J.p0(J.q8($.Zd.QG.B0),172),10)),"px"))
 Q.fY("tape-vs","tape-es","tape-scrollbar","h")
-w=J.WB(J.AG($.Zd.QG.Sb),"-")
-w=J.WB(w,J.AG(J.xZ($.Zd.QG.kF,0)?J.xH($.Zd.QG.kF,1):0))
-J.UQ($.cM(),"dw_scrollObj").V7("scrollToId",["tape-vs",w,"",550])
+v=J.WB(J.AG($.Zd.QG.Sb),"-")
+w=J.WB(v,J.AG(J.xZ($.Zd.QG.kF,0)?J.xH($.Zd.QG.kF,1):0))
+J.UQ(r,"dw_scrollObj").V7("scrollToId",["tape-vs",w,"",550])
 w=$.Zd.QG
 if(!J.J5(J.q8(w.B0),J.WB(w.kF,1))&&!$.Po)Z.W7(a,b)
 if($.Po)A.K8(Z.Ai())},"call$3","n8",4,2,null,39,40,[],41,[],42,[]],
@@ -1949,10 +1951,6 @@ call$1:[function(a){Z.No()
 T.Pi()
 L.tV(document.querySelector(".level-name"),1,C.Fa,null,H.B7(["margin-top",-20,"opacity",0,"font-size",32],P.L5(null,null,null,null,null)))
 return},"call$1",null,2,0,null,9,[],"call"],
-$isEH:true},
-Hmj:{
-"^":"d9:232;c",
-call$1:[function(a){J.UQ($.cM(),"Features").V7("prepareLevelWallPost",[$.Zd.QG.l.oc,Z.w4(this.c)])},"call$1",null,2,0,null,9,[],"call"],
 $isEH:true},
 TJ:{
 "^":"d9:232;a",

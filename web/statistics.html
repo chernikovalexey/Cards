@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Two Cubes Statistics</title>
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            font-family: Tahoma;
+        }
+
+        .stats-layout {
+            cursor: default !important;
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        .users {
+            color: #fff;
+            margin-top: 180px;
+        }
+
+        .label {
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .users .label {
+            font-size: 14px;
+        }
+
+        .users-amount {
+            font-size: 224px;
+            line-height: 180px;
+        }
+
+        .attempts {
+            position: absolute;
+            color: #fff;
+            right: 100px;
+            top: 270px;
+        }
+
+        .attempts-amount {
+            font-size: 72px;
+            line-height: 70px;
+        }
+
+        .bodies {
+            position: absolute;
+            color: #fff;
+            left: 100px;
+            top: 270px;
+        }
+
+        .bodies-amount {
+            font-size: 72px;
+            line-height: 70px;
+        }
+
+        .ml {
+            position: absolute;
+            bottom: 100px;
+            width: 100%;
+            color: #fff;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .ml span {
+            font-size: 16px;
+            font-weight: 700;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script>
+        var stats = {};
+
+        stats.getData = function (callback) {
+            $.get('/twocubes/serverside/index.php?method=no.stats', callback);
+        };
+
+        $(function () {
+            setInterval(function () {
+                stats.getData(function (d) {
+                    $('.updated').each(function () {
+                        var id = $(this).data('id');
+                        if (d[id]) {
+                            if (id === 'users') {
+                                var prev_amount = +$(this).html();
+                                if (d[id] > prev_amount) {
+                                    var audio = new Audio("http://static1.grsites.com/archive/sounds/battle/battle003.mp3");
+                                    audio.play();
+                                }
+                            }
+                            $(this).html(d[id]);
+                        }
+                    });
+
+                    $('.max-level').html(d.maxLevel.chapterId + "/" + d.maxLevel.levelId);
+                });
+            }, 1000);
+        });
+    </script>
+</head>
+<body>
+<div class="stats-layout">
+    <div class="bodies">
+        <div class="label">bodies used</div>
+        <div class="bodies-amount updated" data-id="totalBodies"></div>
+    </div>
+
+    <div class="users">
+        <div class="label">users</div>
+        <div class="users-amount updated" data-id="users"></div>
+    </div>
+
+    <div class="ml">
+        max reached level: <span class="max-level"></span>
+    </div>
+
+    <div class="attempts">
+        <div class="label">attempts</div>
+        <div class="attempts-amount updated" data-id="attempts"></div>
+    </div>
+</div>
+</body>
+</html>

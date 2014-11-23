@@ -43,8 +43,8 @@ locale.attempts = 'Attempts';
 locale.friends_completed = 'Friends completed this level';
 locale.invite_more = 'invite more';
 locale.friends_playing = 'Friends playing';
-locale.amount_of_dynamic = 'Amount of dynamic blocks used';
-locale.amount_of_static = 'Amount of static blocks used';
+locale.amount_of_dynamic = 'Amount of jumpers used';
+locale.amount_of_static = 'Amount of shelves used';
 locale.amount_of_stars = 'Amount of stars acquired for this level';
 locale.completed_form1 = locale.completed_form2 = locale.completed_form3 = 'completed';
 locale.completed = '<%=completed%> <%=levels_amount%> <%=level_ending%> in <%=chapters_amount%> <%=chapter_ending%>';
@@ -52,6 +52,7 @@ locale.not_played = "didn't play yet"
 locale.vote_form1 = 'votes';
 locale.vote_form2 = 'vote';
 locale.vote_form3 = 'votes';
+locale.attempts_left = '%s %s left';
 locale.attempt_form1 = 'attempts';
 locale.attempt_form2 = 'attempt';
 locale.attempt_form3 = 'attempts';
@@ -66,6 +67,7 @@ locale.unlock_left2 = '<b>one</b> star left';
 locale.unlock_left3 = '<b>%s</b> stars left';
 locale.of = 'of';
 locale.click_to_unlock = 'Click to unlock';
+locale.some_friends = 'Some of your friends have already finished this level!';
 
 locale[1] = 'one';
 locale[2] = 'two';
@@ -108,4 +110,4 @@ locale.wizard_remove = "To remove the selected block, <b>right-click</b> or <b>p
 locale.wizard_rotate = "<b>To rotate the block,</b> use your mouse wheel or buttons Q/E";
 locale.wizard_hints = "If you are in trouble with accomplishing this level, <b>use hints</b>";
 locale.wizard_zoom = "<b>Use zoom</b> for accuracy";
-locale.wizard_static = "Static blocks don't fall when physics applied, and don't conduct energy.";
+locale.wizard_static = "Shelves don't fall when physics applied, and don't conduct energy.";

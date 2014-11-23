@@ -54,6 +54,7 @@ locale.not_played = 'пока ничего не пройдено';
 locale.vote_form1 = 'голосов';
 locale.vote_form2 = 'голос';
 locale.vote_form3 = 'голоса';
+locale.attempts_left = 'Осталось %s %s';
 locale.attempt_form1 = 'попыток';
 locale.attempt_form2 = 'попытка';
 locale.attempt_form3 = 'попытки';

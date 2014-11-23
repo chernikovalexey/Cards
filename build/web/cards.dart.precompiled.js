@@ -1847,15 +1847,17 @@ J.pP(document.querySelector(".rating-inner-layout")).Rz(0,"small-margin")}else{J
 J.pP(document.querySelector(".pause-controls")).h(0,"hidden")
 J.pP(document.querySelector(".level-rating")).Rz(0,"hidden")
 J.pP(document.querySelector(".pause-title")).h(0,"hidden")
-J.pP(document.querySelector(".rating-inner-layout")).h(0,"small-margin")
-J.qV(document.querySelector("#share-level"),"click",new Z.Hmj(b),!0)}J.Qy(document.querySelector("#attempts-remaining"),J.AG(A.UF("allAttempts")))
+J.pP(document.querySelector(".rating-inner-layout")).h(0,"small-margin")}w=document.querySelector(".attempts-left")
+v=$.Jn()
+r=$.cM()
+J.Qy(w,v.call$2(J.UQ(J.UQ(r,"locale"),"attempts_left"),[J.AG(A.UF("allAttempts")),J.UQ(r,"Features").V7("getNounPlural",[A.UF("allAttempts"),J.UQ(J.UQ(r,"locale"),"attempt_form1"),J.UQ(J.UQ(r,"locale"),"attempt_form2"),J.UQ(J.UQ(r,"locale"),"attempt_form3")])]))
 J.ln(document.querySelector(".get-attempts-button"),"click",Z.iJ())
 J.qV(document.querySelector(".get-attempts-button"),"click",Z.iJ(),!0)
 J.vP(document.querySelector("#tape-es").style,J.WB(J.AG(J.WB(J.p0(J.q8($.Zd.QG.B0),172),10)),"px"))
 Q.fY("tape-vs","tape-es","tape-scrollbar","h")
-w=J.WB(J.AG($.Zd.QG.Sb),"-")
-w=J.WB(w,J.AG(J.xZ($.Zd.QG.kF,0)?J.xH($.Zd.QG.kF,1):0))
-J.UQ($.cM(),"dw_scrollObj").V7("scrollToId",["tape-vs",w,"",550])
+v=J.WB(J.AG($.Zd.QG.Sb),"-")
+w=J.WB(v,J.AG(J.xZ($.Zd.QG.kF,0)?J.xH($.Zd.QG.kF,1):0))
+J.UQ(r,"dw_scrollObj").V7("scrollToId",["tape-vs",w,"",550])
 w=$.Zd.QG
 if(!J.J5(J.q8(w.B0),J.WB(w.kF,1))&&!$.Po)Z.W7(a,b)
 if($.Po)A.K8(Z.Ai())},"call$3","n8",4,2,null,39,40,[],41,[],42,[]],
@@ -1949,10 +1951,6 @@ call$1:[function(a){Z.No()
 T.Pi()
 L.tV(document.querySelector(".level-name"),1,C.Fa,null,H.B7(["margin-top",-20,"opacity",0,"font-size",32],P.L5(null,null,null,null,null)))
 return},"call$1",null,2,0,null,9,[],"call"],
-$isEH:true},
-Hmj:{
-"^":"d9:232;c",
-call$1:[function(a){J.UQ($.cM(),"Features").V7("prepareLevelWallPost",[$.Zd.QG.l.oc,Z.w4(this.c)])},"call$1",null,2,0,null,9,[],"call"],
 $isEH:true},
 TJ:{
 "^":"d9:232;a",
@@ -16704,11 +16702,6 @@ if(!"name" in ke)ke.name="ke"
 $desc=$collectedClasses.ke
 if($desc instanceof Array)$desc=$desc[1]
 ke.prototype=$desc
-function Hmj(c){this.c=c}Hmj.builtin$cls="Hmj"
-if(!"name" in Hmj)Hmj.name="Hmj"
-$desc=$collectedClasses.Hmj
-if($desc instanceof Array)$desc=$desc[1]
-Hmj.prototype=$desc
 function TJ(a){this.a=a}TJ.builtin$cls="TJ"
 if(!"name" in TJ)TJ.name="TJ"
 $desc=$collectedClasses.TJ
@@ -20083,4 +20076,4 @@ $desc=$collectedClasses.z3
 if($desc instanceof Array)$desc=$desc[1]
 z3.prototype=$desc
 z3.prototype.gEv=function(){return this.Ev}
-return[qE,Gh,rK,Z5,VT,lJ,P2,nB,i3,it,Az,QP,IF,xc,Ny,Kh,v6,Y5,Gc,nx,QQ,fW,y4,TR,na,Un,He,Ff,vH,dY,Em,NW,rV,Wy,QF,hs,cm,Nh,wj,cv,Fs,hY,ea,D0,as,T5,Aa,u5,Yu,M5,jP,Ax,xf,br,Vb,Lv,zA,So,FP,zU,Vi,tb,Sg,pA,Mi,HL,Xb,wP,eP,JP,Og,u8,p8,El,mC,SV,o9,fJ,BK,tA,Vh,rC,Zy,av,Ee,Qb,fp,be,Hw,bn,Ik,xI,Aj,oU,eY,KV,BH,KY,G7,l9,Ql,wL,bP,Us,SN,HD,ni,jg,qj,nC,IP,jh,fs,u2,bX,ZF,MC,Mx,Ue,Ea,lp,pD,I0,yN,Cp,ua,HN,Ul,KK,WU,ii,fq,i9,qk,Xe,Tb,Iv,BT,yY,kJ,FB,xV,YS,y6,RH,ho,Z2,w6,BR,vw,aG,fA,K5,CQ,YC,hq,WS,NL,yp,pU,Mq,nK,Nc,VB,rh,q0,Nd,hF,yK,HB,ZJ,mU,ph,IT,Q4,JY,nl,kx,nV,Zc,Ii,ui,D6,Bn,nP,xL,es,jw,lv,U1,NV,W1,HC,kK,n5,ih,Gs,lc,Xu,lu,G0,TM,oB,Ah,Pn,MI,Ub,bM,eW,um,ju,OE,N9,Bo,TQ,zp,SL,CC,PQ,uz,Yd,U0,AD,Gr,ue,Gq,GH,To,PY,MU,j2,Pu,rQ,Lx,LR,d5,hy,r8,SG,CG,Kf,MT,Rk,Eo,tL,ox,ZD,vt,cu,GU,vR,j8,Ja,zI,cB,uY,fk,GK,xJ,ak,Il,NC,nb,yx,xt,tG,YQ,xl,Dc,Sl,Jo,CS,bf,pF,df,Xa,L3,xj,dE,ZA,dT,Bz,eE,EN,NY,eh,TU,mN,Md,YJ,Qm,hX,pE,Pp,RC,Rv,rE,Dw,CM,C8,nY,LQ,M6,xz,xn,Mm,wJ,zO,W6,eb,rc,ER,iU,Ks,Sv,xa,Hv,au,DI,m4,ew,Bf,As,i6,zR,X2,oC,Um,Wv,nL,Fu,lV,WO,yF,JK,af,vJ,iI,AC,Ye,UP,Eq,bG,tz,uK,bh,YX,QD,CE,d7,wi,zT,o8,ET,pS,Iu,fu,Tc,pf,JL,Hm,tC,Et,ke,Hmj,TJ,Ku,AE,Vm,UR,RB,wm,QM,OU,hO,Gk,LJ,HE,DO,zF,IO,Qf,ZX,hR,ZZ,Zs,MX,wd,jx,oJ,Lt,Gv,GI,YE,MF,iC,It,Q,P,im,VA,O,PK,JO,f0,aX,cC,RA,IY,JH,jl,Iy,JM,Ua,ns,yo,Bj,NO,II,fP,X1,HU,Jl,Yg,Tf,iY,yH,FA,Av,ku,mX,FD,Cj,t2,Zr,ZQ,az,vV,Am,XO,dr,TL,KX,uZ,OQ,d9,Bp,v,Pe,ha,lb,tD,hJ,dC,wN,VX,VR,EK,Pb,tQ,hg,dn,RP,Sk,u3,Y1,iR,hW,mq,e1,Dh,E3,SX,wW,xp,hj,Ts,BA,J4,te,OY,nE,Ma,Zu,NM,cr,rv,Di,XB,Nt,bv,ah,ab,zq,OS,PP,KC,ll,fF,OW,r9,De,zY,NZ,qR,bi,la,YT,I2,uo,ez,nD,Ox,pk,Ll,nT,rj,cR,pX,cN,aH,Ur,PT,o4,Qk,hM,Q3,Zi,IW,Da,M2,Tm,x4,id,kn,op,em,Lb,VW,jr,Ws,ql,QA,Cv,ed,oZ,y8,N2,S3,Yh,wa,Or,YL,wf,Hi,Ss,Yl,ZG,Ng,aL,nH,a7,i1,xy,MH,A8,U5,SO,SU,GD,Ca,Gm,f6,WV,zW,tK,OR,Bg,DL,b8,fT,Lj,vs,da,xw,dm,rH,ZL,rq,RW,YP,jZ,FZ,OM,qh,lz,Rl,Jb,M4,PI,uO,VV,Dy,MO,ms,UO,Bc,vp,Fj,uI,FY,Ld,Xi,Jy,O9,yU,oK,KA,Vo,qB,aN,lx,LV,DS,dp,B3,CR,ny,dR,uR,YR,fB,t3,fZ,TF,Xz,Cg,Hs,pK,eM,R8,k6,oi,PL,fG,EQ,YB,a1,S9,db,i5,N6,Ta,YO,oz,b6,tj,zQ,u3T,mW,ar,FN,W0,Sw,o0,JC,f1,Uk,wI,Ud,fS,by,oj,Cf,Sh,tF,h0,CL,fR,iP,Hn,Zl,B5,a6,P7,DW,Ge,LK,AT,Sn,mp,ub,ds,lj,UV,VS,t7,HG,cK,eV,kM,EH,Ov,Z0,L9,a,Od,MN,Rn,wv,M0,WX,E1,VG,wz,B1,l4,nj,ec,Kx,iO,bU,e7,qb,x5,wQ,DE,tv,uX,DB,RAp,HR,tJ,i7,Sy,KS,A3,aY,nF,FK,Si,vf,Fc,hD,I4,e0,RO,eu,pu,xC,qO,RX,bO,JQ,G3,d8,ya,NP,mD,Eg,m6,Jf,ct,tE,Ow,GB,W9,dW,rB,dv,mk,MM,fm,O7,XY,E4,Gn,r7,Tz,Wk,DV,Hp,Nz,Jd,QS,mg,hL,IN,tn,b0,Dg,Ob,U4,Pg,fj,Fb,dM,GE,uQ,D7,Zf,GS,F6,RQ,BL,HX,Ip,dd,E5,B0,lP,Uf,Ra,wJY,zOQ,W6o,MdQ,YJG,DOe,lPa,Ufa,Raa,w0,D9,GR,z3]}
+return[qE,Gh,rK,Z5,VT,lJ,P2,nB,i3,it,Az,QP,IF,xc,Ny,Kh,v6,Y5,Gc,nx,QQ,fW,y4,TR,na,Un,He,Ff,vH,dY,Em,NW,rV,Wy,QF,hs,cm,Nh,wj,cv,Fs,hY,ea,D0,as,T5,Aa,u5,Yu,M5,jP,Ax,xf,br,Vb,Lv,zA,So,FP,zU,Vi,tb,Sg,pA,Mi,HL,Xb,wP,eP,JP,Og,u8,p8,El,mC,SV,o9,fJ,BK,tA,Vh,rC,Zy,av,Ee,Qb,fp,be,Hw,bn,Ik,xI,Aj,oU,eY,KV,BH,KY,G7,l9,Ql,wL,bP,Us,SN,HD,ni,jg,qj,nC,IP,jh,fs,u2,bX,ZF,MC,Mx,Ue,Ea,lp,pD,I0,yN,Cp,ua,HN,Ul,KK,WU,ii,fq,i9,qk,Xe,Tb,Iv,BT,yY,kJ,FB,xV,YS,y6,RH,ho,Z2,w6,BR,vw,aG,fA,K5,CQ,YC,hq,WS,NL,yp,pU,Mq,nK,Nc,VB,rh,q0,Nd,hF,yK,HB,ZJ,mU,ph,IT,Q4,JY,nl,kx,nV,Zc,Ii,ui,D6,Bn,nP,xL,es,jw,lv,U1,NV,W1,HC,kK,n5,ih,Gs,lc,Xu,lu,G0,TM,oB,Ah,Pn,MI,Ub,bM,eW,um,ju,OE,N9,Bo,TQ,zp,SL,CC,PQ,uz,Yd,U0,AD,Gr,ue,Gq,GH,To,PY,MU,j2,Pu,rQ,Lx,LR,d5,hy,r8,SG,CG,Kf,MT,Rk,Eo,tL,ox,ZD,vt,cu,GU,vR,j8,Ja,zI,cB,uY,fk,GK,xJ,ak,Il,NC,nb,yx,xt,tG,YQ,xl,Dc,Sl,Jo,CS,bf,pF,df,Xa,L3,xj,dE,ZA,dT,Bz,eE,EN,NY,eh,TU,mN,Md,YJ,Qm,hX,pE,Pp,RC,Rv,rE,Dw,CM,C8,nY,LQ,M6,xz,xn,Mm,wJ,zO,W6,eb,rc,ER,iU,Ks,Sv,xa,Hv,au,DI,m4,ew,Bf,As,i6,zR,X2,oC,Um,Wv,nL,Fu,lV,WO,yF,JK,af,vJ,iI,AC,Ye,UP,Eq,bG,tz,uK,bh,YX,QD,CE,d7,wi,zT,o8,ET,pS,Iu,fu,Tc,pf,JL,Hm,tC,Et,ke,TJ,Ku,AE,Vm,UR,RB,wm,QM,OU,hO,Gk,LJ,HE,DO,zF,IO,Qf,ZX,hR,ZZ,Zs,MX,wd,jx,oJ,Lt,Gv,GI,YE,MF,iC,It,Q,P,im,VA,O,PK,JO,f0,aX,cC,RA,IY,JH,jl,Iy,JM,Ua,ns,yo,Bj,NO,II,fP,X1,HU,Jl,Yg,Tf,iY,yH,FA,Av,ku,mX,FD,Cj,t2,Zr,ZQ,az,vV,Am,XO,dr,TL,KX,uZ,OQ,d9,Bp,v,Pe,ha,lb,tD,hJ,dC,wN,VX,VR,EK,Pb,tQ,hg,dn,RP,Sk,u3,Y1,iR,hW,mq,e1,Dh,E3,SX,wW,xp,hj,Ts,BA,J4,te,OY,nE,Ma,Zu,NM,cr,rv,Di,XB,Nt,bv,ah,ab,zq,OS,PP,KC,ll,fF,OW,r9,De,zY,NZ,qR,bi,la,YT,I2,uo,ez,nD,Ox,pk,Ll,nT,rj,cR,pX,cN,aH,Ur,PT,o4,Qk,hM,Q3,Zi,IW,Da,M2,Tm,x4,id,kn,op,em,Lb,VW,jr,Ws,ql,QA,Cv,ed,oZ,y8,N2,S3,Yh,wa,Or,YL,wf,Hi,Ss,Yl,ZG,Ng,aL,nH,a7,i1,xy,MH,A8,U5,SO,SU,GD,Ca,Gm,f6,WV,zW,tK,OR,Bg,DL,b8,fT,Lj,vs,da,xw,dm,rH,ZL,rq,RW,YP,jZ,FZ,OM,qh,lz,Rl,Jb,M4,PI,uO,VV,Dy,MO,ms,UO,Bc,vp,Fj,uI,FY,Ld,Xi,Jy,O9,yU,oK,KA,Vo,qB,aN,lx,LV,DS,dp,B3,CR,ny,dR,uR,YR,fB,t3,fZ,TF,Xz,Cg,Hs,pK,eM,R8,k6,oi,PL,fG,EQ,YB,a1,S9,db,i5,N6,Ta,YO,oz,b6,tj,zQ,u3T,mW,ar,FN,W0,Sw,o0,JC,f1,Uk,wI,Ud,fS,by,oj,Cf,Sh,tF,h0,CL,fR,iP,Hn,Zl,B5,a6,P7,DW,Ge,LK,AT,Sn,mp,ub,ds,lj,UV,VS,t7,HG,cK,eV,kM,EH,Ov,Z0,L9,a,Od,MN,Rn,wv,M0,WX,E1,VG,wz,B1,l4,nj,ec,Kx,iO,bU,e7,qb,x5,wQ,DE,tv,uX,DB,RAp,HR,tJ,i7,Sy,KS,A3,aY,nF,FK,Si,vf,Fc,hD,I4,e0,RO,eu,pu,xC,qO,RX,bO,JQ,G3,d8,ya,NP,mD,Eg,m6,Jf,ct,tE,Ow,GB,W9,dW,rB,dv,mk,MM,fm,O7,XY,E4,Gn,r7,Tz,Wk,DV,Hp,Nz,Jd,QS,mg,hL,IN,tn,b0,Dg,Ob,U4,Pg,fj,Fb,dM,GE,uQ,D7,Zf,GS,F6,RQ,BL,HX,Ip,dd,E5,B0,lP,Uf,Ra,wJY,zOQ,W6o,MdQ,YJG,DOe,lPa,Ufa,Raa,w0,D9,GR,z3]}

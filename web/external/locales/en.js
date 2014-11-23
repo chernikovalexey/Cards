@@ -52,6 +52,7 @@ locale.not_played = "didn't play yet"
 locale.vote_form1 = 'votes';
 locale.vote_form2 = 'vote';
 locale.vote_form3 = 'votes';
+locale.attempts_left = '%s %s left';
 locale.attempt_form1 = 'attempts';
 locale.attempt_form2 = 'attempt';
 locale.attempt_form3 = 'attempts';

@@ -15,6 +15,7 @@ import 'WebApi.dart';
 import 'Tooltip.dart';
 import 'Chapter.dart';
 import 'ChapterShower.dart';
+import 'package:sprintf/sprintf.dart';
 
 class RatingShower {
     static const int FADE_TIME = 450;
@@ -200,12 +201,12 @@ class RatingShower {
             querySelector(".rating-inner-layout").classes.add("small-margin");
 
             //
-            querySelector("#share-level").addEventListener("click", (event) {
-                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating)]);
-            }, true);
+//            querySelector("#share-level").addEventListener("click", (event) {
+//                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating)]);
+//            }, true);
         }
 
-        querySelector("#attempts-remaining").innerHtml = UserManager.get("allAttempts").toString();
+        querySelector(".attempts-left").innerHtml = sprintf(context['locale']['attempts_left'], [UserManager.get("allAttempts").toString(), context['Features'].callMethod('getNounPlural', [UserManager.get("allAttempts"), context['locale']['attempt_form1'], context['locale']['attempt_form2'], context['locale']['attempt_form3']])]);
         querySelector(".get-attempts-button").removeEventListener("click", showPurchases);
         querySelector(".get-attempts-button").addEventListener("click", showPurchases, true);
 
