@@ -552,6 +552,23 @@ var FBFeatures = {
         });
     },
 
+    unlockChapter: function (chapter) {
+        var data = encodeURIComponent(JSON.stringify({
+            'userId': this.user.platformUserId,
+            'chapter': chapter
+        }));
+
+        FB.ui({
+            method: 'pay',
+            action: 'purchaseitem',
+            product: 'http://twopeoplesoftware.com/twocubes/serverside/index.php?method=fb.fbGetChapterUnlockOg&arguments=' + data
+        }, function (r) {
+            if (r.status == "initiated" || r.status == "completed") {
+                Features.onOrderSuccess();
+            }
+        });
+    },
+
     toUserObject: function (fr) {
         console.log('trying to get user object:', fr);
         return {
@@ -732,7 +749,6 @@ var FBFeatures = {
         return data;
     },
 
-    //asus: +380666721021
     makePurchase: function () {
         var item = $(this).data('item');
         console.log(item);
