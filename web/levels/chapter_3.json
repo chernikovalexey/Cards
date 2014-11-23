@@ -1,6 +1,6 @@
 {"levels": [
     {
-        "name": "The Dog of Triad",
+        "name": "Transgalactic Hustler",
         "x": 0,
         "y": -10,
         "width": 1600,
@@ -36,13 +36,223 @@
                 "width": 1600,
                 "height": 10,
                 "type": 1
+            }
+        ]
+    },
+    {
+        "name": "Captain Asteroid",
+        "x": 30,
+        "y": 10,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [0, 3],
+        "stars": [1, 2],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 200,
+            "y": 50
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Third Advent",
+        "x": 30,
+        "y": -10,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [0, 6],
+        "stars": [3, 4],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 300,
+            "y": 50
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Oldschool Ship",
+        "x": 30,
+        "y": -10,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [0, 6],
+        "stars": [1, 2],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 350,
+            "y": 120
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Good Times",
+        "x": 100,
+        "y": -10,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [0, 6],
+        "stars": [4, 5],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 320,
+            "y": 330
+        },
+        "obstacles": []
+    },
+    {
+        "name": "New Standards",
+        "x": 125,
+        "y": 20,
+        "width": 800,
+        "height": 700,
+        "blocks": [0, 7],
+        "stars": [5, 6],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 430,
+            "y": 330
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Beautiful Star",
+        "x": 150,
+        "y": -50,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [0, 8],
+        "stars": [6, 7],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 520,
+            "y": 280
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Arctic Spring",
+        "x": 200,
+        "y": -50,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [2, 8],
+        "stars": [10, 11],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 800,
+            "y": 280
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Recrystalization",
+        "x": 275,
+        "y": -50,
+        "width": 1200,
+        "height": 1000,
+        "blocks": [0, 20],
+        "stars": [18, 20],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 950,
+            "y": 280
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Galactic Agency",
+        "x": 350,
+        "y": -50,
+        "width": 1200,
+        "height": 2000,
+        "blocks": [2, 7],
+        "stars": [8, 9],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 950,
+            "y": 50
+        },
+        "obstacles": []
+    },
+    {
+        "name": "Door Alarm",
+        "x": 400,
+        "y": -50,
+        "width": 1200,
+        "height": 2000,
+        "blocks": [0, 9],
+        "stars": [8, 9],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 1050,
+            "y": 50
+        },
+        "obstacles": [
+            {
+                "x": 1010,
+                "y": 0,
+                "width": 5,
+                "height": 220,
+                "type": 1
+            }
+        ]
+    },
+    {
+        "name": "Rainy Asteroid",
+        "x": 575,
+        "y": -100,
+        "width": 1200,
+        "height": 2000,
+        "blocks": [1, 16],
+        "stars": [15, 17],
+        "from": {
+            "offset": 50
+        },
+        "to": {
+            "x": 1200,
+            "y": 50
+        },
+        "obstacles": [
+            {
+                "x": 1070,
+                "y": 45,
+                "width": 250,
+                "height": 5,
+                "type": 1
             },
             {
-                "x": 200,
-                "y": 0,
-                "width": 20,
-                "height": 130,
-                "type": 5
+                "x": 1150,
+                "y": 45,
+                "width": 5,
+                "height": 90,
+                "type": 1
+            },
+            {
+                "x": 1150,
+                "y": 135,
+                "width": 200,
+                "height": 5,
+                "type": 1
             }
         ]
     }

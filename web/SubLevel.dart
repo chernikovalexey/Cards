@@ -12,8 +12,11 @@ class SubLevel {
     String name;
 
     List frames = new List();
+
     List cards = new List();
+
     List<Body> obstacles = new List<Body>();
+
     List stars;
 
     int attemptsUsed = 0;
@@ -21,17 +24,23 @@ class SubLevel {
     GameEngine e;
 
     Object fSprite, tSprite;
+
     Object levelData;
 
     Function levelApplied;
 
     double x, y, w, h;
+
     int rating = 0;
+
     int index;
+
     int staticBlocksRemaining;
+
     int dynamicBlocksRemaining;
 
     Body from;
+
     Body to;
 
     SubLevel(GameEngine e, Map l, int index) {
@@ -54,7 +63,7 @@ class SubLevel {
             y += e.to.position.y - GameEngine.ENERGY_BLOCK_HEIGHT / 2;
             this.from = e.to;
             this.from.userData = Sprite.from(e.world);
-            //boundsOffset = x - (to.position.x - l["from"]["offset"].toDouble() / GameEngine.scale;);
+//boundsOffset = x - (to.position.x - l["from"]["offset"].toDouble() / GameEngine.scale;);
         } else {
             this.from = e.createPolygonShape(l["from"]["x"].toDouble() / GameEngine.NSCALE, l["from"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
             this.from.userData = Sprite.from(e.world);
@@ -78,11 +87,7 @@ class SubLevel {
                 o = e.createMultiShape(points);
             }
             Sprite s = Sprite.byType(1, e.world);
-            bool isDynamicObstacle = obstacle["type"] & 4 != 0;
-            s.isStatic = !isDynamicObstacle;
             o.userData = s;
-            o.type =
-
             obstacles.add(o);
         }
 
@@ -141,7 +146,7 @@ class SubLevel {
     }
 
     void apply() {
-        //analytics.levelStart(e.level.chapter, index);
+//analytics.levelStart(e.level.chapter, index);
         Function f = () {
             e.camera.setBounds(x, y, x + w, y + h);
             e.camera.mTargetX = x / GameEngine.scale;
@@ -186,7 +191,7 @@ class SubLevel {
     }
 
     void online(bool online) {
-        //print("SubLevel::online("+online.toString()+")");
+//print("SubLevel::online("+online.toString()+")");
         for (Body c in e.cards) {
             (c.userData as EnergySprite).makeSensor(!online, c);
         }
