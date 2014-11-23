@@ -17,6 +17,7 @@ img {
     height: 300px;
     text-align: center;
     padding-top: 300px;
+    cursor: default;
 }
 
 .loading-label {

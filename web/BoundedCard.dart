@@ -8,6 +8,7 @@ import "Sprite.dart";
 import "Color4.dart";
 import 'GameWizard.dart';
 import 'Tooltip.dart';
+import 'ComplexPolygonShape.dart';
 
 class BoundedCard {
     Body b;
@@ -27,12 +28,12 @@ class BoundedCard {
 
         PolygonShape sd = new PolygonShape();
         sd.setAsBox(GameEngine.CARD_WIDTH / 2 * e.currentZoom, GameEngine.CARD_HEIGHT / 2 * e.currentZoom);
+
         fd.shape = sd;
         fd.isSensor = true;
 
         b = e.world.createBody(bd);
         b.createFixture(fd);
-        //b.createFixture(e.createHelperFixture(GameEngine.CARD_WIDTH, GameEngine.CARD_HEIGHT));
         b.userData = Sprite.card(e.world);
     }
 

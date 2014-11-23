@@ -155,6 +155,11 @@ class World {
     }
   }
 
+  void setGravity(Vector2 gravity) {
+    _gravity.x = gravity.x;
+    _gravity.y = gravity.y;
+  }
+
   void _initializeRegisters() {
     _addType(_pool.getCircleContactStack(), ShapeType.CIRCLE, ShapeType.CIRCLE);
     _addType(_pool.getPolyCircleContactStack(), ShapeType.POLYGON,

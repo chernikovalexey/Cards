@@ -127,7 +127,7 @@ class Settings {
   /**
    * The maximum number of vertices on a convex polygon.
    */
-  static const int MAX_POLYGON_VERTICES = 8;
+  static const int MAX_POLYGON_VERTICES = 12;
 
   /**
    * Friction mixing law.

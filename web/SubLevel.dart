@@ -75,6 +75,10 @@ class SubLevel {
         this.to = e.createPolygonShape(l["to"]["x"].toDouble() / GameEngine.NSCALE, l["to"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
         this.to.userData = Sprite.to(e.world);
 
+        if (l["gravity"] != null) {
+            e.world.setGravity(new Vector2(0.0, l["gravity"].toDouble()));
+        }
+
         for (var obstacle in l["obstacles"]) {
             Body o;
             if (obstacle["type"] == 1 || obstacle["type"] == 5) {

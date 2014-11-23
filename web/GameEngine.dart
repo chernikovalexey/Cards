@@ -24,6 +24,7 @@ import "StarManager.dart";
 import 'GameWizard.dart';
 import 'Tooltip.dart';
 import 'PromptWindow.dart';
+import 'Chapter.dart';
 
 // Actions history item
 class HItem {
@@ -119,6 +120,8 @@ class GameEngine extends State {
 
             level = new Level(() {
                 ready = true;
+
+                this.bcard = new BoundedCard(this);
             }, params["chapter"], this, params["continue"] != null && params["continue"]);
         }
     }
@@ -134,11 +137,10 @@ class GameEngine extends State {
         pool = new DefaultWorldPool();
 
         this.contactListener = new CardContactListener(this);
-        this.world = new World(new Vector2(0.0, GRAVITY), true, pool);
+        this.world = new World(new Vector2(0.0, -GRAVITY), true, pool);
 
         world.contactListener = contactListener;
 
-        this.bcard = new BoundedCard(this);
         this.traverser = new Traverser(this);
 
         this.bobbin = new Bobbin(() {
@@ -231,7 +233,7 @@ class GameEngine extends State {
 
     Body addCard(double x, double y, double angle, [bool isStatic = false, SubLevel sub = null, Color4 col = null, bool isHint = false]) {
         PolygonShape cs = new PolygonShape();
-        cs.setAsBox(CARD_WIDTH / 2 * currentZoom, CARD_HEIGHT / 2 * currentZoom);
+        cs.setAsBox(GameEngine.CARD_WIDTH / 2 * currentZoom, GameEngine.CARD_HEIGHT / 2 * currentZoom);
 
         FixtureDef fd = new FixtureDef();
         fd.shape = cs;
@@ -375,8 +377,14 @@ class GameEngine extends State {
             }
         }
 
+        for (Body obstacle in level.current.obstacles) {
+            obstacle.applyForce(new Vector2(0.0, GameEngine.GRAVITY), obstacle.worldCenter);
+        }
+
         world.step(1.0 / 60, 10, 10);
-        bcard.update();
+        if (bcard != null) {
+            bcard.update();
+        }
 
         bool cp = canPut();
         if (level.current != null && ((staticBlocksSelected && level.current.staticBlocksRemaining > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
