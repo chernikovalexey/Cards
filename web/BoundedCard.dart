@@ -8,7 +8,6 @@ import "Sprite.dart";
 import "Color4.dart";
 import 'GameWizard.dart';
 import 'Tooltip.dart';
-import 'ComplexPolygonShape.dart';
 
 class BoundedCard {
     Body b;
