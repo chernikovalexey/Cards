@@ -77,17 +77,23 @@ class SubLevel {
 
         for (var obstacle in l["obstacles"]) {
             Body o;
-            if (obstacle["type"] == 1) {
+            if (obstacle["type"] == 1 || obstacle["type"] == 5) {
                 o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE, obstacle["y"].toDouble() / GameEngine.NSCALE, obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble() / GameEngine.NSCALE);
-            } else {
+            } else if (obstacle["type"] == 2 || obstacle["type"] == 6) {
                 List<Vector2> points = new List();
                 for (var p in obstacle["points"]) {
                     points.add(new Vector2(p['x'] / GameEngine.NSCALE, p['y'] / GameEngine.NSCALE));
                 }
                 o = e.createMultiShape(points);
             }
+
             Sprite s = Sprite.byType(1, e.world);
             o.userData = s;
+
+            if (obstacle["type"] != 5 && obstacle["type"] != 6) {
+                o.userData.isStatic = true;
+            }
+
             obstacles.add(o);
         }
 

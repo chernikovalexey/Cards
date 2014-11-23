@@ -103,7 +103,7 @@ locale.negative = 'No';
 
 // Wizard
 locale.wizard_apply = "Apply physics to drop blocks";
-locale.wizard_place = "Left-click to place a block";
+locale.wizard_place = "Left-click to place a block and connect two cubes";
 locale.wizard_limited_amount = "Amount of blocks is limited";
 locale.wizard_rewind = "Rewind to try again";
 locale.wizard_remove = "To remove the selected block, <b>right-click</b> or <b>press Delete</b>";

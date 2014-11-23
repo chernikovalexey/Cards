@@ -31,22 +31,21 @@ class Sprite {
     }
 
     void render(SuperCanvasDraw g, Body b) {
-        if(isHidden) return;
+        if (isHidden) return;
 
         this.canvasDraw = g;
         Transform tf = new Transform();
         tf.setFrom(b.originTransform);
         drawShape(b.fixtureList, tf, color);
 
-        if(contactOverlay) {
+        if (contactOverlay) {
             drawShape(b.fixtureList, tf, new Color4.fromRGBA(220, 30, 30, 0.425));
         }
     }
 
     void drawShape(Fixture fixture, Transform xf, Color4 color) {
-        if(fixture.userData==false) {
-            if(fixture.next!=null) fixture = fixture.next;
-            else return;
+        if (fixture.userData == false) {
+            if (fixture.next != null) fixture = fixture.next; else return;
         }
         switch (fixture.type) {
             case ShapeType.CIRCLE:
@@ -68,13 +67,10 @@ class Sprite {
                 final PolygonShape poly = fixture.shape;
                 int vertexCount = poly.vertexCount;
                 assert (vertexCount <= Settings.MAX_POLYGON_VERTICES);
-                List<Vector2> vertices = new List<Vector2>.generate(
-                    vertexCount, (i) => new Vector2.zero());
+                List<Vector2> vertices = new List<Vector2>.generate(vertexCount, (i) => new Vector2.zero());
 
                 for (int i = 0; i < vertexCount; ++i) {
-                    assert(poly.vertices[i] != null);
-                    assert(vertices[i] != null);
-                    Transform.mulToOut(xf, poly.vertices[i], vertices[i]);
+                    assert(poly.vertices[i] != null);assert(vertices[i] != null);Transform.mulToOut(xf, poly.vertices[i], vertices[i]);
                 }
 
                 if (0 != (canvasDraw.flags & DebugDraw.e_lineDrawingBit)) {
@@ -88,8 +84,11 @@ class Sprite {
         }
     }
 
-    void activate() {}
-    void deactivate() {}
+    void activate() {
+    }
+
+    void deactivate() {
+    }
 
     static Sprite card(World w) {
         return new EnergySprite(w);
@@ -97,7 +96,7 @@ class Sprite {
 
     static Sprite innerEnergy() {
         Sprite s = new Sprite();
-        s.color = new Color4.fromRGB(255,242,0);
+        s.color = new Color4.fromRGB(255, 242, 0);
         s.isInner = true;
         return s;
     }
@@ -124,18 +123,19 @@ class Sprite {
     static Sprite ground() {
         Sprite s = new Sprite();
         s.color = new Color4.fromRGB(66, 36, 12);
+        s.isStatic = true;
         return s;
     }
-    
+
     static Sprite byType(int type, World w) {
-      switch(type) {
-        case 1:
-          return ground();
-        case 2:
-          return from(w);
-        case 3:
-          return to(w);
-      }
-      return null;
+        switch (type) {
+            case 1:
+                return ground();
+            case 2:
+                return from(w);
+            case 3:
+                return to(w);
+        }
+        return null;
     }
 }

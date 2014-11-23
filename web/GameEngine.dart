@@ -75,6 +75,7 @@ class GameEngine extends State {
     SuperCanvasDraw debugDraw;
     BoundedCard bcard;
     Bobbin bobbin;
+    Bobbin obstaclesBobbin;
     Camera camera;
     Traverser traverser;
     Level level;
@@ -84,6 +85,8 @@ class GameEngine extends State {
     List<HItem> history = new List<HItem>();
 
     List<Body> cards = new List<Body>();
+
+    //List<Body> dynamicObstacles = new List<Body>();
     List<int> stars;
     List levels;
 
@@ -161,6 +164,9 @@ class GameEngine extends State {
                 frontRewindLevelFailed();
             }
         });
+
+        this.obstaclesBobbin = new Bobbin(() {
+        });
     }
 
     void setCanvasCursor(String cursor) {
@@ -178,7 +184,7 @@ class GameEngine extends State {
         return fd;
     }
 
-    Body createPolygonShape(double x, double y, double width, double height) {
+    Body createPolygonShape(double x, double y, double width, double height, [bool _dynamic = false]) {
         PolygonShape sd = new PolygonShape();
         sd.setAsBox(width / 2, height / 2);
 
@@ -188,15 +194,21 @@ class GameEngine extends State {
 
         BodyDef bd = new BodyDef();
         bd.position = new Vector2(x + width / 2, y + height / 2);
+//        print("create obstacle: " + _dynamic.toString());
+//        bd.type = _dynamic ? BodyType.DYNAMIC : BodyType.STATIC;
 
         Body body = world.createBody(bd);
         body.createFixture(fd);
         body.createFixture(createHelperFixture(width, height));
 
+//        if(_dynamic){
+//            dynamicObstacles.add();
+//        }
+
         return body;
     }
 
-    Body createMultiShape(List<Vector2> points) {
+    Body createMultiShape(List<Vector2> points, [bool _dynamic = false]) {
         PolygonShape sd = new PolygonShape();
         sd.setFrom(points, points.length);
 
@@ -205,6 +217,7 @@ class GameEngine extends State {
         fd.friction = 0.7;
 
         BodyDef bd = new BodyDef();
+//        bd.type = _dynamic ? BodyType.DYNAMIC : BodyType.STATIC;
 
         Body body = world.createBody(bd);
         body.createFixture(fd);
@@ -295,6 +308,27 @@ class GameEngine extends State {
             body.type = getBodyType(active, sprite.isStatic, sprite.isHint);
             if (!physicsEnabled) sprite.deactivate();
         }
+
+        // Toggle dynamic obstacles
+        if (physicsEnabled) {
+            obstaclesBobbin.erase();
+            obstaclesBobbin.enterFrame(level.current.obstacles);
+        }
+
+        for (Body obstacle in level.current.obstacles) {
+            bool isStatic = (obstacle.userData as Sprite).isStatic;
+            if (!isStatic) {
+                obstacle.type = getBodyType(active, isStatic, false);
+            }
+        }
+    }
+
+    List<Body> getCurrentLevelObstacles() {
+        List<Body> obstacles = new List<Body>();
+        if (level != null && level.current != null) {
+            obstacles.addAll(level.current.obstacles);
+        }
+        return obstacles;
     }
 
     void toggleBoundedCard(bool visible) {
@@ -328,12 +362,15 @@ class GameEngine extends State {
 
         if (physicsEnabled) {
             bobbin.enterFrame(cards);
+            obstaclesBobbin.enterFrame(level.current.obstacles);
         }
 
         if (isRewinding) {
-            isRewinding = bobbin.previousFrame(cards);
+            isRewinding = bobbin.previousFrame(cards) || obstaclesBobbin.previousFrame(level.current.obstacles);
+
             if (!isRewinding) {
                 bobbin.erase();
+                obstaclesBobbin.erase();
                 if (bobbin.rewindComplete != null) bobbin.rewindComplete();
             }
         }
@@ -458,7 +495,7 @@ class GameEngine extends State {
         return n;
     }
 
-    // saves the state of the current level
+// saves the state of the current level
 
     void saveCurrentProgress() {
         if (level != null && level.current != null && !manuallyControlled) {
@@ -594,6 +631,7 @@ class GameEngine extends State {
         window.localStorage.remove("level_" + level.chapter.toString() + "_" + (level.current.index + 1).toString());
         applyPhysicsLabelToButton();
         bobbin.erase();
+        obstaclesBobbin.erase();
         List<Body> _cards = new List<Body>();
         _cards.addAll(cards);
         for (Body b in _cards) {

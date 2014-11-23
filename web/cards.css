@@ -428,7 +428,7 @@ button:hover:not([disabled]) {
 .current-level-rating .star {
     width: 64px;
     height: 62px;
-    background-size: contain;
+    background-size: 64px 62px !important;
 }
 
 .current-chapter-cr {

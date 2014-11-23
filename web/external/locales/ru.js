@@ -105,7 +105,7 @@ locale.negative = 'Нет';
 
 // Wizard
 locale.wizard_apply = "Примените физику, чтобы блоки упали";
-locale.wizard_place = "Левая кнопка мыши, чтобы поставить блок";
+locale.wizard_place = "Левая кнопка мыши, чтобы поставить блок и соединить кубики";
 locale.wizard_limited_amount = "Количество ограничено";
 locale.wizard_rewind = "Rewind to try again";
 locale.wizard_remove = "Чтобы удалить выбранный блок, <b>нажмите правую кнопку</b> или <b>Delete</b>";

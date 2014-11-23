@@ -90,6 +90,13 @@
                     $('.updated').each(function () {
                         var id = $(this).data('id');
                         if (d[id]) {
+                            if (id === 'users') {
+                                var prev_amount = +$(this).html();
+                                if (d[id] > prev_amount) {
+                                    var audio = new Audio("http://static1.grsites.com/archive/sounds/battle/battle003.mp3");
+                                    audio.play();
+                                }
+                            }
                             $(this).html(d[id]);
                         }
                     });
