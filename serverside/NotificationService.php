@@ -79,7 +79,6 @@ class NotificationService
 
     private function sendVk($vk)
     {
-        //$byReasons = $this->groupBy($vk, 'reason');
         $methods = VKServerMethods::getInstance($this->db);
         $data = $methods->usersGet($this->getIds($vk), 'online,online_mobile');
         $byUserId = $this->groupBy($vk, 'platformUserId');
@@ -95,10 +94,8 @@ class NotificationService
 
         $sentNotifications = array();
         foreach ($forSend as $reason => $reasonArray) {
-
-           // $this->getMessage($reason, 'ru');
-           var_dump($methods->sendNotification($this->getIds($reasonArray), $this->getMessage($reason, 'ru')));
-           $sentNotifications = array_merge($this->getValues($reasonArray, 'id'), $sentNotifications);
+            $methods->sendNotification($this->getIds($reasonArray), $this->getMessage($reason, 'ru'));
+            $sentNotifications = array_merge($this->getValues($reasonArray, 'id'), $sentNotifications);
         }
 
         $this->db->removeNotifications($sentNotifications);

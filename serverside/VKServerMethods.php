@@ -33,24 +33,24 @@ class VKServerMethods
         $this->accessToken = $accessToken;
     }
 
-    public static function getInstance()
+    public static function getInstance(DB $db)
     {
         if (self::$instance != null)
             return self::$instance;
-        return self::login();
+        return self::login($db);
     }
 
-    public static function login()
+    public static function login(DB $db)
     {
         $loginLink = 'https://oauth.vk.com/access_token?client_id=' . self::APP_ID . '&client_secret=' . self::APP_SECRET . '&grant_type=client_credentials';
-        if ($accessToken = DBVkData::getToken()) {
+        if ($accessToken = $db->getConfig('vkAccessToken')) {
             self::$instance = new VKServerMethods($accessToken);
-            return self::getInstance();
+            return self::getInstance($db);
         } else {
             $obj = json_decode(WebClient::downloadString($loginLink), true);
-            DBVkData::setToken($obj['access_token']);
+            $db->setConfig('vkAccessToken', $obj['access_token']);
             self::$instance = new VKServerMethods($obj['access_token']);
-            return self::getInstance();
+            return self::getInstance($db);
         }
     }
 
@@ -108,7 +108,7 @@ class VKServerMethods
     public function sendNotification($uids, $message)
     {
         return $this->query("secure.sendNotification",
-            new Param("uids", $uids),
+            new Param("uids", implode(',', $uids)),
             new Param("message", $message)
         );
     }
@@ -120,9 +120,8 @@ class VKServerMethods
             new Param('counter', $counter));
     }
 
-    public function usersGet($uids, $fields)
+    public function usersGet(array $uids, $fields)
     {
-        echo "users get\r\n";
         $url = self::API_URL . 'users.get';
 
 // use key 'http' even if you send the request to https://...

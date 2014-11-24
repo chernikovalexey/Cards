@@ -269,4 +269,32 @@ class DB
             'levels' => $levels
         );
     }
+
+    public function getConfig($key)
+    {
+        $sql = $this->db->prepare("SELECT value FROM tconfigurations WHERE `key` = ?");
+        $sql->bindValue(1, $key, PDO::PARAM_STR);
+        $sql->execute();
+        list($value) = $sql->fetch();
+        return $value;
+    }
+
+    public function setConfig($key, $value)
+    {
+        $sql = $this->db->prepare("CALL setConfig(?, ?)");
+        $sql->bindValue(1, $key, PDO::PARAM_STR);
+        $sql->bindValue(2, $value, PDO::PARAM_STR);
+        $sql->execute();
+    }
+
+    public function getNotifications()
+    {
+        return $this->db->query("SELECT * FROM tcardnotifications INNER JOIN tcardusers ON tcardnotifications.userId = tcardusers.userId")->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function removeNotifications(array $sentNotifications)
+    {
+        $q = implode(',', $sentNotifications);
+        $this->db->query("DELETE FROM tcardnotifications WHERE `id` IN($q)");
+    }
 } 

@@ -4,8 +4,8 @@ function WebApi(method, data, callback) {
     console.log("api request:", data);
 
     var url = "/twocubes28340jfddv03jfd/serverside/index.php";
-    if (document.location.href.indexOf('28340jfddv03jfd') != -1) {
-        url = "/twocubes28340jfddv03jfd/serverside/index.php";
+    if (document.location.href.indexOf('28340jfddv03jfd') == -1) {
+        url = "/twocubes.test/serverside/index.php";
     }
 
     $.ajax({

@@ -89,7 +89,6 @@ class Api
 
     public function chapters(array $user)
     {
-
         $total = $this->db->getTotalStars($user['userId']);
         $unlocked = $this->db->getUnlocked($user['userId']);
         $chapters = json_decode(file_get_contents(CHAPTER_FILE), true);
@@ -136,5 +135,11 @@ class Api
                 break;
         }
         return null;
+    }
+
+    public function sendNotifications()
+    {
+
+        return NotificationService::send($this->db);
     }
 }
