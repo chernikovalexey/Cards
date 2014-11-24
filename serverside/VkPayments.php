@@ -3,7 +3,6 @@ header("Content-Type: application/json; encoding=utf-8");
 
 class VKPayments implements IPayments
 {
-    const SECRET_KEY = 'e8tBn39YovCQNsKX9WKK';
     private $input;
     private $response;
     /**
@@ -26,10 +25,10 @@ class VKPayments implements IPayments
             $str .= $k . '=' . $v;
         }
 
-        if ($sig != md5($str . self::SECRET_KEY)) {
+        if ($sig != md5($str . VK_SECRET_KEY)) {
             $this->response['error'] = array(
                 'error_code' => 10,
-                'error_msg' => $sig . " / " . $str . self::SECRET_KEY,
+                'error_msg' => 'Несовпадение вычисленной и переданной подписи запроса.',
                 'critical' => true
             );
             return false;

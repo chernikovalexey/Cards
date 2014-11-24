@@ -683,7 +683,7 @@ x.Sb=z
 x.Jg=this
 this.QG=x}},"call$1","gM",0,2,null,0,281,[]],
 o9:[function(){var z,y
-z=new V.kn(null,null,null)
+z=new V.Ub(null,null,null)
 z.yP()
 this.qK=z
 this.fZ=new Q.Qm(this,H.VM([],[V.qR]))
@@ -1049,7 +1049,9 @@ $isEH:true}}],["","file:///E:/Software/Cards/web/GameWizard.dart",,M,{
 "^":"",
 S4:[function(a,b){var z,y
 z=$.Kk
-if(z==null?a!=null:z!==a){y=new M.iU(a,b)
+if(z==null?a!=null:z!==a){R.JI()
+y=new M.iU(a,b)
+z=$.Kk
 if(z!=null)T.j0(z,175,y)
 else y.call$0()}},"call$2","hB",2,2,null,0,6,[],7,[]],
 NQ:[function(){$.kG=!1
@@ -1538,6 +1540,7 @@ $isEH:true},
 YX:{
 "^":"d9:232;a",
 call$1:[function(a){var z
+R.JI()
 A.H2()
 z=H.Go(document.querySelector("#friends-finished"),"$isWy")
 z.toString
@@ -1607,7 +1610,7 @@ t=b.A6(J.Oq(u.t(v,"x")),J.Oq(u.t(v,"y")),J.Oq(u.t(v,"angle")),u.t(v,"static"),c)
 if(w)t.st5(0,0)
 H.Go(t.eH,"$isM6").cu=J.Oq(u.t(v,"energy"))}T.Wp()
 s=[]
-r=J.q8(y.t(z,"frames"))
+if(J.tx(y.t(z,"cards"))!==!0){r=J.q8(y.t(z,"frames"))
 if(typeof r!=="number")return H.s(r)
 q=0
 for(;q<r;++q){s.push([])
@@ -1624,7 +1627,7 @@ o=J.Oq(o.t(p,"angle"))
 m=new N.eh(null,null)
 m.BV=new T.z3(l)
 m.Cg=o
-J.wT(u,m)}}if(w){c.wH=s
+J.wT(u,m)}}}if(w){c.wH=s
 c.Qc(0,!1)}else b.b1.im=s
 if(w)if(J.J5(J.UQ(c.td,0),c.z7.length))c.KS=3
 else if(J.J5(J.UQ(c.td,1),c.z7.length))c.KS=2
@@ -2559,7 +2562,7 @@ giO:function(a){return H.eQ(a)},
 bu:[function(a){return H.a5(a)},"call$0","gAY",0,0,null],
 T:[function(a,b){throw H.b(P.lr(a,b.gWa(),b.gnd(),b.gVm(),null))},"call$1","gac",2,0,null,322,[]],
 "%":"ArrayBuffer|CanvasGradient|CanvasPattern|DOMImplementation|Navigator|NavigatorUserMediaError|SVGAnimatedEnumeration|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString|SVGAnimatedTransformList|SVGPointList"},
-GI:{
+kn:{
 "^":"bool/Gv;",
 bu:[function(a){return String(a)},"call$0","gAY",0,0,null],
 giO:function(a){return a?519018:218159},
@@ -2618,6 +2621,7 @@ XU:[function(a,b,c){return H.TK(a,b,c,a.length)},function(a,b){return this.XU(a,
 tg:[function(a,b){var z
 for(z=0;z<a.length;++z)if(J.de(a[z],b))return!0
 return!1},"call$1","gx0",2,0,null,144,[]],
+gl0:function(a){return a.length===0},
 bu:[function(a){return H.mx(a,"[","]")},"call$0","gAY",0,0,null],
 V3:[function(a,b){var z
 if(b)return H.VM(a.slice(),[H.Kp(a,0)])
@@ -6671,7 +6675,7 @@ this.Va=a.gVa()
 for(z=this.cB,y=0;C.jn.C(y,a.gAq());++y){if(y>=z.length)return H.e(z,y)
 z[y].xu(a.gcB(a).t(0,y))}},"call$1","goq",2,0,null,418,[]],
 bu:[function(a){return"localNormal: \""+H.d(this.EL)+"\", localPoint: \""+H.d(this.hK)+"\" normal: \""+H.d(this.di)+"\", radius: \""+H.d(this.jn)+"\" friction: \""+H.d(this.f1)+"\" restitution: \""+H.d(this.Zh)+"\", pointCount: \""+this.Aq+"\""},"call$0","gAY",0,0,null],
-static:{tx:function(){var z,y,x,w,v
+static:{Sl:function(){var z,y,x,w,v
 z=P.Le(2,new V.ez(),!0,V.nD)
 y=new Float32Array(2)
 x=new Float32Array(2)
@@ -6713,7 +6717,7 @@ y=H.VM(y,[V.uo])
 this.af=y
 x=z.length
 H.qG(y,0,x,z,0)
-for(w=z.length;z=this.af,w<z.length;++w){y=V.tx()
+for(w=z.length;z=this.af,w<z.length;++w){y=V.Sl()
 if(w>=z.length)return H.e(z,w)
 z[w]=y}}z=this.yC
 y=z.cB
@@ -7328,7 +7332,7 @@ f=new Float32Array(2)
 return new V.Ll(z,null,y,new T.z3(x),new T.z3(w),new T.z3(v),new T.z3(u),new T.z3(t),new T.z3(s),new T.z3(r),new T.z3(q),new T.z3(p),new T.z3(o),new T.z3(n),new V.rj(new T.z3(m),new T.z3(l),0,new T.z3(k),new T.z3(j),new T.z3(i),new T.z3(h),new T.z3(g)),new T.z3(f),new T.z3(new Float32Array(2)))}}},
 nT:{
 "^":"d9:232;",
-call$1:[function(a){return V.tx()},"call$1",null,2,0,null,66,[],"call"],
+call$1:[function(a){return V.Sl()},"call$1",null,2,0,null,66,[],"call"],
 $isEH:true},
 rj:{
 "^":"a;di<,KY,Bi,q9,So,Jt,En,Uz"},
@@ -8201,7 +8205,7 @@ return z}}},
 id:{
 "^":"a;bd,FR",
 Ki:function(){return this.FR.call$0()}},
-kn:{
+Ub:{
 "^":"a;j1,lW,f7",
 iw:[function(){var z,y,x
 z=V.YT
@@ -8717,6 +8721,7 @@ if(typeof z!=="number")return H.s(z)
 y=0
 for(;y<z;++y){b.call$1(this.Zv(0,y))
 if(z!==this.gB(this))throw H.b(P.a4(this))}},"call$1","gjw",2,0,null,445,[]],
+gl0:function(a){return J.de(this.gB(this),0)},
 ez:[function(a,b){return H.VM(new H.A8(this,b),[null,null])},"call$1","gtl",2,0,null,167,[]],
 es:[function(a,b,c){var z,y,x
 z=this.gB(this)
@@ -8809,6 +8814,8 @@ z.$builtinTypeInfo=this.$builtinTypeInfo
 return z},
 gB:function(a){var z=this.l6
 return z.gB(z)},
+gl0:function(a){var z=this.l6
+return z.gl0(z)},
 $asmW:function(a,b){return[b]},
 $ascX:function(a,b){return[b]},
 static:{K1:function(a,b,c,d){if(!!a.$isqC)return H.VM(new H.xy(a,b),[c,d])
@@ -8934,6 +8941,11 @@ y=J.x(z)
 if(typeof z==="object"&&z!==null&&!!y.$isb8)z.Qy(new P.dR(b,c,d))
 else b.K5(c,d)},"call$4","CW",8,0,null,196,[],197,[],191,[],192,[]],
 TB:[function(a,b){return new P.uR(a,b)},"call$2","cH",4,0,null,196,[],197,[]],
+Bb:[function(a,b,c){var z,y
+z=a.ed()
+y=J.x(z)
+if(typeof z==="object"&&z!==null&&!!y.$isb8)z.Qy(new P.QX(b,c))
+else b.rX(c)},"call$3","ee",6,0,null,196,[],197,[],84,[]],
 rT:function(a,b){var z=$.X3
 if(z===C.NU){z.toString
 return P.h8(z,null,z,a,b)}return P.h8(z,null,z,a,z.xi(b,!0))},
@@ -9374,6 +9386,12 @@ y=P.Dt(J.im)
 z.a=0
 this.KR(new P.PI(z),!0,new P.uO(z,y),y.gbY())
 return y},
+gl0:function(a){var z,y
+z={}
+y=P.Dt(J.kn)
+z.a=null
+z.a=this.KR(new P.j4(z,y),!0,new P.i9(y),y.gbY())
+return y},
 br:[function(a){var z,y
 z=H.VM([],[H.ip(this,"qh",0)])
 y=P.Dt([J.Q,H.ip(this,"qh",0)])
@@ -9404,6 +9422,14 @@ $isEH:true},
 uO:{
 "^":"d9:269;a,b",
 call$0:[function(){this.b.rX(this.a.a)},"call$0",null,0,0,null,"call"],
+$isEH:true},
+j4:{
+"^":"d9:232;a,b",
+call$1:[function(a){P.Bb(this.a.a,this.b,!1)},"call$1",null,2,0,null,453,[],"call"],
+$isEH:true},
+i9:{
+"^":"d9:269;c",
+call$0:[function(){this.c.rX(!0)},"call$0",null,0,0,null,"call"],
 $isEH:true},
 VV:{
 "^":"d9;a,b",
@@ -9725,6 +9751,10 @@ uR:{
 "^":"d9:462;a,b",
 call$2:[function(a,b){return P.NX(this.a,this.b,a,b)},"call$2",null,4,0,null,191,[],192,[],"call"],
 $isEH:true},
+QX:{
+"^":"d9:269;a,b",
+call$0:[function(){return this.a.rX(this.b)},"call$0",null,0,0,null,"call"],
+$isEH:true},
 YR:{
 "^":"qh;",
 KR:[function(a,b,c,d){var z,y,x,w,v
@@ -9905,6 +9935,7 @@ z.pop()}return y.gvM()},"call$1","WW",2,0,null,205,[]],
 k6:{
 "^":"a;X5,vv,OX,OB,wV",
 gB:function(a){return this.X5},
+gl0:function(a){return this.X5===0},
 gvc:function(a){return H.VM(new P.fG(this),[H.Kp(this,0)])},
 gUQ:function(a){return H.K1(H.VM(new P.fG(this),[H.Kp(this,0)]),new P.oi(this),H.Kp(this,0),H.Kp(this,1))},
 x4:[function(a,b){var z,y,x
@@ -10013,6 +10044,7 @@ if(x==null?b==null:x===b)return y}return-1},"call$2","gcT",4,0,null,467,[],70,[]
 fG:{
 "^":"mW;Fb",
 gB:function(a){return this.Fb.X5},
+gl0:function(a){return this.Fb.X5===0},
 gA:function(a){var z=this.Fb
 return new P.EQ(z,z.Ig(),0,null)},
 aN:[function(a,b){var z,y,x,w
@@ -10146,6 +10178,7 @@ db:{
 i5:{
 "^":"mW;Fb",
 gB:function(a){return this.Fb.X5},
+gl0:function(a){return this.Fb.X5===0},
 gA:function(a){var z,y
 z=this.Fb
 y=new P.N6(z,z.zN,null,null)
@@ -10173,6 +10206,7 @@ Ta:{
 "^":"u3T;",
 gA:function(a){return new P.oz(this,this.Zl(),0,null)},
 gB:function(a){return this.X5},
+gl0:function(a){return this.X5===0},
 tg:[function(a,b){var z,y,x
 if(typeof b==="string"&&b!=="__proto__"){z=this.vv
 return z==null?!1:z[b]!=null}else if(typeof b==="number"&&(b&0x3ffffff)===b){y=this.OX
@@ -10287,6 +10321,7 @@ gA:function(a){var z=new P.zQ(this,this.zN,null,null)
 z.zq=this.H9
 return z},
 gB:function(a){return this.X5},
+gl0:function(a){return this.X5===0},
 tg:[function(a,b){var z,y,x
 if(typeof b==="string"&&b!=="__proto__"){z=this.vv
 if(z==null)return!1
@@ -10426,6 +10461,7 @@ gB:function(a){var z,y
 z=this.gA(this)
 for(y=0;z.G();)++y
 return y},
+gl0:function(a){return!this.gA(this).G()},
 gr8:function(a){var z,y
 z=this.gA(this)
 if(!z.G())throw H.b(new P.lj("No elements"))
@@ -10458,6 +10494,7 @@ if(typeof z!=="number")return H.s(z)
 y=0
 for(;y<z;++y){b.call$1(this.t(a,y))
 if(z!==this.gB(a))throw H.b(P.a4(a))}},"call$1","gjw",2,0,null,445,[]],
+gl0:function(a){return J.de(this.gB(a),0)},
 ev:[function(a,b){return H.VM(new H.U5(a,b),[H.ip(a,"FN",0)])},"call$1","gIR",2,0,null,471,[]],
 ez:[function(a,b){return H.VM(new H.A8(a,b),[null,null])},"call$1","gtl",2,0,null,167,[]],
 V3:[function(a,b){var z,y,x
@@ -10543,6 +10580,7 @@ for(y=this.HN;y!==this.eZ;y=(y+1&this.v5.length-1)>>>0){x=this.v5
 if(y<0||y>=x.length)return H.e(x,y)
 b.call$1(x[y])
 if(z!==this.qT)H.vh(P.a4(this))}},"call$1","gjw",2,0,null,445,[]],
+gl0:function(a){return this.HN===this.eZ},
 gB:function(a){return(this.eZ-this.HN&this.v5.length-1)>>>0},
 V3:[function(a,b){var z,y
 if(b){z=H.VM([],[H.Kp(this,0)])
@@ -10960,7 +10998,7 @@ w=z.call$1(C.CD.JV(C.CD.cU(y,1000000),60))
 v=new P.P7().call$1(C.CD.JV(y,1000000))
 return H.d(C.CD.cU(y,3600000000))+":"+H.d(x)+":"+H.d(w)+"."+H.d(v)},"call$0","gAY",0,0,null],
 $isa6:true,
-static:{"^":"Wt,v7,dk,Lo,zj,b2,q9,A1,Do,f4,kT,IJ,oa,Vk,S8,yn",k5:function(a,b,c,d,e,f){return new P.a6(a*86400000000+b*3600000000+e*60000000+f*1000000+d*1000+c)}}},
+static:{"^":"Wt,v7,dk,Lo,zj,b2,q9,A1,Do,f4,kT,IJ,xOK,Vk,S8,yn",k5:function(a,b,c,d,e,f){return new P.a6(a*86400000000+b*3600000000+e*60000000+f*1000000+d*1000+c)}}},
 P7:{
 "^":"d9:476;",
 call$1:[function(a){if(a>=100000)return H.d(a)
@@ -11087,6 +11125,7 @@ MN:{
 Rn:{
 "^":"a;vM<",
 gB:function(a){return this.vM.length},
+gl0:function(a){return this.vM.length===0},
 KF:[function(a){var z=typeof a==="string"?a:H.d(a)
 this.vM=this.vM+z},"call$1","gF2",2,0,null,135,[]],
 We:[function(a,b){var z,y
@@ -11536,6 +11575,7 @@ gUQ:function(a){var z=[]
 this.aN(a,new W.DE(z))
 return z},
 gB:function(a){return a.length},
+gl0:function(a){return a.key(0)==null},
 $isZ0:true,
 $asZ0:function(){return[J.O,J.O]},
 "%":"Storage"},
@@ -11722,6 +11762,7 @@ gR:function(a){return this.T2(a,"width")},
 sR:function(a,b){this.hV(a,"width",b,"")}},
 VG:{
 "^":"ar;Jy,wM",
+gl0:function(a){return this.Jy.firstElementChild==null},
 gB:function(a){return this.wM.length},
 t:[function(a,b){var z=this.wM
 if(b>>>0!==b||b>=z.length)return H.e(z,b)
@@ -11920,6 +11961,7 @@ y=H.VM([],[J.O])
 for(x=z.length,w=0;w<x;++w){if(w>=z.length)return H.e(z,w)
 if(this.mb(z[w])){if(w>=z.length)return H.e(z,w)
 y.push(J.Rb(z[w]))}}return y},
+gl0:function(a){return this.gB(this)===0},
 $isZ0:true,
 $asZ0:function(){return[J.O,J.O]}},
 i7:{
@@ -11951,6 +11993,7 @@ gUQ:function(a){var z=H.VM([],[J.O])
 this.V5.aN(0,new W.aY(this,z))
 return z},
 gB:function(a){return this.gvc(this).length},
+gl0:function(a){return this.gvc(this).length===0},
 PJ:[function(a,b){var z,y,x,w,v
 z=a.split("-")
 y=b?0:1
@@ -12357,7 +12400,7 @@ Pn:{
 MI:{
 "^":"d5;fg:height=,R:width=,x=,y=",
 "%":"SVGFEOffsetElement"},
-Ub:{
+oa:{
 "^":"d5;x=,y=",
 "%":"SVGFEPointLightElement"},
 bM:{
@@ -12991,6 +13034,7 @@ return y},
 aN:[function(a,b){this.lF().aN(0,b)},"call$1","gjw",2,0,null,167,[]],
 ez:[function(a,b){var z=this.lF()
 return H.K1(z,b,H.ip(z,"mW",0),null)},"call$1","gtl",2,0,null,167,[]],
+gl0:function(a){return this.lF().X5===0},
 gB:function(a){return this.lF().X5},
 Zt:[function(a){return this.lF().tg(0,a)?a:null},"call$1","gnW",2,0,null,84,[]],
 h:[function(a,b){return this.OS(new P.GE(b))},"call$1","ght",2,0,null,84,[]],
@@ -13732,6 +13776,8 @@ W.zU.$isD0=true
 W.zU.$isa=true
 W.jh.$isea=true
 W.jh.$isa=true
+J.kn.$isbool=true
+J.kn.$isa=true
 P.qh.$isqh=true
 P.qh.$isa=true
 P.MO.$isMO=true
@@ -13767,8 +13813,6 @@ W.Wy.$isKV=true
 W.Wy.$isD0=true
 W.Wy.$isD0=true
 W.Wy.$isa=true
-J.GI.$isbool=true
-J.GI.$isa=true
 P.KA.$isKA=true
 P.KA.$isoK=true
 P.KA.$isMO=true
@@ -13856,7 +13900,7 @@ return J.ks(a)}
 J.x=function(a){if(typeof a=="number"){if(Math.floor(a)==a)return J.im.prototype
 return J.VA.prototype}if(typeof a=="string")return J.O.prototype
 if(a==null)return J.YE.prototype
-if(typeof a=="boolean")return J.GI.prototype
+if(typeof a=="boolean")return J.kn.prototype
 if(a.constructor==Array)return J.Q.prototype
 if(typeof a!="object")return a
 if(a instanceof P.a)return a
@@ -13971,6 +14015,7 @@ J.r0=function(a,b){return J.RE(a).sLU(a,b)}
 J.rR=function(a){return J.RE(a).geT(a)}
 J.rr=function(a){return J.rY(a).bS(a)}
 J.tW=function(a){return J.RE(a).C2(a)}
+J.tx=function(a){return J.U6(a).gl0(a)}
 J.u6=function(a,b){if(typeof a=="number"&&typeof b=="number")return a<b
 return J.Wx(a).C(a,b)}
 J.uB=function(a,b){return J.RE(a).sx(a,b)}
@@ -14330,7 +14375,7 @@ I.$lazy($,"specifier","yD","DZ",function(){return new H.VR(H.v4("%(?:(\\d+)\\$)?
 I.$lazy($,"uppercase_rx","Xx","Dv",function(){return new H.VR(H.v4("[A-Z]",!1,!0,!1),null,null)})
 
 init.functionAliases={}
-init.metadata=[,"ready","chapter","levels",{func:"bw",void:true,args:[J.Q]},"chapters","box","callback",{func:"a5",void:true,args:[W.Aj]},"event",{func:"MH",void:true,args:[W.fA]},"down",{func:"BB",void:true,args:[W.HL]},{func:"X0",void:true},"cards","frames","physicsEnabled","json","e","subLevel","random","layer","layers","sel","temp","headline","message","offer_text","offer_button","offerCallback","positive","negative","buttonLabel",{func:"qh",void:true,args:[W.ea]},{func:"G5",void:true,args:[null]},"l","index","current","stars",0,"engine","rating","oldR",{func:"Dp",void:true,opt:[W.ea]},"evt","v","visibleId","entireId","scrollbar","axis","w","type","result","text","x","y",800,"rel","code","alignment","closeDelay","maxWidth","xArrowOffset","xOffset","yArrowOffset","yOffset","i","_for","_class","elem","key","delta","object","interceptor","proto","extension","indexability","codeUnit","isolate","function","entry","sender","msg","record","value",{func:"WD",args:[J.O]},"string","source","radix","handleError","array","codePoints","charCodes","receiver","positionalArguments","namedArguments","argument","ex","expression","keyValuePairs","closure","numberOfArguments","arg1","arg2","arg3","arg4","arity","functions","reflectionInfo","isStatic","jsArguments","propertyName","isIntercepted","name","fieldName","property","staticName","list","returnType","parameterTypes","optionalParameterTypes","target","typeInfo","substitutionName","onTypeVariable","types","startIndex","substitution","arguments","s","t","signature","context","contextName","allowShorter","obj","tag","interceptorClass","transformer","hooks","pattern","multiLine","caseSensitive","global","other","time","duration","change","baseValue","element","easing","paused","properties","a","b","vOut","vIn","norm","offset","v1","v2","transform","vector","out","selector",500,"iterable","f","initialValue","combine","leftDelimiter","rightDelimiter","start","end","from","skipCount","src","srcStart","dst","dstStart","count","endIndex","left","right","compare","victim","errorHandler","zone","listeners","notificationHandler",{func:"KV",void:true,args:[null],opt:[P.MN]},"error","stackTrace","userCode","onSuccess","onError","subscription","future","self","parent","arg","table",{func:"Gl",ret:J.GI,args:[null,null]},{func:"h8",ret:J.im,args:[null]},"parts","m","reviver",{func:"GF",ret:P.a,args:[null]},"toEncodable","sb",{func:"Dl",ret:J.im,args:[P.fR,P.fR]},{func:"zv",ret:J.GI,args:[P.a,P.a]},{func:"ZY",ret:J.im,args:[P.a]},{func:"Tf",ret:J.O,args:[W.D0]},"typeExtension","url","onProgress","withCredentials","method","mimeType","requestHeaders","responseType","sendData","thing","hash",{func:"Vv",ret:J.GI,args:[W.cv,J.O,J.O,W.JQ]},"attributeName","win",!1,"captureThis","data","o",{func:"l4",args:[null]},"createProxy","pad","contextId","attrs","winding","width","height",1,"r","g","radius","startAngle","endAngle","anticlockwise","priority","selectors","where","html","treeSanitizer","validator","listener","useCapture","async","password","user","timestamp","otherNode","newChild","deep","oldChild","svg","length","bx1","by1","bx2","by2",{func:"NT"},"contact","oldManifold","str",{func:"Kb",args:[null,J.O]},{func:"bh",args:[null,null]},"canvas",{func:"Tc",args:[W.Ny]},{func:"Hm",args:[W.Wy]},{func:"fP",ret:J.VA},"sensor","it","params","h","_dynamic","ignorePhysics","angle","sub","col","isHint","activeness","active","visible","countStatic","c","zoomIn","onMouse",{func:"HC",opt:[W.ea]},"el","energy","_static",{func:"SF",args:[J.GI]},"hints",{func:"zI",args:[P.Z0]},"val",{func:"cH",args:[J.O,A.UP]},{func:"c0",args:[W.HL]},"ch","_continue",{func:"Km",args:[W.cv]},"fixture","xf","color","k",{func:"QB",void:true,args:[J.P]},"online","vertices","vertexCount","center",{func:"ZH",args:[J.im]},"edge","makeFull",{func:"b8",args:[P.E4]},"invocation","collection","","separator",!0,"growable","authentification","resume","portId","port","dataEvent","info","map","parameter",{func:"Za",args:[J.O,null]},{func:"np",args:[null,J.O]},{func:"lS",args:[J.P]},"highResTime","fixtureA","fixtureB","boxOne","boxTwo","aabb","userData","proxy","toDestroy","argProxy","argBox","displacement","node","argNode","iterations","pair2","manifold","circle1","xfA","circle2","xfB","polygon","circle","poly1","xf1","edge1","poly2","xf2","results","polyA","polyB","cv","output","cache","input","shape","direction","md","d","otherVertices","hx","hy","argAabb","argXf","vs","massData","density","proxyA","transformA","proxyB","transformB","sc","sv","argProxyA","argSweepA","argProxyB","argSweepB","t1","indexes","indexA","indexB","radiusA","radiusB","alpha","argWorld","argScreen","def","argPosition","argAngle","force","point","localPoint","localVector",{func:"rf",void:true,args:[V.hM,V.hM]},"fA","fB","argManifold","fixA","fixB","cp","contacts","contactCount","impulseRatio","baumgarte","argOther","argCount","argToiBody","broadPhase","transformOne","transformTwo","argBodyCapacity","argContactCapacity","argJointCapacity","argListener","step","gravity","allowSleep","constraints","creatorStack","type1","type2","joint","body","timeStep",{func:"dG",args:[W.ea]},{func:"mR",args:[J.Q]},"action","eventId","cancelOnError",{func:"Vc",void:true,args:[P.a],opt:[P.MN]},{func:"yV",args:[null],opt:[null]},{func:"Uf",ret:J.GI},"ignored","convert","_","pendingEvents","handleData","handleDone","resumeSignal","wasInputPaused","onData","onDone","dispatch",{func:"bb",args:[null,P.MN]},"sink",{func:"u9",void:true,args:[null,P.MN]},"inputEvent","runGuarded","bucket","each","cell","objects","test",{func:"A7",args:[J.O,P.a]},"symbol",{func:"lv",args:[P.wv,null]},"n",{func:"Pt",ret:J.O,args:[J.im]},"factor","quotient",{func:"YI",void:true,args:[P.a]},"xhr","header","hyphenedName","startUppercase","word",{func:"ag",args:[J.O,J.O]},"prevValue","stream","tagName","attributes","uriAttributes","uriPolicy","attr","uri",{func:"Xt",void:true,args:[W.KV]},"args","max","precision","remove_trailing_zeros","fmt",{func:"VK",ret:J.O,args:[J.O,null]},"options","K","V","arg0","row","radians","x_","y_","scale",];$=null
+init.metadata=[,"ready","chapter","levels",{func:"bw",void:true,args:[J.Q]},"chapters","box","callback",{func:"a5",void:true,args:[W.Aj]},"event",{func:"MH",void:true,args:[W.fA]},"down",{func:"BB",void:true,args:[W.HL]},{func:"X0",void:true},"cards","frames","physicsEnabled","json","e","subLevel","random","layer","layers","sel","temp","headline","message","offer_text","offer_button","offerCallback","positive","negative","buttonLabel",{func:"qh",void:true,args:[W.ea]},{func:"G5",void:true,args:[null]},"l","index","current","stars",0,"engine","rating","oldR",{func:"Dp",void:true,opt:[W.ea]},"evt","v","visibleId","entireId","scrollbar","axis","w","type","result","text","x","y",800,"rel","code","alignment","closeDelay","maxWidth","xArrowOffset","xOffset","yArrowOffset","yOffset","i","_for","_class","elem","key","delta","object","interceptor","proto","extension","indexability","codeUnit","isolate","function","entry","sender","msg","record","value",{func:"WD",args:[J.O]},"string","source","radix","handleError","array","codePoints","charCodes","receiver","positionalArguments","namedArguments","argument","ex","expression","keyValuePairs","closure","numberOfArguments","arg1","arg2","arg3","arg4","arity","functions","reflectionInfo","isStatic","jsArguments","propertyName","isIntercepted","name","fieldName","property","staticName","list","returnType","parameterTypes","optionalParameterTypes","target","typeInfo","substitutionName","onTypeVariable","types","startIndex","substitution","arguments","s","t","signature","context","contextName","allowShorter","obj","tag","interceptorClass","transformer","hooks","pattern","multiLine","caseSensitive","global","other","time","duration","change","baseValue","element","easing","paused","properties","a","b","vOut","vIn","norm","offset","v1","v2","transform","vector","out","selector",500,"iterable","f","initialValue","combine","leftDelimiter","rightDelimiter","start","end","from","skipCount","src","srcStart","dst","dstStart","count","endIndex","left","right","compare","victim","errorHandler","zone","listeners","notificationHandler",{func:"KV",void:true,args:[null],opt:[P.MN]},"error","stackTrace","userCode","onSuccess","onError","subscription","future","self","parent","arg","table",{func:"Gl",ret:J.kn,args:[null,null]},{func:"h8",ret:J.im,args:[null]},"parts","m","reviver",{func:"GF",ret:P.a,args:[null]},"toEncodable","sb",{func:"Dl",ret:J.im,args:[P.fR,P.fR]},{func:"zv",ret:J.kn,args:[P.a,P.a]},{func:"ZY",ret:J.im,args:[P.a]},{func:"Tf",ret:J.O,args:[W.D0]},"typeExtension","url","onProgress","withCredentials","method","mimeType","requestHeaders","responseType","sendData","thing","hash",{func:"Vv",ret:J.kn,args:[W.cv,J.O,J.O,W.JQ]},"attributeName","win",!1,"captureThis","data","o",{func:"l4",args:[null]},"createProxy","pad","contextId","attrs","winding","width","height",1,"r","g","radius","startAngle","endAngle","anticlockwise","priority","selectors","where","html","treeSanitizer","validator","listener","useCapture","async","password","user","timestamp","otherNode","newChild","deep","oldChild","svg","length","bx1","by1","bx2","by2",{func:"NT"},"contact","oldManifold","str",{func:"Kb",args:[null,J.O]},{func:"bh",args:[null,null]},"canvas",{func:"Tc",args:[W.Ny]},{func:"Hm",args:[W.Wy]},{func:"fP",ret:J.VA},"sensor","it","params","h","_dynamic","ignorePhysics","angle","sub","col","isHint","activeness","active","visible","countStatic","c","zoomIn","onMouse",{func:"HC",opt:[W.ea]},"el","energy","_static",{func:"SF",args:[J.kn]},"hints",{func:"zI",args:[P.Z0]},"val",{func:"cH",args:[J.O,A.UP]},{func:"c0",args:[W.HL]},"ch","_continue",{func:"Km",args:[W.cv]},"fixture","xf","color","k",{func:"QB",void:true,args:[J.P]},"online","vertices","vertexCount","center",{func:"ZH",args:[J.im]},"edge","makeFull",{func:"b8",args:[P.E4]},"invocation","collection","","separator",!0,"growable","authentification","resume","portId","port","dataEvent","info","map","parameter",{func:"Za",args:[J.O,null]},{func:"np",args:[null,J.O]},{func:"lS",args:[J.P]},"highResTime","fixtureA","fixtureB","boxOne","boxTwo","aabb","userData","proxy","toDestroy","argProxy","argBox","displacement","node","argNode","iterations","pair2","manifold","circle1","xfA","circle2","xfB","polygon","circle","poly1","xf1","edge1","poly2","xf2","results","polyA","polyB","cv","output","cache","input","shape","direction","md","d","otherVertices","hx","hy","argAabb","argXf","vs","massData","density","proxyA","transformA","proxyB","transformB","sc","sv","argProxyA","argSweepA","argProxyB","argSweepB","t1","indexes","indexA","indexB","radiusA","radiusB","alpha","argWorld","argScreen","def","argPosition","argAngle","force","point","localPoint","localVector",{func:"rf",void:true,args:[V.hM,V.hM]},"fA","fB","argManifold","fixA","fixB","cp","contacts","contactCount","impulseRatio","baumgarte","argOther","argCount","argToiBody","broadPhase","transformOne","transformTwo","argBodyCapacity","argContactCapacity","argJointCapacity","argListener","step","gravity","allowSleep","constraints","creatorStack","type1","type2","joint","body","timeStep",{func:"dG",args:[W.ea]},{func:"mR",args:[J.Q]},"action","eventId","cancelOnError",{func:"Vc",void:true,args:[P.a],opt:[P.MN]},{func:"yV",args:[null],opt:[null]},{func:"Uf",ret:J.kn},"ignored","convert","_","pendingEvents","handleData","handleDone","resumeSignal","wasInputPaused","onData","onDone","dispatch",{func:"bb",args:[null,P.MN]},"sink",{func:"u9",void:true,args:[null,P.MN]},"inputEvent","runGuarded","bucket","each","cell","objects","test",{func:"A7",args:[J.O,P.a]},"symbol",{func:"lv",args:[P.wv,null]},"n",{func:"Pt",ret:J.O,args:[J.im]},"factor","quotient",{func:"YI",void:true,args:[P.a]},"xhr","header","hyphenedName","startUppercase","word",{func:"ag",args:[J.O,J.O]},"prevValue","stream","tagName","attributes","uriAttributes","uriPolicy","attr","uri",{func:"Xt",void:true,args:[W.KV]},"args","max","precision","remove_trailing_zeros","fmt",{func:"VK",ret:J.O,args:[J.O,null]},"options","K","V","arg0","row","radians","x_","y_","scale",];$=null
 I = I.$finishIsolateConstructor(I)
 $=new I()
 function convertToFastObject(properties) {

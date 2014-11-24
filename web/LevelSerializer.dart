@@ -53,10 +53,12 @@ class LevelSerializer {
         applyPhysicsLabelToButton();
 
         List frames = new List();
-        for (int i = 0, len = state['frames'].length; i < len; ++i) {
-            frames.add(new List());
-            for (Map t in state['frames'][i]) {
-                frames[i].add(new BTransform(new Vector2(t['x'].toDouble(), t['y'].toDouble()), t['angle'].toDouble()));
+        if (!state['cards'].isEmpty) {
+            for (int i = 0, len = state['frames'].length; i < len; ++i) {
+                frames.add(new List());
+                for (Map t in state['frames'][i]) {
+                    frames[i].add(new BTransform(new Vector2(t['x'].toDouble(), t['y'].toDouble()), t['angle'].toDouble()));
+                }
             }
         }
 
