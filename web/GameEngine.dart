@@ -137,7 +137,7 @@ class GameEngine extends State {
         pool = new DefaultWorldPool();
 
         this.contactListener = new CardContactListener(this);
-        this.world = new World(new Vector2(0.0, -GRAVITY), true, pool);
+        this.world = new World(new Vector2(0.0, GRAVITY), true, pool);
 
         world.contactListener = contactListener;
 
@@ -377,8 +377,10 @@ class GameEngine extends State {
             }
         }
 
-        for (Body obstacle in level.current.obstacles) {
-            obstacle.applyForce(new Vector2(0.0, GameEngine.GRAVITY), obstacle.worldCenter);
+        if (level != null && level.current != null) {
+            for (Body obstacle in level.current.obstacles) {
+                obstacle.applyForce(new Vector2(0.0, GameEngine.GRAVITY), obstacle.worldCenter);
+            }
         }
 
         world.step(1.0 / 60, 10, 10);

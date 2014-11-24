@@ -9,6 +9,7 @@ import 'package:box2d/box2d_browser.dart';
 import 'GameEngine.dart';
 import 'Input.dart';
 import 'EnergySprite.dart';
+import 'PromptWindow.dart';
 
 class GameWizard {
     static const int ANIM_TIME = 175;
@@ -24,6 +25,8 @@ class GameWizard {
 
     static void enterStep(Element box, [Function callback]) {
         if (currentBox != box) {
+            PromptWindow.close();
+
             var setNewBox = () {
                 fadeBoxIn(box, ANIM_TIME, callback);
                 currentBox = box;

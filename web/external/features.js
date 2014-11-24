@@ -127,21 +127,22 @@ var Features = {
 
     showFinishedFriends: function (chapter, level, callback) {
         var users = [];
-        var counter = 0;
 
         $('.finished-friends').empty();
 
         $.each(Features.chapters[chapter][level], function (k, v) {
             users.push($.extend(v, {
-                id: k.replace("u", ""),
-                pos: ++counter
+                id: k.replace("u", "")
             }));
         });
 
         users.sort(user_sort);
 
+        var counter = 0;
         $(users).each(function () {
-            $('.finished-friends').append(TemplateEngine.parseTemplate($('.finished-friend-template').html(), this));
+            $('.finished-friends').append(TemplateEngine.parseTemplate($('.finished-friend-template').html(), $.extend(this, {
+                pos: ++counter
+            })));
         });
 
         callback();
@@ -561,7 +562,7 @@ var FBFeatures = {
         FB.ui({
             method: 'pay',
             action: 'purchaseitem',
-            product: 'http://twopeoplesoftware.com/twocubes/serverside/index.php?method=fb.fbGetChapterUnlockOg&arguments=' + data
+            product: 'http://twopeoplesoftware.com/twocubes28340jfddv03jfd/serverside/index.php?method=fb.fbGetChapterUnlockOg&arguments=' + data
         }, function (r) {
             if (r.status == "initiated" || r.status == "completed") {
                 Features.onOrderSuccess();
@@ -755,7 +756,7 @@ var FBFeatures = {
         FB.ui({
             method: 'pay',
             action: 'purchaseitem',
-            product: 'https://twopeoplesoftware.com/twocubes/fb_payments/' + item + '.html'
+            product: 'https://twopeoplesoftware.com/twocubes28340jfddv03jfd/fb_payments/' + item + '.html'
         }, function (r) {
             if (r.status == "initiated" || r.status == "completed") {
                 Features.onOrderSuccess();

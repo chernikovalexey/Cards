@@ -26,12 +26,14 @@ class LevelSerializer {
             }
         }
 
-        for (int i = 0, len = frames.length; i < len; ++i) {
-            map['frames'].add(new List());
-            for (var t in frames[i]) {
-                map['frames'][i].add({
-                    'x': roundDouble(t.pos.x), 'y': roundDouble(t.pos.y), 'angle': roundDouble(t.angle)
-                });
+        if (!cards.isEmpty) {
+            for (int i = 0, len = frames.length; i < len; ++i) {
+                map['frames'].add(new List());
+                for (var t in frames[i]) {
+                    map['frames'][i].add({
+                        'x': roundDouble(t.pos.x), 'y': roundDouble(t.pos.y), 'angle': roundDouble(t.angle)
+                    });
+                }
             }
         }
 

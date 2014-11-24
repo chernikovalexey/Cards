@@ -8,15 +8,5 @@
         "name": "Loopy Loop",
         "unlock_stars": 30,
         "levels": 12
-    },
-    {
-        "name": "Impossible Here",
-        "unlock_stars": 60,
-        "levels": 1
-    },
-    {
-        "name": "Stash of Joe",
-        "unlock_stars": 93,
-        "levels": 12
     }
 ]}

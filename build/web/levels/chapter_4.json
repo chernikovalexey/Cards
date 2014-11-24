@@ -1,11 +1,12 @@
 {"levels": [
     {
-        "name": "Harder and stronger",
+        "name": "Crossed Attack",
         "x": 0,
         "y": -10,
         "width": 1600,
         "height": 2000,
-        "blocks": [0, 3],
+        "gravity": 0.98,
+        "blocks": [3, 33],
         "from": {
             "x": 100,
             "y": 50
