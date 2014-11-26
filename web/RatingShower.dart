@@ -288,6 +288,7 @@ class RatingShower {
 
     static void mainMenu(GameEngine e) {
         //e.saveCurrentProgress();
+        //e.saveCurrentProgress();
         hide();
         showMainMenu();
 

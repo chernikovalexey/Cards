@@ -123,7 +123,7 @@ class Sprite {
     static Sprite ground() {
         Sprite s = new Sprite();
         s.color = new Color4.fromRGB(66, 36, 12);
-        s.isStatic = true;
+        //s.isStatic = true;
         return s;
     }
 

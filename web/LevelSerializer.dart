@@ -12,8 +12,9 @@ class LevelSerializer {
         return (n * 1000.0).round() / 1000.0;
     }
 
-    static String toJSON(List<Body> cards, List<List> frames, bool physicsEnabled) {
+    static String toJSON(List<Body> cards, List<List> frames, bool physicsEnabled, bool completed) {
         Map map = new Map();
+        map['completed'] = completed;
         map['physics_enabled'] = physicsEnabled;
         map['cards'] = new List<Map>();
         map['frames'] = new List();
@@ -40,7 +41,7 @@ class LevelSerializer {
         return JSON.encode(map);
     }
 
-    static void fromJSON(String json, GameEngine e, SubLevel subLevel) {
+    static bool fromJSON(String json, GameEngine e, SubLevel subLevel) {
         Map state = JSON.decode(json);
 
         for (Map card in state['cards']) {
@@ -70,5 +71,7 @@ class LevelSerializer {
         }
 
         if (subLevel != null) subLevel.loadRating();
+
+        return state['completed'];
     }
 }

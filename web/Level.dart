@@ -38,9 +38,24 @@ class Level {
 
     int findLastEmptyLevel(int ch) {
         int index = 0;
-        while (window.localStorage.containsKey("level_" + ch.toString() + "_" + (++index).toString())) {
+        bool found = false;
+        while (!found) {
+            ++index;
+            if (window.localStorage.containsKey("level_" + ch.toString() + "_" + index.toString())) {
+                Map json = JSON.decode(window.localStorage["level_" + ch.toString() + "_" + index.toString()]);
+                if (!json["completed"]) {
+                    found = true;
+                    --index;
+                    break;
+                }
+            }
+            if (index == 12) {
+                found = true;
+            }
         }
-        return index - 1 >= levels.length ? levels.length - 1 : index - 1;
+
+        int level = (index >= levels.length ? levels.length : index) - 1;
+        return (level >= 0 ? level : 0) + 1;
     }
 
     void preload(Function ready, int chapter, bool _continue) {
@@ -49,14 +64,24 @@ class Level {
         HttpRequest.getString("levels/chapter_" + chapter.toString() + ".json").then((String str) {
             levels = JSON.decode(str)["levels"];
 
+            bool loadNext = false;
+
             Map last;
             if (_continue || (storage.containsKey("last") && (last = JSON.decode(storage["last"]))["chapter"] == chapter)) {
+                print("has the current");
                 last = JSON.decode(storage["last"]);
                 currentSubLevel = last["level"];
                 loadCurrent();
             } else {
+                print("find last empty");
+
                 currentSubLevel = findLastEmptyLevel(chapter);
-                next();
+
+                if (window.localStorage.containsKey("level_" + chapter.toString() + "_" + (currentSubLevel + 1).toString())) {
+                    next();
+                } else {
+                    loadCurrent();
+                }
             }
 
             ready();
@@ -64,8 +89,10 @@ class Level {
             for (int i = 0; i < currentSubLevel; ++i) {
                 String level = 'level_' + chapter.toString() + '_' + (i + 1).toString();
 
+                // Double-check whether the level is completed
                 if (storage.containsKey(level) && !engine.manuallyControlled) {
-                    LevelSerializer.fromJSON(storage[level], engine, i + 1 != currentSubLevel ? subLevels[i] : null);
+                    bool completed = LevelSerializer.fromJSON(storage[level], engine, i + 1 != currentSubLevel ? subLevels[i] : null);
+
                     if (i + 1 != currentSubLevel) {
                         subLevels[i].complete();
                     }

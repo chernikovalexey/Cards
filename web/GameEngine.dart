@@ -186,26 +186,37 @@ class GameEngine extends State {
         return fd;
     }
 
+    void adjustFixture(FixtureDef fd, bool _dynamic) {
+        if (_dynamic) {
+            fd.density = cardDensity;
+            fd.friction = cardFriction;
+            fd.restitution = cardRestitution;
+        } else {
+            fd.friction = 0.7;
+        }
+    }
+
+    void adjustBody(BodyDef bd, bool _dynamic) {
+        if (_dynamic) {
+            bd.angularDamping = 10.5;
+        }
+    }
+
     Body createPolygonShape(double x, double y, double width, double height, [bool _dynamic = false]) {
         PolygonShape sd = new PolygonShape();
         sd.setAsBox(width / 2, height / 2);
 
         FixtureDef fd = new FixtureDef();
         fd.shape = sd;
-        fd.friction = 0.7;
+        adjustFixture(fd, _dynamic);
 
         BodyDef bd = new BodyDef();
         bd.position = new Vector2(x + width / 2, y + height / 2);
-//        print("create obstacle: " + _dynamic.toString());
-//        bd.type = _dynamic ? BodyType.DYNAMIC : BodyType.STATIC;
+        adjustBody(bd, _dynamic);
 
         Body body = world.createBody(bd);
         body.createFixture(fd);
         body.createFixture(createHelperFixture(width, height));
-
-//        if(_dynamic){
-//            dynamicObstacles.add();
-//        }
 
         return body;
     }
@@ -216,10 +227,10 @@ class GameEngine extends State {
 
         FixtureDef fd = new FixtureDef();
         fd.shape = sd;
-        fd.friction = 0.7;
+        adjustFixture(fd, _dynamic);
 
         BodyDef bd = new BodyDef();
-//        bd.type = _dynamic ? BodyType.DYNAMIC : BodyType.STATIC;
+        adjustBody(bd, _dynamic);
 
         Body body = world.createBody(bd);
         body.createFixture(fd);
@@ -317,9 +328,14 @@ class GameEngine extends State {
             obstaclesBobbin.enterFrame(level.current.obstacles);
         }
 
+        print("Obstacles on the current level: " + level.current.obstacles.length.toString());
         for (Body obstacle in level.current.obstacles) {
             bool isStatic = (obstacle.userData as Sprite).isStatic;
+            print("isstatic=" + isStatic.toString());
             if (!isStatic) {
+                print(obstacle);
+                print(getBodyType(active, isStatic, false));
+                print("-==-=-=-");
                 obstacle.type = getBodyType(active, isStatic, false);
             }
         }
@@ -364,11 +380,13 @@ class GameEngine extends State {
 
         if (physicsEnabled) {
             bobbin.enterFrame(cards);
-            obstaclesBobbin.enterFrame(level.current.obstacles);
+            if (level != null && level.current != null) obstaclesBobbin.enterFrame(level.current.obstacles);
         }
 
         if (isRewinding) {
-            isRewinding = bobbin.previousFrame(cards) || obstaclesBobbin.previousFrame(level.current.obstacles);
+            isRewinding = bobbin.previousFrame(cards);
+
+            if (level != null && level.current != null) isRewinding = isRewinding || obstaclesBobbin.previousFrame(level.current.obstacles);
 
             if (!isRewinding) {
                 bobbin.erase();
@@ -379,7 +397,7 @@ class GameEngine extends State {
 
         if (level != null && level.current != null) {
             for (Body obstacle in level.current.obstacles) {
-                obstacle.applyForce(new Vector2(0.0, GameEngine.GRAVITY), obstacle.worldCenter);
+                //obstacle.applyForce(new Vector2(0.0, GameEngine.GRAVITY), obstacle.worldCenter);
             }
         }
 
@@ -441,7 +459,7 @@ class GameEngine extends State {
                     history.add(new HItem(contacting, true));
                 }
             }
-        } else if (Input.keys['ctrl'].down && Input.keys['z'].clicked && history.length > 0) {
+        } else if (!physicsEnabled && Input.keys['ctrl'].down && Input.keys['z'].clicked && history.length > 0) {
             HItem last = history.removeLast();
             if (last.remove) {
                 addCard(last.card.position.x, last.card.position.y, last.card.angle, (last.card.userData as EnergySprite).isStatic);
@@ -465,6 +483,8 @@ class GameEngine extends State {
                     finishedCurrentLevel = true;
 
                     if (!manuallyControlled) {
+                        level.current.completed = true;
+                        print("save progress");
                         saveCurrentProgress();
                         int or = level.current.rating;
                         int nr = level.current.getRating();
@@ -513,7 +533,7 @@ class GameEngine extends State {
 
             // No sense to save empty states, indeed
             if (ready && (window.localStorage.containsKey(id) || !cards.isEmpty)) {
-                window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled);
+                window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled, level.current.completed);
             }
         }
     }
@@ -531,6 +551,7 @@ class GameEngine extends State {
 
     void nextLevel() {
         if (level.hasNext()) {
+            history.clear();
             level.current.finish();
             level.next();
         }

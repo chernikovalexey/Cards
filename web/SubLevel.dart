@@ -43,6 +43,8 @@ class SubLevel {
 
     Body to;
 
+    bool completed = false;
+
     SubLevel(GameEngine e, Map l, int index) {
         this.index = index;
         this.e = e;
@@ -82,13 +84,13 @@ class SubLevel {
         for (var obstacle in l["obstacles"]) {
             Body o;
             if (obstacle["type"] == 1 || obstacle["type"] == 5) {
-                o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE, obstacle["y"].toDouble() / GameEngine.NSCALE, obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble() / GameEngine.NSCALE);
+                o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE, obstacle["y"].toDouble() / GameEngine.NSCALE, obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble() / GameEngine.NSCALE, obstacle["type"] == 5);
             } else if (obstacle["type"] == 2 || obstacle["type"] == 6) {
                 List<Vector2> points = new List();
                 for (var p in obstacle["points"]) {
                     points.add(new Vector2(p['x'] / GameEngine.NSCALE, p['y'] / GameEngine.NSCALE));
                 }
-                o = e.createMultiShape(points);
+                o = e.createMultiShape(points, obstacle["type"] == 6);
             }
 
             Sprite s = Sprite.byType(1, e.world);
@@ -117,6 +119,7 @@ class SubLevel {
     }
 
     void finish() {
+        completed = true;
         saveState();
         for (Body b in e.cards) {
             b.type = BodyType.STATIC;
@@ -193,6 +196,7 @@ class SubLevel {
     }
 
     void complete() {
+        completed = true;
         for (Body b in cards) {
             (b.userData as EnergySprite).alwaysAnimate = true;
             (b.userData as EnergySprite).activate();
