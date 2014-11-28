@@ -58,13 +58,25 @@ class Level {
         return (level >= 0 ? level : 0) + 1;
     }
 
+    List<Map> getLevelsFrom(int chapter, int from) {
+        List<Map> levels = new List<Map>();
+        for (int i = from; i <= 12;++i) {
+            String level = 'level_' + chapter.toString() + '_' + i.toString();
+
+            if (!window.localStorage.containsKey(level)) {
+                break;
+            } else {
+                levels.add(JSON.decode(window.localStorage[level]));
+            }
+        }
+        return levels;
+    }
+
     void preload(Function ready, int chapter, bool _continue) {
         Storage storage = window.localStorage;
 
         HttpRequest.getString("levels/chapter_" + chapter.toString() + ".json").then((String str) {
             levels = JSON.decode(str)["levels"];
-
-            bool loadNext = false;
 
             Map last;
             if (_continue || (storage.containsKey("last") && (last = JSON.decode(storage["last"]))["chapter"] == chapter)) {
@@ -81,6 +93,14 @@ class Level {
                     next();
                 } else {
                     loadCurrent();
+                }
+
+                List<Map> furtherLevels = getLevelsFrom(currentSubLevel);
+                if (!furtherLevels.isEmpty) {
+                    for (int i = currentSubLevel; i <= currentSubLevel + furtherLevels.length; ++i) {
+                        subLevels.add(load(i));
+                        subLevels[i].enable(false);
+                    }
                 }
             }
 
