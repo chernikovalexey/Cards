@@ -54,6 +54,15 @@ class VKServerMethods
         }
     }
 
+    public function setUserLevel($userId, $levelId)
+    {
+        $var = $this->query("secure.setUserLevel",
+            new Param('user_id', $userId),
+            new Param('level', $levelId)
+        );
+        return $var;
+    }
+
     private function query($method)
     {
         $params = "";
