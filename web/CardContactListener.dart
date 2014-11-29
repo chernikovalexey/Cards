@@ -13,11 +13,10 @@ class CardContactListener extends ContactListener {
 
     @override
     void endContact(Contact contact) {
-        //if (!e.physicsEnabled) {
-            contact.fixtureA.body.userData.contactOverlay = false;
-            contact.fixtureB.body.userData.contactOverlay = false;
-            contactingBodies.remove(contact.fixtureB.body);
-        //}
+        Fixture fx = contact.fixtureA.isSensor ? contact.fixtureB : contact.fixtureA;
+        contact.fixtureA.body.userData.contactOverlay = false;
+        contact.fixtureB.body.userData.contactOverlay = false;
+        contactingBodies.remove(fx.body);
     }
 
     @override
@@ -31,10 +30,12 @@ class CardContactListener extends ContactListener {
     void beginContact(Contact contact) {
         if (!contact.touching) return;
 
-        if (!e.physicsEnabled && !contact.fixtureB.isSensor && contact.fixtureB.body.userData != null && !contact.fixtureB.body.userData.isHint && !contact.fixtureB.body.userData.isInner) {
+        Fixture fx = contact.fixtureA.isSensor ? contact.fixtureB : contact.fixtureA;
+
+        if (!e.physicsEnabled && !fx.isSensor && fx.body.userData != null && !fx.body.userData.isHint && !fx.body.userData.isInner) {
             contact.fixtureA.body.userData.contactOverlay = true;
             contact.fixtureB.body.userData.contactOverlay = true;
-            contactingBodies.add(contact.fixtureB.body);
+            contactingBodies.add(fx.body);
         }
     }
 }

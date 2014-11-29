@@ -26,6 +26,12 @@ class NotificationService
         return $service->internalSend();
     }
 
+    public static function notifyFriends(DB $db, array $user, $level, $chapter, $result)
+    {
+        $service = new self($db);
+        $service->internalNotifyFriends($user, $level, $chapter, $result);
+    }
+
     private function select(&$array, callable $condition)
     {
         $r = array();
@@ -43,7 +49,7 @@ class NotificationService
     private function getValues(&$array, $key)
     {
         $r = array();
-        foreach($array as $a) {
+        foreach ($array as $a) {
             $r[] = $a[$key];
         }
         return $r;
@@ -94,7 +100,13 @@ class NotificationService
 
         $sentNotifications = array();
         foreach ($forSend as $reason => $reasonArray) {
-            $methods->sendNotification($this->getIds($reasonArray), $this->getMessage($reason, 'ru'));
+            if ($reason != 3) //needs extra data
+                $methods->sendNotification($this->getIds($reasonArray), $this->getMessage($reason, 'ru'));
+            else {
+                foreach ($reasonArray as $r) {
+                    $methods->sendNotification($r['platformUserId'], $this->getMessage($reason, 'ru', $r['data']));
+                }
+            }
             $sentNotifications = array_merge($this->getValues($reasonArray, 'id'), $sentNotifications);
         }
 
@@ -103,15 +115,21 @@ class NotificationService
     }
 
     private $messages;
+
     private function getMessage($reason, $lang)
     {
-        if($this->messages == null) {
+        if ($this->messages == null) {
             $this->messages = array();
         }
-        if(!isset($this->messages[$lang])) {
-            $this->messages[$lang] = json_decode(file_get_contents("lang/".$lang.'.json'));
+        if (!isset($this->messages[$lang])) {
+            $this->messages[$lang] = json_decode(file_get_contents("lang/" . $lang . '.json'));
         }
 
         return $this->messages[$lang][$reason];
     }
-} 
+
+    private function internalNotifyFriends(array $user, $level, $chapter, $result)
+    {
+        $this->db->pushNotifications($user['userId'], $level, $chapter, $result);
+    }
+}

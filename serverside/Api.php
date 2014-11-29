@@ -28,9 +28,11 @@ class Api
     {
         Analytics::push(new AnalyticsEvent("session", "start", array('user' => $user['userId'])));
 
-        if (count($friends) > 0)
-            return array('user' => $user, 'results' => $this->db->getResults($friends, $this->platform));
-        else
+        if (count($friends) > 0) {
+            $r = array('user' => $user, 'results' => $this->db->getResults($friends, $this->platform, null, $inGameUsers));
+            $this->db->bindFriends($user['userId'], $this->platform, $inGameUsers);
+            return $r;
+        } else
             return array('user' => $user, 'results' => array());
     }
 
@@ -52,6 +54,10 @@ class Api
         )));
 
         $this->db->addAttempts($user, $attempts);
+        NotificationService::notifyFriends($this->db, $user, $level, $chapter, $result);
+        if ($this->platform == 'vk') {
+            VKServerMethods::getInstance($this->db)->setUserLevel($user['platformUserId'], $chapter * $level);
+        }
         return array('result' => $this->db->result($chapter, $level, $result, $numStatic, $numDynamic, $user, $this->platform));
     }
 
@@ -141,5 +147,11 @@ class Api
     {
 
         return NotificationService::send($this->db);
+    }
+
+    public function save($user, $data)
+    {
+        echo "save";
+        var_dump(file_put_contents("chapter1.full.json", $_POST['arguments'][1]));
     }
 }

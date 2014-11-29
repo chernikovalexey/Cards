@@ -48,7 +48,7 @@ class DB
         return $chapterHints[$level - 1];
     }
 
-    public function getResults(array $users, $platform, $selector = null)
+    public function getResults(array $users, $platform, $selector = null, &$outUsers = null)
     {
         $users = $this->getPlatformUsers($users, $platform, $selector);
 
@@ -69,7 +69,7 @@ class DB
                 $result['u' . $users[$t['userId']]['platformUserId']] = array();
             $result['u' . $users[$t['userId']]['platformUserId']][] = $t;
         }
-
+        $outUsers = $users;
         return $result;
     }
 
@@ -296,5 +296,38 @@ class DB
     {
         $q = implode(',', $sentNotifications);
         $this->db->query("DELETE FROM tcardnotifications WHERE `id` IN($q)");
+    }
+
+    public function bindFriends($userId, $platform, array $friends)
+    {
+
+        $q = str_repeat('(?,?,?),', count($friends));
+        $q = substr($q, 0, strlen($q) - 1);
+
+        $query = "INSERT IGNORE INTO tcardfriendrealations(userId, platformFriendId, platformId) VALUES " . $q;
+        $sql = $this->db->prepare($query);
+        $i = 0;
+        foreach ($friends as $f) {
+            $sql->bindValue($i * 3 + 1, $userId, PDO::PARAM_INT);
+            $sql->bindValue($i * 3 + 2, $f['platformUserId'], PDO::PARAM_INT);
+            $sql->bindValue($i * 3 + 3, $platform, PDO::PARAM_STR);
+            $i++;
+        }
+        $sql->execute();
+    }
+
+    public function getFriends($platformUserId)
+    {
+        $sql = $this->db->prepare("SELECT * FROM tcardfriendrealations t WHERE platformUserId = ?");
+        $sql->bindValue(1, $platformUserId, PDO::PARAM_INT);
+        $sql->execute();
+        return $sql->fetchAll();
+    }
+
+    public function pushNotifications($userId, $level, $chapter, $result)
+    {
+        $sql = $this->db->prepare("CALL notifyFriends(?)");
+        $sql->bindValue(1, $userId, PDO::PARAM_INT);
+        $sql->execute();
     }
 } 
