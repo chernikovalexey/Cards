@@ -27,13 +27,10 @@ class RatingShower {
     static bool pauseState = false;
 
     static void nextLevel(Event event) {
-        print("next level");
-
         int attempts = e.level.current.attemptsUsed;
         e.level.current.attemptsUsed = 0;
 
         if (e.level.currentSubLevel != e.level.subLevels.length) {
-            print("in condition");
             onTypeItemClick(event);
             return;
         }
@@ -287,8 +284,6 @@ class RatingShower {
     }
 
     static void mainMenu(GameEngine e) {
-        //e.saveCurrentProgress();
-        //e.saveCurrentProgress();
         hide();
         showMainMenu();
 
@@ -311,8 +306,6 @@ class RatingShower {
             level = int.parse(querySelector(".tape-current-item").dataset['level']) + 1;
         }
 
-        print(level);
-
         Level.navigateToLevel(level, e);
     }
 
@@ -321,8 +314,6 @@ class RatingShower {
             fadeBoxIn(GameWizard.progress, 175);
             querySelector("#wizard-overview").classes.remove("blurred");
         }
-
-        print("hide hide");
 
         Input.removeSingleEscClickCallback();
         e.isPaused = false;

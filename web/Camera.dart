@@ -152,12 +152,13 @@ class Camera {
         double speed = 5.05;
 
         if (Input.keys['space'].down) {
-            e.setCanvasCursor('-webkit-grab');
+            e.setCanvasCursor('grab');
 
             double dx = Input.getMouseDeltaX() * GameEngine.scale;
             double dy = Input.getMouseDeltaY() * GameEngine.scale;
 
             if (Input.isMouseLeftDown) {
+                e.setCanvasCursor("grabbing");
                 if (dx != 0.0) {
                     targetOffsetX -= dx;
                     updated = true;

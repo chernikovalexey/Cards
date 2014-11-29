@@ -1,56 +1,62 @@
 {"levels": [
     {
-        "name": "Harder and stronger",
+        "name": "The Dog Of Triad",
         "x": 0,
-        "y": -10,
-        "width": 1600,
-        "height": 2000,
-        "blocks": [0, 3],
+        "y": 100,
         "from": {
-            "x": 100,
-            "y": 50
+            "x": 104,
+            "y": 330
         },
-        "stars": [1, 2],
         "to": {
-            "x": 150,
-            "y": 50
+            "x": 179,
+            "y": 331
         },
+        "width": 800,
+        "height": 600,
+        "blocks": [0, 1],
+        "stars": [1, 1],
         "obstacles": [
             {
-                "x": 0,
-                "y": -90,
-                "width": 1600,
-                "height": 100,
-                "type": 1
+                "type": 1,
+                "x": 7,
+                "y": 8,
+                "width": 1,
+                "height": 629
             },
             {
-                "x": 1590,
-                "y": 0,
-                "width": 10,
-                "height": 1200,
-                "type": 1
+                "type": 1,
+                "x": 8,
+                "y": 8,
+                "width": 598,
+                "height": 1
             },
             {
-                "x": 0,
-                "y": 1350,
-                "width": 1600,
-                "height": 10,
-                "type": 1
+                "type": 1,
+                "x": 152,
+                "y": 264,
+                "width": 19,
+                "height": 8
             },
             {
-                "x": 200,
-                "y": 400,
-                "width": 20,
-                "height": 20,
-                "type": 5
+                "type": 5,
+                "x": 159,
+                "y": 352,
+                "width": 2,
+                "height": 35
             },
             {
-                "type": 6,
-                "points": [
-                    {"x": 275, "y": 200},
-                    {"x": 300, "y": 200},
-                    {"x": 300, "y": 275}
-                ]
+                "type": 5,
+                "x": 159,
+                "y": 314,
+                "width": 2,
+                "height": 35
+            },
+            {
+                "type": 5,
+                "x": 159,
+                "y": 276,
+                "width": 2,
+                "height": 35
             }
         ]
     }

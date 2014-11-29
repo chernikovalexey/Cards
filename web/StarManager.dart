@@ -6,17 +6,18 @@ class StarManager {
     static Map byChapters;
 
     static void init() {
-        if(window.localStorage['stars']!=null) {
+        if (window.localStorage['stars'] != null) {
             load();
-        } else
+        } else {
             byChapters = new Map();
+        }
     }
 
     static void load() {
         Map m = JSON.decode(window.localStorage['stars']);
         byChapters = new Map();
         total = m['total'];
-        for(var c in m['chapters']) {
+        for (var c in m['chapters']) {
             byChapters[c['id']] = c['s'];
         }
     }
@@ -24,14 +25,14 @@ class StarManager {
     static void setResult(int chapter, int result) {
         byChapters[chapter] = result;
         total = 0;
-        byChapters.forEach((k,v) {
-            total+=v;
+        byChapters.forEach((k, v) {
+            total += v;
         });
         save();
     }
 
     static int getResult(int chapter) {
-        if(byChapters[chapter]!=null) {
+        if (byChapters[chapter] != null) {
             return byChapters[chapter];
         }
         return 0;
@@ -46,7 +47,9 @@ class StarManager {
         m['total'] = total;
         List c = new List();
         byChapters.forEach((k, v) {
-            c.add({"id":k, "s":v});
+            c.add({
+                "id":k, "s":v
+            });
         });
 
         m['chapters'] = c;
