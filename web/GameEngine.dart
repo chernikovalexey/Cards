@@ -384,9 +384,11 @@ class GameEngine extends State {
         }
 
         if (isRewinding) {
-            isRewinding = bobbin.previousFrame(cards);
-
-            if (level != null && level.current != null) isRewinding = isRewinding || obstaclesBobbin.previousFrame(level.current.obstacles);
+            if (level != null && level.current != null) {
+                bool cardsRewind = bobbin.previousFrame(cards);
+                bool obstaclesRewind = obstaclesBobbin.previousFrame(level.current.obstacles);
+                isRewinding = cardsRewind || obstaclesRewind;
+            }
 
             if (!isRewinding) {
                 bobbin.erase();
@@ -397,7 +399,7 @@ class GameEngine extends State {
 
         if (level != null && level.current != null) {
             for (Body obstacle in level.current.obstacles) {
-                //obstacle.applyForce(new Vector2(0.0, GameEngine.GRAVITY), obstacle.worldCenter);
+                obstacle.applyForce(new Vector2(0.0, -0.05), obstacle.worldCenter);
             }
         }
 

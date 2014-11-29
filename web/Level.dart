@@ -95,13 +95,13 @@ class Level {
                     loadCurrent();
                 }
 
-                List<Map> furtherLevels = getLevelsFrom(currentSubLevel);
+                /*List<Map> furtherLevels = getLevelsFrom(chapter, currentSubLevel);
                 if (!furtherLevels.isEmpty) {
                     for (int i = currentSubLevel; i <= currentSubLevel + furtherLevels.length; ++i) {
                         subLevels.add(load(i));
                         subLevels[i].enable(false);
                     }
-                }
+                }*/
             }
 
             ready();

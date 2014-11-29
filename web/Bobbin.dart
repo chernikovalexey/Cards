@@ -54,7 +54,7 @@ class Bobbin {
             list.removeRange(list.length - rewindSpeed, list.length);
         }
 
-        for (int i = 0, len = frame.length; i < len; i++) {
+        for (int i = 0, clen = cards.length, len = frame.length; i < len && i < clen; i++) {
             Body b = cards[i];
             if (!(b.userData as Sprite).isStatic) {
                 b.setTransform(frame[i].pos, frame[i].angle);
