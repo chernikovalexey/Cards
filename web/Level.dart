@@ -17,6 +17,7 @@ import 'UserManager.dart';
 import 'Input.dart';
 import 'Tooltip.dart';
 import 'PromptWindow.dart';
+import 'StarManager.dart';
 
 class Level {
     GameEngine engine;
@@ -27,10 +28,10 @@ class Level {
 
     int chapter;
 
-    Level(Function ready, int chapter, GameEngine engine, bool _continue) {
-        preload(ready, chapter, _continue);
+    Level(Function ready, int _chapter, GameEngine engine, bool _continue) {
+        preload(ready, _chapter, _continue);
 
-        this.chapter = chapter;
+        this.chapter = _chapter;
         this.engine = engine;
     }
 
@@ -48,6 +49,8 @@ class Level {
                     --index;
                     break;
                 }
+            } else {
+                found = true;
             }
             if (index == 12) {
                 found = true;
@@ -95,13 +98,13 @@ class Level {
                     loadCurrent();
                 }
 
-                List<Map> furtherLevels = getLevelsFrom(currentSubLevel);
+                /*List<Map> furtherLevels = getLevelsFrom(chapter, currentSubLevel);
                 if (!furtherLevels.isEmpty) {
                     for (int i = currentSubLevel; i <= currentSubLevel + furtherLevels.length; ++i) {
                         subLevels.add(load(i));
                         subLevels[i].enable(false);
                     }
-                }
+                }*/
             }
 
             ready();
@@ -272,9 +275,21 @@ class Level {
     static void navigateToLevel(int target, GameEngine _eng) {
         eng = _eng;
         targetLevel = target;
+
         if (targetLevel == eng.level.currentSubLevel) {
             eng.restartLevel();
         } else if (target < eng.level.currentSubLevel) {
+            // Reset stars
+            for (int i = target; i <= eng.level.currentSubLevel; ++i) {
+                Element el = querySelector(".ti-" + i.toString());
+                if (!el.classes.contains("locked")) {
+                    int starsEarned = 3 - el.querySelectorAll(".extinct-star").length;
+                    StarManager.setResult(_eng.level.chapter, StarManager.getResult(_eng.level.chapter) - starsEarned);
+                }
+            }
+
+            StarManager.save();
+
             last = eng.level.current;
             eng.frontRewind = false;
             eng.level.previous();

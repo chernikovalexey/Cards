@@ -7,6 +7,32 @@ img {
     pointer-events: none;
 }
 
+.none-cursor {
+    cursor: none !important;
+}
+
+.default-cursor {
+    cursor: default !important;
+}
+
+.zoom-in-cursor {
+    cursor: -webkit-zoom-in !important;
+}
+
+.zoom-out-cursor {
+    cursor: -webkit-zoom-out !important;
+}
+
+.grab-cursor {
+    cursor: -moz-grab !important;
+    cursor: -webkit-grab !important;
+}
+
+.grabbing-cursor {
+    cursor: -moz-grabbing !important;
+    cursor: -webkit-grabbing !important;
+}
+
 .loading-overlay {
     position: absolute;
     background: rgba(0, 0, 0, 0.9);

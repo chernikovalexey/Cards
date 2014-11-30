@@ -171,8 +171,9 @@ class GameEngine extends State {
         });
     }
 
-    void setCanvasCursor(String cursor) {
-        canvas.style.cursor = cursor;
+    void setCanvasCursor(String _class) {
+        canvas.classes.clear();
+        canvas.classes.add(_class + "-cursor");
     }
 
     FixtureDef createHelperFixture(double w, double h) {
@@ -328,14 +329,9 @@ class GameEngine extends State {
             obstaclesBobbin.enterFrame(level.current.obstacles);
         }
 
-        print("Obstacles on the current level: " + level.current.obstacles.length.toString());
         for (Body obstacle in level.current.obstacles) {
             bool isStatic = (obstacle.userData as Sprite).isStatic;
-            print("isstatic=" + isStatic.toString());
             if (!isStatic) {
-                print(obstacle);
-                print(getBodyType(active, isStatic, false));
-                print("-==-=-=-");
                 obstacle.type = getBodyType(active, isStatic, false);
             }
         }
@@ -384,9 +380,11 @@ class GameEngine extends State {
         }
 
         if (isRewinding) {
-            isRewinding = bobbin.previousFrame(cards);
-
-            if (level != null && level.current != null) isRewinding = isRewinding || obstaclesBobbin.previousFrame(level.current.obstacles);
+            if (level != null && level.current != null) {
+                bool cardsRewind = bobbin.previousFrame(cards);
+                bool obstaclesRewind = obstaclesBobbin.previousFrame(level.current.obstacles);
+                isRewinding = cardsRewind || obstaclesRewind;
+            }
 
             if (!isRewinding) {
                 bobbin.erase();
@@ -397,7 +395,7 @@ class GameEngine extends State {
 
         if (level != null && level.current != null) {
             for (Body obstacle in level.current.obstacles) {
-                //obstacle.applyForce(new Vector2(0.0, GameEngine.GRAVITY), obstacle.worldCenter);
+                obstacle.applyForce(new Vector2(0.0, -0.05), obstacle.worldCenter);
             }
         }
 
@@ -428,11 +426,11 @@ class GameEngine extends State {
         // Button clicks
 
         if (Input.keys['z'].down && !Input.isAltDown) {
-            setCanvasCursor('-webkit-zoom-in');
+            setCanvasCursor('zoom-in');
             toggleBoundedCard(false);
             if (Input.isMouseLeftClicked) zoom(true, true);
         } else if (Input.isAltDown) {
-            setCanvasCursor('-webkit-zoom-out');
+            setCanvasCursor('zoom-out');
             toggleBoundedCard(false);
             if (Input.isMouseLeftClicked) zoom(false, true);
         }
@@ -484,7 +482,6 @@ class GameEngine extends State {
 
                     if (!manuallyControlled) {
                         level.current.completed = true;
-                        print("save progress");
                         saveCurrentProgress();
                         int or = level.current.rating;
                         int nr = level.current.getRating();
@@ -525,8 +522,7 @@ class GameEngine extends State {
         return n;
     }
 
-// saves the state of the current level
-
+    // saves the state of the current level
     void saveCurrentProgress() {
         if (level != null && level.current != null && !manuallyControlled) {
             String id = 'level_' + level.chapter.toString() + '_' + level.current.index.toString();
@@ -544,8 +540,6 @@ class GameEngine extends State {
 
     void restartLevel() {
         applyPhysicsLabelToButton();
-        //rewind();
-
         (to.userData as EnergySprite).energy = 0.0;
     }
 
