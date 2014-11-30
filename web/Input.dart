@@ -26,6 +26,8 @@ class Input {
     static bool isMouseRightClicked = false;
     static int wheelDirection = 0;
 
+    static bool mouseMoved = false;
+
     static WheelEvent wheelEvent;
 
     static Camera camera;
@@ -42,6 +44,8 @@ class Input {
         mouseY = -(event.client.y - canvasY) / GameEngine.scale - camera.pxOffsetY / GameEngine.scale;
         mouseDeltaX = mouseX - prevMouseX;
         mouseDeltaY = mouseY - prevMouseY;
+
+        mouseMoved = true;
     }
 
     static void onMouseDown(MouseEvent event) {
@@ -96,6 +100,8 @@ class Input {
     }
 
     static void update() {
+        mouseMoved = false;
+
         isMouseLeftClicked = false;
         isMouseRightClicked = false;
         wheelDirection = 0;

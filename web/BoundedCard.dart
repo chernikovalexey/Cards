@@ -56,24 +56,24 @@ class BoundedCard {
 
         double speed = 1.0 / GameEngine.scale;
 
-        if (Input.mouseDeltaX != 0.0 || Input.mouseDeltaY != 0.0) {
+        if (Input.mouseMoved) {
             pos = new Vector2(Input.mouseX, Input.mouseY);
-        } else {
-            if (Input.keys['w'].down) {
-                pos.y += speed;
-            }
+        }
 
-            if (Input.keys['a'].down) {
-                pos.x -= speed;
-            }
+        if (Input.keys['w'].down) {
+            pos.y += speed;
+        }
 
-            if (Input.keys['s'].down) {
-                pos.y -= speed;
-            }
+        if (Input.keys['a'].down) {
+            pos.x -= speed;
+        }
 
-            if (Input.keys['d'].down) {
-                pos.x += speed;
-            }
+        if (Input.keys['s'].down) {
+            pos.y -= speed;
+        }
+
+        if (Input.keys['d'].down) {
+            pos.x += speed;
         }
 
         b.setTransform(pos, angle);

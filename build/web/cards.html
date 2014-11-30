@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head prefix=
-              "og: http://ogp.me/ns#
-     fb: http://ogp.me/ns/fb#
-     product: http://ogp.me/ns/product#">
-
+<head>
     <title>Two Cubes</title>
 
     <meta charset="utf-8">
@@ -25,11 +21,21 @@
     <script type="text/javascript" src="packages/browser/dart.js"></script>
 
     <script type="text/javascript">
-        window.onmousewheel = window.onkeydown = function (e) {
+        var evt_name = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
+
+        var on_scroll = function (e) {
             if (e.preventDefault) e.preventDefault();
             e.returnValue = false;
             return false;
         };
+
+        if (document.attachEvent) {
+            document.attachEvent("on" + evt_name, on_scroll);
+        } else if (document.addEventListener) {
+            document.addEventListener(evt_name, on_scroll, false);
+        }
+
+        window.onkeydown = on_scroll;
     </script>
 </head>
 <body>
@@ -163,6 +169,7 @@
             <div class="chapter-level">
                 <div class="finished-levels"></div>
                 <span class="localized" data-lid="of">of</span>
+
                 <div class="all-levels"></div>
             </div>
             <div id="tape-vs">
@@ -256,7 +263,6 @@
         </div>
         <div class="purchase-options hint-options"></div>
     </div>
-
     <div class="purchase-block">
         <div class="purchase-block-head">
             <div class="purchase-headline localized" data-lid="attempts">Attempts</div>
@@ -409,6 +415,7 @@
                 <div class="progress-caption">
                     <div class="finished-levels"></div>
                     <span class="localized" data-lid="of"></span>
+
                     <div class="all-levels"></div>
                 </div>
                 <div class="full-bar"></div>

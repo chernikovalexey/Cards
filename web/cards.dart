@@ -33,7 +33,6 @@ void main() {
     featureManager = new FeatureManager();
 
     canvas = (querySelector("#graphics") as CanvasElement);
-    print(canvas);
     CanvasRenderingContext2D g = canvas.getContext('2d');
 
     updateCanvasPositionAndDimension();

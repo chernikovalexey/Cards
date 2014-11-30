@@ -523,6 +523,7 @@ class GameEngine extends State {
     }
 
     // saves the state of the current level
+
     void saveCurrentProgress() {
         if (level != null && level.current != null && !manuallyControlled) {
             String id = 'level_' + level.chapter.toString() + '_' + level.current.index.toString();

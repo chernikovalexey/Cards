@@ -2,6 +2,7 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" hash="3437314011">
     <data-source source="LOCAL" name="MySQL - twocubes@104.131.127.236" uuid="884a7394-72bf-4ac9-92e9-3deb2ab271e6">
+      <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://104.131.127.236:3306/twocubes</jdbc-url>
