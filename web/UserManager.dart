@@ -6,7 +6,7 @@ class UserManager {
         return context['Features']['user'].hasProperty(key) ? context['Features']['user'][key] : 0;
     }
 
-    static int getAsString(String key) {
+    static String getAsString(String key) {
         return get(key) is int ? get(key).toString() : get(key);
     }
 
@@ -16,13 +16,14 @@ class UserManager {
         return get(key) is int ? get(key) : int.parse(get(key));
     }
 
-    // sets an integer
+// sets an integer
 
     static void set(String key, int val) {
         context['Features']['user'][key] = val;
     }
 
     static bool decrement(String key) {
+        if (getAsInt('boughtAttempts') == -1)return true;
         int attempts = getAsInt(key);
         if (attempts > 0) {
             set(key, attempts - 1);

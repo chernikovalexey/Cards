@@ -57,7 +57,7 @@ class HintManager {
         WebApi.getUser(() {
             print("get user success");
             querySelector("#hints-amount").innerHtml = querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
-            querySelector("#attempts-balance").innerHtml = querySelector("#attempts-remaining").innerHtml = UserManager.getAsString("allAttempts");
+            querySelector("#attempts-balance").innerHtml = querySelector("#attempts-remaining").innerHtml = UserManager.getAsInt('boughtAttempts') == -1 ? "∞" : UserManager.getAsString("allAttempts");
             WebApi.onOrderSuccess(orderSuccessCallback);
         });
     }
@@ -78,7 +78,7 @@ class HintManager {
         }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
 
         querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
-        querySelector("#attempts-balance").innerHtml = UserManager.getAsString("allAttempts");
+        querySelector("#attempts-balance").innerHtml = UserManager.getAsInt('boughtAttempts') == -1 ? "∞" : UserManager.getAsString("allAttempts");
 
         querySelector(".close-purchases").addEventListener("click", (event) {
             //querySelector('.game-box').classes.remove('blurred');

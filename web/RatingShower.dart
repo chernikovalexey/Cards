@@ -206,7 +206,7 @@ class RatingShower {
 //            }, true);
         }
 
-        querySelector(".attempts-left").innerHtml = sprintf(context['locale']['attempts_left'], [UserManager.get("allAttempts").toString(), context['Features'].callMethod('getNounPlural', [UserManager.get("allAttempts"), context['locale']['attempt_form1'], context['locale']['attempt_form2'], context['locale']['attempt_form3']])]);
+        querySelector(".attempts-left").innerHtml = sprintf(context['locale']['attempts_left'], [UserManager.getAsInt('boughtAttempts') == -1 ? '∞' : UserManager.get("allAttempts").toString(), context['Features'].callMethod('getNounPlural', [UserManager.get("allAttempts"), context['locale']['attempt_form1'], context['locale']['attempt_form2'], context['locale']['attempt_form3']])]);
         querySelector(".get-attempts-button").removeEventListener("click", showPurchases);
         querySelector(".get-attempts-button").addEventListener("click", showPurchases, true);
 

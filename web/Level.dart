@@ -111,7 +111,7 @@ class Level {
 
                 // Double-check whether the level is completed
                 if (storage.containsKey(level) && !engine.manuallyControlled) {
-                    bool completed = LevelSerializer.fromJSON(storage[level], engine, i + 1 != currentSubLevel ? subLevels[i] : null);
+                    bool completed = LevelSerializer.fromJSON(storage[level], engine, i < subLevels.length ? subLevels[i] : null);
 
                     if (i + 1 != currentSubLevel) {
                         subLevels[i].complete();

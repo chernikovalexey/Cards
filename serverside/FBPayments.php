@@ -67,6 +67,8 @@ class FBPayments implements IPayments
                 return array('attempt', 50);
             case '100-a':
                 return array('attempt', 100);
+            case '-1-a':
+                return array('attempt', -1);
             default:
                 return $this->getChapterProduct($url);
         }
@@ -101,7 +103,10 @@ class FBPayments implements IPayments
                 $user['balance'] += $product[1];
                 break;
             case 'attempt':
-                $user['boughtAttempts'] += $product[1];
+                if ($product[1] != -1)
+                    $user['boughtAttempts'] += $product[1];
+                else
+                    $user['boughtAttempts'] = -1;
                 break;
             case 'chapter':
                 $this->db->unlockChapter($user, $product[1]);

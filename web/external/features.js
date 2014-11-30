@@ -492,6 +492,11 @@ var VKFeatures = {
                     name: "100 " + locale.attempt_form1,
                     price: "12 " + locale.vote_form1,
                     data: "a.100."
+                },
+                {
+                    name: "∞ " + locale.attempt_form1,
+                    price: "80 " + locale.vote_form1,
+                    data: "a.-1."
                 }
             ],
             chapters: [

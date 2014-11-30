@@ -6,14 +6,23 @@ import "Color4.dart";
 
 class Sprite {
     double energy = 0.0;
+
     bool isInner = false;
+
     bool isHidden = false;
+
     bool active = false;
+
     bool connectedToEnergy = false;
+
     bool energySupport = false;
+
     bool isStatic = false;
+
     bool isHint = false;
+
     bool contactOverlay = false;
+
     bool enabled = true;
 
     Body bFrom;
@@ -23,6 +32,7 @@ class Sprite {
     SuperCanvasDraw canvasDraw;
 
     Vector2 center;
+
     Vector2 axis;
 
     Sprite() {
@@ -48,7 +58,9 @@ class Sprite {
             if (fixture.next != null) fixture = fixture.next; else return;
         }
         switch (fixture.type) {
-            case ShapeType.CIRCLE:
+            case ShapeType
+        .
+        CIRCLE:
                 final CircleShape circle = fixture.shape;
 
 // Vector2 center = Mul(xf, circle.p);
@@ -63,7 +75,9 @@ class Sprite {
                 }
                 break;
 
-            case ShapeType.POLYGON:
+            case ShapeType
+        .
+        POLYGON:
                 final PolygonShape poly = fixture.shape;
                 int vertexCount = poly.vertexCount;
                 assert (vertexCount <= Settings.MAX_POLYGON_VERTICES);
@@ -113,7 +127,7 @@ class Sprite {
 
     static Sprite to(World w) {
         EnergySprite s = new EnergySprite(w, false);
-        //s.alwaysAnimate = true;
+//s.alwaysAnimate = true;
         s.energy = 0.0;
         s.active = true;
         s.energyStep = .1;
@@ -122,8 +136,8 @@ class Sprite {
 
     static Sprite ground() {
         Sprite s = new Sprite();
-        s.color = new Color4.fromRGB(66, 36, 12);
-        //s.isStatic = true;
+        s.color = new Color4.fromRGB(200, 200, 200);
+//s.isStatic = true;
         return s;
     }
 
