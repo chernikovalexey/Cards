@@ -1,63 +1,74 @@
-{"levels": [
-    {
-        "name": "The Dog Of Triad",
-        "x": 0,
-        "y": 100,
-        "from": {
-            "x": 104,
-            "y": 330
+{
+    "levels": [
+        {
+            "name": "No distance",
+            "x": 0,
+            "y": 0,
+            "from": {
+                "x": 113,
+                "y": 112
+            },
+            "to": {
+                "x": 159,
+                "y": 112
+            },
+            "width": 800,
+            "height": 600,
+            "blocks": [
+                2,
+                8
+            ],
+            "stars": [
+                6,
+                7
+            ],
+            "obstacles": [
+                {
+                    "type": 1,
+                    "x": 7,
+                    "y": 8,
+                    "width": 1,
+                    "height": 629
+                },
+                {
+                    "type": 1,
+                    "x": 8,
+                    "y": 8,
+                    "width": 598,
+                    "height": 1
+                },
+                {
+                    "type": 1,
+                    "x": 153,
+                    "y": 134,
+                    "width": 1,
+                    "height": 223
+                },
+                {
+                    "type": 1,
+                    "x": 153,
+                    "y": 52,
+                    "width": 1,
+                    "height": 71
+                }
+            ]
         },
-        "to": {
-            "x": 179,
-            "y": 331
-        },
-        "width": 800,
-        "height": 600,
-        "blocks": [0, 1],
-        "stars": [1, 1],
-        "obstacles": [
-            {
-                "type": 1,
-                "x": 7,
-                "y": 8,
-                "width": 1,
-                "height": 629
-            },
-            {
-                "type": 1,
-                "x": 8,
-                "y": 8,
-                "width": 598,
-                "height": 1
-            },
-            {
-                "type": 1,
-                "x": 152,
-                "y": 264,
-                "width": 19,
-                "height": 8
-            },
-            {
-                "type": 5,
-                "x": 159,
-                "y": 352,
-                "width": 2,
-                "height": 35
-            },
-            {
-                "type": 5,
-                "x": 159,
-                "y": 314,
-                "width": 2,
-                "height": 35
-            },
-            {
-                "type": 5,
-                "x": 159,
-                "y": 276,
-                "width": 2,
-                "height": 35
-            }
-        ]
-    }
-]}
+        {
+            "name": null,
+            "x": 0,
+            "y": 0,
+            "to": null,
+            "width": 0,
+            "height": 0,
+            "blocks": [
+                0,
+                0
+            ],
+            "stars": [
+                0,
+                0
+            ],
+            "obstacles": null
+        }
+    ]
+}

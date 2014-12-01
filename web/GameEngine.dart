@@ -459,8 +459,9 @@ class GameEngine extends State {
             }
         } else if (!physicsEnabled && Input.keys['ctrl'].down && Input.keys['z'].clicked && history.length > 0) {
             HItem last = history.removeLast();
-            if (last.remove) {
-                addCard(last.card.position.x, last.card.position.y, last.card.angle, (last.card.userData as EnergySprite).isStatic);
+            bool s = (last.card.userData as EnergySprite).isStatic;
+            if (last.remove && ((level.current.dynamicBlocksRemaining > 0 && !s) || (s && level.current.staticBlocksRemaining > 0))) {
+                addCard(last.card.position.x, last.card.position.y, last.card.angle, s);
             } else {
                 removeCard(last.card);
             }
@@ -482,11 +483,13 @@ class GameEngine extends State {
 
                     if (!manuallyControlled) {
                         level.current.completed = true;
+                        level.current.getRating();
                         saveCurrentProgress();
-                        int or = level.current.rating;
-                        int nr = level.current.getRating();
 
-                        if (!frontRewind) RatingShower.show(this, nr, or);
+                        if (!frontRewind) {
+                            StarManager.saveFrom(level.chapter, level.subLevels);
+                            RatingShower.show(this, level.current.rating);
+                        }
 
                         if (level.chapter == 1 && level.current.index == 1) {
                             GameWizard.finish();
@@ -557,7 +560,7 @@ class GameEngine extends State {
         if (ready) {
             Body b = world.bodyList;
             while (b != null) {
-                if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
+                if (b != null && b.userData != null) (b.userData as Sprite).render(debugDraw, b);
                 b = b.next;
             }
         }

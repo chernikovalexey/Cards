@@ -39,7 +39,6 @@ class RatingShower {
 
         hide();
 
-        StarManager.updateResult(e.level.chapter, newRating - oldRating);
         GameWizard.finish();
 
         e.nextLevel();

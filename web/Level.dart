@@ -83,13 +83,10 @@ class Level {
 
             Map last;
             if (_continue || (storage.containsKey("last") && (last = JSON.decode(storage["last"]))["chapter"] == chapter)) {
-                print("has the current");
                 last = JSON.decode(storage["last"]);
                 currentSubLevel = last["level"];
                 loadCurrent();
             } else {
-                print("find last empty");
-
                 currentSubLevel = findLastEmptyLevel(chapter);
 
                 if (window.localStorage.containsKey("level_" + chapter.toString() + "_" + (currentSubLevel + 1).toString())) {
@@ -114,7 +111,7 @@ class Level {
 
                 // Double-check whether the level is completed
                 if (storage.containsKey(level) && !engine.manuallyControlled) {
-                    bool completed = LevelSerializer.fromJSON(storage[level], engine, i < subLevels.length ? subLevels[i] : null);
+                    LevelSerializer.fromJSON(storage[level], engine, i + 1 != currentSubLevel ? subLevels[i] : null);
 
                     if (i + 1 != currentSubLevel) {
                         subLevels[i].complete();
@@ -125,9 +122,7 @@ class Level {
     }
 
     void next() {
-        print("in next method");
         if (hasNext()) {
-            print("has next");
             if (current != null) {
                 current.enable(false);
             }
@@ -279,16 +274,12 @@ class Level {
         if (targetLevel == eng.level.currentSubLevel) {
             eng.restartLevel();
         } else if (target < eng.level.currentSubLevel) {
-            // Reset stars
-            for (int i = target; i <= eng.level.currentSubLevel; ++i) {
-                Element el = querySelector(".ti-" + i.toString());
-                if (!el.classes.contains("locked")) {
-                    int starsEarned = 3 - el.querySelectorAll(".extinct-star").length;
-                    StarManager.setResult(_eng.level.chapter, StarManager.getResult(_eng.level.chapter) - starsEarned);
-                }
+            for (int i = 0, len = _eng.level.subLevels.length; i < len && i >= target - 1; ++i) {
+                _eng.level.subLevels[i].rating = 0;
+                print("level #" + (i + 1).toString() + " = " + _eng.level.subLevels[i].rating.toString());
             }
 
-            StarManager.save();
+            StarManager.saveFrom(_eng.level.chapter, _eng.level.subLevels);
 
             last = eng.level.current;
             eng.frontRewind = false;
@@ -296,9 +287,7 @@ class Level {
             eng.level.current.levelApplied = onLevelApplied;
         } else {
             eng.frontRewind = true;
-            print("front rewind");
             //if (!eng.physicsEnabled) {
-            print("physics not enabled");
             applyRewindLabelToButton();
             eng.frontRewindLevelComplete = onFrontRewindLevelComplete;
             eng.frontRewindLevelFailed = onFrontRewindLevelFailed;
@@ -308,8 +297,6 @@ class Level {
     }
 
     static void onFrontRewindLevelComplete() {
-        print("onFrontRewindLevelComplete");
-        print("target: " + targetLevel.toString() + " current: " + eng.level.currentSubLevel.toString());
         if (targetLevel != eng.level.currentSubLevel) {
             eng.level.current.finish();
             eng.level.next();
@@ -322,7 +309,7 @@ class Level {
 
     static void onFrontRewindLevelFailed() {
         //PromptWindow.showSimple("System is broken!", "Please, repair this level to continue.");
-        window.alert("The system is broken! Please repair this level to continue.");
+//        window.alert("The system is broken! Please repair this level to continue.");
         eng.frontRewind = false;
         applyPhysicsLabelToButton();
     }
