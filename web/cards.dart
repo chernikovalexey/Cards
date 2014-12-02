@@ -153,10 +153,13 @@ void main() {
         if (!(event.target as ButtonElement).classes.contains("rewind")) {
             int attempts = UserManager.getAsInt("allAttempts");
             if (attempts > 0) {
-                UserManager.decrement("allAttempts");
+                //UserManager.decrement("allAttempts");
                 applyRewindLabelToButton();
-                ++engine.level.current.attemptsUsed;
-                UserManager.decrement("allAttempts");
+
+                // Update in togglePhysics
+                // As it's called not only from here
+                // ++engine.level.current.attemptsUsed;
+                //UserManager.decrement("allAttempts");
 
                 if (!updateAttempts()) {
                     WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);

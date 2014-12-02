@@ -24,7 +24,7 @@ class WebApi {
     static void updateAttemptsAmount(int delta) {
         context['Api'].callMethod('call', ['addAttempts', new JsObject.jsify({
             'attemptsUsed': delta
-        })]);
+        }), false]);
     }
 
     static void showFriends() {

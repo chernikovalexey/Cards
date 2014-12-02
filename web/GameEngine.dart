@@ -25,6 +25,7 @@ import 'GameWizard.dart';
 import 'Tooltip.dart';
 import 'PromptWindow.dart';
 import 'Chapter.dart';
+import 'UserManager.dart';
 
 // Actions history item
 class HItem {
@@ -311,6 +312,9 @@ class GameEngine extends State {
         physicsEnabled = active;
 
         if (physicsEnabled) {
+            ++level.current.attemptsUsed;
+            UserManager.decrement("allAttempts");
+
             bobbin.erase();
             bobbin.enterFrame(cards);
         } else {
@@ -444,7 +448,7 @@ class GameEngine extends State {
             updateBlockButtons(this);
         }
         if (Input.keys['ctrl'].down && Input.keys['shift'].clicked || Input.keys['ctrl'].clicked && Input.keys['shift'].down) {
-            togglePhysicsLabel();
+            querySelector('#toggle-physics').click();
         }
 
         if (contactListener.contactingBodies.isNotEmpty && (Input.isMouseRightClicked || Input.keys['delete'].clicked) && !isRewinding) {

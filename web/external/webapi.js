@@ -1,4 +1,4 @@
-function WebApi(method, data, callback) {
+function WebApi(method, data, callback, async) {
     var json = JSON.stringify(data);
 
     console.log("api request:", data);
@@ -11,6 +11,7 @@ function WebApi(method, data, callback) {
     $.ajax({
         type: 'POST',
         url: url,
+        async: async != undefined ? true : false,
         data: {arguments: json, method: method},
         success: function (r) {
             callback(r);

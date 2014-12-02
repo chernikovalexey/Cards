@@ -803,6 +803,7 @@ button:hover:not([disabled]) {
 .rating-inner-layout {
     position: absolute;
     top: 200px;
+    cursor: default;
 }
 
 .small-margin {

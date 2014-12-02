@@ -796,7 +796,10 @@ T.iL(this)}return u},function(a,b,c,d,e){return this.e2(a,b,c,d,e,null,!1)},"A6"
 Z1:[function(a,b,c){return a&&b!==!0&&!c?2:0},function(a){return this.Z1(a,!1,!1)},"Jo","call$3",null,"gfW",2,4,null,230,230,292,[],112,[],291,[]],
 vU:[function(a){var z,y,x,w,v,u
 this.VE=a
-if(a){this.b1.Og()
+if(a){z=this.QG.l
+z.ZP=z.ZP+1
+A.nd("allAttempts")
+this.b1.Og()
 this.b1.uL(this.z7)}else H.Go(this.ol.eH,"$isAE").rl()
 for(z=this.z7,z=new H.a7(z,z.length,0,null);z.G();){y=z.lo
 x=H.Go(y.geH(),"$isM6")
@@ -896,8 +899,7 @@ if($.E7)this.kw(0,!1,!0)}if(z.t(0,"1").OE){this.Q9=!1
 T.iL(this)}if(z.t(0,"2").OE&&J.xZ(this.QG.l.CF,0)){this.Q9=!0
 T.iL(this)}if(!(z.t(0,"ctrl").CX&&z.t(0,"shift").OE))v=z.t(0,"ctrl").OE&&z.t(0,"shift").CX
 else v=!0
-if(v)if(J.pP(document.querySelector("#toggle-physics")).lF().tg(0,"rewind"))T.Wp()
-else T.pL(null)
+if(v)J.oc(document.querySelector("#toggle-physics"))
 if(this.fZ.Vj.length!==0)v=($.AB||z.t(0,"delete").OE)&&!this.u6
 else v=!1
 if(v){m=H.VM([],[V.qR])
@@ -2583,7 +2585,7 @@ if(y.D(z,0)){y=y.W(z,1)
 J.kW(J.UQ(J.UQ($.cM(),"Features"),"user"),a,y)
 return!0}return!1},"call$1","rt",2,0,null,73,[]]}],["","file:///E:/Software/Cards/web/WebApi.dart",,B,{
 "^":"",
-Y2:[function(a){J.UQ($.cM(),"Api").V7("call",["addAttempts",P.jT(H.B7(["attemptsUsed",a],P.L5(null,null,null,null,null)))])},"call$1","Mo",2,0,null,74,[]],
+Y2:[function(a){J.UQ($.cM(),"Api").V7("call",["addAttempts",P.jT(H.B7(["attemptsUsed",a],P.L5(null,null,null,null,null))),!1])},"call$1","Mo",2,0,null,74,[]],
 Ag:[function(a){H.Go(J.UQ($.cM(),"Features"),"$isE4").u(0,"orderListener",P.mt(new B.jx(a)))},"call$1","j9",2,0,null,7,[]],
 GV:[function(a){H.Go(J.UQ($.cM(),"Features"),"$isE4").V7("getUser",[P.mt(new B.oJ(a))])},"call$1","IZ",2,0,null,7,[]],
 jx:{
@@ -8570,11 +8572,7 @@ wa:{
 "^":"d9:234;",
 call$1:[function(a){var z=H.Go(J.l2(a),"$isIF")
 z.toString
-if(!new W.I4(z).lF().tg(0,"rewind"))if(J.xZ(A.V6("allAttempts"),0)){A.nd("allAttempts")
-T.pL(null)
-z=$.Jg.QG.l
-z.ZP=z.ZP+1
-A.nd("allAttempts")
+if(!new W.I4(z).lF().tg(0,"rewind"))if(J.xZ(A.V6("allAttempts"),0)){T.pL(null)
 if(!T.ts())B.Y2($.Jg.QG.l.ZP)}else{z=$.cM()
 R.N0(J.UQ(J.UQ(z,"locale"),"attempts_lack"),J.UQ(J.UQ(z,"locale"),"attempts_lack_message"),J.UQ(J.UQ(z,"locale"),"get_attempts"),$.cx.gnE())
 B.Y2($.Jg.QG.l.ZP)}else T.Wp()},"call$1",null,2,0,null,9,[],"call"],
