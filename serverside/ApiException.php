@@ -9,6 +9,7 @@
 class ApiException extends Exception
 {
     public $message, $api, $method, $args;
+    public $error = true;
 
     public function ApiException($message, $api = null, $method = null, $args = null)
     {

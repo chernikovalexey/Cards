@@ -100,7 +100,7 @@ class NotificationService
 
         $sentNotifications = array();
         foreach ($forSend as $reason => $reasonArray) {
-            if ($reason != 3) //needs extra data
+            if ($reason != 2) //needs extra data
                 $methods->sendNotification($this->getIds($reasonArray), $this->getMessage($reason, 'ru'));
             else {
                 foreach ($reasonArray as $r) {
