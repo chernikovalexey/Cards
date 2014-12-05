@@ -38,6 +38,7 @@ class Router
         } else if ($method == 'stats')
             return $Api->stats();
         try {
+            $Api->checkPlatform($arguments);
             $rm = new ReflectionMethod($Api, $method);
             //todo: Add clause if user not valid
             if ($platform != 'no') {

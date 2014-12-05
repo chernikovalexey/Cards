@@ -370,8 +370,13 @@ var VKFeatures = {
 
             VKFeatures.initFields(function () {
                 Features.updateLoadingBar(70);
-
+                Api.auth_key = qs['auth_key'];
                 Api.initialRequest(function (data) {
+                    if (data.error === true) {
+                        document.body.innerHTML = JSON.stringify(data);
+                        alert(data.message);
+                        return;
+                    }
                     Features.updateLoadingBar(85);
 
                     console.log("initial request vk:", data);

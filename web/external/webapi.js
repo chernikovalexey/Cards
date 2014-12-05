@@ -37,7 +37,7 @@ var Api = {
     },
 
     initialRequest: function (callback) {
-        WebApi(this.platform + ".initialRequest", {userId: this.personalId, friends: this.friendsList}, function (data) {
+        WebApi(this.platform + ".initialRequest", {userId: this.personalId, friends: this.friendsList, auth_key: this.auth_key}, function (data) {
             callback(data);
         });
     },
@@ -51,24 +51,27 @@ var Api = {
             numStatic: numStatic,
             numDynamic: numDynamic,
             attempts: attempts,
-            timeSpent: timeSpent
+            timeSpent: timeSpent,
+            auth_key: this.auth_key
         }, callback);
     },
 
     addAttempts: function (delta, callback) {
         WebApi(this.platform + ".addAttempts", {
+            auth_key: this.auth_key,
             delta: delta
         }, callback);
     },
 
     keepAlive: function () {
         WebApi(this.platform + ".keepAlive", {
-            userId: this.personalId
+            userId: this.personalId,
+            auth_key: this.auth_key
         });
     },
 
     call: function (method, data, callback) {
-        data = extendAndOverride({userId: this.personalId}, data || {});
+        data = extendAndOverride({userId: this.personalId, auth_key: this.auth_key}, data || {});
         callback = callback || function (r) {
             console.log(r);
         };

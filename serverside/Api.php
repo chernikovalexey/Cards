@@ -154,4 +154,15 @@ class Api
         echo "save";
         var_dump(file_put_contents("chapter1.full.json", $_POST['arguments'][1]));
     }
+
+    public function checkPlatform($arguments)
+    {
+        switch ($this->platform) {
+            case 'vk':
+                if (md5(VK_APP_ID . '_' . $arguments['userId'] . '_' . VK_SECRET_KEY) != $arguments['auth_key'])
+                    throw new ApiException("auth_key is invalid! Connection is untrusted. Check iframe VK parameters!");
+                unset($arguments['auth_key']);
+                return;
+        }
+    }
 }

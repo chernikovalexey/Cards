@@ -326,8 +326,11 @@ class DB
 
     public function pushNotifications($userId, $level, $chapter, $result)
     {
-        $sql = $this->db->prepare("CALL notifyFriends(?)");
+        $sql = $this->db->prepare("CALL notifyFriends(?, ?, ?, ?)");
         $sql->bindValue(1, $userId, PDO::PARAM_INT);
+        $sql->bindValue(2, $level, PDO::PARAM_INT);
+        $sql->bindValue(3, $chapter, PDO::PARAM_INT);
+        $sql->bindValue(4, $result, PDO::PARAM_INT);
         $sql->execute();
     }
 } 
