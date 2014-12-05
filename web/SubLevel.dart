@@ -39,6 +39,8 @@ class SubLevel {
 
     int dynamicBlocksRemaining;
 
+    int maxStaticBlocks, maxDynamicBlocks;
+
     Body from;
 
     Body to;
@@ -57,6 +59,8 @@ class SubLevel {
 
         this.staticBlocksRemaining = l["blocks"][0];
         this.dynamicBlocksRemaining = l["blocks"][1];
+        this.maxStaticBlocks = l['blocks'][0];
+        this.maxDynamicBlocks = l['blocks'][1];
         this.stars = l['stars'];
 
         double boundsOffset = 0.0;

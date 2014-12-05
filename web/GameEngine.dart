@@ -412,7 +412,7 @@ class GameEngine extends State {
         if (level.current != null && ((staticBlocksSelected && level.current.staticBlocksRemaining > 0) || (!staticBlocksSelected && level.current.dynamicBlocksRemaining > 0))) {
             if (cp) {
                 Body put = addCard(bcard.b.position.x, bcard.b.position.y, bcard.b.angle, staticBlocksSelected);
-                history.add(new HItem(put, false));
+                addHistoryState(put, false);
             } else if (canPut(true)) {
                 blinkPhysicsButton();
             }
@@ -451,6 +451,8 @@ class GameEngine extends State {
             querySelector('#toggle-physics').click();
         }
 
+        //print("history.length=" + history.length.toString());
+
         if (contactListener.contactingBodies.isNotEmpty && (Input.isMouseRightClicked || Input.keys['delete'].clicked) && !isRewinding) {
             List<Body> cardsToRemove = new List<Body>();
             cardsToRemove.addAll(contactListener.contactingBodies);
@@ -458,13 +460,14 @@ class GameEngine extends State {
             for (Body contacting in cardsToRemove) {
                 if (cards.contains(contacting)) {
                     removeCard(contacting);
-                    history.add(new HItem(contacting, true));
+                    addHistoryState(contacting, true);
                 }
             }
         } else if (!physicsEnabled && Input.keys['ctrl'].down && Input.keys['z'].clicked && history.length > 0) {
             HItem last = history.removeLast();
             bool s = (last.card.userData as EnergySprite).isStatic;
-            if (last.remove && ((level.current.dynamicBlocksRemaining > 0 && !s) || (s && level.current.staticBlocksRemaining > 0))) {
+
+            if (last.remove) {
                 addCard(last.card.position.x, last.card.position.y, last.card.angle, s);
             } else {
                 removeCard(last.card);
@@ -559,12 +562,28 @@ class GameEngine extends State {
         }
     }
 
+    void addHistoryState(Body body, bool remove) {
+        if (!remove) {
+            int max = level.current.maxDynamicBlocks + level.current.maxStaticBlocks;
+            int current = 0;
+
+            for (HItem item in history)
+                if (!item.remove) ++current;
+
+            if (current < max) {
+                history.add(new HItem(body, remove));
+            }
+        } else if (remove) {
+            history.add(new HItem(body, remove));
+        }
+    }
+
     @override
     void render() {
         if (ready) {
             Body b = world.bodyList;
             while (b != null) {
-                if (b != null && b.userData != null) (b.userData as Sprite).render(debugDraw, b);
+                if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
                 b = b.next;
             }
         }
@@ -598,14 +617,25 @@ class GameEngine extends State {
     }
 
     void removeCard(Body c) {
+        // Add-immediate-remove bug fix
+        if (history.length > 0) {
+            List<HItem> _history = new List<HItem>();
+            _history.addAll(history);
+            for (HItem item in _history) {
+                if (!item.remove && item.card == c) {
+                    history.remove(item);
+                }
+            }
+        }
+
         world.destroyBody(c);
         cards.remove(c);
 
         EnergySprite sprite = c.userData as EnergySprite;
         if (!sprite.isHint) {
-            if (sprite.isStatic) {
+            if (sprite.isStatic && level.current.staticBlocksRemaining + 1 <= level.current.maxStaticBlocks) {
                 ++level.current.staticBlocksRemaining;
-            } else {
+            } else if (level.current.dynamicBlocksRemaining + 1 <= level.current.maxDynamicBlocks) {
                 ++level.current.dynamicBlocksRemaining;
             }
             updateBlockButtons(this);
