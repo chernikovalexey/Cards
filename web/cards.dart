@@ -118,7 +118,6 @@ void main() {
             querySelector(".close-friends").click();
         });
 
-        //fadeBoxIn(querySelector(".friends"), 250, () {
         new Timer(new Duration(milliseconds: 125), () {
             context['Features'].callMethod('showFriendsBar', [() {
                 querySelector(".game-box").classes.add("blurred");
@@ -141,25 +140,11 @@ void main() {
         });
     });
 
-    /*int attempts = UserManager.getAsInt("allAttempts");
-    if (attempts == 0) {
-        querySelector("#toggle-physics")
-            ..classes.add("faded")
-            ..title = "You've spent all attempts for today";
-        //WebApi.attemptsRanOut(engine.level.current.attemptsUsed);
-    }*/
-
     querySelector('#toggle-physics').addEventListener("click", (event) {
         if (!(event.target as ButtonElement).classes.contains("rewind")) {
             int attempts = UserManager.getAsInt("allAttempts");
             if (attempts > 0) {
-                //UserManager.decrement("allAttempts");
                 applyRewindLabelToButton();
-
-                // Update in togglePhysics
-                // As it's called not only from here
-                // ++engine.level.current.attemptsUsed;
-                //UserManager.decrement("allAttempts");
 
                 if (!updateAttempts()) {
                     WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
@@ -174,9 +159,6 @@ void main() {
     }, false);
     querySelector("#zoom-in").addEventListener("click", (event) => engine.zoom(true));
     querySelector("#zoom-out").addEventListener("click", (event) => engine.zoom(false));
-    //querySelector("#restart").addEventListener("click", (event) => engine.clear(), false);
-
-    //updateBlockButtons(engine);
 
     querySelectorAll(".selector").forEach((DivElement el) {
         el.addEventListener("click", (event) {

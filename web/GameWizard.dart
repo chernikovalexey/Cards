@@ -73,6 +73,11 @@ class GameWizard {
                 });
             }
         });
+
+        querySelector(".show-goal").onClick.listen((event) {
+            Tooltip.showSimple(context['locale']['goal_short_desc'], Input.canvasX + 94, 4, () {
+            }, context['locale']['goal']);
+        });
     }
 
     static void manage(int chapter, int level) {
@@ -95,7 +100,9 @@ class GameWizard {
         if (engine.cards.isEmpty) {
             hints.addHintCard(1.671, 2.5, 0.0, 1.0, false);
 
-            var cb = ([Event event]) {
+            var cb = (Event event) {
+                if (event.target.classes.contains("ignore-close-all")) return;
+
                 Tooltip.closeAll();
                 hints.clearHintCards();
 
@@ -120,6 +127,13 @@ class GameWizard {
         }
     }
 
+    static void showGoal() {
+        engine.canFinishLevel = false;
+        Tooltip.showSimple(context['locale']['goal_desc'], Input.canvasX + 200, 300, () {
+            engine.canFinishLevel = true;
+        }, context['locale']['goal']);
+    }
+
     static void showRunout() {
         if (!storage.containsKey("runout_occured") && manager.states.contains(engine)) {
             Tooltip.show(querySelector(".dynamic"), context['locale']['wizard_limited_amount'], Tooltip.RIGHT, maxWidth: 300, closeDelay: 1500);
@@ -133,6 +147,7 @@ class GameWizard {
                 Tooltip.showSimple(context['locale']['wizard_remove'], Input.canvasX + 200, 225);
 
                 var bodyStream = querySelector("body").onContextMenu.listen((event) {
+                    if (event.target.classes.contains("ignore-close-all")) return;
                     Tooltip.closeAll();
                 });
 

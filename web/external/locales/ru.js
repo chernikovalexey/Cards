@@ -2,6 +2,7 @@ var locale = {};
 
 locale.loading = 'ЗАГРУЗКА ...';
 locale.view_controls = 'Управление';
+locale.show_goal = 'Цель игры';
 locale.zoom_in = 'Приблизить камеру';
 locale.zoom_out = 'Отдалить камеру';
 locale.apply_physics = 'Вперед';
@@ -105,7 +106,10 @@ locale.negative = 'Нет';
 
 // Wizard
 locale.wizard_apply = "Примените физику, чтобы блоки упали";
-locale.wizard_place = "Левая кнопка мыши, чтобы поставить блок и соединить кубики";
+locale.wizard_place = "Левая кнопка мыши, чтобы поставить блок";
+locale.goal = "Цель игры";
+locale.goal_desc = "Блок упал и соединил два кубика.<br><br>Это и есть цель игры — <b>соединить два кубика</b>!";
+locale.goal_short_desc = "Поставьте блоки, примените физику. После этого блоки должны соединить кубики.";
 locale.wizard_limited_amount = "Количество ограничено";
 locale.wizard_rewind = "Назад, чтобы попробовать снова";
 locale.wizard_remove = "Чтобы удалить выбранный блок, <b>нажмите правую кнопку</b> или <b>Delete</b>";

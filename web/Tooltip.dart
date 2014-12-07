@@ -25,9 +25,15 @@ class Tooltip {
 
     static List<int> opened = new List<int>();
 
-    static int showSimple(String text, int x, int y, [Function callback=null]) {
+    static int showSimple(String text, int x, int y, [Function callback = null, String title=""]) {
         Element body = querySelector("body");
-        body.appendHtml('<div class="tt simple-tooltip"><div class="simple-tooltip-text">' + text + '</div><button class="got-it">OK</button></div><div class="arrow bottom-arrow" hidden></div>');
+
+        if (title != "") {
+            title = '<div class="simple-tooltip-title">' + title + '</div>';
+        }
+
+        body.appendHtml('<div class="tt simple-tooltip"><div class="simple-tooltip-white-layout">' + title + '<div class="simple-tooltip-text">' + text + '</div><button class="got-it">OK</button></div></div>');
+
         Element tooltip = querySelectorAll(".simple-tooltip").last;
         tooltip.style.left = x.toString() + "px";
         tooltip.style.top = y.toString() + "px";

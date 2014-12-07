@@ -66,7 +66,7 @@ class GameEngine extends State {
     bool physicsEnabled = false;
     bool isPaused = false;
     bool ready = false;
-    bool manuallyControlled = false;
+    bool canFinishLevel = true;
     bool finishedCurrentLevel = false;
 
     World world;
@@ -161,6 +161,8 @@ class GameEngine extends State {
                         traverser.traverseEdges(card.contactList);
                     }
                 }
+            } else {
+                GameWizard.showGoal();
             }
 
             if (!traverser.hasPath && frontRewind) {
@@ -484,23 +486,21 @@ class GameEngine extends State {
             if (physicsEnabled) {
                 sprite.update(this);
 
-                if (sprite.isFull() && level.current != null) {
+                if (sprite.isFull() && canFinishLevel && level.current != null) {
                     onLevelEndCallback();
                     finishedCurrentLevel = true;
 
-                    if (!manuallyControlled) {
-                        level.current.completed = true;
-                        level.current.getRating();
-                        saveCurrentProgress();
+                    level.current.completed = true;
+                    level.current.getRating();
+                    saveCurrentProgress();
 
-                        if (!frontRewind) {
-                            StarManager.saveFrom(level.chapter, level.subLevels);
-                            RatingShower.show(this, level.current.rating);
-                        }
+                    if (!frontRewind) {
+                        StarManager.saveFrom(level.chapter, level.subLevels);
+                        RatingShower.show(this, level.current.rating);
+                    }
 
-                        if (level.chapter == 1 && level.current.index == 1) {
-                            GameWizard.finish();
-                        }
+                    if (level.chapter == 1 && level.current.index == 1) {
+                        GameWizard.finish();
                     }
 
                     if (frontRewind) {
@@ -535,7 +535,7 @@ class GameEngine extends State {
     // saves the state of the current level
 
     void saveCurrentProgress() {
-        if (level != null && level.current != null && !manuallyControlled) {
+        if (level != null && level.current != null) {
             String id = 'level_' + level.chapter.toString() + '_' + level.current.index.toString();
 
             // No sense to save empty states, indeed

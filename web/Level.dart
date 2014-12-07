@@ -125,7 +125,7 @@ class Level {
                 String level = 'level_' + chapter.toString() + '_' + (i + 1).toString();
 
                 // Double-check whether the level is completed
-                if (storage.containsKey(level) && !engine.manuallyControlled) {
+                if (storage.containsKey(level)) {
                     LevelSerializer.fromJSON(storage[level], engine, i + 1 != currentSubLevel ? subLevels[i] : null);
 
                     if (i + 1 != currentSubLevel) {

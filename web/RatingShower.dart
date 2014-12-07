@@ -102,14 +102,14 @@ class RatingShower {
     }
 
     static void show(GameEngine engine, int rating, [int oldR = 0]) {
-        if (GameWizard.showing) {
+        /*if (GameWizard.showing) {
             querySelector(".tutorial-layout").classes.remove("hidden");
             querySelector(".attempts-layout").classes.add("hidden");
             GameWizard.finish();
-        } else {
+        } else {*/
             querySelector(".tutorial-layout").classes.add("hidden");
             querySelector(".attempts-layout").classes.remove("hidden");
-        }
+        //}
 
         oldRating = oldR;
         newRating = rating;
@@ -306,7 +306,7 @@ class RatingShower {
             level = int.parse(querySelector(".tape-current-item").dataset['level']) + 1;
         }
 
-        print("navigate to: "+level.toString());
+        print("navigate to: " + level.toString());
 
         Level.navigateToLevel(level, e);
     }

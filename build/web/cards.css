@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: Tahoma;
+    font-family: Tahoma, Verdana;
 }
 
 img {
@@ -118,7 +118,7 @@ button {
     background: rgba(255, 255, 255, 0.125);
     padding: 10px 20px;
     color: #fff;
-    font-family: Tahoma;
+    font-family: Tahoma, Verdana;
     font-size: 14px;
     border: none;
     -webkit-transition: all 600ms cubic-bezier(0.23, 1, 0.32, 1);
@@ -311,7 +311,7 @@ button:hover:not([disabled]) {
 .headline {
     font-size: 24px;
     text-align: center;
-    font-family: Tahoma;
+    font-family: Tahoma, Verdana;
     margin-bottom: 10px;
 }
 
@@ -897,7 +897,7 @@ button:hover:not([disabled]) {
 }
 
 .congratulations {
-    font-family: Tahoma, serif;
+    font-family: Tahoma, Verdana, serif;
     font-size: 30px;
     color: rgba(255, 255, 255, 0.70);
     width: 800px;
@@ -926,7 +926,7 @@ button:hover:not([disabled]) {
 .sl-item div {
     display: inline-block;
     padding: 5px;
-    font-family: Tahoma, serif;
+    font-family: Tahoma, Verdana, serif;
 }
 
 .sl-name {
@@ -1158,31 +1158,56 @@ div.active-step {
     opacity: 1.0;
 }
 
-.topbar-show-controls {
+.help-layout {
     display: inline-block;
     float: left;
+    position: absolute;
+    left: 15px;
+    top: 13px;
+}
+
+.help-delimiter {
+    display: inline-block;
+    width: 1px;
+    height: 34px;
+    background: rgba(255, 255, 255, 0.09375);
+}
+
+.topbar-show-controls, .show-goal {
+    display: inline-block;
     background: transparent !important;
     border: none !important;
     padding: 0;
-    position: absolute;
-    left: 15px;
-    top: 17px;
     opacity: 0.5;
     font-weight: 400;
     font-size: 14px;
     border-radius: 0;
+    vertical-align: top;
+    position: relative;
+    top: 5px;
 }
 
-.topbar-show-controls:hover {
+.topbar-show-controls:hover, .show-goal:hover {
     opacity: 0.75;
 }
 
 .simple-tooltip {
     position: absolute;
     z-index: 888;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.925);
     border-radius: 3px;
     max-width: 300px;
+}
+
+.simple-tooltip-white-layout {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.simple-tooltip-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    padding: 15px 15px 0 15px;
 }
 
 .simple-tooltip-text {
@@ -1489,7 +1514,7 @@ div.active-step {
     border-radius: 29px;
     width: 250px;
     color: #fff;
-    font-family: Tahoma;
+    font-family: Tahoma, Verdana;
     font-size: 13px;
 }
 
@@ -1541,7 +1566,7 @@ div.active-step {
 }
 
 .fr-name {
-    font-family: Tahoma;
+    font-family: Tahoma, Verdana;
     color: silver;
     overflow: hidden;
     white-space: nowrap;

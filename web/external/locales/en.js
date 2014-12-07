@@ -2,6 +2,7 @@ var locale = {};
 
 locale.loading = 'LOADING ...';
 locale.view_controls = 'View controls';
+locale.show_goal = 'Goal of the game';
 locale.zoom_in = 'Zoom camera in';
 locale.zoom_out = 'Zoom camera out';
 locale.apply_physics = 'Apply';
@@ -103,7 +104,10 @@ locale.negative = 'No';
 
 // Wizard
 locale.wizard_apply = "Apply physics to drop blocks";
-locale.wizard_place = "Left-click to place a block and connect two cubes";
+locale.wizard_place = "Left-click to place a block";
+locale.goal = "Goal of the game";
+locale.goal_desc = "The block has fallen and connected two cubes.<br>That's the goal—<b>connect two cubes</b>!";
+locale.goal_short_desc = "Place blocks, apply physics. Thereafter, blocks have to connect two cubes.";
 locale.wizard_limited_amount = "Amount of blocks is limited";
 locale.wizard_rewind = "Rewind to try again";
 locale.wizard_remove = "To remove the selected block, <b>right-click</b> or <b>press Delete</b>";
