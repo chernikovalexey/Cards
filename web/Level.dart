@@ -61,7 +61,9 @@ class Level {
         return (level >= 0 ? level : 0) + 1;
     }
 
-    List<Map> getLevelsFrom(int chapter, int from) {
+    // Returns unparsed strings of levels
+
+    List<String> getLevelsFrom(int chapter, int from) {
         List<Map> levels = new List<Map>();
         for (int i = from; i <= 12;++i) {
             String level = 'level_' + chapter.toString() + '_' + i.toString();
@@ -69,10 +71,28 @@ class Level {
             if (!window.localStorage.containsKey(level)) {
                 break;
             } else {
-                levels.add(JSON.decode(window.localStorage[level]));
+                levels.add(window.localStorage[level]);
             }
         }
         return levels;
+    }
+
+    void preloadFurtherLevels() {
+        List<String> furtherLevels = getLevelsFrom(chapter, currentSubLevel + 1);
+
+        if (!furtherLevels.isEmpty) {
+            for (int i = currentSubLevel + 1, li = 0; i <= currentSubLevel + furtherLevels.length; ++i, ++li) {
+                subLevels.add(new SubLevel(engine, levels[i - 1], i, true));
+                SubLevel further = subLevels[i - 1];
+                LevelSerializer.fromJSON(furtherLevels[li], engine, further, true);
+                further.online(false, true);
+            }
+
+            // Fix to cube
+            current.to.userData = engine.to.userData = Sprite.to(engine.world);
+            // Fix camera position
+            current.alignCamera();
+        }
     }
 
     void preload(Function ready, int chapter, bool _continue) {
@@ -86,6 +106,7 @@ class Level {
                 last = JSON.decode(storage["last"]);
                 currentSubLevel = last["level"];
                 loadCurrent();
+                preloadFurtherLevels();
             } else {
                 currentSubLevel = findLastEmptyLevel(chapter);
 
@@ -95,13 +116,7 @@ class Level {
                     loadCurrent();
                 }
 
-                /*List<Map> furtherLevels = getLevelsFrom(chapter, currentSubLevel);
-                if (!furtherLevels.isEmpty) {
-                    for (int i = currentSubLevel; i <= currentSubLevel + furtherLevels.length; ++i) {
-                        subLevels.add(load(i));
-                        subLevels[i].enable(false);
-                    }
-                }*/
+                preloadFurtherLevels();
             }
 
             ready();
@@ -125,6 +140,7 @@ class Level {
         if (hasNext()) {
             if (current != null) {
                 current.enable(false);
+                current.to.userData = Sprite.from(engine.world);
             }
             ++currentSubLevel;
             loadCurrent();
@@ -274,8 +290,9 @@ class Level {
         if (targetLevel == eng.level.currentSubLevel) {
             eng.restartLevel();
         } else if (target < eng.level.currentSubLevel) {
-            for (int i = 0, len = _eng.level.subLevels.length; i < len && i >= target - 1; ++i) {
+            for (int i = _eng.level.subLevels.length - 1; i >= target - 1; --i) {
                 _eng.level.subLevels[i].rating = 0;
+                toggleLevelCompletenessInStorage(_eng.level.chapter, i + 1, false);
                 print("level #" + (i + 1).toString() + " = " + _eng.level.subLevels[i].rating.toString());
             }
 
@@ -296,15 +313,26 @@ class Level {
         }
     }
 
+    static void toggleLevelCompletenessInStorage(int chapter, int level, bool completed) {
+        Storage storage = window.localStorage;
+        String levelName = 'level_' + chapter.toString() + '_' + level.toString();
+
+        if (storage.containsKey(levelName)) {
+            Map json = JSON.decode(storage[levelName]);
+            json['completed'] = completed;
+            storage[levelName] = JSON.encode(json);
+        }
+    }
+
     static void onFrontRewindLevelComplete() {
         if (targetLevel != eng.level.currentSubLevel) {
-            eng.level.current.finish();
-            eng.level.next();
-            applyRewindLabelToButton();
+            if (eng.level.current.finish()) {
+                eng.level.next();
+                applyRewindLabelToButton();
+            }
         } else {
             eng.frontRewind = false;
         }
-
     }
 
     static void onFrontRewindLevelFailed() {

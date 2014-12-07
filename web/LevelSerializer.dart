@@ -41,7 +41,7 @@ class LevelSerializer {
         return JSON.encode(map);
     }
 
-    static bool fromJSON(String json, GameEngine e, SubLevel subLevel) {
+    static bool fromJSON(String json, GameEngine e, SubLevel subLevel, [bool further = false]) {
         Map state = JSON.decode(json);
 
         for (Map card in state['cards']) {
@@ -66,11 +66,13 @@ class LevelSerializer {
         if (subLevel != null) {
             subLevel.frames = frames;
             subLevel.enable(false);
+
+            if (!further) {
+                subLevel.loadRating();
+            }
         } else {
             e.bobbin.list = frames;
         }
-
-        if (subLevel != null) subLevel.loadRating();
 
         return state['completed'];
     }

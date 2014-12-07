@@ -31,6 +31,7 @@ class RatingShower {
         e.level.current.attemptsUsed = 0;
 
         if (e.level.currentSubLevel != e.level.subLevels.length) {
+            print("current sublevel != sublevels.length");
             onTypeItemClick(event);
             return;
         }
@@ -304,6 +305,8 @@ class RatingShower {
         } else if (evt.currentTarget is ButtonElement) {
             level = int.parse(querySelector(".tape-current-item").dataset['level']) + 1;
         }
+
+        print("navigate to: "+level.toString());
 
         Level.navigateToLevel(level, e);
     }

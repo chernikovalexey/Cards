@@ -557,8 +557,9 @@ class GameEngine extends State {
     void nextLevel() {
         if (level.hasNext()) {
             history.clear();
-            level.current.finish();
-            level.next();
+            if (level.current.finish()) {
+                level.next();
+            }
         }
     }
 

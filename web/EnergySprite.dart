@@ -73,24 +73,23 @@ class EnergySprite extends Sprite {
             energy = 0.0;
         }
 
-        for (GlowSprite gs in effects) gs.render(g, b);
+        for (GlowSprite gs in effects)
+            gs.render(g, b);
     }
 
     void update(GameEngine e) {
         if (!e.physicsEnabled) return;
-        if (active && !connectedToEnergy) deactivate(); else if (!active &&
-        connectedToEnergy) activate();
+        if (active && !connectedToEnergy) deactivate(); else if (!active && connectedToEnergy) activate();
     }
 
     bool isFull() {
         return energy >= 1 - energyStep;
     }
-    
+
     void makeSensor(bool sensor, Body it) {
-      
-      for(Fixture f = it.fixtureList;f != null; f = f.next) {
-        f.isSensor = sensor;
-      }
-      color.a = sensor?.4:.8;
+        for (Fixture f = it.fixtureList;f != null; f = f.next) {
+            f.isSensor = sensor;
+        }
+        color.a = sensor ? .4 : .8;
     }
 }

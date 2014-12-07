@@ -47,7 +47,12 @@ class SubLevel {
 
     bool completed = false;
 
-    SubLevel(GameEngine e, Map l, int index) {
+    void alignCamera() {
+        e.camera.reset();
+        e.camera.setBounds(x, y, x + w, y + h);
+    }
+
+    SubLevel(GameEngine e, Map l, int index, [bool further = false]) {
         this.index = index;
         this.e = e;
         this.name = l["name"];
@@ -67,16 +72,16 @@ class SubLevel {
         if (index > 1) {
             x += e.to.position.x - GameEngine.ENERGY_BLOCK_WIDTH / 2;
             y += e.to.position.y - GameEngine.ENERGY_BLOCK_HEIGHT / 2;
-            this.from = e.to;
-            this.from.userData = Sprite.from(e.world);
-//boundsOffset = x - (to.position.x - l["from"]["offset"].toDouble() / GameEngine.scale;);
+
+            // Get from cube from the previous level, not from the engine!
+            this.from = e.level.subLevels[index - 2].to;
+            this.from.userData = Sprite.from(e.world, !further);
         } else {
             this.from = e.createPolygonShape(l["from"]["x"].toDouble() / GameEngine.NSCALE, l["from"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
-            this.from.userData = Sprite.from(e.world);
+            this.from.userData = Sprite.from(e.world, !further);
         }
 
-        e.camera.reset();
-        e.camera.setBounds(x, y, x + w, y + h);
+        alignCamera();
 
         this.to = e.createPolygonShape(l["to"]["x"].toDouble() / GameEngine.NSCALE, l["to"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
         this.to.userData = Sprite.to(e.world);
@@ -107,8 +112,10 @@ class SubLevel {
             obstacles.add(o);
         }
 
-        e.from = this.from;
-        e.to = this.to;
+        if (!further) {
+            e.from = this.from;
+            e.to = this.to;
+        }
     }
 
 
@@ -122,7 +129,12 @@ class SubLevel {
         if (stars[0] >= cards.length) rating = 3; else if (stars[1] >= cards.length)rating = 2; else rating = 1;
     }
 
-    void finish() {
+    bool finish() {
+        // Can't finish an empty level
+        if (e.cards.isEmpty) {
+            return false;
+        }
+
         completed = true;
         saveState();
         for (Body b in e.cards) {
@@ -134,6 +146,8 @@ class SubLevel {
         e.cards.clear();
 
         applyPhysicsLabelToButton();
+
+        return true;
     }
 
     void saveState() {
@@ -158,8 +172,8 @@ class SubLevel {
             b.userData.enabled = v;
         }
 
-        e.from.userData.enabled = v;
-        e.to.userData.enabled = v;
+        from.userData.enabled = v;
+        to.userData.enabled = v;
     }
 
     void apply() {
@@ -208,12 +222,15 @@ class SubLevel {
         }
     }
 
-    void online(bool online) {
-//print("SubLevel::online("+online.toString()+")");
-        for (Body c in e.cards) {
+    void online(bool online, [bool full = false]) {
+        for (Body c in this.cards) {
             (c.userData as EnergySprite).makeSensor(!online, c);
         }
 
-        (e.to.userData as EnergySprite).makeSensor(!online, e.to);
+        if (full && this.from != e.level.current.to) {
+            (this.from.userData as EnergySprite).makeSensor(!online, this.from);
+        }
+
+        (this.to.userData as EnergySprite).makeSensor(!online, this.to);
     }
 }

@@ -58,9 +58,7 @@ class Sprite {
             if (fixture.next != null) fixture = fixture.next; else return;
         }
         switch (fixture.type) {
-            case ShapeType
-        .
-        CIRCLE:
+            case ShapeType.CIRCLE:
                 final CircleShape circle = fixture.shape;
 
 // Vector2 center = Mul(xf, circle.p);
@@ -75,9 +73,7 @@ class Sprite {
                 }
                 break;
 
-            case ShapeType
-        .
-        POLYGON:
+            case ShapeType.POLYGON:
                 final PolygonShape poly = fixture.shape;
                 int vertexCount = poly.vertexCount;
                 assert (vertexCount <= Settings.MAX_POLYGON_VERTICES);
@@ -115,19 +111,27 @@ class Sprite {
         return s;
     }
 
-    static Sprite from(World w) {
+    static Sprite from(World w, [bool active = true]) {
         EnergySprite s = new EnergySprite(w, false);
         s.isCard = false;
-        s.energy = 1.0;
-        s.alwaysAnimate = true;
-        s.connectedToEnergy = true;
-        s.activate();
+
+        if (active) {
+            s.energy = 1.0;
+            s.alwaysAnimate = true;
+            s.connectedToEnergy = true;
+            s.active = true;
+        } else {
+            s.energy = 0.0;
+            s.alwaysAnimate = false;
+            s.connectedToEnergy = false;
+            s.active = false;
+        }
+
         return s;
     }
 
     static Sprite to(World w) {
         EnergySprite s = new EnergySprite(w, false);
-//s.alwaysAnimate = true;
         s.energy = 0.0;
         s.active = true;
         s.energyStep = .1;
@@ -137,7 +141,6 @@ class Sprite {
     static Sprite ground() {
         Sprite s = new Sprite();
         s.color = new Color4.fromRGB(200, 200, 200);
-//s.isStatic = true;
         return s;
     }
 
