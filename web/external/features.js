@@ -550,7 +550,7 @@ var VKFeatures = {
 var FBFeatures = {
     initFields: function (callback) {
         FB.api("/me", function (me_res) {
-            FB.api("/me/friends", function (fr_res) {
+            FB.api("me/friends?fields=last_name,first_name,picture", function (fr_res) {
                 console.log("Friends:", fr_res);
                 Api.setFriendsList(Features.toIdArray(fr_res.data));
                 Features.friends = fr_res.data;
@@ -583,7 +583,10 @@ var FBFeatures = {
     toUserObject: function (fr) {
         console.log('trying to get user object:', fr);
         return {
-            id: fr.id
+            id: fr.id,
+            name: fr.first_name,
+            surname: fr.last_name,
+            ava: fr.picture.data.url
         };
     },
 
@@ -678,7 +681,7 @@ var FBFeatures = {
                         callback();
                     });
                 });
-            });
+            }, {scope: 'user_about_me, user_friends'});
         });
     },
 

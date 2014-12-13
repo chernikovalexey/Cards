@@ -95,6 +95,8 @@ class VKPayments implements IPayments
                         return 8;
                     case 100:
                         return 12;
+                    case -1:
+                        return 80;
                 }
         }
 
@@ -153,9 +155,10 @@ class VKPayments implements IPayments
                     'price' => $this->getPrice($info['type'], $info['count'])
                 );
             case 'a':
+                $info['countname'] = ($info['count'] == -1) ? 'unlimited' : strval($info['count']);
                 return array(
                     'item_id' => $item,
-                    'title' => "Buy {$info['count']}-attempts-pack!",
+                    'title' => "Buy {$info['countname']}-attempts-pack!",
                     'photo_url' => 'http://thumbs.dreamstime.com/thumb_370/1235836831WEhmZf.jpg',
                     'price' => $this->getPrice($info['type'], $info['count'])
                 );
@@ -184,7 +187,10 @@ class VKPayments implements IPayments
         $user = $this->db->getUser($info['platformUserId'], 'vk');
         switch ($info['type']) {
             case 'a':
-                $user['boughtAttempts'] += $info['count'];
+                if ($info['count'] != -1)
+                    $user['boughtAttempts'] += $info['count'];
+                else
+                    $user['boughtAttempts'] = -1;
                 break;
             case 'h':
                 $user['balance'] += $info['count'];

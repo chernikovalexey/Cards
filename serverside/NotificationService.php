@@ -1,4 +1,8 @@
 <?php
+use Facebook\FacebookCanvasLoginHelper;
+use Facebook\FacebookRequestException;
+use Facebook\FacebookSession;
+
 /**
  * Created by PhpStorm.
  * User: podko_000
@@ -79,8 +83,47 @@ class NotificationService
         $notifications = $this->db->getNotifications();
         $platforms = $this->groupBy($notifications, 'platformId');
         $vk = $this->sendVk($platforms['vk']);
+        $fb = $this->sendFb($platforms['fb']);
         return array('vk' => $vk);
         //$this->sendVk($vk);
+    }
+
+    private function sendFb($fb)
+    {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(-1);
+        var_dump($fb);
+        require_once "Analytics.php";
+        require_once "ApiException.php";
+        require_once "Payments.php";
+        require_once "FBPayments.php";
+        require_once "lib/autoload.php";
+        FacebookSession::setDefaultApplication('614090422033888', 'b414d64c9dc377b6393f93c1be235472');
+        $session = new FacebookSession('614090422033888|b414d64c9dc377b6393f93c1be235472');
+        var_dump($session);
+
+        if ($session) {
+            foreach ($fb as $user) {
+                $userId = $user['platformUserId'];
+                $request = new Facebook\FacebookRequest(
+                    $session,
+                    'POST',
+                    "/$userId/notifications",
+                    array(
+                        'href' => '/',
+                        'template' => $this->getMessage($user['reason'], 'en', $user['data']),
+                    )
+                );
+                try {
+                    $response = $request->execute();
+                } catch (Exception $e) {
+                    var_dump($e);
+                }
+            }
+        }
+
+        return 0;
     }
 
     private function sendVk($vk)
