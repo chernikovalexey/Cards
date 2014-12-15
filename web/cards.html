@@ -55,7 +55,7 @@
                 data-lid="view_controls">View controls
         </button>
         <div class="help-delimiter"></div>
-        <button class="show-goal ignore-close-all localized" data-lid="show_goal">Show the goal</button>
+        <button class="show-goal ignore-close-all localized" data-lid="howto">Goal of the game</button>
     </div>
 
     <button id="zoom-in" class="zb plus localized-title" data-lid="zoom_in" title="Zoom camera in"></button>
@@ -254,6 +254,17 @@
 </div>
 </div>
 
+<div class="bs-screen" id="howto">
+    <div class="bs-screen-topbar">
+        <div class="bs-screen-headline localized" data-lid="howto">Purchases</div>
+        <div class="bs-screen-close close-howto localized" data-lid="close">close</div>
+    </div>
+    <div class="howto-player-layout">
+        <div class="howto-goal">CONNECT THE CUBES!</div>
+        <img id="tutorial-player" src="img/tutorial/tutorial_en.gif">
+    </div>
+</div>
+
 <div class="bs-screen" id="purchases">
     <div class="bs-screen-topbar">
         <div class="bs-screen-headline friends-headline localized" data-lid="purchases">Purchases</div>
@@ -314,7 +325,7 @@
 <div class="templates">
     <div class="finished-friend-template">
         <div data-id="<%=id%>" class="friend-card finished-friend">
-            <div class="fr-pos">#<%=pos%></div>
+            <div class="fr-pos"><%=pos%></div>
             <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
@@ -341,7 +352,7 @@
 
     <div class="friend-card-template">
         <div data-id="<%=id%>" class="friend-card fr-pos-<%=pos%>">
-            <div class="fr-pos">#<%=pos%></div>
+            <div class="fr-pos"><%=pos%></div>
             <div class="fr-ava"><img src="<%=ava%>"></div>
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>

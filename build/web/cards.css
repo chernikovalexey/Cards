@@ -1197,10 +1197,12 @@ div.active-step {
     background: rgba(0, 0, 0, 0.925);
     border-radius: 3px;
     max-width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.175);
 }
 
 .simple-tooltip-white-layout {
     background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
 }
 
 .simple-tooltip-title {
@@ -1293,6 +1295,28 @@ div.active-step {
 }
 
 /* Balance and In-app Purchases */
+
+#howto {
+
+}
+
+.howto-player-layout {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.howto-goal {
+    padding: 10px;
+    padding-top: 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+}
+
+.howto-player-layout img {
+    height: 460px;
+    border: 3px solid rgba(255, 255, 255, 0.125);
+    border-radius: 2px;
+}
 
 #purchases {
 }
@@ -1436,7 +1460,7 @@ div.active-step {
 }
 
 .bs-screen-close:hover {
-    opacity: 0.75;
+    opacity: 0.75 !important;
 }
 
 .bs-screen-blurry-bar {
@@ -1546,10 +1570,14 @@ div.active-step {
 .fr-ava {
     display: table-cell;
     width: 50px;
+    height: 50px;
 }
 
 .fr-ava img {
     border-radius: 25px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.125);
 }
 
 .fr-meta {

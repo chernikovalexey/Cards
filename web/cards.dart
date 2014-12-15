@@ -27,6 +27,21 @@ StateManager manager;
 HintManager hints;
 FeatureManager featureManager;
 
+Function rateLimit(Function callback, int time) {
+    bool waiting = false;
+
+    Function rtn = (Event event) {
+        if (waiting) return;
+        waiting = true;
+        new Timer(new Duration(milliseconds: time), () {
+            waiting = false;
+            callback(event);
+        });
+    };
+
+    return rtn;
+}
+
 void main() {
     StarManager.init();
 
@@ -46,7 +61,12 @@ void main() {
 
     // release the mouse no matter where it currently is
     window.onMouseUp.listen(Input.onMouseUp);
-    canvas.onMouseWheel.listen(Input.onMouseWheel);
+
+    // Wheel rotation must be fixed at the same speed on all computers
+    // E.g., on Macs it performs faster than on PCs
+    // But must be the same indeed
+    canvas.onMouseWheel.listen(rateLimit(Input.onMouseWheel, 18));
+
     canvas.onContextMenu.listen(Input.onContextMenu);
 
     window.onKeyDown.listen(Input.onKeyDown);

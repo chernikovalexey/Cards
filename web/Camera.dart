@@ -40,12 +40,14 @@ class Camera {
     bool firedMovingEnd = true;
     bool firedZoomEnd = true;
 
+    bool ignoreAutoCheck = false;
+
     Function movingEnd = () {
     };
     Function zoomEnd = () {
     };
 
-    DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, FRAME_COUNT / 3);
+    DoubleAnimation zoomAnimation = new DoubleAnimation(1.0, 1.0, FRAME_COUNT);
     DoubleAnimation xAnim = new DoubleAnimation(0.0, 0.0, FRAME_COUNT);
     DoubleAnimation yAnim = new DoubleAnimation(0.0, 0.0, FRAME_COUNT);
 
@@ -66,7 +68,7 @@ class Camera {
     void beginZoom(double finalZoom, double currentZoom) {
         this.finalZoom = finalZoom;
         this.startZoom = currentZoom;
-        zoomAnimation = new DoubleAnimation(currentZoom, finalZoom, FRAME_COUNT / 3);
+        zoomAnimation = new DoubleAnimation(currentZoom, finalZoom, FRAME_COUNT);
     }
 
     void update(num delta) {
@@ -169,35 +171,39 @@ class Camera {
                 }
             }
 
-            xAnim.setFrames(2000);
-            yAnim.setFrames(2000);
+            xAnim.setFrames(1750);
+            yAnim.setFrames(1750);
 
             e.toggleBoundedCard(false);
         } else {
             e.toggleBoundedCard(true);
 
-            if (/*Input.keys['w'].down || */Input.keys['arrow_up'].down) {
+            if (/*Input.keys['w'].down || */
+            Input.keys['arrow_up'].down) {
                 targetOffsetY -= speed;
                 updated = true;
             }
 
-            if (/*Input.keys['a'].down || */Input.keys['arrow_left'].down) {
+            if (/*Input.keys['a'].down || */
+            Input.keys['arrow_left'].down) {
                 targetOffsetX -= speed;
                 updated = true;
             }
 
-            if (/*Input.keys['s'].down || */Input.keys['arrow_down'].down) {
+            if (/*Input.keys['s'].down || */
+            Input.keys['arrow_down'].down) {
                 targetOffsetY += speed;
                 updated = true;
             }
 
-            if (/*Input.keys['d'].down || */Input.keys['arrow_right'].down) {
+            if (/*Input.keys['d'].down || */
+            Input.keys['arrow_right'].down) {
                 targetOffsetX += speed;
                 updated = true;
             }
         }
 
-        if (hasBounds) {
+        if (hasBounds && !ignoreAutoCheck) {
             checkTarget();
             updated = true;
         }
@@ -207,11 +213,15 @@ class Camera {
         }
     }
 
-    void checkTarget() {
-        if (mTargetX <= bx1 / GameEngine.NSCALE) mTargetX = bx1 / GameEngine.NSCALE;
-        if (mTargetX + GameEngine.WIDTH >= bx2 / GameEngine.NSCALE) mTargetX = bx2 / GameEngine.NSCALE - GameEngine.WIDTH;
+    void checkTarget([bool ignoreXCheck = false, bool ignoreYCheck = false]) {
+        if (!ignoreXCheck) {
+            if (mTargetX <= bx1 / GameEngine.NSCALE) mTargetX = bx1 / GameEngine.NSCALE;
+            if (mTargetX + GameEngine.WIDTH >= bx2 / GameEngine.NSCALE) mTargetX = bx2 / GameEngine.NSCALE - GameEngine.WIDTH;
+        }
 
-        if (mTargetY - GameEngine.HEIGHT <= by1 / GameEngine.NSCALE) mTargetY = by1 / GameEngine.NSCALE + GameEngine.HEIGHT;
-        if (mTargetY >= by2 / GameEngine.NSCALE) mTargetY = by2 / GameEngine.NSCALE;
+        if (!ignoreYCheck) {
+            if (mTargetY - GameEngine.HEIGHT <= by1 / GameEngine.NSCALE) mTargetY = by1 / GameEngine.NSCALE + GameEngine.HEIGHT;
+            if (mTargetY >= by2 / GameEngine.NSCALE) mTargetY = by2 / GameEngine.NSCALE;
+        }
     }
 }

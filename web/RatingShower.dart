@@ -27,16 +27,11 @@ class RatingShower {
     static bool pauseState = false;
 
     static void nextLevel(Event event) {
-        int attempts = e.level.current.attemptsUsed;
-        e.level.current.attemptsUsed = 0;
-
         if (e.level.currentSubLevel != e.level.subLevels.length) {
             print("current sublevel != sublevels.length");
             onTypeItemClick(event);
             return;
         }
-
-        WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false), attempts);
 
         hide();
 
@@ -107,8 +102,8 @@ class RatingShower {
             querySelector(".attempts-layout").classes.add("hidden");
             GameWizard.finish();
         } else {*/
-            querySelector(".tutorial-layout").classes.add("hidden");
-            querySelector(".attempts-layout").classes.remove("hidden");
+        querySelector(".tutorial-layout").classes.add("hidden");
+        querySelector(".attempts-layout").classes.remove("hidden");
         //}
 
         oldRating = oldR;
@@ -189,6 +184,10 @@ class RatingShower {
 
             querySelector(".rating-inner-layout").classes.remove("small-margin");
         } else {
+            // Update the data on the server
+            WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false), e.level.current.attemptsUsed);
+            e.level.current.attemptsUsed = 0;
+
             querySelector(".level-controls").classes.remove('hidden');
             querySelector(".pause-controls").classes.add('hidden');
             querySelector(".level-rating").classes.remove('hidden');

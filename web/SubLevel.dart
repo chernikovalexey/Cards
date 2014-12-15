@@ -12,6 +12,7 @@ class SubLevel {
     String name;
 
     List frames = new List();
+    List obstaclesFrames = new List();
 
     List cards = new List();
 
@@ -31,6 +32,8 @@ class SubLevel {
 
     double x, y, w, h;
 
+    // Unique for each level
+    int currentSpriteId = 0;
     int rating = 0;
 
     int index;
@@ -104,6 +107,7 @@ class SubLevel {
 
             Sprite s = Sprite.byType(1, e.world);
             o.userData = s;
+            o.userData.id = ++currentSpriteId;
 
             if (obstacle["type"] != 5 && obstacle["type"] != 6) {
                 o.userData.isStatic = true;
@@ -157,6 +161,9 @@ class SubLevel {
         frames = new List();
         frames.addAll(e.bobbin.list);
 
+        obstaclesFrames = new List();
+        obstaclesFrames.addAll(e.obstaclesBobbin.list);
+
         from = e.from;
         to = e.to;
         fSprite = e.from.userData;
@@ -165,6 +172,7 @@ class SubLevel {
 
     void fromData(GameEngine e) {
         e.bobbin.list = frames;
+        e.obstaclesBobbin.list = obstaclesFrames;
     }
 
     void enable(bool v) {
@@ -185,6 +193,8 @@ class SubLevel {
             e.bobbin.list = this.frames;
             e.cards = this.cards;
 
+            e.obstaclesBobbin.list = this.obstaclesFrames;
+
             e.from = from;
             e.from.userData = Sprite.from(e.world);
 
@@ -198,7 +208,10 @@ class SubLevel {
                 e.rewind();
                 e.bobbin.rewindComplete = () {
                     e.bobbin.rewindComplete = null;
+
                     this.frames.clear();
+                    this.obstaclesFrames.clear();
+
                     if (levelApplied != null) levelApplied();
                     levelApplied = null;
                 };
@@ -215,10 +228,13 @@ class SubLevel {
 
     void complete() {
         completed = true;
+
         for (Body b in cards) {
-            (b.userData as EnergySprite).alwaysAnimate = true;
-            (b.userData as EnergySprite).activate();
-            (b.userData as EnergySprite).connectedToEnergy = true;
+            if (!b.userData.isStatic) {
+                (b.userData as EnergySprite).alwaysAnimate = true;
+                (b.userData as EnergySprite).activate();
+                (b.userData as EnergySprite).connectedToEnergy = true;
+            }
         }
     }
 
