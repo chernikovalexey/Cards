@@ -529,7 +529,7 @@ class GameEngine extends State {
 
             // No sense to save empty states, indeed
             if (ready && (window.localStorage.containsKey(id) || !cards.isEmpty)) {
-                window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list, level.current.obstacles, obstaclesBobbin.list, physicsEnabled, level.current.completed);
+                window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list, level.current.obstacles, obstaclesBobbin.list, level.current.completed);
             }
         }
     }
@@ -553,16 +553,17 @@ class GameEngine extends State {
     }
 
     void addHistoryState(Body body, bool remove) {
-        int max = level.current.maxDynamicBlocks + level.current.maxStaticBlocks;
         int current = 0;
 
-        for (HItem item in history)
-            if (item.remove == remove) ++current;
-
-        if (current < max) {
-            history.add(new HItem(body, remove));
-            history.add(new HItem(body, remove));
+        for (HItem item in history) {
+            if (body.userData.isStatic == item.card.userData.isStatic) ++current;
         }
+
+        if (!((body.userData.isStatic && current < level.current.maxStaticBlocks) || (!body.userData.isStatic && current < level.current.maxDynamicBlocks))) {
+            if (history.length >= 1) history.removeRange(0, 1);
+        }
+
+        history.add(new HItem(body, remove));
     }
 
     @override

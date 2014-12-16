@@ -1069,9 +1069,8 @@ button:hover:not([disabled]) {
 }
 
 .step-button {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    min-width: 100px;
 }
 
 .step-button:hover:not([disabled]) {

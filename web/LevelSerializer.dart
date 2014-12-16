@@ -13,10 +13,9 @@ class LevelSerializer {
         return (n * 1000.0).round() / 1000.0;
     }
 
-    static String toJSON(List<Body> cards, List<List> frames, List<Body> _do, List<List> doFrames, bool physicsEnabled, bool completed) {
+    static String toJSON(List<Body> cards, List<List> frames, List<Body> _do, List<List> doFrames, bool completed) {
         Map map = new Map();
         map['completed'] = completed;
-        map['physics_enabled'] = physicsEnabled;
         map['cards'] = new List<Map>();
         map['frames'] = new List();
         map['do'] = new List<Map>();
@@ -121,5 +120,12 @@ class LevelSerializer {
         }
 
         return state['completed'];
+    }
+
+    // Shorter names
+    // Indicator of completeness of a level
+
+    static void syncVersions() {
+
     }
 }
