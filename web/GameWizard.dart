@@ -97,7 +97,7 @@ class GameWizard {
     static void showHowto([Function closeCallback = null]) {
         Tooltip.closeAll();
 
-        querySelector("#tutorial-player").attr['src'] = context['Features']['tutorial_img']['src'] + "?v=" + (new DateTime()).now().toString();
+        querySelector("#tutorial-player").attributes['src'] = context['Features']['tutorial_img'].src + "?v=" + new DateTime.now().millisecondsSinceEpoch.toString();
 
         querySelector('#howto').classes.remove("hidden");
         animate(querySelector('#howto'), properties: {

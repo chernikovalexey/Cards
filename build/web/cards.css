@@ -391,7 +391,6 @@ button:hover:not([disabled]) {
     position: absolute;
     width: 300px;
     left: calc(50% - 150px);
-    background: rgba(44, 44, 44, 0.25);
     color: #fff;
 }
 
@@ -411,13 +410,11 @@ button:hover:not([disabled]) {
 }
 
 .get-attempts-button {
-    border-radius: 0;
     width: 100%;
     text-transform: uppercase;
     font-size: 13px;
     margin: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    background: transparent;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .get-attempts-button:hover {
@@ -1074,7 +1071,7 @@ button:hover:not([disabled]) {
 }
 
 .step-button:hover:not([disabled]) {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.075);
 }
 
 #wizard-controls {
