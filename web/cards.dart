@@ -109,6 +109,16 @@ void main() {
                 ChapterShower.show(chapters);
             }, false);
         });
+
+        int fp = context['Features']['friends_in_game'].length;
+
+        String in_game = context['Features'].callMethod('getNounPlural', [fp, context['locale']['play_form1'], context['locale']['play_form2'], context['locale']['play_form3']]);
+        String before = "";
+        String after = "";
+
+        if (context['qs']['app_lang'] == "en") after = in_game; else before = in_game;
+
+        querySelector("#invite-friends").innerHtml = before + " <b>" + fp.toString() + " " + context['Features'].callMethod('getNounPlural', [fp, context['locale']['friend_form1'], context['locale']['friend_form2'], context['locale']['friend_form3']]) + "</b> " + after;
     };
 
     if (context['Features']['initialized']) {

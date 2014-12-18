@@ -561,16 +561,69 @@ button:hover:not([disabled]) {
 }
 
 #invite-friends {
+    display: inline-block;
     font-size: 14px;
     color: rgb(211, 211, 211);
     -webkit-text-stroke: 1px rgba(211, 211, 211, 0.05);
     -webkit-transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+
+    -webkit-animation-name: bs;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: bs;
+    -moz-animation-duration: 1s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: bs;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 
 #invite-friends:hover {
-    color: #fff;
+    color: #fff !important;
+    opacity: 1.0 !important;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
     cursor: pointer;
+}
+
+@-moz-keyframes bs {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.75;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@-webkit-keyframes bs {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.75;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@keyframes bs {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.75;
+    }
+    100% {
+        opacity: 1.0;
+    }
 }
 
 .chapter-blurry-bar {
@@ -1165,8 +1218,9 @@ div.active-step {
 .help-delimiter {
     display: inline-block;
     width: 1px;
-    height: 34px;
+    height: 29px;
     background: rgba(255, 255, 255, 0.09375);
+    margin: 0 5px;
 }
 
 .topbar-show-controls, .show-goal {

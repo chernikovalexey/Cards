@@ -8628,8 +8628,15 @@ if(z!=null&&z.l!=null)B.Y2(z.l.ZP)},"call$1",null,2,0,null,10,[],"call"],
 $isEH:true},
 Lb:{
 "^":"d9:281;",
-call$0:[function(){T.Pi()
-D.d0(new T.VW())},"call$0",null,0,0,null,"call"],
+call$0:[function(){var z,y,x,w,v
+T.Pi()
+D.d0(new T.VW())
+z=$.cM()
+y=J.q8(J.UQ(J.UQ(z,"Features"),"friends_in_game"))
+x=J.UQ(z,"Features").V7("getNounPlural",[y,J.UQ(J.UQ(z,"locale"),"play_form1"),J.UQ(J.UQ(z,"locale"),"play_form2"),J.UQ(J.UQ(z,"locale"),"play_form3")])
+if(J.de(J.UQ(J.UQ(z,"qs"),"app_lang"),"en")){w=x
+v=""}else{v=x
+w=""}J.Qy(document.querySelector("#invite-friends"),J.WB(J.WB(J.WB(J.WB(J.WB(J.WB(v," <b>"),J.AG(y))," "),J.UQ(z,"Features").V7("getNounPlural",[y,J.UQ(J.UQ(z,"locale"),"friend_form1"),J.UQ(J.UQ(z,"locale"),"friend_form2"),J.UQ(J.UQ(z,"locale"),"friend_form3")])),"</b> "),w))},"call$0",null,0,0,null,"call"],
 $isEH:true},
 VW:{
 "^":"d9:457;",
