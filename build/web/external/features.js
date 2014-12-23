@@ -108,6 +108,8 @@ var Features = {
         scroll.buildScrollControls('invitations-scrollbar', 'v', 'mouseover', true);
     },
 
+    tutorial_img: null,
+    is_macintosh: false,
     initialized: false,
     onLoaded: function () {
     },
@@ -225,7 +227,6 @@ var Features = {
     getPurchaseOptionsPresentation: function (options) {
         var html = "";
         var template = $('.purchase-option-template').html();
-        console.log(template);
         $(options).each(function () {
             html += TemplateEngine.parseTemplate(template, this);
         });
@@ -237,7 +238,6 @@ var Features = {
 
     loadPurchasesWindow: function () {
         var purchases = this.getPurchases();
-        console.log(purchases);
         var attemptsHtml = this.getPurchaseOptionsPresentation(purchases.attempts);
         var hintsHtml = this.getPurchaseOptionsPresentation(purchases.hints);
 
@@ -255,7 +255,6 @@ var Features = {
     getChapters: function (callback) {
         this.chapterCallback = callback;
         Api.call('chapters', {}, function (r) {
-            console.log('raw data:', r);
             Features.chapterCallback(JSON.stringify(r));
         });
     },
@@ -550,7 +549,7 @@ var VKFeatures = {
 var FBFeatures = {
     initFields: function (callback) {
         FB.api("/me", function (me_res) {
-            FB.api("/me/friends", function (fr_res) {
+            FB.api("me/friends?fields=last_name,first_name,picture", function (fr_res) {
                 console.log("Friends:", fr_res);
                 Api.setFriendsList(Features.toIdArray(fr_res.data));
                 Features.friends = fr_res.data;
@@ -583,7 +582,10 @@ var FBFeatures = {
     toUserObject: function (fr) {
         console.log('trying to get user object:', fr);
         return {
-            id: fr.id
+            id: fr.id,
+            name: fr.first_name,
+            surname: fr.last_name,
+            ava: fr.picture.data.url
         };
     },
 
@@ -678,7 +680,7 @@ var FBFeatures = {
                         callback();
                     });
                 });
-            });
+            }, {scope: 'user_about_me, user_friends'});
         });
     },
 
@@ -821,6 +823,10 @@ var NoFeatures = {
 };
 
 (function () {
+    if (navigator.appVersion.indexOf("Mac") != -1) {
+        Features.is_macintosh = true;
+    }
+
     qs['app_lang'] = 'en';
 
     switch (qs['platform']) {
@@ -838,7 +844,9 @@ var NoFeatures = {
             Features = extendAndOverride(Features, NoFeatures);
     }
 
-    console.log("Loading locale:", qs['app_lang']);
+    Features.tutorial_img = new Image();
+    Features.tutorial_img.src = 'img/tutorial/tutorial_' + qs['app_lang'] + '.gif';
+
     $.getScript('external/locales/' + qs['app_lang'] + '.js', function () {
         $('.localized').each(function () {
             var t = locale[$(this).data('lid')];

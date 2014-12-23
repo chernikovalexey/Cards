@@ -391,7 +391,6 @@ button:hover:not([disabled]) {
     position: absolute;
     width: 300px;
     left: calc(50% - 150px);
-    background: rgba(44, 44, 44, 0.25);
     color: #fff;
 }
 
@@ -411,13 +410,11 @@ button:hover:not([disabled]) {
 }
 
 .get-attempts-button {
-    border-radius: 0;
     width: 100%;
     text-transform: uppercase;
     font-size: 13px;
     margin: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    background: transparent;
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .get-attempts-button:hover {
@@ -564,16 +561,69 @@ button:hover:not([disabled]) {
 }
 
 #invite-friends {
+    display: inline-block;
     font-size: 14px;
     color: rgb(211, 211, 211);
     -webkit-text-stroke: 1px rgba(211, 211, 211, 0.05);
     -webkit-transition: all 475ms cubic-bezier(0.23, 1, 0.32, 1);
+
+    -webkit-animation-name: bs;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: bs;
+    -moz-animation-duration: 1s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: bs;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 
 #invite-friends:hover {
-    color: #fff;
+    color: #fff !important;
+    opacity: 1.0 !important;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05);
     cursor: pointer;
+}
+
+@-moz-keyframes bs {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.75;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@-webkit-keyframes bs {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.75;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@keyframes bs {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.75;
+    }
+    100% {
+        opacity: 1.0;
+    }
 }
 
 .chapter-blurry-bar {
@@ -1069,13 +1119,12 @@ button:hover:not([disabled]) {
 }
 
 .step-button {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    min-width: 100px;
 }
 
 .step-button:hover:not([disabled]) {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.075);
 }
 
 #wizard-controls {
@@ -1169,8 +1218,9 @@ div.active-step {
 .help-delimiter {
     display: inline-block;
     width: 1px;
-    height: 34px;
+    height: 29px;
     background: rgba(255, 255, 255, 0.09375);
+    margin: 0 5px;
 }
 
 .topbar-show-controls, .show-goal {
@@ -1197,10 +1247,12 @@ div.active-step {
     background: rgba(0, 0, 0, 0.925);
     border-radius: 3px;
     max-width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.175);
 }
 
 .simple-tooltip-white-layout {
     background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
 }
 
 .simple-tooltip-title {
@@ -1293,6 +1345,28 @@ div.active-step {
 }
 
 /* Balance and In-app Purchases */
+
+#howto {
+
+}
+
+.howto-player-layout {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.howto-goal {
+    padding: 10px;
+    padding-top: 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+}
+
+.howto-player-layout img {
+    height: 460px;
+    border: 3px solid rgba(255, 255, 255, 0.125);
+    border-radius: 2px;
+}
 
 #purchases {
 }
@@ -1436,7 +1510,7 @@ div.active-step {
 }
 
 .bs-screen-close:hover {
-    opacity: 0.75;
+    opacity: 0.75 !important;
 }
 
 .bs-screen-blurry-bar {
@@ -1546,10 +1620,14 @@ div.active-step {
 .fr-ava {
     display: table-cell;
     width: 50px;
+    height: 50px;
 }
 
 .fr-ava img {
     border-radius: 25px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.125);
 }
 
 .fr-meta {

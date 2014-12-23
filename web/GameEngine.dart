@@ -161,9 +161,10 @@ class GameEngine extends State {
                         traverser.traverseEdges(card.contactList);
                     }
                 }
-            } else {
-                GameWizard.showGoal();
             }
+            /* else if (level.chapter == 1 && level.current.index == 1) {
+                GameWizard.showGoal();
+            }*/
 
             if (!traverser.hasPath && frontRewind) {
                 frontRewindLevelFailed();
@@ -343,14 +344,6 @@ class GameEngine extends State {
         }
     }
 
-    List<Body> getCurrentLevelObstacles() {
-        List<Body> obstacles = new List<Body>();
-        if (level != null && level.current != null) {
-            obstacles.addAll(level.current.obstacles);
-        }
-        return obstacles;
-    }
-
     void toggleBoundedCard(bool visible) {
         (bcard.b.userData as Sprite).isHidden = !visible;
     }
@@ -401,7 +394,7 @@ class GameEngine extends State {
 
         if (level != null && level.current != null) {
             for (Body obstacle in level.current.obstacles) {
-                obstacle.applyForce(new Vector2(0.0, -0.05), obstacle.worldCenter);
+                obstacle.applyForce(new Vector2(0.0, -0.0005), obstacle.worldCenter);
             }
         }
 
@@ -431,14 +424,12 @@ class GameEngine extends State {
         //
         // Button clicks
 
-        if (Input.keys['z'].down && !Input.isAltDown) {
-            setCanvasCursor('zoom-in');
+        if ((Input.keys['shift'].down && Input.keys['z'].clicked) || (Input.keys['z'].down && Input.keys['shift'].clicked)) {
             toggleBoundedCard(false);
-            if (Input.isMouseLeftClicked) zoom(true, true);
-        } else if (Input.isAltDown) {
-            setCanvasCursor('zoom-out');
+            zoom(true);
+        } else if ((Input.keys['z'].down && Input.isAltClicked) || (Input.isAltDown && Input.keys['z'].clicked)) {
             toggleBoundedCard(false);
-            if (Input.isMouseLeftClicked) zoom(false, true);
+            zoom(false);
         }
 
         if (Input.keys['1'].clicked) {
@@ -449,11 +440,9 @@ class GameEngine extends State {
             staticBlocksSelected = true;
             updateBlockButtons(this);
         }
-        if (Input.keys['ctrl'].down && Input.keys['shift'].clicked || Input.keys['ctrl'].clicked && Input.keys['shift'].down) {
+        if ((Input.keys['ctrl'].down || Input.isCmdDown) && Input.keys['shift'].clicked || (Input.keys['ctrl'].clicked || Input.isCmdClicked) && Input.keys['shift'].down) {
             querySelector('#toggle-physics').click();
         }
-
-        //print("history.length=" + history.length.toString());
 
         if (contactListener.contactingBodies.isNotEmpty && (Input.isMouseRightClicked || Input.keys['delete'].clicked) && !isRewinding) {
             List<Body> cardsToRemove = new List<Body>();
@@ -540,7 +529,7 @@ class GameEngine extends State {
 
             // No sense to save empty states, indeed
             if (ready && (window.localStorage.containsKey(id) || !cards.isEmpty)) {
-                window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list, physicsEnabled, level.current.completed);
+                window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list, level.current.obstacles, obstaclesBobbin.list, level.current.completed);
             }
         }
     }
@@ -564,19 +553,17 @@ class GameEngine extends State {
     }
 
     void addHistoryState(Body body, bool remove) {
-        if (!remove) {
-            int max = level.current.maxDynamicBlocks + level.current.maxStaticBlocks;
-            int current = 0;
+        int current = 0;
 
-            for (HItem item in history)
-                if (!item.remove) ++current;
-
-            if (current < max) {
-                history.add(new HItem(body, remove));
-            }
-        } else if (remove) {
-            history.add(new HItem(body, remove));
+        for (HItem item in history) {
+            if (body.userData.isStatic == item.card.userData.isStatic) ++current;
         }
+
+        if (!((body.userData.isStatic && current < level.current.maxStaticBlocks) || (!body.userData.isStatic && current < level.current.maxDynamicBlocks))) {
+            if (history.length >= 1) history.removeRange(0, 1);
+        }
+
+        history.add(new HItem(body, remove));
     }
 
     @override
@@ -643,11 +630,7 @@ class GameEngine extends State {
         }
     }
 
-    bool zoomDisabled = false;
-
-    void zoom(bool zoomIn, [bool onMouse = false]) {
-        if (zoomDisabled) return;
-
+    void zoom(bool zoomIn) {
         double zoomDelta = 0.2;
         double newZoom;
 
@@ -658,35 +641,20 @@ class GameEngine extends State {
         }
 
         if (newZoom != currentZoom) {
-            zoomDisabled = true;
             camera.beginZoom(newZoom, currentZoom);
             camera.updateZoom();
 
-            if (newZoom > currentZoom) {
-                if (onMouse) {
-                    camera.mTargetX = camera.mTargetX + Input.mouseX / 2;
-                    camera.mTargetY = camera.mTargetY - Input.mouseY / 2;
-                } else {
-                    camera.mTargetX = camera.mTargetX + WIDTH / 2;
-                    camera.mTargetY = camera.mTargetY - HEIGHT / 2;
-                }
-            } else {
-                if (onMouse) {
-                    camera.mTargetX = camera.mTargetX - Input.mouseX / 2;
-                    camera.mTargetY = camera.mTargetY - Input.mouseY / 2;
-                } else {
-                    camera.mTargetX = camera.mTargetX - WIDTH / 2;
-                    camera.mTargetY = camera.mTargetY - HEIGHT / 2;
-                }
-            }
+            camera.mTargetX = from.position.x + (to.position.x - from.position.x) / 2 - WIDTH / 2;
+            camera.mTargetY = from.position.y + (to.position.y - from.position.y) / 2 - HEIGHT / 2;
 
+            camera.ignoreAutoCheck = true;
             camera.checkTarget();
             camera.updateEngine();
 
             currentZoom = newZoom;
 
             camera.zoomEnd = () {
-                zoomDisabled = false;
+                camera.ignoreAutoCheck = false;
             };
         }
     }

@@ -1,6 +1,7 @@
 import "dart:html";
 import "GameEngine.dart";
 import "Camera.dart";
+import 'dart:js';
 
 class Key {
     int code;
@@ -20,6 +21,9 @@ class Input {
     static num mouseX = 0.0, mouseY = 0.0, mouseDeltaX = 0.0, mouseDeltaY = 0.0;
 
     static bool isAltDown = false;
+    static bool isAltClicked = false;
+    static bool isCmdDown = false;
+    static bool isCmdClicked = false;
     static bool isMouseLeftDown = false;
     static bool isMouseLeftClicked = false;
     static bool isMouseRightDown = false;
@@ -87,7 +91,14 @@ class Input {
     static void onKeyDown(KeyboardEvent event) {
         if (event.altKey) {
             isAltDown = true;
+            isAltClicked = true;
         }
+
+        if (event.metaKey && context['Features']['is_macintosh']) {
+            isCmdDown = true;
+            isCmdClicked = true;
+        }
+
         toggle(event, true);
         if (keyDown != null) keyDown(event);
     }
@@ -96,10 +107,15 @@ class Input {
 
     static void onKeyUp(KeyboardEvent event) {
         toggle(event, false);
+
         isAltDown = false;
+        isCmdDown = false;
     }
 
     static void update() {
+        isAltClicked = false;
+        isCmdClicked = false;
+
         mouseMoved = false;
 
         isMouseLeftClicked = false;

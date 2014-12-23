@@ -8,6 +8,7 @@ import "Sprite.dart";
 import "Color4.dart";
 import 'GameWizard.dart';
 import 'Tooltip.dart';
+import 'dart:js';
 
 class BoundedCard {
     Body b;
@@ -42,9 +43,9 @@ class BoundedCard {
         double prev_angle = angle;
 
         if (Input.keys['q'].down) {
-            angle += delta / 2;
+            angle += delta / 3;
         } else if (Input.keys['e'].down) {
-            angle -= delta / 2;
+            angle -= delta / 3;
         } else {
             angle -= Input.wheelDirection * delta;
         }

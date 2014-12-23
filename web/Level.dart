@@ -344,6 +344,8 @@ class Level {
 
     static void onLevelApplied() {
         last.frames.clear();
+        last.obstaclesFrames.clear();
+
         if (targetLevel < eng.level.currentSubLevel) {
             eng.level.previous();
             eng.level.current.levelApplied = onLevelApplied;

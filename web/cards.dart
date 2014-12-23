@@ -27,6 +27,21 @@ StateManager manager;
 HintManager hints;
 FeatureManager featureManager;
 
+Function rateLimit(Function callback, int time) {
+    bool waiting = false;
+
+    Function rtn = (Event event) {
+        if (waiting) return;
+        waiting = true;
+        new Timer(new Duration(milliseconds: time), () {
+            waiting = false;
+            callback(event);
+        });
+    };
+
+    return rtn;
+}
+
 void main() {
     StarManager.init();
 
@@ -46,7 +61,12 @@ void main() {
 
     // release the mouse no matter where it currently is
     window.onMouseUp.listen(Input.onMouseUp);
-    canvas.onMouseWheel.listen(Input.onMouseWheel);
+
+    // Wheel rotation must be fixed at the same speed on all computers
+    // E.g., on Macs it performs faster than on PCs
+    // But must be the same indeed
+    canvas.onMouseWheel.listen(rateLimit(Input.onMouseWheel, 18));
+
     canvas.onContextMenu.listen(Input.onContextMenu);
 
     window.onKeyDown.listen(Input.onKeyDown);
@@ -89,6 +109,16 @@ void main() {
                 ChapterShower.show(chapters);
             }, false);
         });
+
+        int fp = context['Features']['friends_in_game'].length;
+
+        String in_game = context['Features'].callMethod('getNounPlural', [fp, context['locale']['play_form1'], context['locale']['play_form2'], context['locale']['play_form3']]);
+        String before = "";
+        String after = "";
+
+        if (context['qs']['app_lang'] == "en") after = in_game; else before = in_game;
+
+        querySelector("#invite-friends").innerHtml = before + " <b>" + fp.toString() + " " + context['Features'].callMethod('getNounPlural', [fp, context['locale']['friend_form1'], context['locale']['friend_form2'], context['locale']['friend_form3']]) + "</b> " + after;
     };
 
     if (context['Features']['initialized']) {

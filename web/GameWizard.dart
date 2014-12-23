@@ -6,6 +6,7 @@ import 'dart:js';
 import 'RatingShower.dart';
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
+import 'package:animation/animation.dart';
 import 'GameEngine.dart';
 import 'Input.dart';
 import 'EnergySprite.dart';
@@ -75,8 +76,7 @@ class GameWizard {
         });
 
         querySelector(".show-goal").onClick.listen((event) {
-            Tooltip.showSimple(context['locale']['goal_short_desc'], Input.canvasX + 94, 4, () {
-            }, context['locale']['goal']);
+            showHowto();
         });
     }
 
@@ -94,36 +94,101 @@ class GameWizard {
         }
     }
 
+    static void showHowto([Function closeCallback = null]) {
+        Tooltip.closeAll();
+
+        querySelector("#tutorial-player").attributes['src'] = context['Features']['tutorial_img'].src + "?v=" + new DateTime.now().millisecondsSinceEpoch.toString();
+
+        querySelector('#howto').classes.remove("hidden");
+        animate(querySelector('#howto'), properties: {
+            'top': 0, 'opacity': 1.0
+        }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+
+        querySelector(".close-howto").style.opacity = "0.0";
+
+        var showClose = () {
+            animate(querySelector(".close-howto"), properties: {
+                'opacity': 0.5
+            }, duration: 350, easing: Easing.SINUSOIDAL_EASY_IN);
+
+            storage['seen_howto'] = 'true';
+        };
+
+        if (storage.containsKey("seen_howto")) {
+            showClose();
+        } else {
+            new Timer(new Duration(seconds: 8), showClose);
+        }
+
+        var frames = [{
+            'time': 0, 'text': context['locale']['wizard_place']
+        }, {
+            'time': 2500, 'text': context['locale']['wizard_apply']
+        }, {
+            'time': 5500, 'text': context['locale']['goal_desc']
+        }];
+
+        var change = () {
+            for (var i = 0, len = frames.length; i < len; ++i) {
+                String text = frames[i]['text'];
+                new Timer(new Duration(milliseconds: frames[i]['time']), () {
+                    querySelector('.howto-goal').innerHtml = text;
+                });
+            }
+        };
+
+        new Timer.periodic(new Duration(milliseconds: 25000), (Timer timer) => change());
+        change();
+
+        querySelector(".close-howto").addEventListener("click", (event) {
+            animate(querySelector('#howto'), properties: {
+                'top': 800, 'opacity': 0.0
+            }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+
+            if (closeCallback != null) {
+                closeCallback();
+            }
+        }, false);
+    }
+
     static void showOverview() {
         showing = true;
 
-        if (engine.cards.isEmpty) {
-            hints.addHintCard(1.671, 2.5, 0.0, 1.0, false);
+        var showTooltips = () {
+            if (engine.cards.isEmpty) {
+                hints.addHintCard(1.671, 2.5, 0.0, 1.0, false);
 
-            var cb = (Event event) {
-                if (event.target.classes.contains("ignore-close-all")) return;
+                var cb = (Event event) {
+                    if (event.target.classes.contains("ignore-close-all")) return;
 
-                Tooltip.closeAll();
-                hints.clearHintCards();
-
-                Tooltip.show(querySelector("#toggle-physics"), context['locale']['wizard_apply'], Tooltip.BOTTOM, maxWidth: 300);
-
-                var toggleStream = querySelector("#toggle-physics").onClick.listen((event) {
                     Tooltip.closeAll();
+                    hints.clearHintCards();
+
+                    Tooltip.show(querySelector("#toggle-physics"), context['locale']['wizard_apply'], Tooltip.BOTTOM, maxWidth: 300);
+
+                    var toggleStream = querySelector("#toggle-physics").onClick.listen((event) {
+                        Tooltip.closeAll();
+                    });
+
+                    querySelector("#toggle-physics").onClick.listen((event) {
+                        toggleStream.cancel();
+                    });
+                };
+
+                Tooltip.showSimple(context['locale']['wizard_place'], Input.canvasX + 225, 335);
+
+                var bodyStream = querySelector("body").onClick.listen(cb);
+
+                querySelector("body").onClick.listen((event) {
+                    bodyStream.cancel();
                 });
+            }
+        };
 
-                querySelector("#toggle-physics").onClick.listen((event) {
-                    toggleStream.cancel();
-                });
-            };
-
-            Tooltip.showSimple(context['locale']['wizard_place'], Input.canvasX + 225, 335);
-
-            var bodyStream = querySelector("body").onClick.listen(cb);
-
-            querySelector("body").onClick.listen((event) {
-                bodyStream.cancel();
-            });
+        if (!storage.containsKey("seen_howto")) {
+            showHowto(showTooltips);
+        } else {
+            showTooltips();
         }
     }
 

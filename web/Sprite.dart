@@ -5,9 +5,13 @@ import "SuperCanvasDraw.dart";
 import "Color4.dart";
 
 class Sprite {
+    static int CURRENT_ID = 0;
+
     double energy = 0.0;
 
-    bool isInner = false;
+    bool isInner
+
+    = false;
 
     bool isHidden = false;
 
@@ -24,6 +28,9 @@ class Sprite {
     bool contactOverlay = false;
 
     bool enabled = true;
+
+    // for dynamic obstacles only
+    int id;
 
     Body bFrom;
 
@@ -53,7 +60,9 @@ class Sprite {
         }
     }
 
-    void drawShape(Fixture fixture, Transform xf, Color4 color) {
+    void drawShape(Fixture fixture, Transform xf, Color4
+
+    color) {
         if (fixture.userData == false) {
             if (fixture.next != null) fixture = fixture.next; else return;
         }
@@ -111,7 +120,9 @@ class Sprite {
         return s;
     }
 
-    static Sprite from(World w, [bool active = true]) {
+    static Sprite from(World w, [bool active
+
+    = true]) {
         EnergySprite s = new EnergySprite(w, false);
         s.isCard = false;
 
