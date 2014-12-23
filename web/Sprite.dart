@@ -9,9 +9,7 @@ class Sprite {
 
     double energy = 0.0;
 
-    bool isInner
-
-    = false;
+    bool isInner = false;
 
     bool isHidden = false;
 

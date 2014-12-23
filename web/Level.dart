@@ -44,7 +44,7 @@ class Level {
             ++index;
             if (window.localStorage.containsKey("level_" + ch.toString() + "_" + index.toString())) {
                 Map json = JSON.decode(window.localStorage["level_" + ch.toString() + "_" + index.toString()]);
-                if (!json["completed"]) {
+                if (!json["cd"] && !json["cards"].isEmpty) {
                     found = true;
                     --index;
                     break;
@@ -177,8 +177,6 @@ class Level {
 
                 JsMap flevel = new JsMap.fromJsObject(flevel_js);
 
-                print("Amount of friends finished this level: " + flevel.length.toString());
-
                 querySelector(".friends-finished-amount").innerHtml = flevel.length.toString();
 
                 finished.addEventListener("click", (event) {
@@ -251,7 +249,10 @@ class Level {
         toggleFinishedFriends();
         updateHints();
         updateBlockButtons(engine);
+        saveAsLastLevel();
+    }
 
+    void saveAsLastLevel() {
         window.localStorage["last"] = JSON.encode({
             'chapter': chapter, 'level': currentSubLevel
         });
@@ -289,14 +290,9 @@ class Level {
 
         if (targetLevel == eng.level.currentSubLevel) {
             eng.restartLevel();
+            saveStarsForLoadedLevels(_eng, target);
         } else if (target < eng.level.currentSubLevel) {
-            for (int i = _eng.level.subLevels.length - 1; i >= target - 1; --i) {
-                _eng.level.subLevels[i].rating = 0;
-                toggleLevelCompletenessInStorage(_eng.level.chapter, i + 1, false);
-                print("level #" + (i + 1).toString() + " = " + _eng.level.subLevels[i].rating.toString());
-            }
-
-            StarManager.saveFrom(_eng.level.chapter, _eng.level.subLevels);
+            saveStarsForLoadedLevels(_eng, target);
 
             last = eng.level.current;
             eng.frontRewind = false;
@@ -304,13 +300,18 @@ class Level {
             eng.level.current.levelApplied = onLevelApplied;
         } else {
             eng.frontRewind = true;
-            //if (!eng.physicsEnabled) {
             applyRewindLabelToButton();
             eng.frontRewindLevelComplete = onFrontRewindLevelComplete;
             eng.frontRewindLevelFailed = onFrontRewindLevelFailed;
-            //}
-            //eng.level.next();
         }
+    }
+
+    static void saveStarsForLoadedLevels(GameEngine _eng, int target) {
+        for (int i = _eng.level.subLevels.length - 1; i >= target - 1; --i) {
+            _eng.level.subLevels[i].rating = 0;
+            toggleLevelCompletenessInStorage(_eng.level.chapter, i + 1, false);
+        }
+        StarManager.saveFrom(_eng.level.chapter, _eng.level.subLevels);
     }
 
     static void toggleLevelCompletenessInStorage(int chapter, int level, bool completed) {
@@ -319,7 +320,7 @@ class Level {
 
         if (storage.containsKey(levelName)) {
             Map json = JSON.decode(storage[levelName]);
-            json['completed'] = completed;
+            json['cd'] = completed;
             storage[levelName] = JSON.encode(json);
         }
     }
@@ -327,6 +328,7 @@ class Level {
     static void onFrontRewindLevelComplete() {
         if (targetLevel != eng.level.currentSubLevel) {
             if (eng.level.current.finish()) {
+                StarManager.saveFrom(eng.level.chapter, eng.level.subLevels);
                 eng.level.next();
                 applyRewindLabelToButton();
             }

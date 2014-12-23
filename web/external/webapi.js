@@ -11,7 +11,7 @@ function WebApi(method, data, callback, async) {
     $.ajax({
         type: 'POST',
         url: url,
-        async: async != undefined ? true : false,
+        async: async == undefined ? true : async,
         data: {arguments: json, method: method},
         success: function (r) {
             callback(r);
@@ -60,7 +60,7 @@ var Api = {
         WebApi(this.platform + ".addAttempts", {
             auth_key: this.auth_key,
             delta: delta
-        }, callback);
+        }, callback, false);
     },
 
     keepAlive: function () {
@@ -70,11 +70,11 @@ var Api = {
         });
     },
 
-    call: function (method, data, callback) {
+    call: function (method, data, callback, async) {
         data = extendAndOverride({userId: this.personalId, auth_key: this.auth_key}, data || {});
         callback = callback || function (r) {
             console.log(r);
         };
-        WebApi(this.platform + "." + method, data, callback);
+        WebApi(this.platform + "." + method, data, callback, async);
     }
 };

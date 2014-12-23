@@ -21,8 +21,12 @@ class Chapter {
     static int getFinishedLevelsAmount(int chapter, int levels) {
         int finished = 0;
         for (int i = 1; i <= levels; ++i) {
-            if (window.localStorage.containsKey("level_" + chapter.toString() + "_" + i.toString())) {
-                ++finished;
+            String levelName = "level_" + chapter.toString() + "_" + i.toString();
+            if (window.localStorage.containsKey(levelName)) {
+                Map json = JSON.decode(window.localStorage[levelName]);
+                if (json['cd']) {
+                    ++finished;
+                }
             }
         }
         return finished;

@@ -19,6 +19,9 @@ import 'GameWizard.dart';
 import 'Scroll.dart';
 import 'PromptWindow.dart';
 import 'package:sprintf/sprintf.dart';
+import 'LevelSerializer.dart';
+
+int lastAttemptsUsed = -1;
 
 CanvasElement canvas;
 GameEngine engine;
@@ -54,7 +57,7 @@ void main() {
 
     manager = new StateManager(g);
     engine = new GameEngine(g);
-    manager.addState(new ParallaxManager(engine, g, 24, 175));
+    manager.addState(parallax = new ParallaxManager(engine, g, 24, 175));
 
     canvas.onMouseMove.listen(Input.onMouseMove);
     canvas.onMouseDown.listen(Input.onMouseDown);
@@ -72,19 +75,39 @@ void main() {
     window.onKeyDown.listen(Input.onKeyDown);
     window.onKeyUp.listen(Input.onKeyUp);
     window.onResize.listen(updateCanvasPositionAndDimension);
+
+    bool updatedAttemptsUsed = false;
+
     window.onBeforeUnload.listen((Event event) {
         engine.saveCurrentProgress();
 
-        if (engine.level != null && engine.level.current != null) {
+        if (engine.level != null && engine.level.current != null && !updatedAttemptsUsed) {
             WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
+            updatedAttemptsUsed = true;
+        }
+    });
+
+    window.onUnload.listen((Event event) {
+        if (engine.level != null && engine.level.current != null && !updatedAttemptsUsed) {
+            WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
+            updatedAttemptsUsed = true;
         }
     });
 
     Function onLoadedCallback = () {
         showMainMenu();
 
+        /*if (window.localStorage.containsKey("last_attempts_used")) {
+            lastAttemptsUsed = int.parse(window.localStorage['last_attempts_used']);
+            print(lastAttemptsUsed);
+            window.localStorage.remove('last_attempts_used');
+            WebApi.updateAttemptsAmount(lastAttemptsUsed);
+        }*/
+
         Chapter.load((List chapters) {
             context['Features'].callMethod("hideLoading");
+
+            LevelSerializer.syncVersions();
 
             querySelector("#continue").addEventListener("click", (event) {
                 manager.removeState(engine);
@@ -173,12 +196,10 @@ void main() {
     querySelector('#toggle-physics').addEventListener("click", (event) {
         if (!(event.target as ButtonElement).classes.contains("rewind")) {
             int attempts = UserManager.getAsInt("allAttempts");
-            if (attempts > 0) {
-                applyRewindLabelToButton();
+            int boughtAttempts = UserManager.getAsInt("boughtAttempts");
 
-                if (!updateAttempts()) {
-                    WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
-                }
+            if (attempts > 0 || boughtAttempts == -1) {
+                applyRewindLabelToButton();
             } else {
                 PromptWindow.showSimple(context['locale']['attempts_lack'], context['locale']['attempts_lack_message'], context['locale']['get_attempts'], hints.getMoreHints);
                 WebApi.updateAttemptsAmount(engine.level.current.attemptsUsed);
@@ -205,12 +226,15 @@ void main() {
 
 bool updateAttempts() {
     int attempts = UserManager.getAsInt("allAttempts");
-    if (attempts == 0) {
+    int boughtAttempts = UserManager.getAsInt("boughtAttempts");
+
+    if (attempts == 0 && boughtAttempts != -1) {
         querySelector("#toggle-physics")
             ..classes.add("faded")
             ..title = context['locale']['spent_all_attempts'];
         return false;
     }
+
     return true;
 }
 
@@ -269,8 +293,6 @@ void applyPhysicsLabelToButton() {
 
 void applyRewindLabelToButton([List list]) {
     if (!engine.isRewinding) {
-        //WebApi.addAttempt();
-
         var btn = querySelector("#toggle-physics");
         btn.classes.add("rewind");
         btn.text = context['locale']['rewind'];

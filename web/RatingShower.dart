@@ -97,14 +97,13 @@ class RatingShower {
     }
 
     static void show(GameEngine engine, int rating, [int oldR = 0]) {
-        /*if (GameWizard.showing) {
-            querySelector(".tutorial-layout").classes.remove("hidden");
+        if (UserManager.getAsInt("boughtAttempts") == -1) {
             querySelector(".attempts-layout").classes.add("hidden");
-            GameWizard.finish();
-        } else {*/
-        querySelector(".tutorial-layout").classes.add("hidden");
-        querySelector(".attempts-layout").classes.remove("hidden");
-        //}
+            querySelector(".unlimited-attempts-layout").classes.remove("hidden");
+        } else {
+            querySelector(".unlimited-attempts-layout").classes.add("hidden");
+            querySelector(".attempts-layout").classes.remove("hidden");
+        }
 
         oldRating = oldR;
         newRating = rating;
@@ -184,7 +183,6 @@ class RatingShower {
 
             querySelector(".rating-inner-layout").classes.remove("small-margin");
         } else {
-            // Update the data on the server
             WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false), e.level.current.attemptsUsed);
             e.level.current.attemptsUsed = 0;
 
@@ -193,13 +191,11 @@ class RatingShower {
             querySelector(".level-rating").classes.remove('hidden');
             querySelector(".pause-title").classes.add('hidden');
 
-            //
             querySelector(".rating-inner-layout").classes.add("small-margin");
 
-            //
-//            querySelector("#share-level").addEventListener("click", (event) {
-//                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating)]);
-//            }, true);
+            querySelector("#share-level").addEventListener("click", (event) {
+                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating)]);
+            }, true);
         }
 
         querySelector(".attempts-left").innerHtml = sprintf(context['locale']['attempts_left'], [UserManager.getAsInt('boughtAttempts') == -1 ? '∞' : UserManager.get("allAttempts").toString(), context['Features'].callMethod('getNounPlural', [UserManager.get("allAttempts"), context['locale']['attempt_form1'], context['locale']['attempt_form2'], context['locale']['attempt_form3']])]);
@@ -311,11 +307,6 @@ class RatingShower {
     }
 
     static void hide() {
-        if (GameWizard.showing) {
-            fadeBoxIn(GameWizard.progress, 175);
-            querySelector("#wizard-overview").classes.remove("blurred");
-        }
-
         Input.removeSingleEscClickCallback();
         e.isPaused = false;
 

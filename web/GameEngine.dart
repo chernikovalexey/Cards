@@ -26,6 +26,7 @@ import 'Tooltip.dart';
 import 'PromptWindow.dart';
 import 'Chapter.dart';
 import 'UserManager.dart';
+import 'WebApi.dart';
 
 // Actions history item
 class HItem {
@@ -103,7 +104,7 @@ class GameEngine extends State {
     Function onLevelEndCallback = () {
     };
 
-    double cardDensity = 0.1, cardFriction = 0.1, cardRestitution = 0.00;
+    double cardDensity = 0.25, cardFriction = 0.115, cardRestitution = 0.0;
     double currentZoom = 1.0;
 
     GameEngine(CanvasRenderingContext2D g) {
@@ -120,6 +121,11 @@ class GameEngine extends State {
             GameWizard.init();
 
             level = new Level(() {
+                if (lastAttemptsUsed != -1) {
+                    level.current.attemptsUsed = lastAttemptsUsed;
+                    lastAttemptsUsed = -1;
+                }
+
                 ready = true;
 
                 this.bcard = new BoundedCard(this);
@@ -162,13 +168,13 @@ class GameEngine extends State {
                     }
                 }
             }
-            /* else if (level.chapter == 1 && level.current.index == 1) {
-                GameWizard.showGoal();
-            }*/
 
             if (!traverser.hasPath && frontRewind) {
                 frontRewindLevelFailed();
             }
+
+            // Push an update to the server
+            //WebApi.updateAttemptsAmount(level.current.attemptsUsed);
         });
 
         this.obstaclesBobbin = new Bobbin(() {
@@ -222,6 +228,8 @@ class GameEngine extends State {
         Body body = world.createBody(bd);
         body.createFixture(fd);
         body.createFixture(createHelperFixture(width, height));
+
+        print("create simple rectangle " + _dynamic.toString());
 
         return body;
     }
@@ -394,7 +402,7 @@ class GameEngine extends State {
 
         if (level != null && level.current != null) {
             for (Body obstacle in level.current.obstacles) {
-                obstacle.applyForce(new Vector2(0.0, -0.0005), obstacle.worldCenter);
+                obstacle.applyForce(new Vector2(0.0, obstacle.mass * GRAVITY * 0.98), obstacle.worldCenter);
             }
         }
 
@@ -440,7 +448,7 @@ class GameEngine extends State {
             staticBlocksSelected = true;
             updateBlockButtons(this);
         }
-        if ((Input.keys['ctrl'].down || Input.isCmdDown) && Input.keys['shift'].clicked || (Input.keys['ctrl'].clicked || Input.isCmdClicked) && Input.keys['shift'].down) {
+        if (Input.applied()) {
             querySelector('#toggle-physics').click();
         }
 
@@ -525,6 +533,8 @@ class GameEngine extends State {
 
     void saveCurrentProgress() {
         if (level != null && level.current != null) {
+            level.saveAsLastLevel();
+
             String id = 'level_' + level.chapter.toString() + '_' + level.current.index.toString();
 
             // No sense to save empty states, indeed

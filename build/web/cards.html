@@ -130,6 +130,11 @@
         <button class="get-attempts-button localized" data-lid="get_more">get more</button>
     </div>
 
+    <div class="unlimited-attempts-layout">
+        <div class="unlimited-head localized" data-lid="unlimited_attempts"></div>
+        <div class="unlimited-note localized" data-lid="unlimited_note"></div>
+    </div>
+
     <div class="rating-inner-layout">
         <div class="pause-title hidden localized" data-lid="paused">Game paused</div>
         <div class="rating-wrap">
@@ -279,7 +284,8 @@
                     id="hints-balance">2</span></div>
         </div>
         <div class="purchase-options hint-options"></div>
-    </div><div class="purchase-block">
+    </div>
+    <div class="purchase-block">
         <div class="purchase-block-head">
             <div class="purchase-headline localized" data-lid="attempts">Attempts</div>
             <div class="balance-layout"><span class="localized" data-lid="you_have">you have</span> <span
@@ -398,7 +404,7 @@
     </div>
 
     <div class="purchase-option-template">
-        <div class="purchase-option" data-item="<%=data%>">
+        <div class="purchase-option <%=disabled%>" data-item="<%=data%>">
             <div class="text-overlay"><%=name%></div>
             <span class="purchase-price"><%=price%></span>
         </div>

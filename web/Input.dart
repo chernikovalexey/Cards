@@ -142,6 +142,10 @@ class Input {
         return mouseX >= canvasX && mouseX <= canvasX + canvasWidth && mouseY >= canvasY && mouseY <= canvasY + canvasHeight;
     }
 
+    static bool applied() {
+        return (keys['ctrl'].down || isCmdDown) && keys['shift'].clicked || (keys['ctrl'].clicked || isCmdClicked) && keys['shift'].down;
+    }
+
     static void attachSingleEscClickCallback(Function callback) {
         Input.keyDown = (KeyboardEvent e) {
             if (e.keyCode == Input.keys['esc'].code) {

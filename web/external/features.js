@@ -224,12 +224,18 @@ var Features = {
         });
     },
 
-    getPurchaseOptionsPresentation: function (options) {
+    getPurchaseOptionsPresentation: function (options, unlimited, text) {
         var html = "";
-        var template = $('.purchase-option-template').html();
-        $(options).each(function () {
-            html += TemplateEngine.parseTemplate(template, this);
-        });
+
+        if (unlimited) {
+            html = text;
+        } else {
+            var template = $('.purchase-option-template').html();
+            $(options).each(function () {
+                html += TemplateEngine.parseTemplate(template, this);
+            });
+        }
+
         return html;
     },
 
@@ -238,7 +244,7 @@ var Features = {
 
     loadPurchasesWindow: function () {
         var purchases = this.getPurchases();
-        var attemptsHtml = this.getPurchaseOptionsPresentation(purchases.attempts);
+        var attemptsHtml = this.getPurchaseOptionsPresentation(purchases.attempts, Features.user.boughtAttempts === -1, '<div class="unlimited-attempts">' + locale['unlimited_attempts'] + '</div>');
         var hintsHtml = this.getPurchaseOptionsPresentation(purchases.hints);
 
         $('.hint-options').html(hintsHtml);
@@ -498,6 +504,7 @@ var VKFeatures = {
                     data: "a.100."
                 },
                 {
+                    is_infinity: true,
                     name: "∞ " + locale.attempt_form1,
                     price: "80 " + locale.vote_form1,
                     data: "a.-1."
@@ -525,10 +532,12 @@ var VKFeatures = {
                     data: "c.0."
                 }
             ]
-        }
+        };
+
         this.appendUserId(data.attempts);
         this.appendUserId(data.hints);
         this.appendUserId(data.chapters);
+
         return data;
     },
 
@@ -759,6 +768,7 @@ var FBFeatures = {
                 }
             ]
         }
+
         return data;
     },
 

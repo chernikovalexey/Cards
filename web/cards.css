@@ -394,6 +394,74 @@ button:hover:not([disabled]) {
     color: #fff;
 }
 
+.unlimited-attempts-layout {
+    top: 0;
+    position: absolute;
+    width: 300px;
+    left: calc(50% - 165px);
+    color: #fff;
+    padding: 15px;
+}
+
+.unlimited-head {
+    -webkit-animation-name: ua;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: ua;
+    -moz-animation-duration: 2s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: ua;
+    animation-duration: 2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.unlimited-note {
+    font-size: 13px;
+    opacity: 0.35;
+    margin-top: 5px;
+}
+
+@-moz-keyframes ua {
+    0% {
+        opacity: 0.75;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0.75;
+    }
+}
+
+@-webkit-keyframes ua {
+    0% {
+        opacity: 0.75;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0.75;
+    }
+}
+
+@keyframes ua {
+    0% {
+        opacity: 0.75;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0.75;
+    }
+}
+
 .attempts-left {
     padding: 15px;
     padding-bottom: 0;
@@ -890,6 +958,7 @@ button:hover:not([disabled]) {
 .locked {
     background: transparent;
     border: none;
+    cursor: default !important;
 }
 
 .tape-name {
@@ -1119,12 +1188,17 @@ button:hover:not([disabled]) {
 }
 
 .step-button {
+    border: 1px solid transparent;
     background: rgba(255, 255, 255, 0.05);
-    min-width: 100px;
+    min-width: 125px;
 }
 
 .step-button:hover:not([disabled]) {
-    background: rgba(255, 255, 255, 0.075);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.step-button:focus {
+    border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 #wizard-controls {
@@ -1438,6 +1512,14 @@ div.active-step {
 .purchase-option:hover {
     cursor: pointer;
     background: rgba(255, 255, 255, 0.125);
+}
+
+.unlimited-attempts {
+    opacity: 0.5;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 175px;
 }
 
 .text-overlay {

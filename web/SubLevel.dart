@@ -7,6 +7,7 @@ import 'cards.dart';
 import 'Traverser.dart';
 import 'EnergySprite.dart';
 import 'Color4.dart';
+import 'ParallaxManager.dart';
 
 class SubLevel {
     String name;
@@ -90,7 +91,14 @@ class SubLevel {
         this.to.userData = Sprite.to(e.world);
 
         if (l["gravity"] != null) {
-            e.world.setGravity(new Vector2(0.0, l["gravity"].toDouble()));
+            double gravity = l["gravity"].toDouble();
+            e.world.setGravity(new Vector2(0.0, gravity));
+
+            if (gravity > 0.0) {
+                parallax.modifier = ParallaxManager.UP;
+            } else {
+                parallax.modifier = ParallaxManager.DOWN;
+            }
         }
 
         for (var obstacle in l["obstacles"]) {
@@ -230,7 +238,7 @@ class SubLevel {
         completed = true;
 
         for (Body b in cards) {
-            if (!b.userData.isStatic) {
+            if (!b.userData.isStatic && b.userData.energy > 0.5) {
                 (b.userData as EnergySprite).alwaysAnimate = true;
                 (b.userData as EnergySprite).activate();
                 (b.userData as EnergySprite).connectedToEnergy = true;
