@@ -155,7 +155,7 @@ class Api
         var_dump(file_put_contents("chapter1.full.json", $_POST['arguments'][1]));
     }
 
-    public function checkPlatform($arguments)
+    public function checkPlatform(&$arguments)
     {
         switch ($this->platform) {
             case 'vk':

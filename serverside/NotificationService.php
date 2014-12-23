@@ -84,7 +84,7 @@ class NotificationService
         $platforms = $this->groupBy($notifications, 'platformId');
         $vk = $this->sendVk($platforms['vk']);
         $fb = $this->sendFb($platforms['fb']);
-        return array('vk' => $vk);
+        return array('vk' => $vk, 'fb' => $fb);
         //$this->sendVk($vk);
     }
 
@@ -140,11 +140,10 @@ class NotificationService
                 $forSend[$r][] = $byUserId[$u['uid']][0];
             }
         }
-
         $sentNotifications = array();
         foreach ($forSend as $reason => $reasonArray) {
             if ($reason != 2) //needs extra data
-                $methods->sendNotification($this->getIds($reasonArray), $this->getMessage($reason, 'ru'));
+                echo $methods->sendNotification($this->getIds($reasonArray), $this->getMessage($reason, 'ru'));
             else {
                 foreach ($reasonArray as $r) {
                     $methods->sendNotification($r['platformUserId'], $this->getMessage($reason, 'ru', $r['data']));
