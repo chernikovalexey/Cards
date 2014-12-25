@@ -402,7 +402,11 @@ class GameEngine extends State {
 
         if (level != null && level.current != null) {
             for (Body obstacle in level.current.obstacles) {
-                obstacle.applyForce(new Vector2(0.0, obstacle.mass * GRAVITY * 0.98), obstacle.worldCenter);
+                if ((obstacle.position.x - obstacle.userData.px).abs() < 0.2 || (obstacle.position.y - obstacle.userData.py).abs() < 0.2) {
+                    obstacle.userData.px = obstacle.position.x;
+                    obstacle.userData.py = obstacle.position.y;
+                    obstacle.applyForce(new Vector2(0.0, obstacle.mass * GRAVITY * 0.98), obstacle.worldCenter);
+                }
             }
         }
 

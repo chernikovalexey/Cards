@@ -23,7 +23,6 @@ class StarManager {
     }
 
     static void setResult(int chapter, int result) {
-        print("set result = " + result.toString());
         if (result < 0) {
             result = 0;
         }

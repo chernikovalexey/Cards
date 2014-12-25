@@ -215,13 +215,13 @@ class Camera {
 
     void checkTarget([bool ignoreXCheck = false, bool ignoreYCheck = false]) {
         if (!ignoreXCheck) {
-            if (mTargetX <= bx1 / GameEngine.scale) mTargetX = bx1 / GameEngine.NSCALE;
-            if (mTargetX + GameEngine.WIDTH >= bx2 / GameEngine.NSCALE) mTargetX = bx2 / GameEngine.scale - GameEngine.WIDTH;
+            if (mTargetX <= bx1 / GameEngine.NSCALE) mTargetX = bx1 / GameEngine.NSCALE;
+            if (mTargetX + GameEngine.WIDTH >= bx2 / GameEngine.NSCALE) mTargetX = bx2 / GameEngine.NSCALE - GameEngine.WIDTH;
         }
 
         if (!ignoreYCheck) {
-            if (mTargetY - GameEngine.HEIGHT <= by1 / GameEngine.scale) mTargetY = by1 / GameEngine.scale + GameEngine.HEIGHT;
-            if (mTargetY >= by2 / GameEngine.scale) mTargetY = by2 / GameEngine.scale;
+            if (mTargetY - GameEngine.HEIGHT <= by1 / GameEngine.NSCALE) mTargetY = by1 / GameEngine.NSCALE + GameEngine.HEIGHT;
+            if (mTargetY >= by2 / GameEngine.NSCALE) mTargetY = by2 / GameEngine.NSCALE;
         }
     }
 }

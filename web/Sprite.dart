@@ -27,6 +27,9 @@ class Sprite {
 
     bool enabled = true;
 
+    double px = 0.0;
+    double py = 0.0;
+
     // for dynamic obstacles only
     int id;
 
