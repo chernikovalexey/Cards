@@ -150,7 +150,7 @@ class GameEngine extends State {
 
         this.traverser = new Traverser(this);
 
-        this.bobbin = new Bobbin(() {
+        Function allAsleepCallback = ([bool cardsReady = false]) {
             traverser.reset();
 
             if (from.contactList != null) {
@@ -158,7 +158,7 @@ class GameEngine extends State {
             }
 
             if (!traverser.hasPath) {
-                if (!cards.isEmpty) {
+                if (!cards.isEmpty && cardsReady) {
                     GameWizard.showRewind();
                 }
 
@@ -172,13 +172,10 @@ class GameEngine extends State {
             if (!traverser.hasPath && frontRewind) {
                 frontRewindLevelFailed();
             }
+        };
 
-            // Push an update to the server
-            //WebApi.updateAttemptsAmount(level.current.attemptsUsed);
-        });
-
-        this.obstaclesBobbin = new Bobbin(() {
-        });
+        this.bobbin = new Bobbin(() => allAsleepCallback(true));
+        this.obstaclesBobbin = new Bobbin(() => allAsleepCallback(false));
     }
 
     void setCanvasCursor(String _class) {
@@ -225,11 +222,11 @@ class GameEngine extends State {
         bd.position = new Vector2(x + width / 2, y + height / 2);
         adjustBody(bd, _dynamic);
 
+        print("created: x=" + bd.position.x.toString() + ", y=" + bd.position.y.toString());
+
         Body body = world.createBody(bd);
         body.createFixture(fd);
         body.createFixture(createHelperFixture(width, height));
-
-        print("create simple rectangle " + _dynamic.toString());
 
         return body;
     }
@@ -493,6 +490,7 @@ class GameEngine extends State {
 
                     level.current.completed = true;
                     level.current.getRating();
+                    print('where care');
                     saveCurrentProgress();
 
                     if (!frontRewind) {
@@ -540,6 +538,8 @@ class GameEngine extends State {
             level.saveAsLastLevel();
 
             String id = 'level_' + level.chapter.toString() + '_' + level.current.index.toString();
+
+            print("on progress save: " + bobbin.list.length.toString());
 
             // No sense to save empty states, indeed
             if (ready && (window.localStorage.containsKey(id) || !cards.isEmpty)) {

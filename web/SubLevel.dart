@@ -101,10 +101,12 @@ class SubLevel {
             }
         }
 
+        print("Parsing the obstacle of level #" + index.toString());
+
         for (var obstacle in l["obstacles"]) {
             Body o;
             if (obstacle["type"] == 1 || obstacle["type"] == 5) {
-                o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE, obstacle["y"].toDouble() / GameEngine.NSCALE, obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble() / GameEngine.NSCALE, obstacle["type"] == 5);
+                o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE * e.currentZoom, obstacle["y"].toDouble() / GameEngine.NSCALE * e.currentZoom, obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble() / GameEngine.NSCALE, obstacle["type"] == 5);
             } else if (obstacle["type"] == 2 || obstacle["type"] == 6) {
                 List<Vector2> points = new List();
                 for (var p in obstacle["points"]) {
@@ -113,7 +115,11 @@ class SubLevel {
                 o = e.createMultiShape(points, obstacle["type"] == 6);
             }
 
-            Sprite s = Sprite.byType(1, e.world);
+            int type = 1;
+            if (obstacle['type'] == 5 || obstacle['type'] == 6) {
+                type = 4;
+            }
+            Sprite s = Sprite.byType(type, e.world);
             o.userData = s;
             o.userData.id = ++currentSpriteId;
 
@@ -194,14 +200,19 @@ class SubLevel {
 
     void apply() {
 //analytics.levelStart(e.level.chapter, index);
+
+        print("Applying: " + index.toString());
+
         Function f = () {
             e.camera.setBounds(x, y, x + w, y + h);
             e.camera.mTargetX = x / GameEngine.scale;
             e.camera.mTargetY = y / GameEngine.scale;
-            e.bobbin.list = this.frames;
-            e.cards = this.cards;
+            e.bobbin.list = frames;
+            e.cards = cards;
 
-            e.obstaclesBobbin.list = this.obstaclesFrames;
+            print("Frames length: " + frames.length.toString());
+
+            e.obstaclesBobbin.list = obstaclesFrames;
 
             e.from = from;
             e.from.userData = Sprite.from(e.world);

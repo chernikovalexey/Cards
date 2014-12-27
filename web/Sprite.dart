@@ -164,6 +164,10 @@ class Sprite {
                 return from(w);
             case 3:
                 return to(w);
+            case 4:
+                Sprite obstacle = ground();
+                obstacle.color = new Color4.fromRGB(200, 144, 144);
+                return obstacle;
         }
         return null;
     }

@@ -44,7 +44,7 @@ class Level {
             ++index;
             if (window.localStorage.containsKey("level_" + ch.toString() + "_" + index.toString())) {
                 Map json = JSON.decode(window.localStorage["level_" + ch.toString() + "_" + index.toString()]);
-                if (!json["cd"] && !json["cards"].isEmpty) {
+                if (!json["cd"] && !json["c"].isEmpty) {
                     found = true;
                     --index;
                     break;
@@ -162,7 +162,6 @@ class Level {
 
         GameWizard.manage(chapter, current.index);
         handleLevelChange();
-        //updateBlockButtons(engine);
     }
 
     void toggleFinishedFriends() {
@@ -299,8 +298,9 @@ class Level {
             eng.level.previous();
             eng.level.current.levelApplied = onLevelApplied;
         } else {
+            print("turned on the front rewind");
             eng.frontRewind = true;
-            applyRewindLabelToButton();
+            //applyRewindLabelToButton();
             eng.frontRewindLevelComplete = onFrontRewindLevelComplete;
             eng.frontRewindLevelFailed = onFrontRewindLevelFailed;
         }

@@ -105,6 +105,8 @@ class RatingShower {
             querySelector(".attempts-layout").classes.remove("hidden");
         }
 
+        Tooltip.closeAll();
+
         oldRating = oldR;
         newRating = rating;
         e = engine;
@@ -291,7 +293,6 @@ class RatingShower {
     static void onTypeItemClick(Event evt) {
         hide();
         e.isPaused = false;
-        e.saveCurrentProgress();
 
         int level;
 
