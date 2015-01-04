@@ -1,8 +1,6 @@
 function WebApi(method, data, callback, async) {
     var json = JSON.stringify(data);
 
-    console.log("api request:", data);
-
     var url = "/twocubes28340jfddv03jfd/serverside/index.php";
     if (document.location.href.indexOf('28340jfddv03jfd') == -1) {
         url = "/twocubes.test/serverside/index.php";
@@ -42,7 +40,7 @@ var Api = {
         });
     },
 
-    finishLevel: function (chapter, level, result, numStatic, numDynamic, attempts, timeSpent, callback) {
+    finishLevel: function (chapter, level, result, numDynamic, numStatic, attempts, timeSpent, callback) {
         WebApi(this.platform + ".finishLevel", {
             userId: this.personalId,
             chapter: chapter,

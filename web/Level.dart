@@ -144,6 +144,10 @@ class Level {
             }
             ++currentSubLevel;
             loadCurrent();
+
+            if (engine.currentZoom != 1.0) {
+                engine.centerBetweenCubes(engine.currentZoom);
+            }
         }
     }
 
@@ -301,9 +305,7 @@ class Level {
             eng.level.previous();
             eng.level.current.levelApplied = onLevelApplied;
         } else {
-            print("turned on the front rewind");
             eng.frontRewind = true;
-            //applyRewindLabelToButton();
             eng.frontRewindLevelComplete = onFrontRewindLevelComplete;
             eng.frontRewindLevelFailed = onFrontRewindLevelFailed;
         }

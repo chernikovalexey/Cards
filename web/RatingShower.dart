@@ -28,7 +28,6 @@ class RatingShower {
 
     static void nextLevel(Event event) {
         if (e.level.currentSubLevel != e.level.subLevels.length) {
-            print("current sublevel != sublevels.length");
             onTypeItemClick(event);
             return;
         }
@@ -185,7 +184,10 @@ class RatingShower {
 
             querySelector(".rating-inner-layout").classes.remove("small-margin");
         } else {
-            WebApi.finishLevel(newRating, engine.countCards(true), engine.countCards(false), e.level.current.attemptsUsed);
+            int dynamicCardsUsed = engine.countCards(false);
+            int staticCardsUsed = engine.countCards(true);
+
+            WebApi.finishLevel(newRating, dynamicCardsUsed, staticCardsUsed, e.level.current.attemptsUsed);
             e.level.current.attemptsUsed = 0;
 
             querySelector(".level-controls").classes.remove('hidden');
@@ -196,7 +198,7 @@ class RatingShower {
             querySelector(".rating-inner-layout").classes.add("small-margin");
 
             querySelector("#share-level").addEventListener("click", (event) {
-                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating)]);
+                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating), e.level.chapter, e.level.currentSubLevel, rating, dynamicCardsUsed, staticCardsUsed]);
             }, true);
         }
 
@@ -301,8 +303,6 @@ class RatingShower {
         } else if (evt.currentTarget is ButtonElement) {
             level = int.parse(querySelector(".tape-current-item").dataset['level']) + 1;
         }
-
-        print("navigate to: " + level.toString());
 
         Level.navigateToLevel(level, e);
     }

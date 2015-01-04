@@ -72,6 +72,8 @@ class SubLevel {
         this.maxDynamicBlocks = l['blocks'][1];
         this.stars = l['stars'];
 
+        alignCamera();
+
         double boundsOffset = 0.0;
         if (index > 1) {
             // Get from cube from the previous level, not from the engine!
@@ -81,8 +83,6 @@ class SubLevel {
             this.from = e.createPolygonShape(l["from"]["x"].toDouble() / GameEngine.NSCALE, l["from"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
             this.from.userData = Sprite.from(e.world, !further);
         }
-
-        alignCamera();
 
         this.to = e.createPolygonShape(l["to"]["x"].toDouble() / GameEngine.NSCALE, l["to"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
         this.to.userData = Sprite.to(e.world);
@@ -97,8 +97,6 @@ class SubLevel {
                 parallax.modifier = ParallaxManager.DOWN;
             }
         }
-
-        print("Parsing the obstacle of level #" + index.toString());
 
         for (var obstacle in l["obstacles"]) {
             Body o;
@@ -125,8 +123,6 @@ class SubLevel {
             }
 
             obstacles.add(o);
-
-            print("after creating: x=" + o.position.x.toString() + ", y=" + o.position.y.toString());
         }
 
         if (!further) {
@@ -198,18 +194,12 @@ class SubLevel {
     }
 
     void apply() {
-//analytics.levelStart(e.level.chapter, index);
-
-        print("Applying: " + index.toString());
-
         Function f = () {
             e.camera.setBounds(x, y, x + w, y + h);
             e.camera.mTargetX = x / GameEngine.scale;
             e.camera.mTargetY = y / GameEngine.scale;
             e.bobbin.list = frames;
             e.cards = cards;
-
-            print("Frames length: " + frames.length.toString());
 
             e.obstaclesBobbin.list = obstaclesFrames;
 

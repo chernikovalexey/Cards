@@ -11,12 +11,7 @@
     },
     {
         "name": "Absolutely Crazy",
-        "unlock_stars": 0,
+        "unlock_stars": 64,
         "levels": 12
-    },
-    {
-        "name": "Interstellar",
-        "unlock_stars": 0,
-        "levels": 2
     }
 ]}

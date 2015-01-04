@@ -425,8 +425,8 @@ button:hover:not([disabled]) {
 .unlimited-attempts-layout {
     top: 0;
     position: absolute;
-    width: 300px;
-    left: calc(50% - 165px);
+    width: 320px;
+    left: calc(50% - 160px - 15px);
     color: #fff;
     padding: 15px;
 }
@@ -2018,7 +2018,8 @@ div.active-step {
 .level-wall-post-template {
     width: 500px;
     height: 500px;
-    background: #000;
+    background: url(img/cover.png);
+    background-size: 500px 500px;
 }
 
 .level-wall-post-template .rating-wrap {

@@ -11,7 +11,7 @@ locale.rewind = 'Rewind';
 locale.use_hint = 'Use hint';
 locale.dynamic = 'jumper';
 locale.static = 'shelf';
-locale.motto = "Connect the cubes!";
+locale.motto = "Place blocks and connect the cubes!";
 locale.continue = 'Continue';
 locale.new_game = 'New game';
 locale.friends_in_game = 'Friends in the game';
@@ -124,3 +124,9 @@ locale.wizard_rotate = "<b>To rotate the block,</b> use your mouse wheel or butt
 locale.wizard_hints = "If you are in trouble with accomplishing this level, <b>use hints</b>";
 locale.wizard_zoom = "<b>Use zoom</b> for accuracy";
 locale.wizard_static = "Shelves don't fall when physics applied, and don't conduct energy.";
+
+// Wall posts
+locale.share_offer_text = 'Check out an excellent puzzle game! #twocubes';
+locale.completed_level_1 = "I've completed the level {0} in Two Cubes!";
+locale.completed_level_2 = "I've completed the level {0} in Two Cubes better than {1}!";
+locale.completed_level_3 = "I've completed the level {0} in Two Cubes better than {1} and {2}!";

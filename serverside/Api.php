@@ -122,7 +122,7 @@ class Api
 
         $reservedNames = array(
             'logo' => SITE_PATH . "web/img/logo.png",
-            'promo' => SITE_PATH . "web/img/logo@2x.png"
+            'promo' => SITE_PATH . "web/img/promo.png"
         );
         return $this->uploadPhotoInternal($user, $server, $reservedNames[$reservedName]);
     }

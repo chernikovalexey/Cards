@@ -29,7 +29,6 @@ class HintManager {
                     context['Api'].callMethod('call', ['getHint', new JsObject.jsify({
                         'chapter': engine.level.chapter, 'level': engine.level.currentSubLevel
                     }), (Map hints) {
-                        print(hints);
                         UserManager.set("balance", hints['user']['balance']);
                         querySelector("#hints-amount").innerHtml = hints['user']['balance'].toString();
 

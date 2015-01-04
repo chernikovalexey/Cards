@@ -56,7 +56,6 @@ class ChapterShower {
                 } else {
                     WebApi.unlockChapter(e.dataset['id']);
                     WebApi.onOrderSuccess(() {
-                        print("order success!");
                         Chapter.load(show);
                     });
                 }

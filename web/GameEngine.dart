@@ -226,8 +226,6 @@ class GameEngine extends State {
         body.createFixture(fd);
         body.createFixture(createHelperFixture(width, height));
 
-        print("creating x=" + body.position.x.toString() + ", y=" + body.position.y.toString());
-
         return body;
     }
 
@@ -525,10 +523,10 @@ class GameEngine extends State {
         };
     }
 
-    int countCards(bool countStatic) {
+    int countCards(bool isStatic) {
         int n = 0;
         for (Body c in cards) {
-            n += ((c.userData as EnergySprite).isStatic == countStatic) ? 1 : 0;
+            n += ((c.userData as EnergySprite).isStatic == isStatic) ? 1 : 0;
         }
         return n;
     }
@@ -540,8 +538,6 @@ class GameEngine extends State {
             level.saveAsLastLevel();
 
             String id = 'level_' + level.chapter.toString() + '_' + level.current.index.toString();
-
-            print("on progress save: " + bobbin.list.length.toString());
 
             // No sense to save empty states, indeed
             if (ready && (window.localStorage.containsKey(id) || !cards.isEmpty)) {
@@ -646,6 +642,15 @@ class GameEngine extends State {
         }
     }
 
+    void centerBetweenCubes(double newZoom) {
+        camera.mTargetX = from.position.x + (to.position.x - from.position.x) / 2 - WIDTH / 2;
+        camera.mTargetY = from.position.y + (to.position.y - from.position.y) / 2 - HEIGHT / 2;
+        camera.checkTarget();
+        camera.updateEngine();
+
+        currentZoom = newZoom;
+    }
+
     void zoom(bool zoomIn) {
         double zoomDelta = 0.2;
         double newZoom;
@@ -660,15 +665,8 @@ class GameEngine extends State {
             camera.beginZoom(newZoom, currentZoom);
             camera.updateZoom();
 
-            camera.mTargetX = from.position.x + (to.position.x - from.position.x) / 2 - WIDTH / 2;
-            camera.mTargetY = from.position.y + (to.position.y - from.position.y) / 2 - HEIGHT / 2;
-
             camera.ignoreAutoCheck = true;
-            camera.checkTarget();
-            camera.updateEngine();
-
-            currentZoom = newZoom;
-
+            centerBetweenCubes(newZoom);
             camera.zoomEnd = () {
                 camera.ignoreAutoCheck = false;
             };

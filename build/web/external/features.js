@@ -27,6 +27,11 @@ if (!String.prototype.format) {
     };
 }
 
+var getRandomInRange = function (floor, ceil, not) {
+    var rand = Math.floor(Math.random() * (1 + ceil - floor)) + floor;
+    return not != undefined ? (rand === not ? getRandomInRange(floor, ceil, not) : rand) : rand;
+};
+
 var extendAndOverride = function (o1, o2) {
     for (var key in o2) {
         o1[key] = o2[key];
@@ -113,6 +118,11 @@ var Features = {
     initialized: false,
     onLoaded: function () {
     },
+    platformUser: {
+        first_name: '',
+        last_name: '',
+        photo: ''
+    },
     user: {},
     chapters: {},
     results_by_chapters: {},
@@ -127,12 +137,10 @@ var Features = {
         }
     },
 
-    showFinishedFriends: function (chapter, level, callback) {
+    getFinishedUsersAsSortedArray: function (obj) {
         var users = [];
 
-        $('.finished-friends').empty();
-
-        $.each(Features.chapters[chapter][level], function (k, v) {
+        $.each(obj, function (k, v) {
             users.push($.extend(v, {
                 id: k.replace("u", "")
             }));
@@ -140,7 +148,15 @@ var Features = {
 
         users.sort(user_sort);
 
+        return users;
+    },
+
+    showFinishedFriends: function (chapter, level, callback) {
+        $('.finished-friends').empty();
+
+        var users = Features.getFinishedUsersAsSortedArray(Features.chapters[chapter][level]);
         var counter = 0;
+
         $(users).each(function () {
             $('.finished-friends').append(TemplateEngine.parseTemplate($('.finished-friend-template').html(), $.extend(this, {
                 pos: ++counter
@@ -201,8 +217,8 @@ var Features = {
         return r;
     },
 
-    onLevelFinish: function (chapter, level, result, numStatic, numDynamic, attempts, timeSpent) {
-        Api.finishLevel(chapter, level, result, numStatic, numDynamic, attempts, timeSpent, function (data) {
+    onLevelFinish: function (chapter, level, result, numDynamic, numStatic, attempts, timeSpent) {
+        Api.finishLevel(chapter, level, result, numDynamic, numStatic, attempts, timeSpent, function (data) {
             console.log(data);
         });
     },
@@ -283,16 +299,14 @@ var VKFeatures = {
                 VK.api('photos.getWallUploadServer', {}, function (data) {
                     if (data.response) {
                         Api.call("uploadPhotoReserved", {server: data.response.upload_url, photo: "promo"}, function (upload_response) {
-                            console.log('upload resp', upload_response);
                             VK.api("photos.saveWallPhoto", {
                                 user_id: Features.user.platformUserId,
                                 photo: upload_response.photo,
                                 server: upload_response.server,
                                 hash: upload_response.hash
                             }, function (save_response) {
-                                console.log('save resp', save_response);
                                 VK.api("wall.post", {
-                                    message: "Пацаны, давайте поиграем в Два Куба ))",
+                                    message: locale.share_offer_text,
                                     attachments: save_response.response[0].id + ",https://vk.com/twocubes"
                                 });
                             });
@@ -311,7 +325,7 @@ var VKFeatures = {
         });
     },
 
-    prepareLevelWallPost: function (level_name, stars_html) {
+    prepareLevelWallPost: function (level_name, stars_html, chapter, level, result, _dynamic, _static) {
         var upload = function (permission) {
             if (!(permission & 4)) {
                 return false;
@@ -319,6 +333,40 @@ var VKFeatures = {
                 VK.api('photos.getWallUploadServer', {}, function (data) {
                     if (data.response) {
                         var upload_url = data.response.upload_url;
+
+                        var current_level_users = $.extend(true, {}, Features.chapters[chapter][level]);
+                        current_level_users['u' + Features.user.platformUserId] = {
+                            name: Features.platformUser.first_name,
+                            surname: Features.platformUser.last_name,
+                            result: result,
+                            static: _static,
+                            dynamic: _dynamic,
+                            id: Features.user.platformUserId,
+                            ava: Features.platformUser.photo
+                        };
+
+                        var users = Features.getFinishedUsersAsSortedArray(current_level_users);
+                        var current_user_index;
+
+                        for (var i = 0, len = users.length; i < len; ++i) {
+                            if (users[i].id == Features.user.platformUserId) {
+                                current_user_index = i;
+                                break;
+                            }
+                        }
+
+                        var text;
+                        if (users.length - current_user_index - 1 >= 2) {
+                            var rand1 = getRandomInRange(current_user_index, users.length - 1);
+                            var rand2 = getRandomInRange(current_user_index, users.length - 1, rand1);
+
+                            text = locale.completed_level_3.format(level_name, '*id' + users[rand1].id + ' (' + users[rand1].name + ' ' + users[rand1].surname + ')', '*id' + users[rand2].id + ' (' + users[rand2].name + ' ' + users[rand2].surname + ')');
+                        } else if (users.length - current_user_index - 1 >= 1) {
+                            var rand1 = getRandomInRange(current_user_index, users.length - 1);
+                            text = locale.completed_level_2.format(level_name, '*id' + users[rand1].id + ' (' + users[rand1].name + ' ' + users[rand1].surname + ')');
+                        } else {
+                            text = locale.completed_level_1.format(level_name);
+                        }
 
                         $('.level-wall-post-template').find('.s-level-name').html(level_name);
                         $('.level-wall-post-template').find('.level-rating').html(stars_html);
@@ -334,7 +382,7 @@ var VKFeatures = {
                                         hash: upload_response.hash
                                     }, function (save_response) {
                                         VK.api("wall.post", {
-                                            message: "I've completed level " + level_name + " in Two Cubes!/n#twocubes",
+                                            message: text,
                                             attachments: save_response.response[0].id
                                         });
                                     });
@@ -356,6 +404,12 @@ var VKFeatures = {
     },
 
     initFields: function (callback) {
+        VK.api("users.get", {fields: 'photo_medium'}, function (data) {
+            Features.platformUser.first_name = data.response[0].first_name;
+            Features.platformUser.last_name = data.response[0].last_name;
+            Features.platformUser.photo = data.response[0].photo_medium;
+        });
+
         VK.api("friends.get", {fields: "domain, photo_50"}, function (data) {
             Api.setFriendsList(Features.toIdArray(data.response));
             Features.friends = data.response;
@@ -365,6 +419,13 @@ var VKFeatures = {
             Api.setPersonalId(qs['viewer_id']);
             Api.setPlatform('vk');
             callback();
+        });
+
+        VK.api("friends.get", {fields: 'name', name_case: 'gen'}, function (data) {
+            for (var i = 0, len = data.response.length; i < len; ++i) {
+                Features.friends[i].first_name_gen = data.response[i].first_name;
+                Features.friends[i].last_name_gen = data.response[i].last_name;
+            }
         });
     },
 
@@ -383,7 +444,9 @@ var VKFeatures = {
             id: fr.uid,
             ava: fr.photo_50,
             name: fr.first_name,
-            surname: fr.last_name
+            surname: fr.last_name,
+            name_gen: fr.first_name_gen,
+            surname_gen: fr.last_name_gen
         };
     },
 
