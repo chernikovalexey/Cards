@@ -74,9 +74,6 @@ class SubLevel {
 
         double boundsOffset = 0.0;
         if (index > 1) {
-            x += e.to.position.x - GameEngine.ENERGY_BLOCK_WIDTH / 2;
-            y += e.to.position.y - GameEngine.ENERGY_BLOCK_HEIGHT / 2;
-
             // Get from cube from the previous level, not from the engine!
             this.from = e.level.subLevels[index - 2].to;
             this.from.userData = Sprite.from(e.world, !further);
@@ -106,7 +103,7 @@ class SubLevel {
         for (var obstacle in l["obstacles"]) {
             Body o;
             if (obstacle["type"] == 1 || obstacle["type"] == 5) {
-                o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE * e.currentZoom, obstacle["y"].toDouble() / GameEngine.NSCALE * e.currentZoom, obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble() / GameEngine.NSCALE, obstacle["type"] == 5);
+                o = e.createPolygonShape(obstacle["x"].toDouble() / GameEngine.NSCALE, obstacle["y"].toDouble() / GameEngine.NSCALE, obstacle["width"].toDouble() / GameEngine.NSCALE, obstacle["height"].toDouble() / GameEngine.NSCALE, obstacle["type"] == 5);
             } else if (obstacle["type"] == 2 || obstacle["type"] == 6) {
                 List<Vector2> points = new List();
                 for (var p in obstacle["points"]) {
@@ -128,6 +125,8 @@ class SubLevel {
             }
 
             obstacles.add(o);
+
+            print("after creating: x=" + o.position.x.toString() + ", y=" + o.position.y.toString());
         }
 
         if (!further) {

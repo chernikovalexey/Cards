@@ -120,7 +120,10 @@ class Api
     public function uploadPhotoReserved(array $user, $server, $reservedName)
     {
 
-        $reservedNames = array('logo' => SITE_PATH . "web/img/logo.png");
+        $reservedNames = array(
+            'logo' => SITE_PATH . "web/img/logo.png",
+            'promo' => SITE_PATH . "web/img/logo@2x.png"
+        );
         return $this->uploadPhotoInternal($user, $server, $reservedNames[$reservedName]);
     }
 

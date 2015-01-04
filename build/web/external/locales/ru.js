@@ -1,5 +1,6 @@
 var locale = {};
 
+locale.share_offer = 'Рассказать друзьям об игре!';
 locale.loading = 'ЗАГРУЗКА ...';
 locale.view_controls = 'Управление';
 locale.show_goal = 'Цель игры';

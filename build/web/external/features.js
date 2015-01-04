@@ -275,6 +275,42 @@ var VKFeatures = {
     scrollParentTop: function () {
     },
 
+    shareWithFriends: function () {
+        var upload = function (permission) {
+            if (!(permission & 4)) {
+                return false;
+            } else {
+                VK.api('photos.getWallUploadServer', {}, function (data) {
+                    if (data.response) {
+                        Api.call("uploadPhotoReserved", {server: data.response.upload_url, photo: "promo"}, function (upload_response) {
+                            console.log('upload resp', upload_response);
+                            VK.api("photos.saveWallPhoto", {
+                                user_id: Features.user.platformUserId,
+                                photo: upload_response.photo,
+                                server: upload_response.server,
+                                hash: upload_response.hash
+                            }, function (save_response) {
+                                console.log('save resp', save_response);
+                                VK.api("wall.post", {
+                                    message: "Пацаны, давайте поиграем в Два Куба ))",
+                                    attachments: save_response.response[0].id + ",https://vk.com/twocubes"
+                                });
+                            });
+                        });
+                    }
+                });
+                return true;
+            }
+        };
+
+        VK.api('account.getAppPermissions', function (r) {
+            if (!upload(r.response)) {
+                VK.callMethod("showSettingsBox", 4);
+                VK.addCallback("onSettingsChanged", upload);
+            }
+        });
+    },
+
     prepareLevelWallPost: function (level_name, stars_html) {
         var upload = function (permission) {
             if (!(permission & 4)) {

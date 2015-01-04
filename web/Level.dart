@@ -153,6 +153,9 @@ class Level {
                 subLevels.add(load(i + 1));
             }
 
+            engine.bobbin.erase();
+            engine.obstaclesBobbin.erase();
+
             WebApi.levelStart(chapter, currentSubLevel);
         } else {
             current = subLevels[currentSubLevel - 1];

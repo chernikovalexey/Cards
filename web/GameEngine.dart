@@ -222,11 +222,11 @@ class GameEngine extends State {
         bd.position = new Vector2(x + width / 2, y + height / 2);
         adjustBody(bd, _dynamic);
 
-        print("created: x=" + bd.position.x.toString() + ", y=" + bd.position.y.toString());
-
         Body body = world.createBody(bd);
         body.createFixture(fd);
         body.createFixture(createHelperFixture(width, height));
+
+        print("creating x=" + body.position.x.toString() + ", y=" + body.position.y.toString());
 
         return body;
     }
@@ -353,6 +353,8 @@ class GameEngine extends State {
         (bcard.b.userData as Sprite).isHidden = !visible;
     }
 
+    int i = 0;
+
     @override
     void update(num delta) {
         if (!ready || isPaused) {
@@ -394,6 +396,7 @@ class GameEngine extends State {
                 bobbin.erase();
                 obstaclesBobbin.erase();
                 if (bobbin.rewindComplete != null) bobbin.rewindComplete();
+                if (obstaclesBobbin.rewindComplete != null) obstaclesBobbin.rewindComplete();
             }
         }
 
@@ -490,7 +493,6 @@ class GameEngine extends State {
 
                     level.current.completed = true;
                     level.current.getRating();
-                    print('where care');
                     saveCurrentProgress();
 
                     if (!frontRewind) {

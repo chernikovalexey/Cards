@@ -94,15 +94,43 @@ void main() {
         }
     });
 
+    Element shareOffer = querySelector(".share-offer");
+    Element logo = querySelector(".logo");
+    Element instructions = querySelector(".instructions");
+
+    Function slideMenuTop = () {
+        animate(shareOffer, properties: {
+            'top': -75
+        }, easing: Easing.SINUSOIDAL_EASY_IN_OUT, duration: 125);
+
+        animate(logo, properties: {
+            'margin-top': 50
+        }, easing: Easing.SINUSOIDAL_EASY_IN_OUT, duration: 225);
+
+        animate(instructions, properties: {
+            'margin-bottom': 115
+        }, easing: Easing.SINUSOIDAL_EASY_IN_OUT, duration: 225);
+    };
+
     Function onLoadedCallback = () {
         showMainMenu();
 
-        /*if (window.localStorage.containsKey("last_attempts_used")) {
-            lastAttemptsUsed = int.parse(window.localStorage['last_attempts_used']);
-            print(lastAttemptsUsed);
-            window.localStorage.remove('last_attempts_used');
-            WebApi.updateAttemptsAmount(lastAttemptsUsed);
-        }*/
+        Storage storage = window.localStorage;
+        if (!storage.containsKey("last_share_offer") || new DateTime.now().difference(DateTime.parse(storage['last_share_offer'])).inHours >= 24) {
+            storage['last_share_offer'] = new DateTime.now().toString();
+            new Timer(new Duration(milliseconds: 750), () {
+                animate(shareOffer, properties: {
+                    'top': 17
+                }, easing: Easing.SINUSOIDAL_EASY_IN_OUT, duration: 125);
+
+                shareOffer.addEventListener("click", (event) {
+                    context['Features'].callMethod('shareWithFriends');
+                    slideMenuTop();
+                }, true);
+            });
+        } else {
+            slideMenuTop();
+        }
 
         Chapter.load((List chapters) {
             context['Features'].callMethod("hideLoading");

@@ -1,5 +1,6 @@
 var locale = {};
 
+locale.share_offer = 'Tell friends about the game!';
 locale.loading = 'LOADING ...';
 locale.view_controls = 'View controls';
 locale.show_goal = 'Goal of the game';
@@ -10,7 +11,7 @@ locale.rewind = 'Rewind';
 locale.use_hint = 'Use hint';
 locale.dynamic = 'jumper';
 locale.static = 'shelf';
-locale.motto = "Connect the cubes!";
+locale.motto = "Place blocks and connect the cubes!";
 locale.continue = 'Continue';
 locale.new_game = 'New game';
 locale.friends_in_game = 'Friends in the game';

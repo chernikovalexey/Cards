@@ -1,5 +1,6 @@
 var locale = {};
 
+locale.share_offer = 'Рассказать друзьям об игре!';
 locale.loading = 'ЗАГРУЗКА ...';
 locale.view_controls = 'Управление';
 locale.show_goal = 'Цель игры';
@@ -10,7 +11,7 @@ locale.rewind = 'Назад';
 locale.use_hint = 'Подсказка';
 locale.dynamic = 'прыгун';
 locale.static = 'полка';
-locale.motto = "Соедините два куба!";
+locale.motto = "Ставьте блоки и соединяйте кубы!";
 locale.continue = 'Продолжить';
 locale.new_game = 'Новая игра';
 locale.friends_in_game = 'Друзья в игре';

@@ -32,7 +32,6 @@ class Bobbin {
         }
 
         if (numAsleep == cards.length && !callbackFired) {
-            //analytics.applyPhysics(engine.level.chapter, engine.level.currentSubLevel);
             allAsleep();
             callbackFired = true;
         }
