@@ -138,6 +138,8 @@ void main() {
             LevelSerializer.syncVersions();
 
             querySelector("#continue").addEventListener("click", (event) {
+                slideMenuTop();
+
                 manager.removeState(engine);
                 manager.addState(engine, {
                     'continue': true, 'chapter': JSON.decode(window.localStorage["last"])["chapter"]
@@ -154,6 +156,8 @@ void main() {
             }, false);
 
             querySelector("#new-game").addEventListener("click", (event) {
+                slideMenuTop();
+
                 querySelector("#menu-box").classes.add("hidden");
 
                 fadeBoxIn(querySelector("#chapter-selection"));

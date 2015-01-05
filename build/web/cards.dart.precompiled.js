@@ -8742,7 +8742,7 @@ y=z.getItem("last_share_offer")==null||C.CD.cU(P.Gi().E8(P.zu(z.getItem("last_sh
 x=this.f
 if(y){z.setItem("last_share_offer",P.Gi().bu(0))
 P.rT(P.k5(0,0,0,750,0,0),new T.VW(this.e,x))}else x.call$0()
-D.d0(new T.oZ())
+D.d0(new T.oZ(x))
 y=$.cM()
 w=J.q8(J.UQ(J.UQ(y,"Features"),"friends_in_game"))
 v=J.UQ(y,"Features").V7("getNounPlural",[w,J.UQ(J.UQ(y,"locale"),"play_form1"),J.UQ(J.UQ(y,"locale"),"play_form2"),J.UQ(J.UQ(y,"locale"),"play_form3")])
@@ -8762,15 +8762,18 @@ call$1:[function(a){J.UQ($.cM(),"Features").nQ("shareWithFriends")
 this.Gq.call$0()},"call$1",null,2,0,null,10,[],"call"],
 $isEH:true},
 oZ:{
-"^":"d9:469;",
-call$1:[function(a){J.UQ($.cM(),"Features").nQ("hideLoading")
+"^":"d9:469;Rm",
+call$1:[function(a){var z
+J.UQ($.cM(),"Features").nQ("hideLoading")
 Q.Zw()
-J.qV(document.querySelector("#continue"),"click",new T.jr(),!1)
-J.qV(document.querySelector("#new-game"),"click",new T.ql(a),!1)},"call$1",null,2,0,null,5,[],"call"],
+z=this.Rm
+J.qV(document.querySelector("#continue"),"click",new T.jr(z),!1)
+J.qV(document.querySelector("#new-game"),"click",new T.ql(z,a),!1)},"call$1",null,2,0,null,5,[],"call"],
 $isEH:true},
 jr:{
-"^":"d9:250;",
+"^":"d9:250;w3",
 call$1:[function(a){var z,y,x
+this.w3.call$0()
 z=$.OA
 y=$.Jg
 C.Nm.Rz(z.C6,y)
@@ -8789,10 +8792,11 @@ J.pP(document.querySelector(".buttons")).Rz(0,"hidden")
 J.pP(document.querySelector(".selectors")).Rz(0,"hidden")},"call$0",null,0,0,null,"call"],
 $isEH:true},
 ql:{
-"^":"d9:250;Rm",
-call$1:[function(a){J.pP(document.querySelector("#menu-box")).h(0,"hidden")
+"^":"d9:250;HZ,mG",
+call$1:[function(a){this.HZ.call$0()
+J.pP(document.querySelector("#menu-box")).h(0,"hidden")
 T.dH(document.querySelector("#chapter-selection"),500,null)
-O.cs(this.Rm)},"call$1",null,2,0,null,10,[],"call"],
+O.cs(this.mG)},"call$1",null,2,0,null,10,[],"call"],
 $isEH:true},
 ed:{
 "^":"d9:250;",
@@ -8867,9 +8871,9 @@ emv:{
 call$1:[function(a){J.qV(a,"click",new T.BT(a),!1)},"call$1",null,2,0,null,323,[],"call"],
 $isEH:true},
 BT:{
-"^":"d9:250;w3",
+"^":"d9:250;xC",
 call$1:[function(a){var z,y,x,w
-z=this.w3
+z=this.xC
 y=J.RE(z)
 x=y.gDD(z).lF().tg(0,"static")
 w=$.Jg
@@ -18982,12 +18986,12 @@ if(!"name" in N2)N2.name="N2"
 $desc=$collectedClasses.N2
 if($desc instanceof Array)$desc=$desc[1]
 N2.prototype=$desc
-function oZ(){}oZ.builtin$cls="oZ"
+function oZ(Rm){this.Rm=Rm}oZ.builtin$cls="oZ"
 if(!"name" in oZ)oZ.name="oZ"
 $desc=$collectedClasses.oZ
 if($desc instanceof Array)$desc=$desc[1]
 oZ.prototype=$desc
-function jr(){}jr.builtin$cls="jr"
+function jr(w3){this.w3=w3}jr.builtin$cls="jr"
 if(!"name" in jr)jr.name="jr"
 $desc=$collectedClasses.jr
 if($desc instanceof Array)$desc=$desc[1]
@@ -18997,7 +19001,8 @@ if(!"name" in Ws)Ws.name="Ws"
 $desc=$collectedClasses.Ws
 if($desc instanceof Array)$desc=$desc[1]
 Ws.prototype=$desc
-function ql(Rm){this.Rm=Rm}ql.builtin$cls="ql"
+function ql(HZ,mG){this.HZ=HZ
+this.mG=mG}ql.builtin$cls="ql"
 if(!"name" in ql)ql.name="ql"
 $desc=$collectedClasses.ql
 if($desc instanceof Array)$desc=$desc[1]
@@ -19062,7 +19067,7 @@ if(!"name" in emv)emv.name="emv"
 $desc=$collectedClasses.emv
 if($desc instanceof Array)$desc=$desc[1]
 emv.prototype=$desc
-function BT(w3){this.w3=w3}BT.builtin$cls="BT"
+function BT(xC){this.xC=xC}BT.builtin$cls="BT"
 if(!"name" in BT)BT.name="BT"
 $desc=$collectedClasses.BT
 if($desc instanceof Array)$desc=$desc[1]
