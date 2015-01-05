@@ -22,10 +22,9 @@ function endsWith($haystack, $needle)
     return (substr($haystack, -$length) === $needle);
 }
 
-
 try {
     $connectionString = "mysql:host=104.131.127.236;dbname=twocubes";
-    if (!endsWith(SITE_PATH, '28340jfddv03jfd')) {
+    if (!endsWith(SITE_PATH, '28340jfddv03jfd' . DIRECTORY_SEPARATOR)) {
         $connectionString .= '.test';
         define('TEST', true, true);
     } else {
@@ -36,6 +35,7 @@ try {
         define("VK_SECRET_KEY", "qMTyaAdaQz4dC81H8PIK", true);
         define("VK_APP_ID", 4649460, true);
     } else {
+
         define("VK_SECRET_KEY", "e8tBn39YovCQNsKX9WKK", true);
         define("VK_APP_ID", 4394659, true);
     }
