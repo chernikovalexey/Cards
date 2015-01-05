@@ -115,30 +115,17 @@ class DB
 
     public function result($chapter, $level, $result, $numStatic, $numDynamic, array $user, $platform)
     {
-        $sql = $this->db->prepare("SELECT * FROM tcardresults WHERE userId=? AND chapterId=? AND levelId=?");
-        $sql->bindValue(1, $user['userId'], PDO::PARAM_INT);
-        $sql->bindValue(2, $chapter, PDO::PARAM_INT);
-        $sql->bindValue(3, $level, PDO::PARAM_INT);
+        $sql = $this->db->prepare("INSERT INTO tcardresults (`userId`, `chapterId`, `levelId`, `result`, `time`, `numStatic`, `numDynamic`)
+  VALUES (:user, :chapter, :level, :result, :time, :static, :dynamic)
+ON DUPLICATE KEY UPDATE result = :result");
+        $sql->bindValue('user', $user['userId'], PDO::PARAM_INT);
+        $sql->bindValue('chapter', $chapter, PDO::PARAM_INT);
+        $sql->bindValue('level', $level, PDO::PARAM_INT);
+        $sql->bindValue('result', $result, PDO::PARAM_INT);
+        $sql->bindValue('time', time(), PDO::PARAM_INT);
+        $sql->bindValue('static', $numStatic, PDO::PARAM_INT);
+        $sql->bindValue('dynamic', $numDynamic, PDO::PARAM_INT);
         $sql->execute();
-        if ($rslt = $sql->fetch()) {
-            $sql = $this->db->prepare("UPDATE tcardresults SET result = ?, `time`=?, `numStatic`=?, `numDynamic`=? WHERE id=?");
-            $sql->bindValue(1, $result, PDO::PARAM_INT);
-            $sql->bindValue(2, time(), PDO::PARAM_INT);
-            $sql->bindValue(3, $numStatic, PDO::PARAM_INT);
-            $sql->bindValue(4, $numDynamic, PDO::PARAM_INT);
-            $sql->bindParam(5, $rslt['id'], PDO::PARAM_INT);
-            $sql->execute();
-        } else {
-            $sql = $this->db->prepare("INSERT INTO tcardresults(`userId`, `chapterId`, `levelId`, `result`, `time`, `numStatic`, `numDynamic`) VALUES(?,?,?,?,?,?,?)");
-            $sql->bindValue(1, $user['userId'], PDO::PARAM_INT);
-            $sql->bindValue(2, $chapter, PDO::PARAM_INT);
-            $sql->bindValue(3, $level, PDO::PARAM_INT);
-            $sql->bindValue(4, $result, PDO::PARAM_INT);
-            $sql->bindValue(5, time(), PDO::PARAM_INT);
-            $sql->bindValue(6, $numStatic, PDO::PARAM_INT);
-            $sql->bindValue(7, $numDynamic, PDO::PARAM_INT);
-            $sql->execute();
-        }
         return true;
     }
 

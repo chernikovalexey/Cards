@@ -44,6 +44,7 @@ class Api
 
     public function finishLevel(array $user, $chapter, $level, $result, $numStatic, $numDynamic, $attempts, $timeSpent)
     {
+
         Analytics::push(new AnalyticsEvent("level", "finish", array(
             'area' => 'c' . $chapter . 'l' . $level,
             'chapter' => $chapter,
