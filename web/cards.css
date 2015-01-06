@@ -1332,6 +1332,8 @@ div.active-step {
     height: 29px;
     background: rgba(255, 255, 255, 0.09375);
     margin: 0 5px;
+    top: 2px;
+    position: relative;
 }
 
 .topbar-show-controls, .show-goal {
