@@ -536,7 +536,6 @@ button:hover:not([disabled]) {
 .current-level-name {
     font-size: 24px;
     color: #fff;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
     letter-spacing: 1px;
 }
 
@@ -559,7 +558,6 @@ button:hover:not([disabled]) {
 .current-chapter-name {
     font-size: 36px;
     color: #fff;
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.35);
     letter-spacing: 2px;
 }
 
@@ -1674,7 +1672,7 @@ div.active-step {
     user-select: none;
     display: inline-table;
     vertical-align: middle;
-    z-index: 99;
+    z-index: 999;
 }
 
 .card-users {
@@ -2031,6 +2029,10 @@ div.active-step {
 
 .level-wall-post-template .s-level-name {
     font-size: 48px;
+}
+
+.share-succeeded {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (   min--moz-device-pixel-ratio: 2), only screen and (     -o-min-device-pixel-ratio: 2/1), only screen and (        min-device-pixel-ratio: 2), only screen and (                min-resolution: 192dpi), only screen and (                min-resolution: 2dppx) {

@@ -2033,6 +2033,10 @@ div.active-step {
     font-size: 48px;
 }
 
+.share-succeeded {
+    color: rgba(255, 255, 255, 0.5);
+}
+
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (   min--moz-device-pixel-ratio: 2), only screen and (     -o-min-device-pixel-ratio: 2/1), only screen and (        min-device-pixel-ratio: 2), only screen and (                min-resolution: 192dpi), only screen and (                min-resolution: 2dppx) {
     .logo {
         background: url(img/logo@2x.png);

@@ -69,6 +69,7 @@ class GameEngine extends State {
     bool ready = false;
     bool canFinishLevel = true;
     bool finishedCurrentLevel = false;
+    bool traversed = false;
 
     World world;
     DefaultWorldPool pool;
@@ -172,6 +173,8 @@ class GameEngine extends State {
             if (!traverser.hasPath && frontRewind) {
                 frontRewindLevelFailed();
             }
+
+            traversed = true;
         };
 
         this.bobbin = new Bobbin(() => allAsleepCallback(true));
@@ -315,6 +318,7 @@ class GameEngine extends State {
     }
 
     void togglePhysics(bool active) {
+        traversed = false;
         physicsEnabled = active;
 
         if (physicsEnabled) {
@@ -400,15 +404,53 @@ class GameEngine extends State {
 
         if (level != null && level.current != null) {
             for (Body obstacle in level.current.obstacles) {
-                if ((obstacle.position.x - obstacle.userData.px).abs() < 0.2 || (obstacle.position.y - obstacle.userData.py).abs() < 0.2) {
-                    obstacle.userData.px = obstacle.position.x;
-                    obstacle.userData.py = obstacle.position.y;
-                    obstacle.applyForce(new Vector2(0.0, obstacle.mass * GRAVITY * 0.98), obstacle.worldCenter);
+                obstacle.userData.px = obstacle.position.x;
+                obstacle.userData.py = obstacle.position.y;
+
+                double mass = obstacle.mass;
+                if (mass == 0.0) {
+                    mass += 0.01;
                 }
+
+                if (obstacle.userData.gravity != 0.0) {
+                    obstacle.applyForce(new Vector2(0.0, obstacle.userData.gravity), obstacle.worldCenter);
+                } else {
+                    obstacle.applyForce(new Vector2(0.0, mass * GRAVITY * 0.98), obstacle.worldCenter);
+                }
+            }
+
+            for (Body card in cards) {
+                card.userData.px = card.position.x;
+                card.userData.py = card.position.y;
             }
         }
 
         world.step(1.0 / 60, 10, 10);
+
+        if (level != null && level.current != null) {
+            for (Body obstacle in level.current.obstacles) {
+                double minDelta = 0.00001;
+                if (obstacle.userData.gravity.abs() > 0.1 || obstacle.userData.gravity == 0.0) {
+                    minDelta = 0.001;
+                }
+
+                if ((obstacle.userData.px - obstacle.position.x).abs() <= minDelta && (obstacle.userData.py - obstacle.position.y).abs() <= minDelta) {
+                    obstacle.awake = false;
+                }
+            }
+
+            for (Body card in cards) {
+                double minDelta = 0.001;
+                if (level.current.gravity.abs() > 0.1) {
+                    minDelta = 0.0000001;
+                }
+
+                if (traversed && !traverser.hasPath && (card.userData.px - card.position.x).abs() <= minDelta && (card.userData.py - card.position.y).abs() <= minDelta) {
+                    card.awake = false;
+                }
+            }
+        }
+
         if (bcard != null) {
             bcard.update();
         }

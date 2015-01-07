@@ -91,6 +91,7 @@ var Features = {
     },
 
     updateLoadingBar: function (percentage, callback) {
+        console.log(percentage);
         $('.running-bar').animate({width: 600 * percentage / 100}, 150, 'easeOutQuart', callback || function () {
         });
     },
@@ -127,6 +128,7 @@ var Features = {
     chapters: {},
     results_by_chapters: {},
     friends_in_game: [],
+    friends: [],
     orderListener: null,
 
     setOnLoadedCallback: function (callback) {
@@ -282,6 +284,22 @@ var Features = {
     },
 
     scrollParentTop: function () {
+    },
+
+    resetSharing: function () {
+        $('#share-level').removeClass('share-succeeded').removeAttr('disabled').html(locale.share_result);
+    },
+
+    startSharing: function () {
+        $('#share-level').addClass('share-succeeded').attr('disabled', 'disabled').html(locale.sharing_process);
+    },
+
+    failSharing: function () {
+        Features.resetSharing();
+    },
+
+    successSharing: function () {
+        $('#share-level').addClass('share-succeeded').html(locale.shared);
     }
 };
 
@@ -328,6 +346,7 @@ var VKFeatures = {
     prepareLevelWallPost: function (level_name, stars_html, chapter, level, result, _dynamic, _static) {
         var upload = function (permission) {
             if (!(permission & 4)) {
+                Features.failSharing();
                 return false;
             } else {
                 VK.api('photos.getWallUploadServer', {}, function (data) {
@@ -357,12 +376,12 @@ var VKFeatures = {
 
                         var text;
                         if (users.length - current_user_index - 1 >= 2) {
-                            var rand1 = getRandomInRange(current_user_index, users.length - 1);
+                            var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
                             var rand2 = getRandomInRange(current_user_index, users.length - 1, rand1);
 
                             text = locale.completed_level_3.format(level_name, '*id' + users[rand1].id + ' (' + users[rand1].name + ' ' + users[rand1].surname + ')', '*id' + users[rand2].id + ' (' + users[rand2].name + ' ' + users[rand2].surname + ')');
                         } else if (users.length - current_user_index - 1 >= 1) {
-                            var rand1 = getRandomInRange(current_user_index, users.length - 1);
+                            var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
                             text = locale.completed_level_2.format(level_name, '*id' + users[rand1].id + ' (' + users[rand1].name + ' ' + users[rand1].surname + ')');
                         } else {
                             text = locale.completed_level_1.format(level_name);
@@ -384,7 +403,7 @@ var VKFeatures = {
                                         VK.api("wall.post", {
                                             message: text,
                                             attachments: save_response.response[0].id
-                                        });
+                                        }, Features.successSharing);
                                     });
                                 });
                             }
@@ -394,6 +413,8 @@ var VKFeatures = {
                 return true;
             }
         };
+
+        Features.startSharing();
 
         VK.api('account.getAppPermissions', function (r) {
             if (!upload(r.response)) {
@@ -419,13 +440,6 @@ var VKFeatures = {
             Api.setPersonalId(qs['viewer_id']);
             Api.setPlatform('vk');
             callback();
-        });
-
-        VK.api("friends.get", {fields: 'name', name_case: 'gen'}, function (data) {
-            for (var i = 0, len = data.response.length; i < len; ++i) {
-                Features.friends[i].first_name_gen = data.response[i].first_name;
-                Features.friends[i].last_name_gen = data.response[i].last_name;
-            }
         });
     },
 
@@ -477,15 +491,12 @@ var VKFeatures = {
                 Api.auth_key = qs['auth_key'];
                 Api.initialRequest(function (data) {
                     if (data.error === true) {
-                        document.body.innerHTML = JSON.stringify(data);
-                        alert(data.message);
-                        return;
+                        console.log(data.message);
                     }
                     Features.updateLoadingBar(85);
 
                     console.log("initial request vk:", data);
                     Features.user = data.user;
-//                    Features.user.allAttempts = 0;
 
                     var results_by_chapters = {};
 
@@ -654,18 +665,131 @@ var VKFeatures = {
     }
 };
 
+function publishStream(img, level_name, text) {
+    var accessToken = "";
+
+    FB.getLoginStatus(function (response) {
+        if (response.status === 'connected') {
+            var uid = response.authResponse.userID;
+            accessToken = response.authResponse.accessToken;
+        }
+        else if (response.status === 'not_authorized') {
+            // the user is logged in to Facebook,
+            // but has not authenticated your app
+        }
+        else {
+            // the user isn't logged in to Facebook.
+        }
+    });
+
+    var imageData = img;
+    try {
+        blob = dataURItoBlob(imageData);
+    }
+    catch (e) {
+        console.log(e);
+    }
+
+    var fd = new FormData();
+    fd.append("access_token", accessToken);
+    fd.append("source", blob);
+    fd.append("message", text);
+    fd.append("no_story", true);
+
+    try {
+        $.ajax({
+            url: "https://graph.facebook.com/me/photos?access_token=" + accessToken,
+            type: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function (data) {
+                console.log("success ", data);
+
+                FB.api('/' + data.id, function (r) {
+                    var url = r.source;
+
+                    var res = "http://twopeoplesoftware.com/twocubes28340jfddv03jfd/serverside/index.php?method=fb.getLevelSharingOg&arguments=" + encodeURIComponent(JSON.stringify({
+                        'userId': Features.user.platformUserId,
+                        'level_name': level_name,
+                        'image_url': url
+                    }));
+
+                    console.log(res);
+
+                    var fd = new FormData();
+                    fd.append("message", text);
+                    fd.append("result", res);
+
+                    $.ajax({
+                        url: "https://graph.facebook.com/me/twocubes:levelcomplete?type=POST&access_token=" + accessToken,
+                        type: "POST",
+                        data: fd,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        success: function (data) {
+                            console.log("success 2 ", data);
+
+                            Features.successSharing();
+                        },
+                        error: function (shr, status, data) {
+                            console.log("error " + data + " Status " + shr.status);
+                        }
+                    });
+                });
+            },
+            error: function (shr, status, data) {
+                console.log("error " + data + " Status " + shr.status);
+
+                Features.failSharing();
+            }
+        });
+    }
+    catch (e) {
+        console.log(e);
+    }
+}
+
+function dataURItoBlob(dataURI) {
+    var byteString = window.atob(dataURI);
+
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    var blob = new Blob([ia], { type: 'image/png' });
+
+    return blob;
+}
+
 var FBFeatures = {
     initFields: function (callback) {
         FB.api("/me", function (me_res) {
+            console.log('me fired', me_res);
             FB.api("me/friends?fields=last_name,first_name,picture", function (fr_res) {
-                console.log("Friends:", fr_res);
+                console.log(fr_res.data);
                 Api.setFriendsList(Features.toIdArray(fr_res.data));
                 Features.friends = fr_res.data;
+                console.log('after friends init');
 
                 Api.setPersonalId(me_res.id);
                 Api.setPlatform('fb');
 
-                callback();
+                FB.api("/me/taggable_friends", function (tr) {
+                    console.log('taggable friends', tr);
+                    for (var i = 0, len = Features.friends.length; i < len; ++i) {
+                        for (var k = 0, len2 = tr.data.length; k < len2; ++k) {
+                            if (tr.data[k].name.indexOf(Features.friends[i].first_name) != -1
+                                && tr.data[k].name.indexOf(Features.friends[i].last_name) != -1) {
+                                Features.friends[i].mention_tag = tr.data[k].id;
+                            }
+                        }
+                    }
+
+                    callback();
+                });
             });
         });
     },
@@ -688,22 +812,77 @@ var FBFeatures = {
     },
 
     toUserObject: function (fr) {
-        console.log('trying to get user object:', fr);
         return {
             id: fr.id,
             name: fr.first_name,
             surname: fr.last_name,
-            ava: fr.picture.data.url
+            ava: fr.picture.data.url,
+            tag: fr.mention_tag
         };
     },
 
     getUserObject: function (id) {
-        for (var i = 0; i < this.friends.length; i++) {
-            var fr = this.friends[i];
+        for (var i = 0; i < Features.friends.length; i++) {
+            var fr = Features.friends[i];
             if (fr.id == id) {
-                return this.toUserObject(fr);
+                return Features.toUserObject(fr);
             }
         }
+    },
+
+    shareWithFriends: function () {
+        FB.ui({
+            method: 'feed',
+            picture: 'http://twopeoplesoftware.com/twocubes.test/web/img/promo.png',
+            name: 'Two Cubes',
+            description: 'Mind-blowing puzzle game with blocks and cubes!',
+            caption: 'Place blocks and connect the cubes!',
+            link: 'https://apps.facebook.com/twocubes',
+            actions: '[{"name":"Play","link":"https://apps.facebook.com/twocubes"}]'
+        }, function (response) {
+            console.log(response);
+        });
+    },
+
+    prepareLevelWallPost: function (level_name, stars_html, chapter, level, result, _dynamic, _static) {
+        Features.startSharing();
+
+        var current_level_users = $.extend(true, {}, Features.chapters[chapter][level]);
+        current_level_users['u' + Features.user.platformUserId] = {
+            result: result
+        };
+
+        var users = Features.getFinishedUsersAsSortedArray(current_level_users);
+        var current_user_index;
+
+        for (var i = 0, len = users.length; i < len; ++i) {
+            if (users[i].id == Features.user.platformUserId) {
+                current_user_index = i;
+                break;
+            }
+        }
+
+        var text;
+        if (users.length - current_user_index - 1 >= 2) {
+            var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
+            var rand2 = getRandomInRange(current_user_index, users.length - 1, rand1);
+
+            text = locale.completed_level_3.format(level_name, '@[' + users[rand1].tag + ']', '@[' + users[rand2].tag + ']');
+        } else if (users.length - current_user_index - 1 >= 1) {
+            var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
+            text = locale.completed_level_2.format(level_name, '@[' + users[rand1].tag + ']');
+        } else {
+            text = locale.completed_level_1.format(level_name);
+        }
+
+        $('.level-wall-post-template').find('.s-level-name').html(level_name);
+        $('.level-wall-post-template').find('.level-rating').html(stars_html);
+
+        html2canvas($('.level-wall-post-template').get(0), {
+            onrendered: function (canvas) {
+                publishStream(canvas.toDataURL().replace("data:image/png;base64,", ""), level_name, text);
+            }
+        });
     },
 
     load: function (callback) {
@@ -720,8 +899,10 @@ var FBFeatures = {
                 version: 'v2.1'
             });
 
-            FB.login(function () {
+            FB.login(function (r) {
                 Features.updateLoadingBar(40);
+
+                console.log(r);
 
                 Features.initFields(function () {
                     Features.updateLoadingBar(60);
@@ -788,7 +969,7 @@ var FBFeatures = {
                         callback();
                     });
                 });
-            }, {scope: 'user_about_me, user_friends'});
+            }, {scope: 'user_about_me, user_friends, publish_actions'});
         });
     },
 
@@ -809,39 +990,45 @@ var FBFeatures = {
                 {
                     name: "2 hints",
                     price: "1$",
-                    data: "5-h"
+                    data: "2-h"
                 },
                 {
                     name: "5 hints",
                     price: "2$",
-                    data: "10-h"
+                    data: "5-h"
                 },
                 {
                     name: "10 hints",
                     price: "3$",
-                    data: "25-h"
+                    data: "10-h"
                 }
             ],
             attempts: [
                 {
-                    name: "+10 attempts",
+                    name: "10 attempts",
                     price: "0.25$",
                     data: "10-a"
                 },
                 {
-                    name: "+25 attempts",
+                    name: "25 attempts",
                     price: "0.5$",
                     data: "25-a"
                 },
                 {
-                    name: "+50 attempts",
+                    name: "50 attempts",
                     price: "1$",
                     data: "50-a"
                 },
                 {
-                    name: "+100 attempts",
-                    price: "3$",
+                    name: "100 attempts",
+                    price: "1.5$",
                     data: "100-a"
+                },
+                {
+                    is_infinity: true,
+                    name: "∞ " + locale.attempt_form1,
+                    price: "8$",
+                    data: "-1-a"
                 }
             ],
             chapters: [

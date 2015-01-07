@@ -169,4 +169,17 @@ class Api
                 return;
         }
     }
+
+    public function getLevelSharingOg(array $user, $level_name, $image_url)
+    {
+        echo sprintf('<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# twocubes: http://ogp.me/ns/fb/twocubes#">
+                <meta property="fb:app_id" content="614090422033888" />
+                <meta property="og:title" content="Two Cubes" />
+                <meta property="og:description" content="I\'ve completed the level %s!">
+                <meta property="og:image" content="%s" />
+                <meta property="og:url" content="https://apps.facebook.com/twocubes" />
+                <meta property="og:type" content="twocubes:result" />
+              </head>', $level_name, $image_url);
+        exit;
+    }
 }

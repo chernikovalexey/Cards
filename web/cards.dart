@@ -113,6 +113,7 @@ void main() {
     };
 
     Function onLoadedCallback = () {
+        print('and...');
         showMainMenu();
 
         Storage storage = window.localStorage;
@@ -177,8 +178,10 @@ void main() {
     };
 
     if (context['Features']['initialized']) {
+        print('here');
         onLoadedCallback();
     } else {
+        print('at least there');
         context['Features'].callMethod("setOnLoadedCallback", [onLoadedCallback]);
     }
 

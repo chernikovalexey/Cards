@@ -129,7 +129,7 @@ class RatingShower {
         chapterLevel.querySelector(".finished-levels").innerHtml = e.level.current.index.toString();
         chapterLevel.querySelector(".all-levels").innerHtml = e.level.levels.length.toString();
 
-        querySelector("#next-level").focus();
+        //querySelector("#next-level").focus();
         querySelector("#next-level").removeEventListener("click", nextLevel);
         querySelector("#next-level").addEventListener("click", nextLevel);
         querySelector("#restart-level").removeEventListener("click", restartLevel);
@@ -197,14 +197,17 @@ class RatingShower {
 
             querySelector(".rating-inner-layout").classes.add("small-margin");
 
-            querySelector("#share-level").addEventListener("click", (event) {
-                context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating), e.level.chapter, e.level.currentSubLevel, rating, dynamicCardsUsed, staticCardsUsed]);
-            }, true);
+            context['Features'].callMethod('resetSharing');
+
+            querySelectorAll(".share-level").forEach((el) {
+                el.addEventListener("click", (event) {
+                    context['Features'].callMethod('prepareLevelWallPost', [e.level.current.name, getStars(rating), e.level.chapter, e.level.currentSubLevel, rating, dynamicCardsUsed, staticCardsUsed]);
+                }, true);
+            });
         }
 
         querySelector(".attempts-left").innerHtml = sprintf(context['locale']['attempts_left'], [UserManager.getAsInt('boughtAttempts') == -1 ? '∞' : UserManager.get("allAttempts").toString(), context['Features'].callMethod('getNounPlural', [UserManager.get("allAttempts"), context['locale']['attempt_form1'], context['locale']['attempt_form2'], context['locale']['attempt_form3']])]);
-        querySelector(".get-attempts-button").removeEventListener("click", showPurchases);
-        querySelector(".get-attempts-button").addEventListener("click", showPurchases, true);
+        querySelector(".get-attempts-button").addEventListener("click", (var event) => showPurchases(pauseState), true);
 
         querySelector("#tape-es").style.width = (e.level.levels.length * 172 + 10).toString() + "px";
         Scroll.setup('tape-vs', 'tape-es', 'tape-scrollbar', 'h');
@@ -219,8 +222,10 @@ class RatingShower {
         }
     }
 
-    static void showPurchases([Event event]) {
-        hide();
+    static void showPurchases(bool pauseState) {
+        if (pauseState) {
+            hide();
+        }
         hints.getMoreHints();
     }
 

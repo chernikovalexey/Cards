@@ -132,3 +132,5 @@ locale.share_offer_text = 'Посмотрите на отличную голов
 locale.completed_level_1 = 'Я прошёл уровень {0} в Two Cubes!';
 locale.completed_level_2 = 'Я прошёл уровень {0} в Two Cubes лучше, чем {1}!';
 locale.completed_level_3 = 'Я прошёл уровень {0} в Two Cubes лучше, чем {1} и {2}!';
+locale.sharing_process = 'Делимся ...';
+locale.shared = 'Готово';

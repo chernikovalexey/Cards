@@ -32,6 +32,7 @@ class SubLevel {
     Function levelApplied;
 
     double x, y, w, h;
+    double gravity = GameEngine.GRAVITY;
 
     // Unique for each level
     int currentSpriteId = 0;
@@ -87,14 +88,16 @@ class SubLevel {
         this.to = e.createPolygonShape(l["to"]["x"].toDouble() / GameEngine.NSCALE, l["to"]["y"].toDouble() / GameEngine.NSCALE, GameEngine.ENERGY_BLOCK_WIDTH, GameEngine.ENERGY_BLOCK_HEIGHT);
         this.to.userData = Sprite.to(e.world);
 
-        if (l["gravity"] != null) {
-            double gravity = l["gravity"].toDouble();
-            e.world.setGravity(new Vector2(0.0, gravity));
+        if (l["gravity"] != null && l['gravity'] != 0.0) {
+            this.gravity = l["gravity"].toDouble();
 
-            if (gravity > 0.0) {
-                parallax.modifier = ParallaxManager.UP;
-            } else {
-                parallax.modifier = ParallaxManager.DOWN;
+            if (!further) {
+                e.world.setGravity(new Vector2(0.0, gravity));
+                if (gravity > 0.0) {
+                    parallax.modifier = ParallaxManager.UP;
+                } else {
+                    parallax.modifier = ParallaxManager.DOWN;
+                }
             }
         }
 
@@ -114,9 +117,14 @@ class SubLevel {
             if (obstacle['type'] == 5 || obstacle['type'] == 6) {
                 type = 4;
             }
+
             Sprite s = Sprite.byType(type, e.world);
             o.userData = s;
             o.userData.id = ++currentSpriteId;
+
+            if (obstacle['gravity'] != null) {
+                o.userData.gravity = obstacle['gravity'].toDouble();
+            }
 
             if (obstacle["type"] != 5 && obstacle["type"] != 6) {
                 o.userData.isStatic = true;
@@ -200,6 +208,13 @@ class SubLevel {
             e.camera.mTargetY = y / GameEngine.scale;
             e.bobbin.list = frames;
             e.cards = cards;
+
+            e.world.setGravity(new Vector2(0.0, gravity));
+            if (gravity > 0.0) {
+                parallax.modifier = ParallaxManager.UP;
+            } else {
+                parallax.modifier = ParallaxManager.DOWN;
+            }
 
             e.obstaclesBobbin.list = obstaclesFrames;
 
