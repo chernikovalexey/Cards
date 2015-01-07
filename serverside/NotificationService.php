@@ -84,7 +84,7 @@ class NotificationService
         $platforms = $this->groupBy($notifications, 'platformId');
         $vk = $this->sendVk($platforms['vk']);
         $fb = $this->sendFb($platforms['fb']);
-        return array('vk' => $vk, 'fb' => $fb);
+        //return array('vk' => $vk, 'fb' => $fb);
         //$this->sendVk($vk);
     }
 
@@ -101,7 +101,7 @@ class NotificationService
         require_once "lib/autoload.php";
         FacebookSession::setDefaultApplication('614090422033888', 'b414d64c9dc377b6393f93c1be235472');
         $session = new FacebookSession('614090422033888|b414d64c9dc377b6393f93c1be235472');
-        var_dump($session);
+        //var_dump($session);
 
         if ($session) {
             foreach ($fb as $user) {
@@ -115,6 +115,7 @@ class NotificationService
                         'template' => $this->getMessage($user['reason'], 'en', $user['data']),
                     )
                 );
+                $this->db->removeNotifications(array($user['id']));
                 try {
                     $response = $request->execute();
                 } catch (Exception $e) {
@@ -129,8 +130,9 @@ class NotificationService
     private function sendVk($vk)
     {
         $methods = VKServerMethods::getInstance($this->db);
-        $data = $methods->usersGet($this->getIds($vk), 'online,online_mobile');
+        $data = $methods->usersGet($this->getIds($vk), 'online,online_mobile,name');
         $byUserId = $this->groupBy($vk, 'platformUserId');
+
         $forSend = array();
         foreach ($data['response'] as $u) {
             if ($u['online'] == 1 && (!isset($u['online_mobile']) || $u['online_mobile'] != 1)) {
@@ -139,14 +141,14 @@ class NotificationService
                     $forSend[$r] = array();
                 $forSend[$r][] = $byUserId[$u['uid']][0];
             }
-        }
+        };
         $sentNotifications = array();
         foreach ($forSend as $reason => $reasonArray) {
             if ($reason != 2) //needs extra data
                 echo $methods->sendNotification($this->getIds($reasonArray), $this->getMessage($reason, 'ru'));
             else {
                 foreach ($reasonArray as $r) {
-                    $methods->sendNotification($r['platformUserId'], $this->getMessage($reason, 'ru', $r['data']));
+                    $methods->sendNotification($r['platformUserId'], $reason == 2 ? $this->getMessage($reason, 'ru', $r['data']) : $r['data']);
                 }
             }
             $sentNotifications = array_merge($this->getValues($reasonArray, 'id'), $sentNotifications);
@@ -158,7 +160,7 @@ class NotificationService
 
     private $messages;
 
-    private function getMessage($reason, $lang)
+    private function getMessage($reason, $lang, $data)
     {
         if ($this->messages == null) {
             $this->messages = array();
@@ -167,7 +169,7 @@ class NotificationService
             $this->messages[$lang] = json_decode(file_get_contents("lang/" . $lang . '.json'));
         }
 
-        return $this->messages[$lang][$reason];
+        return sprintf($this->messages[$lang][$reason], $data);
     }
 
     private function internalNotifyFriends(array $user, $level, $chapter, $result)

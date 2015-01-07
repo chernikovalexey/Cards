@@ -98,6 +98,7 @@ class FBPayments implements IPayments
     private function order(array $user, array $product)
     {
 
+        //file_put_contents("file.json" ,json_encode($product)."\r\n".json_encode($user));
         switch ($product[0]) {
             case 'hint':
                 $user['balance'] += $product[1];

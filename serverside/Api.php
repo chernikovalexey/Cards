@@ -150,7 +150,13 @@ class Api
     public function sendNotifications()
     {
 
-        return NotificationService::send($this->db);
+        return null; // NotificationService::send($this->db);
+    }
+
+    public function sendTestNotification()
+    {
+
+        NotificationService::send($this->db);
     }
 
     public function save($user, $data)
