@@ -166,8 +166,8 @@ class VKPayments implements IPayments
                 $data = $this->getChapterInfo($info['platformUserId'], $info['count']);
                 return array(
                     'item_id' => $item,
-                    'title' => "Unlock chapter #" . $info['count'] . " " . $data['name'],
-                    'photo_url' => 'http://thumbs.dreamstime.com/thumb_370/1235836831WEhmZf.jpg',
+                    'title' => "Unlock the chapter: " . $data['name'],
+                    'photo_url' => 'http://twopeoplesoftware.com/twocubes28340jfddv03jfd/web/img/purchases/unlock.png',
                     'price' => $data['price']
                 );
         }

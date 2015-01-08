@@ -436,7 +436,13 @@ var VKFeatures = {
                                         VK.api("wall.post", {
                                             message: text,
                                             attachments: save_response.response[0].id + ",https://vk.com/twocubes"
-                                        }, Features.successSharing);
+                                        }, function (r) {
+                                            if (r && r.error && r.error.error_code === 10007) {
+                                                Features.failSharing();
+                                            } else {
+                                                Features.successSharing();
+                                            }
+                                        });
                                     });
                                 });
                             }

@@ -17,6 +17,7 @@ locale.new_game = 'Новая игра';
 locale.friends_in_game = 'Друзья в игре';
 locale.menu = 'Меню';
 locale.choose_chapter = 'Выбрать главу';
+locale.unlock_now = 'Разблокировать сейчас';
 locale.gorgeous = "Вы великолепны!";
 locale.game_goal = "Это именно то, что вам нужно делать в этой игре!";
 locale.every_day_attempts = 'каждый день вы получаете по 200 бесплатных попыток';

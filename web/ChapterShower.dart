@@ -79,7 +79,7 @@ class ChapterShower {
 
         if (!unlocked) {
             int left = chapter["unlock_stars"] - totalStars;
-            el.querySelector(".unlock-layout").innerHtml = sprintf(context['Features'].callMethod('getNounPlural', [left, context['locale']['unlock_left1'], context['locale']['unlock_left2'], context['locale']['unlock_left3']]), [left.toString()]);
+            el.querySelector(".stars-left-layout").innerHtml = sprintf(context['Features'].callMethod('getNounPlural', [left, context['locale']['unlock_left1'], context['locale']['unlock_left2'], context['locale']['unlock_left3']]), [left.toString()]);
             el.querySelector(".chapter")
                 ..classes.add("chapter-locked")
                 ..title = context['locale']['click_to_unlock'];

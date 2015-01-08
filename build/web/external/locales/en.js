@@ -17,6 +17,7 @@ locale.new_game = 'New game';
 locale.friends_in_game = 'Friends in the game';
 locale.menu = 'Menu';
 locale.choose_chapter = 'Choose chapter';
+locale.unlock_now = 'Unlock now';
 locale.gorgeous = "You're gorgeous!";
 locale.game_goal = "That's exactly what you should do in this game!";
 locale.every_day_attempts = 'every day you acquire 200 free attempts';

@@ -493,7 +493,7 @@ t=J.U6(x)
 J.Qy(v.querySelector(".chapter-title"),t.t(x,"name"))
 s=$.fn
 if(t.t(x,"unlocked")!==!0){r=J.xH(t.t(x,"unlock_stars"),s)
-u=v.querySelector(".unlock-layout")
+u=v.querySelector(".stars-left-layout")
 t=$.Jn()
 q=$.cM()
 J.Qy(u,t.call$2(J.UQ(q,"Features").V7("getNounPlural",[r,J.UQ(J.UQ(q,"locale"),"unlock_left1"),J.UQ(J.UQ(q,"locale"),"unlock_left2"),J.UQ(J.UQ(q,"locale"),"unlock_left3")]),[J.AG(r)]))
@@ -934,13 +934,14 @@ C.Nm.FV(j,this.fZ.Vj)
 C.Nm.sB(this.fZ.Vj,0)
 for(z=new H.a7(j,j.length,0,null);z.G();){i=z.lo
 if(C.Nm.tg(this.z7,i)){this.DN(i)
-this.ks(i,!0)}}}else if(!this.VE&&z.t(0,"ctrl").CX&&z.t(0,"z").OE&&this.jY.length>0){z=this.jY
+this.ks(i,!0)}}}else if((z.t(0,"ctrl").CX||$.tm)&&z.t(0,"z").OE&&this.jY.length>0)if(!this.VE){z=this.jY
 if(0>=z.length)return H.e(z,0)
 h=z.pop()
 z=h.xR
 g=H.Go(z.geH(),"$isM6").Fo
 if(h.US){v=J.RE(z)
-this.C8(J.Rd(v.gbM(z)),J.vY(v.gbM(z)),z.gCg(),g)}else this.DN(z)}for(z=this.z7,z=new H.a7(z,z.length,0,null);z.G();)H.Go(z.lo.geH(),"$isM6").eC(this)
+this.C8(J.Rd(v.gbM(z)),J.vY(v.gbM(z)),z.gCg(),g)}else this.DN(z)}else J.oc(document.querySelector("#toggle-physics"))
+for(z=this.z7,z=new H.a7(z,z.length,0,null);z.G();)H.Go(z.lo.geH(),"$isM6").eC(this)
 this.eR=!1
 z=this.ol
 if(z!=null){f=H.Go(z.eH,"$isM6")

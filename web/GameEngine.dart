@@ -506,14 +506,19 @@ class GameEngine extends State {
                     addHistoryState(contacting, true);
                 }
             }
-        } else if (!physicsEnabled && Input.keys['ctrl'].down && Input.keys['z'].clicked && history.length > 0) {
-            HItem last = history.removeLast();
-            bool s = (last.card.userData as EnergySprite).isStatic;
+        } else if ((Input.keys['ctrl'].down || Input.isCmdDown) && Input.keys['z'].clicked && history.length > 0) {
+            if (!physicsEnabled) {
+                HItem last = history.removeLast();
+                bool s = (last.card.userData as EnergySprite).isStatic;
 
-            if (last.remove) {
-                addCard(last.card.position.x, last.card.position.y, last.card.angle, s);
+                if (last.remove) {
+                    addCard(last.card.position.x, last.card.position.y, last.card.angle, s);
+                } else {
+                    removeCard(last.card);
+                }
             } else {
-                removeCard(last.card);
+                // If Ctrl+Z is pressed whereas physics are applied, it's necessary to rewind
+                querySelector('#toggle-physics').click();
             }
         }
 
