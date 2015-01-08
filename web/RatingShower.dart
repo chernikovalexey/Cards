@@ -267,6 +267,7 @@ class RatingShower {
         querySelector("#cc-list").addEventListener("click", (event) {
             hide();
             manager.removeState(engine);
+            engine.clear(true);
             querySelector(".buttons").classes.add("hidden");
             querySelector(".selectors").classes.add("hidden");
             fadeBoxIn(querySelector("#chapter-selection"));

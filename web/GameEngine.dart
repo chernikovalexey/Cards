@@ -715,8 +715,11 @@ class GameEngine extends State {
         }
     }
 
-    void clear() {
-        window.localStorage.remove("level_" + level.chapter.toString() + "_" + (level.current.index + 1).toString());
+    void clear([bool noLocalStorageClear=false]) {
+        if (!noLocalStorageClear) {
+            window.localStorage.remove("level_" + level.chapter.toString() + "_" + (level.current.index + 1).toString());
+        }
+
         applyPhysicsLabelToButton();
         bobbin.erase();
         obstaclesBobbin.erase();

@@ -287,11 +287,11 @@ var Features = {
     },
 
     resetSharing: function () {
-        $('#share-level').removeClass('share-succeeded').removeAttr('disabled').html(locale.share_result);
+        $('.share-level').removeClass('share-succeeded').removeAttr('disabled').html(locale.share_result);
     },
 
     startSharing: function () {
-        $('#share-level').addClass('share-succeeded').attr('disabled', 'disabled').html(locale.sharing_process);
+        $('.share-level').addClass('share-succeeded').attr('disabled', 'disabled').html(locale.sharing_process);
     },
 
     failSharing: function () {
@@ -299,7 +299,25 @@ var Features = {
     },
 
     successSharing: function () {
-        $('#share-level').addClass('share-succeeded').html(locale.shared);
+        $('.share-level').addClass('share-succeeded').html(locale.shared);
+    },
+
+    //
+
+    resetGameSharing: function () {
+        $('.share-offer').removeClass('share-succeeded').removeAttr('disabled').html(locale.share_offer);
+    },
+
+    startGameSharing: function () {
+        $('.share-offer').addClass('share-succeeded').attr('disabled', 'disabled').html(locale.sharing_process);
+    },
+
+    failGameSharing: function () {
+        Features.resetGameSharing();
+    },
+
+    successGameSharing: function () {
+        $('.share-offer').addClass('share-succeeded').html(locale.shared);
     }
 };
 
@@ -309,9 +327,10 @@ var VKFeatures = {
     scrollParentTop: function () {
     },
 
-    shareWithFriends: function () {
+    shareWithFriends: function (callback) {
         var upload = function (permission) {
             if (!(permission & 4)) {
+                Features.failGameSharing();
                 return false;
             } else {
                 VK.api('photos.getWallUploadServer', {}, function (data) {
@@ -326,6 +345,13 @@ var VKFeatures = {
                                 VK.api("wall.post", {
                                     message: locale.share_offer_text,
                                     attachments: save_response.response[0].id + ",https://vk.com/twocubes"
+                                }, function (r) {
+                                    if (r && r.error && r.error.error_code === 10007) {
+                                        Features.failGameSharing();
+                                    } else {
+                                        Features.successGameSharing();
+                                        callback();
+                                    }
                                 });
                             });
                         });
@@ -334,6 +360,8 @@ var VKFeatures = {
                 return true;
             }
         };
+
+        Features.startGameSharing();
 
         VK.api('account.getAppPermissions', function (r) {
             if (!upload(r.response)) {
@@ -353,38 +381,43 @@ var VKFeatures = {
                     if (data.response) {
                         var upload_url = data.response.upload_url;
 
-                        var current_level_users = $.extend(true, {}, Features.chapters[chapter][level]);
-                        current_level_users['u' + Features.user.platformUserId] = {
-                            name: Features.platformUser.first_name,
-                            surname: Features.platformUser.last_name,
-                            result: result,
-                            static: _static,
-                            dynamic: _dynamic,
-                            id: Features.user.platformUserId,
-                            ava: Features.platformUser.photo
-                        };
-
-                        var users = Features.getFinishedUsersAsSortedArray(current_level_users);
-                        var current_user_index;
-
-                        for (var i = 0, len = users.length; i < len; ++i) {
-                            if (users[i].id == Features.user.platformUserId) {
-                                current_user_index = i;
-                                break;
-                            }
-                        }
-
                         var text;
-                        if (users.length - current_user_index - 1 >= 2) {
-                            var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
-                            var rand2 = getRandomInRange(current_user_index, users.length - 1, rand1);
+                        if (Features[chapter]) {
+                            var current_level_users = $.extend(true, {}, Features.chapters[chapter][level]);
+                            current_level_users['u' + Features.user.platformUserId] = {
+                                name: Features.platformUser.first_name,
+                                surname: Features.platformUser.last_name,
+                                result: result,
+                                static: _static,
+                                dynamic: _dynamic,
+                                id: Features.user.platformUserId,
+                                ava: Features.platformUser.photo
+                            };
 
-                            text = locale.completed_level_3.format(level_name, '*id' + users[rand1].id + ' (' + users[rand1].name + ' ' + users[rand1].surname + ')', '*id' + users[rand2].id + ' (' + users[rand2].name + ' ' + users[rand2].surname + ')');
-                        } else if (users.length - current_user_index - 1 >= 1) {
-                            var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
-                            text = locale.completed_level_2.format(level_name, '*id' + users[rand1].id + ' (' + users[rand1].name + ' ' + users[rand1].surname + ')');
+                            var users = Features.getFinishedUsersAsSortedArray(current_level_users);
+                            var current_user_index;
+
+                            for (var i = 0, len = users.length; i < len; ++i) {
+                                if (users[i].id == Features.user.platformUserId) {
+                                    current_user_index = i;
+                                    break;
+                                }
+                            }
+
+
+                            if (users.length - current_user_index - 1 >= 2) {
+                                var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
+                                var rand2 = getRandomInRange(current_user_index, users.length - 1, rand1);
+
+                                text = locale.completed_level_3.format(level_name, '*id' + users[rand1].id + ' (' + users[rand1].name + ' ' + users[rand1].surname + ')', '*id' + users[rand2].id + ' (' + users[rand2].name + ' ' + users[rand2].surname + ')');
+                            } else if (users.length - current_user_index - 1 >= 1) {
+                                var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
+                                text = locale.completed_level_2.format(level_name, '*id' + users[rand1].id + ' (' + users[rand1].name + ' ' + users[rand1].surname + ')');
+                            } else {
+                                text = locale.completed_level_1.format(level_name);
+                            }
                         } else {
-                            text = locale.completed_level_1.format(level_name);
+                            text = locale.completed_level_4.format(level_name);
                         }
 
                         $('.level-wall-post-template').find('.s-level-name').html(level_name);
@@ -402,7 +435,7 @@ var VKFeatures = {
                                     }, function (save_response) {
                                         VK.api("wall.post", {
                                             message: text,
-                                            attachments: save_response.response[0].id
+                                            attachments: save_response.response[0].id + ",https://vk.com/twocubes"
                                         }, Features.successSharing);
                                     });
                                 });
@@ -719,11 +752,11 @@ function publishStream(img, level_name, text) {
                     console.log(res);
 
                     var fd = new FormData();
-                    fd.append("message", text);
+                    //fd.append("message", text);
                     fd.append("result", res);
 
                     $.ajax({
-                        url: "https://graph.facebook.com/me/twocubes:levelcomplete?type=POST&access_token=" + accessToken,
+                        url: "https://graph.facebook.com/me/twocubes:levelcomplete?access_token=" + accessToken,
                         type: "POST",
                         data: fd,
                         processData: false,
@@ -830,7 +863,8 @@ var FBFeatures = {
         }
     },
 
-    shareWithFriends: function () {
+    shareWithFriends: function (callback) {
+        Features.startGameSharing();
         FB.ui({
             method: 'feed',
             picture: 'http://twopeoplesoftware.com/twocubes.test/web/img/promo.png',
@@ -840,39 +874,49 @@ var FBFeatures = {
             link: 'https://apps.facebook.com/twocubes',
             actions: '[{"name":"Play","link":"https://apps.facebook.com/twocubes"}]'
         }, function (response) {
-            console.log(response);
+            if (response && response.post_id) {
+                Features.successGameSharing();
+                callback();
+            } else {
+                Features.failGameSharing();
+            }
         });
     },
 
     prepareLevelWallPost: function (level_name, stars_html, chapter, level, result, _dynamic, _static) {
         Features.startSharing();
 
-        var current_level_users = $.extend(true, {}, Features.chapters[chapter][level]);
-        current_level_users['u' + Features.user.platformUserId] = {
-            result: result
-        };
-
-        var users = Features.getFinishedUsersAsSortedArray(current_level_users);
-        var current_user_index;
-
-        for (var i = 0, len = users.length; i < len; ++i) {
-            if (users[i].id == Features.user.platformUserId) {
-                current_user_index = i;
-                break;
-            }
-        }
-
         var text;
-        if (users.length - current_user_index - 1 >= 2) {
-            var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
-            var rand2 = getRandomInRange(current_user_index, users.length - 1, rand1);
 
-            text = locale.completed_level_3.format(level_name, '@[' + users[rand1].tag + ']', '@[' + users[rand2].tag + ']');
-        } else if (users.length - current_user_index - 1 >= 1) {
-            var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
-            text = locale.completed_level_2.format(level_name, '@[' + users[rand1].tag + ']');
+        if (Features[chapter]) {
+            var current_level_users = $.extend(true, {}, Features.chapters[chapter][level]);
+            current_level_users['u' + Features.user.platformUserId] = {
+                result: result
+            };
+
+            var users = Features.getFinishedUsersAsSortedArray(current_level_users);
+            var current_user_index;
+
+            for (var i = 0, len = users.length; i < len; ++i) {
+                if (users[i].id == Features.user.platformUserId) {
+                    current_user_index = i;
+                    break;
+                }
+            }
+
+            if (users.length - current_user_index - 1 >= 2) {
+                var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
+                var rand2 = getRandomInRange(current_user_index, users.length - 1, rand1);
+
+                text = locale.completed_level_3.format(level_name, '@[' + users[rand1].tag + ']', '@[' + users[rand2].tag + ']');
+            } else if (users.length - current_user_index - 1 >= 1) {
+                var rand1 = getRandomInRange(current_user_index, users.length - 1, current_user_index);
+                text = locale.completed_level_2.format(level_name, '@[' + users[rand1].tag + ']');
+            } else {
+                text = locale.completed_level_1.format(level_name);
+            }
         } else {
-            text = locale.completed_level_1.format(level_name);
+            text = locale.completed_level_4.format(level_name);
         }
 
         $('.level-wall-post-template').find('.s-level-name').html(level_name);

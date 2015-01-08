@@ -130,5 +130,6 @@ locale.share_offer_text = 'Check out an excellent puzzle game! #twocubes';
 locale.completed_level_1 = "I've completed the level {0} in Two Cubes!";
 locale.completed_level_2 = "I've completed the level {0} in Two Cubes better than {1}!";
 locale.completed_level_3 = "I've completed the level {0} in Two Cubes better than {1} and {2}!";
+locale.completed_level_4 = "I've completed the level {0} in Two Cubes first among my friends!";
 locale.sharing_process = 'Sharing ...';
 locale.shared = 'Shared';

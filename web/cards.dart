@@ -125,8 +125,7 @@ void main() {
                 }, easing: Easing.SINUSOIDAL_EASY_IN_OUT, duration: 125);
 
                 shareOffer.addEventListener("click", (event) {
-                    context['Features'].callMethod('shareWithFriends');
-                    slideMenuTop();
+                    context['Features'].callMethod('shareWithFriends', [slideMenuTop]);
                 }, true);
             });
         } else {

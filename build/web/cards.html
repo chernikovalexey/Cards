@@ -46,7 +46,7 @@
     <div class="loading-bar running-bar"></div>
 </div>
 
-<div class="share-offer localized" data-lid="share_offer">Tell friends about the game!</div>
+<button class="share-offer localized" data-lid="share_offer">Tell friends about the game!</button>
 
 <div class="game-box blurred">
 <div class="level-name"></div>
@@ -161,14 +161,14 @@
             <div class="chapter-controls controls">
                 <button id="cc-list" class="localized" data-lid="choose_another_chapter">Choose another chapter
                 </button>
-                <!--<button id="share-chapter" class="localized" data-lid="share_result">Share result</button>-->
+                <button class="localized share-level" data-lid="share_result">Share result</button>
             </div>
         </div>
 
         <div class="level-controls controls">
             <button class="step-button localized" data-lid="restart" id="restart-level">Restart</button>
             <button class="step-button localized" data-lid="next" id="next-level">Next</button>
-            <button class="step-button localized" data-lid="share_result" id="share-level">Share result</button>
+            <button class="step-button share-level localized" data-lid="share_result">Share result</button>
         </div>
 
         <div class="pause-controls controls hidden">
@@ -286,8 +286,7 @@
                     id="hints-balance">2</span></div>
         </div>
         <div class="purchase-options hint-options"></div>
-    </div>
-    <div class="purchase-block">
+    </div><div class="purchase-block">
         <div class="purchase-block-head">
             <div class="purchase-headline localized" data-lid="attempts">Attempts</div>
             <div class="balance-layout"><span class="localized" data-lid="you_have">you have</span> <span

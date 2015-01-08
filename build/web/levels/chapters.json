@@ -13,5 +13,10 @@
         "name": "Absolutely Crazy",
         "unlock_stars": 60,
         "levels": 12
+    },
+    {
+        "name": "Get out away!",
+        "unlock_stars": 90,
+        "levels": 2
     }
 ]}
