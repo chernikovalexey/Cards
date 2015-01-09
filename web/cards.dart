@@ -161,7 +161,9 @@ void main() {
                 querySelector("#menu-box").classes.add("hidden");
 
                 fadeBoxIn(querySelector("#chapter-selection"));
-                ChapterShower.show(chapters);
+
+                // Such an approach always gets the current list of chapters
+                ChapterShower.show(Chapter.chapters);
             }, false);
         });
 

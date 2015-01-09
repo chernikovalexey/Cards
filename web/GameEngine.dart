@@ -368,10 +368,12 @@ class GameEngine extends State {
             Tooltip.closeAll();
 
             // Close controls viewer first
-            if (querySelector("#wizard-controls").classes.contains("hidden")) {
-                RatingShower.pause(this);
-            } else {
+            if (!querySelector("#wizard-controls").classes.contains("hidden")) {
                 querySelector(".wizard-try").click();
+            } else if (hints.purchasesOpened) {
+                querySelector(".close-purchases").click();
+            } else {
+                RatingShower.pause(this);
             }
 
             saveCurrentProgress();

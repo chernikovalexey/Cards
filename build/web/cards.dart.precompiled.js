@@ -479,38 +479,40 @@ y=this.a
 if(y!=null)y.call$1(z)},"call$2",null,4,0,null,152,[],293,[],"call"],
 $isEH:true}}],["","file:///E:/Software/Cards/web/ChapterShower.dart",,O,{
 "^":"",
-cs:[function(a){var z,y,x,w,v,u,t,s,r,q,p,o
+cs:[function(a){var z,y,x,w,v,u,t,s,r,q,p,o,n
 J.Qy(document.querySelector("#chapter-es"),"")
 A.X0(new O.pE())
 for(z=J.GP(a),y=0;z.G();){x=z.gl()
-w=document.querySelector("#chapter-es");++y
-v=H.Go(document.querySelector(".chapter-template"),"$isWy")
-u=v.querySelector(".chapter")
-u.toString
-t=C.jn.bu(y)
-u.setAttribute("data-"+new W.Sy(new W.i7(u)).kZ("id"),t)
-t=J.U6(x)
-J.Qy(v.querySelector(".chapter-title"),t.t(x,"name"))
-s=$.fn
-if(t.t(x,"unlocked")!==!0){r=J.xH(t.t(x,"unlock_stars"),s)
-u=v.querySelector(".stars-left-layout")
-t=$.Jn()
-q=$.cM()
-J.Qy(u,t.call$2(J.UQ(q,"Features").V7("getNounPlural",[r,J.UQ(J.UQ(q,"locale"),"unlock_left1"),J.UQ(J.UQ(q,"locale"),"unlock_left2"),J.UQ(J.UQ(q,"locale"),"unlock_left3")]),[J.AG(r)]))
-t=v.querySelector(".chapter")
-u=J.RE(t)
-u.gDD(t).h(0,"chapter-locked")
-u.smk(t,J.UQ(J.UQ(q,"locale"),"click_to_unlock"))}else{p=D.Z7(y,t.t(x,"levels"))
-J.pP(v.querySelector(".chapter")).Rz(0,"chapter-locked")
-u=v.querySelector(".current-bar").style
-q=t.t(x,"levels")
-if(typeof q!=="number")return H.s(q)
-J.vP(u,C.CD.bu(240*p/q)+"px")
-J.Qy(v.querySelector(".finished-levels"),C.jn.bu(p))
-J.Qy(v.querySelector(".all-levels"),J.AG(t.t(x,"levels")))
-J.Qy(v.querySelector(".earned-stars"),J.AG(T.aA(y)))}J.IR(w,"beforeend",v.innerHTML)}o=Q.fY("chapter-vs","chapter-es","chapter-scrollbar","v")
+w=H.d(x)
+H.qw(w)
+v=document.querySelector("#chapter-es");++y
+u=H.Go(document.querySelector(".chapter-template"),"$isWy")
+t=u.querySelector(".chapter")
+t.toString
+s=C.jn.bu(y)
+t.setAttribute("data-"+new W.Sy(new W.i7(t)).kZ("id"),s)
+s=J.U6(x)
+J.Qy(u.querySelector(".chapter-title"),s.t(x,"name"))
+r=$.fn
+if(s.t(x,"unlocked")!==!0){q=J.xH(s.t(x,"unlock_stars"),r)
+t=u.querySelector(".stars-left-layout")
+s=$.Jn()
+p=$.cM()
+J.Qy(t,s.call$2(J.UQ(p,"Features").V7("getNounPlural",[q,J.UQ(J.UQ(p,"locale"),"unlock_left1"),J.UQ(J.UQ(p,"locale"),"unlock_left2"),J.UQ(J.UQ(p,"locale"),"unlock_left3")]),[J.AG(q)]))
+s=u.querySelector(".chapter")
+t=J.RE(s)
+t.gDD(s).h(0,"chapter-locked")
+t.smk(s,J.UQ(J.UQ(p,"locale"),"click_to_unlock"))}else{o=D.Z7(y,s.t(x,"levels"))
+J.pP(u.querySelector(".chapter")).Rz(0,"chapter-locked")
+t=u.querySelector(".current-bar").style
+p=s.t(x,"levels")
+if(typeof p!=="number")return H.s(p)
+J.vP(t,C.CD.bu(240*o/p)+"px")
+J.Qy(u.querySelector(".finished-levels"),C.jn.bu(o))
+J.Qy(u.querySelector(".all-levels"),J.AG(s.t(x,"levels")))
+J.Qy(u.querySelector(".earned-stars"),J.AG(T.aA(y)))}J.IR(v,"beforeend",u.innerHTML)}n=Q.fY("chapter-vs","chapter-es","chapter-scrollbar","v")
 z=$.cM()
-J.UQ(z,"dw_Scrollbar_Co").V7("addEvent",[o,"on_scroll",new O.Pp()])
+J.UQ(z,"dw_Scrollbar_Co").V7("addEvent",[n,"on_scroll",new O.Pp()])
 z.V7("html2canvas",[document.querySelector(".chapter-list"),P.jT(H.B7(["onrendered",new O.RC()],P.L5(null,null,null,null,null)))])
 z=W.vD(document.querySelectorAll(".chapter"),null)
 z.aN(z,new O.Rv())
@@ -818,10 +820,11 @@ eC:[function(a){var z,y,x,w,v,u,t,s,r,q,p,o,n,m,l,k,j,i,h,g,f
 if(!this.SG||this.UF)return
 if($.Nl().t(0,"esc").OE&&!this.eR){R.JI()
 A.H2()
-if(J.pP(document.querySelector("#wizard-controls")).lF().tg(0,"hidden")){$.Po=!0
+if(!J.pP(document.querySelector("#wizard-controls")).lF().tg(0,"hidden"))J.oc(document.querySelector(".wizard-try"))
+else if($.cx.El)J.oc(document.querySelector(".close-purchases"))
+else{$.Po=!0
 Z.HH(this,0,0)
-$.Po=!1}else J.oc(document.querySelector(".wizard-try"))
-this.OA()}$.dx=!1
+$.Po=!1}this.OA()}$.dx=!1
 this.FZ("none")
 this.kX.eC(a)
 if(this.VE){this.b1.uL(this.z7)
@@ -1372,7 +1375,7 @@ z.fQ(a,b,c)
 return z}}}}],["","file:///E:/Software/Cards/web/HintManager.dart",,X,{
 "^":"",
 JK:{
-"^":"a;Jg,Fr",
+"^":"a;Jg,Fr,El",
 jr:[function(a,b){var z,y,x
 z=A.V6("balance")
 A.H2()
@@ -1388,10 +1391,11 @@ A.H2()
 B.Ag(this.gH2())
 J.pP(document.querySelector("#purchases")).Rz(0,"hidden")
 L.tV(document.querySelector("#purchases"),125,C.KF,null,H.B7(["top",0,"opacity",1],P.L5(null,null,null,null,null)))
+this.El=!0
 J.Qy(document.querySelector("#hints-balance"),A.Jq("balance"))
 z=document.querySelector("#attempts-balance")
 J.Qy(z,J.de(A.V6("boughtAttempts"),-1)?"\u221e":A.Jq("allAttempts"))
-J.qV(document.querySelector(".close-purchases"),"click",new X.Ye(),!1)},function(){return this.qg(null)},"XW","call$1","call$0","gnE",0,2,181,0,10,[]],
+J.qV(document.querySelector(".close-purchases"),"click",new X.Ye(this),!1)},function(){return this.qg(null)},"XW","call$1","call$0","gnE",0,2,181,0,10,[]],
 qb:[function(a,b,c,d,e){var z,y
 z=new A.nY(235,175,130,0.25)
 if(e===!0)z=new A.nY(235,235,215,0.25)
@@ -1444,9 +1448,10 @@ B.Ag(this.a.gH2())
 if(J.de(A.V6("boughtAttempts"),-1))J.Qy(document.querySelector(".attempt-options"),C.xB.g("<div class=\"unlimited-attempts\">",J.UQ(J.UQ($.cM(),"locale"),"unlimited_attempts"))+"</div>")},"call$0",null,0,0,null,"call"],
 $isEH:true},
 Ye:{
-"^":"d9:250;",
+"^":"d9:250;a",
 call$1:[function(a){J.pP(document.querySelector(".game-box")).Rz(0,"blurred")
-L.tV(document.querySelector("#purchases"),125,C.KF,null,H.B7(["top",800,"opacity",0],P.L5(null,null,null,null,null)))},"call$1",null,2,0,null,10,[],"call"],
+L.tV(document.querySelector("#purchases"),125,C.KF,null,H.B7(["top",800,"opacity",0],P.L5(null,null,null,null,null)))
+this.a.El=!1},"call$1",null,2,0,null,10,[],"call"],
 $isEH:true}}],["","file:///E:/Software/Cards/web/Input.dart",,A,{
 "^":"",
 WD:[function(a){var z,y,x,w,v,u,t
@@ -8675,7 +8680,7 @@ J.mZ(document.querySelector("#zoom-in"),"click",new T.wf())
 J.mZ(document.querySelector("#zoom-out"),"click",new T.Oa())
 z=W.vD(document.querySelectorAll(".selector"),null)
 z.aN(z,new T.emv())
-$.cx=new X.JK($.Jg,!1)
+$.cx=new X.JK($.Jg,!1,!1)
 z=document.querySelector("#hint")
 y=$.cx
 J.mZ(z,"click",y.gVl(y))},"call$0","HA",0,0,16],
@@ -8815,7 +8820,7 @@ J.UQ($.cM(),"Features").nQ("hideLoading")
 Q.Zw()
 z=this.Rm
 J.qV(document.querySelector("#continue"),"click",new T.jr(z),!1)
-J.qV(document.querySelector("#new-game"),"click",new T.ql(z,a),!1)},"call$1",null,2,0,null,5,[],"call"],
+J.qV(document.querySelector("#new-game"),"click",new T.ql(z),!1)},"call$1",null,2,0,null,5,[],"call"],
 $isEH:true},
 jr:{
 "^":"d9:250;w3",
@@ -8839,11 +8844,11 @@ J.pP(document.querySelector(".buttons")).Rz(0,"hidden")
 J.pP(document.querySelector(".selectors")).Rz(0,"hidden")},"call$0",null,0,0,null,"call"],
 $isEH:true},
 ql:{
-"^":"d9:250;HZ,mG",
+"^":"d9:250;HZ",
 call$1:[function(a){this.HZ.call$0()
 J.pP(document.querySelector("#menu-box")).h(0,"hidden")
 T.dH(document.querySelector("#chapter-selection"),500,null)
-O.cs(this.mG)},"call$1",null,2,0,null,10,[],"call"],
+O.cs($.Zo)},"call$1",null,2,0,null,10,[],"call"],
 $isEH:true},
 ed:{
 "^":"d9:250;",
@@ -8918,9 +8923,9 @@ emv:{
 call$1:[function(a){J.qV(a,"click",new T.BT(a),!1)},"call$1",null,2,0,null,324,[],"call"],
 $isEH:true},
 BT:{
-"^":"d9:250;xC",
+"^":"d9:250;mG",
 call$1:[function(a){var z,y,x,w
-z=this.xC
+z=this.mG
 y=J.RE(z)
 x=y.gDD(z).lF().tg(0,"static")
 w=$.Jg
@@ -17121,8 +17126,9 @@ if(!"name" in yF)yF.name="yF"
 $desc=$collectedClasses.yF
 if($desc instanceof Array)$desc=$desc[1]
 yF.prototype=$desc
-function JK(Jg,Fr){this.Jg=Jg
-this.Fr=Fr}JK.builtin$cls="JK"
+function JK(Jg,Fr,El){this.Jg=Jg
+this.Fr=Fr
+this.El=El}JK.builtin$cls="JK"
 if(!"name" in JK)JK.name="JK"
 $desc=$collectedClasses.JK
 if($desc instanceof Array)$desc=$desc[1]
@@ -17147,7 +17153,7 @@ if(!"name" in AC)AC.name="AC"
 $desc=$collectedClasses.AC
 if($desc instanceof Array)$desc=$desc[1]
 AC.prototype=$desc
-function Ye(){}Ye.builtin$cls="Ye"
+function Ye(a){this.a=a}Ye.builtin$cls="Ye"
 if(!"name" in Ye)Ye.name="Ye"
 $desc=$collectedClasses.Ye
 if($desc instanceof Array)$desc=$desc[1]
@@ -19067,8 +19073,7 @@ if(!"name" in Ws)Ws.name="Ws"
 $desc=$collectedClasses.Ws
 if($desc instanceof Array)$desc=$desc[1]
 Ws.prototype=$desc
-function ql(HZ,mG){this.HZ=HZ
-this.mG=mG}ql.builtin$cls="ql"
+function ql(HZ){this.HZ=HZ}ql.builtin$cls="ql"
 if(!"name" in ql)ql.name="ql"
 $desc=$collectedClasses.ql
 if($desc instanceof Array)$desc=$desc[1]
@@ -19133,7 +19138,7 @@ if(!"name" in emv)emv.name="emv"
 $desc=$collectedClasses.emv
 if($desc instanceof Array)$desc=$desc[1]
 emv.prototype=$desc
-function BT(xC){this.xC=xC}BT.builtin$cls="BT"
+function BT(mG){this.mG=mG}BT.builtin$cls="BT"
 if(!"name" in BT)BT.name="BT"
 $desc=$collectedClasses.BT
 if($desc instanceof Array)$desc=$desc[1]

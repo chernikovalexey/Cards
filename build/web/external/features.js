@@ -618,17 +618,17 @@ var VKFeatures = {
                 {
                     name: "2 " + locale.hint_form3,
                     price: "8 " + locale.vote_form1,
-                    data: "h.5."
+                    data: "h.2."
                 },
                 {
                     name: "5 " + locale.hint_form1,
                     price: "16 " + locale.vote_form1,
-                    data: "h.10."
+                    data: "h.5."
                 },
                 {
                     name: "10 " + locale.hint_form1,
                     price: "24 " + locale.vote_form3,
-                    data: "h.25."
+                    data: "h.10."
                 }
             ],
             attempts: [

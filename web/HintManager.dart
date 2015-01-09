@@ -65,6 +65,8 @@ class HintManager {
         });
     }
 
+    bool purchasesOpened = false;
+
     void getMoreHints([Event event]) {
         if (!purchasesWindowLoaded) {
             WebApi.loadPurchasesWindow();
@@ -80,6 +82,8 @@ class HintManager {
             'top': 0, 'opacity': 1.0
         }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
 
+        purchasesOpened = true;
+
         querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
         querySelector("#attempts-balance").innerHtml = UserManager.getAsInt('boughtAttempts') == -1 ? "∞" : UserManager.getAsString("allAttempts");
 
@@ -88,6 +92,7 @@ class HintManager {
             animate(querySelector('#purchases'), properties: {
                 'top': 800, 'opacity': 0.0
             }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+            purchasesOpened = false;
         }, false);
     }
 
