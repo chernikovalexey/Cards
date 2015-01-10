@@ -133,6 +133,8 @@ class Level {
                     }
                 }
             }
+
+            GameWizard.manage(chapter, current.index);
         });
     }
 
@@ -144,6 +146,7 @@ class Level {
             }
             ++currentSubLevel;
             loadCurrent();
+            GameWizard.manage(chapter, current.index);
 
             if (engine.currentZoom != 1.0) {
                 engine.centerBetweenCubes(engine.currentZoom);
@@ -167,7 +170,6 @@ class Level {
             current.online(true);
         }
 
-        GameWizard.manage(chapter, current.index);
         handleLevelChange();
     }
 

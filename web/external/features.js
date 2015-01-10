@@ -57,6 +57,18 @@ var user_sort = function (a, b) {
         : (a.result > b.result ? -1 : 1);
 };
 
+var imageLoaded = function (img) {
+    if (!img.complete) {
+        return false;
+    }
+
+    if (typeof img.naturalWidth !== "undefined" && img.naturalWidth === 0) {
+        return false;
+    }
+
+    return true;
+};
+
 var Features = {
     getNounPlural: function (num, form1, form2, form3) {
         var ending;
