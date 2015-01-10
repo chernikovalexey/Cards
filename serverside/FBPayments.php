@@ -144,7 +144,7 @@ class FBPayments implements IPayments
                 <meta property="og:type" content="og:product" />
                 <meta property="og:title" content="Unlock %s chapter!"/>
                 <meta property="og:plural_title" content="%s"/>
-                <meta property="og:image" content="http://friendsmashsample.herokuapp.com/friendsmash_social_persistence_payments/images/coin.64.png" />
+                <meta property="og:image" content="http://twopeoplesoftware.com/twocubes28340jfddv03jfd/web/img/purchases/unlock.png" />
                 <meta property="og:url" content="%s"/>
                 <meta property="og:description" content="Unlock chapter: %s!"/>
                 <meta property="product:price:amount" content="%s"/>
