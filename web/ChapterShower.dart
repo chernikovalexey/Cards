@@ -18,6 +18,7 @@ class ChapterShower {
 
         int id = 0;
         for (Map chapter in chapters) {
+            print(chapter);
             querySelector("#chapter-es").appendHtml(chapterItem(chapter, ++id));
         }
 

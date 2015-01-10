@@ -510,7 +510,7 @@ button:hover:not([disabled]) {
     text-transform: uppercase;
     font-size: 13px;
     margin: 0;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.075);
 }
 
 .get-attempts-button:hover {
@@ -996,7 +996,6 @@ button:hover:not([disabled]) {
     background: rgba(44, 44, 44, 0.5);
     padding: 10px 0;
     padding-bottom: 0;
-    border-top: 1px solid #2c2c2c;
 }
 
 .tape-item {
@@ -1246,12 +1245,12 @@ button:hover:not([disabled]) {
 
 .step-button {
     border: 1px solid transparent;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.075);
     min-width: 125px;
 }
 
 .step-button:hover:not([disabled]) {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.125);
 }
 
 .step-button:focus {
@@ -1497,10 +1496,29 @@ div.active-step {
     font-size: 14px;
 }
 
+.howto-loading {
+    left: 91px;
+    width: 613px;
+    border-radius: 2px;
+    height: 238px;
+    position: absolute;
+    z-index: 88;
+    background: rgba(255, 255, 255, 0.075);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+    text-transform: uppercase;
+    text-align: center;
+    padding-top: 222px;
+    border: 3px solid rgba(255, 255, 255, 0.125);
+}
+
 .howto-player-layout img {
+    opacity: 0.0;
     height: 460px;
     border: 3px solid rgba(255, 255, 255, 0.125);
     border-radius: 2px;
+    position: relative;
+    z-index: 89;
 }
 
 #purchases {
@@ -2100,5 +2118,7 @@ div.active-step {
 
     .locked .tape-rating {
         background: url(img/small_lock@2x.png);
+        background-position: 58px !important;
+        background-repeat: no-repeat !important;
     }
 }

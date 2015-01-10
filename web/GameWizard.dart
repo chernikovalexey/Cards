@@ -97,7 +97,7 @@ class GameWizard {
     static void showHowto([Function closeCallback = null]) {
         Tooltip.closeAll();
 
-        querySelector("#tutorial-player").attributes['src'] = context['Features']['tutorial_img'].src + "?v=" + new DateTime.now().millisecondsSinceEpoch.toString();
+        querySelector("#tutorial-player").attributes['src'] = context['Features']['tutorial_img'].src;// + "?v=" + new DateTime.now().millisecondsSinceEpoch.toString();
 
         querySelector('#howto').classes.remove("hidden");
         animate(querySelector('#howto'), properties: {
@@ -105,6 +105,20 @@ class GameWizard {
         }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
 
         querySelector(".close-howto").style.opacity = "0.0";
+
+        new Timer.periodic(new Duration(milliseconds: 225), (Timer timer) {
+            if (context.callMethod('imageLoaded', [context['Features']['tutorial_img']])) {
+                animate(querySelector('.howto-loading'), properties: {
+                    'opacity': 0.0
+                }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+
+                animate(querySelector('#tutorial-player'), properties: {
+                    'opacity': 1.0
+                }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
+
+                timer.cancel();
+            }
+        });
 
         var showClose = () {
             animate(querySelector(".close-howto"), properties: {
@@ -123,9 +137,9 @@ class GameWizard {
         var frames = [{
             'time': 0, 'text': context['locale']['wizard_place']
         }, {
-            'time': 2500, 'text': context['locale']['wizard_apply']
+            'time': 3500, 'text': context['locale']['wizard_apply']
         }, {
-            'time': 5500, 'text': context['locale']['goal_desc']
+            'time': 7000, 'text': context['locale']['goal_desc']
         }];
 
         var change = () {
@@ -137,7 +151,7 @@ class GameWizard {
             }
         };
 
-        new Timer.periodic(new Duration(milliseconds: 25000), (Timer timer) => change());
+        new Timer.periodic(new Duration(milliseconds: 40500), (Timer timer) => change());
         change();
 
         querySelector(".close-howto").addEventListener("click", (event) {
