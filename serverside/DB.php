@@ -9,7 +9,7 @@
 class DB
 {
     private $db;
-    const DAY_ATTEMPTS = 200;
+    const DAY_ATTEMPTS = 125;
 
     public function DB(PDO $db)
     {
@@ -141,7 +141,7 @@ ON DUPLICATE KEY UPDATE result = :result");
             return $u;
         }
 
-        $sql = $this->db->prepare("INSERT INTO tcardusers(platformId, platformUserId, balance) VALUES (?, ?, 2)");
+        $sql = $this->db->prepare("INSERT INTO tcardusers(platformId, platformUserId, balance, lastVisit) VALUES (?, ?, 2, " . time() . ")");
         $sql->bindValue(1, $platform, PDO::PARAM_STR);
         $sql->bindValue(2, $uid, PDO::PARAM_INT);
 
@@ -182,12 +182,14 @@ ON DUPLICATE KEY UPDATE result = :result");
                                         ,boughtAttempts = ?
                                         ,dayAttemptsUsed = ?
                                         ,boughtAttemptsUsed = ?
+                                        ,lastVisit = ?
                                          WHERE userId = ?");
         $sql->bindValue(1, $user['balance'], PDO::PARAM_INT);
         $sql->bindValue(2, $user['boughtAttempts'], PDO::PARAM_INT);
         $sql->bindValue(3, $user['dayAttemptsUsed'], PDO::PARAM_INT);
         $sql->bindValue(4, $user['boughtAttemptsUsed'], PDO::PARAM_INT);
-        $sql->bindValue(5, $user['userId'], PDO::PARAM_INT);
+        $sql->bindValue(5, $user['lastVisit'], PDO::PARAM_INT);
+        $sql->bindValue(6, $user['userId'], PDO::PARAM_INT);
         $sql->execute();
     }
 
