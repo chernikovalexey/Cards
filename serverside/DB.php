@@ -42,7 +42,7 @@ class DB
     public function getHint($chapter, $level)
     {
         $sql = $this->db->prepare("SELECT t.data FROM tcardhints t WHERE t.chapter = ?");
-        $sql->bindValue($chapter, $chapter, PDO::PARAM_INT);
+        $sql->bindValue(1, $chapter, PDO::PARAM_INT);
         $sql->execute();
         $chapterHints = json_decode($sql->fetchColumn(0), true);
         return $chapterHints[$level - 1];
