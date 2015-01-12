@@ -9,6 +9,7 @@ class VKPayments implements IPayments
      * @var $db DB
      */
     private $db;
+    private $text;
 
     public function VKPayments(DB $db)
     {
@@ -47,6 +48,8 @@ class VKPayments implements IPayments
 
     private function route()
     {
+        Localization::setLang($this->input['lang'] == 'ru_RU' ? 'ru' : 'en');
+
         switch ($this->input['notification_type']) {
             case 'get_item':
             case 'get_item_test':
@@ -153,15 +156,14 @@ class VKPayments implements IPayments
                 return array(
                     //todo: make item id int
                     'item_id' => $item,
-                    'title' => "Buy {$info['count']}-hints-pack!",
+                    'title' => Localization::getPurchaseHintsMassage($info['count']),
                     'photo_url' => sprintf(HINTS_IMG, $info['count']),
                     'price' => $this->getPrice($info['type'], $info['count'])
                 );
             case 'a':
-                $info['countname'] = ($info['count'] == -1) ? 'unlimited' : strval($info['count']);
                 return array(
                     'item_id' => $item,
-                    'title' => "Buy {$info['countname']}-attempts-pack!",
+                    'title' => Localization::getPurchaseAttemptsMessage($info['count']),
                     'photo_url' => sprintf(ATTEMPTS_IMG, $info['count']),
                     'price' => $this->getPrice($info['type'], $info['count'])
                 );
@@ -169,7 +171,7 @@ class VKPayments implements IPayments
                 $data = $this->getChapterInfo($info['platformUserId'], $info['count']);
                 return array(
                     'item_id' => $item,
-                    'title' => "Unlock chapter #" . $info['count'] . " " . $data['name'],
+                    'title' => Localization::getPurchaseUnlockChapter($data['name']),
                     'photo_url' => UNLOCK,
                     'price' => $data['price']
                 );

@@ -1,0 +1,8 @@
+{
+    "buyHints": "Purchase %s",
+    "manyHints": "hints",
+    "oneHint": "hint",
+    "buyAttempts": "Purchase %s attempts",
+    "buyUnlimitedAttempts": "Purchase unlimited attempts",
+    "unlockChapter": "Unlock chapter: '%s'"
+}
