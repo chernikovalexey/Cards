@@ -347,7 +347,10 @@ var VKFeatures = {
             } else {
                 VK.api('photos.getWallUploadServer', {}, function (data) {
                     if (data.response) {
-                        Api.call("uploadPhotoReserved", {server: data.response.upload_url, photo: "promo"}, function (upload_response) {
+                        Api.call("uploadPhotoReserved", {
+                            server: data.response.upload_url,
+                            photo: "promo"
+                        }, function (upload_response) {
                             VK.api("photos.saveWallPhoto", {
                                 user_id: Features.user.platformUserId,
                                 photo: upload_response.photo,
@@ -437,7 +440,10 @@ var VKFeatures = {
 
                         html2canvas($('.level-wall-post-template').get(0), {
                             onrendered: function (canvas) {
-                                Api.call("uploadPhoto", {server: upload_url, photo: canvas.toDataURL().replace("data:image/png;base64,", "")}, function (upload_response) {
+                                Api.call("uploadPhoto", {
+                                    server: upload_url,
+                                    photo: canvas.toDataURL().replace("data:image/png;base64,", "")
+                                }, function (upload_response) {
                                     console.log(upload_response);
                                     VK.api("photos.saveWallPhoto", {
                                         user_id: Features.user.platformUserId,
@@ -482,7 +488,7 @@ var VKFeatures = {
             Features.platformUser.photo = data.response[0].photo_medium;
         });
 
-        VK.api("friends.get", {fields: "domain, photo_50"}, function (data) {
+        VK.api("friends.get", {fields: "domain, photo_100"}, function (data) {
             Api.setFriendsList(Features.toIdArray(data.response));
             Features.friends = data.response;
 
@@ -507,7 +513,7 @@ var VKFeatures = {
     toUserObject: function (fr) {
         return {
             id: fr.uid,
-            ava: fr.photo_50,
+            ava: fr.photo_100,
             name: fr.first_name,
             surname: fr.last_name,
             name_gen: fr.first_name_gen,
@@ -762,10 +768,10 @@ function publishStream(img, level_name, text) {
                     var url = r.source;
 
                     var res = "http://twopeoplesoftware.com/twocubes28340jfddv03jfd/serverside/index.php?method=fb.getLevelSharingOg&arguments=" + encodeURIComponent(JSON.stringify({
-                        'userId': Features.user.platformUserId,
-                        'level_name': level_name,
-                        'image_url': url
-                    }));
+                            'userId': Features.user.platformUserId,
+                            'level_name': level_name,
+                            'image_url': url
+                        }));
 
                     console.log(res);
 
@@ -810,7 +816,7 @@ function dataURItoBlob(dataURI) {
     for (var i = 0; i < byteString.length; i++) {
         ia[i] = byteString.charCodeAt(i);
     }
-    var blob = new Blob([ia], { type: 'image/png' });
+    var blob = new Blob([ia], {type: 'image/png'});
 
     return blob;
 }
@@ -887,8 +893,8 @@ var FBFeatures = {
             method: 'feed',
             picture: 'http://twopeoplesoftware.com/twocubes.test/web/img/promo.png',
             name: 'Two Cubes',
-            description: 'Mind-blowing puzzle game with blocks and cubes!',
-            caption: 'Place blocks and connect the cubes!',
+            description: 'The game about placing blocks and connecting the two cubes!',
+            caption: 'Place blocks and connect the two cubes!',
             link: 'https://apps.facebook.com/twocubes',
             actions: '[{"name":"Play","link":"https://apps.facebook.com/twocubes"}]'
         }, function (response) {
@@ -1145,7 +1151,8 @@ var FBFeatures = {
     chapterCallback: null,
 
     showInviteBox: function () {
-        FB.ui({method: 'apprequests',
+        FB.ui({
+            method: 'apprequests',
             message: 'Check out this new puzzle!'
         }, function (response) {
             console.log(response);
@@ -1207,14 +1214,24 @@ var NoFeatures = {
 
     $.getScript('external/locales/' + qs['app_lang'] + '.js', function () {
         $('.localized').each(function () {
-            var t = locale[$(this).data('lid')];
+            var postfix = '';
+            if ($(this).hasClass('mac-dependant')) {
+                postfix = '_mac';
+            }
+
+            var t = locale[$(this).data('lid') + postfix];
             if (t) {
                 $(this).html(t);
             }
         });
 
         $('.localized-title').each(function () {
-            var t = locale[$(this).data('lid')];
+            var postfix = '';
+            if ($(this).hasClass('mac-dependant')) {
+                postfix = '_mac';
+            }
+
+            var t = locale[$(this).data('tlid') + postfix];
             if (t) {
                 $(this).attr('title', t);
             }

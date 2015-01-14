@@ -7,8 +7,11 @@ locale.show_goal = 'Цель игры';
 locale.zoom_in = 'Приблизить камеру';
 locale.zoom_out = 'Отдалить камеру';
 locale.apply_physics = 'Вперед';
+locale.apply_shortcut = "Ctrl+Shift";
+locale.apply_shortcut_mac = "Cmd+Shift";
 locale.rewind = 'Назад';
 locale.restart = "Заново";
+locale.restart_desc = "Удалить все блоки и начать уровень сначала";
 locale.use_hint = 'Подсказка';
 locale.dynamic = 'прыгун';
 locale.static = 'полка';
@@ -133,7 +136,7 @@ locale.wizard_zoom = "<b>Используйте приближение</b> дл�
 locale.wizard_static = "Полки не падают, но и не проводят энергию";
 
 // Wall posts
-locale.share_offer_text = 'Посмотрите на отличную головоломку! #twocubes';
+locale.share_offer_text = 'Ставьте блоки и соединяйте кубы в отличной головоломке Two Cubes!';
 locale.completed_level_1 = 'Я прошёл уровень {0} в Two Cubes!';
 locale.completed_level_2 = 'Я прошёл уровень {0} в Two Cubes лучше, чем {1}!';
 locale.completed_level_3 = 'Я прошёл уровень {0} в Two Cubes лучше, чем {1} и {2}!';

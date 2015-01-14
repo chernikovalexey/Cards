@@ -49,217 +49,222 @@
 <button class="share-offer localized" data-lid="share_offer">Tell friends about the game!</button>
 
 <div class="game-box blurred">
-<div class="level-name"></div>
+    <div class="level-name"></div>
 
-<div class="buttons hidden">
-    <div class="help-layout">
-        <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show localized"
-                data-lid="view_controls">View controls
+    <div class="buttons hidden">
+        <div class="help-layout">
+            <button class="show-controls topbar-show-controls progress-step wizard-controls ordinary-show localized"
+                    data-lid="view_controls">View controls
+            </button>
+            <div class="help-delimiter"></div>
+            <button class="show-goal ignore-close-all localized" data-lid="howto">Goal of the game</button>
+        </div>
+
+        <button id="zoom-in" class="zb plus localized-title" data-tlid="zoom_in" title="Zoom camera in"></button>
+        <button id="zoom-out" class="zb minus localized-title" data-tlid="zoom_out" title="Zoom camera out"></button>
+        <button id="toggle-physics" class="localized localized-title mac-dependant" data-lid="apply_physics"
+                data-tlid="apply_shortcut">Apply physics
         </button>
-        <div class="help-delimiter"></div>
-        <button class="show-goal ignore-close-all localized" data-lid="howto">Goal of the game</button>
-    </div>
+        <button id="restart" class="localized localized-title" data-lid="restart" data-tlid="restart_desc">Restart
+        </button>
 
-    <button id="zoom-in" class="zb plus localized-title" data-lid="zoom_in" title="Zoom camera in"></button>
-    <button id="zoom-out" class="zb minus localized-title" data-lid="zoom_out" title="Zoom camera out"></button>
-    <button id="toggle-physics" class="localized" data-lid="apply_physics">Apply physics</button>
-    <button id="restart" class="localized" data-lid="restart">Restart</button>
-
-    <div class="right-buttons">
-        <div class="friends-finished-button localized-title" data-lid="some_friends" title="">
-            <div class="friends-finished-amount"></div>
-            <div class="friends-finished-icon"></div>
-        </div>
-        <button id="hint"><span id="hints-label" class="localized" data-lid="use_hint">Use hint</span><span
-                id="hints-amount">2</span></button>
-    </div>
-</div>
-
-<div class="selectors hidden">
-    <div class="selector dynamic">
-        <div class="icon"></div>
-        <div class="bound-key">1</div>
-        <div class="caption localized" data-lid="dynamic">dynamic</div>
-        <div class="remaining"></div>
-    </div>
-
-    <div class="selector static">
-        <div class="icon"></div>
-        <div class="bound-key">2</div>
-        <div class="caption localized" data-lid="static">static</div>
-        <div class="remaining"></div>
-    </div>
-</div>
-
-<div class="canvas-layout">
-    <canvas width="800" height="600" id="graphics"></canvas>
-</div>
-
-<div class="light-box" id="menu-box">
-    <div class="logo"></div>
-    <div class="instructions localized" data-lid="motto">Don't let physics intervene the energy flow!</div>
-    <div class="menu-items">
-        <div class="menu-item localized" data-lid="continue" id="continue">Continue</div>
-        <div class="menu-item localized" data-lid="new_game" id="new-game">New Game</div>
-    </div>
-    <div class="invite-friends-layout">
-        <div id="invite-friends"></div>
-    </div>
-</div>
-
-<div class="light-box hidden" id="chapter-selection">
-    <div class="go-to-menu-button localized" data-lid="menu">Menu</div>
-    <div class="chapter-headline localized" data-lid="choose_chapter">Choose chapter</div>
-    <div class="chapter-blurry-bar"></div>
-    <div class="chapter-list">
-        <div id="chapter-vs">
-            <div id="chapter-es"></div>
-        </div>
-    </div>
-
-    <div id="chapter-scrollbar"></div>
-</div>
-
-<div class="light-box hidden" id="rating-box">
-    <div class="tutorial-layout hidden">
-        <div class="tutorial-compliment localized" data-lid="gorgeous">You're gorgeous!</div>
-        <div class="tutorial-goal localized" data-lid="game_goal">That's what you should do in this game!</div>
-    </div>
-
-    <div class="attempts-layout">
-        <div class="attempts-left"></div>
-        <div class="attempts-note localized" data-lid="every_day_attempts">every day you acquire 125 free attempts
-        </div>
-        <button class="get-attempts-button localized" data-lid="get_more">get more</button>
-    </div>
-
-    <div class="unlimited-attempts-layout">
-        <div class="unlimited-head localized" data-lid="unlimited_attempts"></div>
-        <div class="unlimited-note localized" data-lid="unlimited_note"></div>
-    </div>
-
-    <div class="rating-inner-layout">
-        <div class="pause-title hidden localized" data-lid="paused">Game paused</div>
-        <div class="rating-wrap">
-            <div class="s-level-name"></div>
-            <div class="level-rating"></div>
-        </div>
-
-        <div class="chapter-rating-wrap hidden">
-            <div class="current-level-cr">
-                <div class="cr-label localized" data-lid="level">Level</div>
-                <div class="current-level-name"></div>
-                <div class="current-level-rating"></div>
+        <div class="right-buttons">
+            <div class="friends-finished-button localized-title" data-tlid="some_friends" title="">
+                <div class="friends-finished-amount"></div>
+                <div class="friends-finished-icon"></div>
             </div>
+            <button id="hint"><span id="hints-label" class="localized" data-lid="use_hint">Use hint</span><span
+                    id="hints-amount">2</span></button>
+        </div>
+    </div>
 
-            <div class="current-chapter-cr">
-                <div class="cr-label localized" data-lid="chapter">Chapter</div>
-                <div class="current-chapter-name"></div>
-                <div class="chapter-rating"></div>
-                <div class="star-ico"></div>
-            </div>
+    <div class="selectors hidden">
+        <div class="selector dynamic">
+            <div class="icon"></div>
+            <div class="bound-key">1</div>
+            <div class="caption localized" data-lid="dynamic">dynamic</div>
+            <div class="remaining"></div>
+        </div>
 
-            <div class="chapter-controls controls">
-                <button id="cc-list" class="localized" data-lid="choose_another_chapter">Choose another chapter
-                </button>
-                <button class="localized share-level" data-lid="share_result">Share result</button>
+        <div class="selector static">
+            <div class="icon"></div>
+            <div class="bound-key">2</div>
+            <div class="caption localized" data-lid="static">static</div>
+            <div class="remaining"></div>
+        </div>
+    </div>
+
+    <div class="canvas-layout">
+        <canvas width="800" height="600" id="graphics"></canvas>
+    </div>
+
+    <div class="light-box" id="menu-box">
+        <div class="logo"></div>
+        <div class="instructions localized" data-lid="motto">Don't let physics intervene the energy flow!</div>
+        <div class="menu-items">
+            <div class="menu-item localized" data-lid="continue" id="continue">Continue</div>
+            <div class="menu-item localized" data-lid="new_game" id="new-game">New Game</div>
+        </div>
+        <div class="invite-friends-layout">
+            <div id="invite-friends"></div>
+        </div>
+    </div>
+
+    <div class="light-box hidden" id="chapter-selection">
+        <div class="go-to-menu-button localized" data-lid="menu">Menu</div>
+        <div class="chapter-headline localized" data-lid="choose_chapter">Choose chapter</div>
+        <div class="chapter-blurry-bar"></div>
+        <div class="chapter-list">
+            <div id="chapter-vs">
+                <div id="chapter-es"></div>
             </div>
         </div>
 
-        <div class="level-controls controls">
-            <button class="step-button localized" data-lid="restart" id="restart-level">Restart</button>
-            <button class="step-button localized" data-lid="next" id="next-level">Next</button>
-            <button class="step-button share-level localized" data-lid="share_result">Share result</button>
+        <div id="chapter-scrollbar"></div>
+    </div>
+
+    <div class="light-box hidden" id="rating-box">
+        <div class="tutorial-layout hidden">
+            <div class="tutorial-compliment localized" data-lid="gorgeous">You're gorgeous!</div>
+            <div class="tutorial-goal localized" data-lid="game_goal">That's what you should do in this game!</div>
         </div>
 
-        <div class="pause-controls controls hidden">
-            <button class="step-button localized" data-lid="resume" id="resume-game">Resume</button>
-            <button class="step-button localized" data-lid="restart" id="clear-level">Restart</button>
-            <button class="step-button localized" data-lid="menu" id="pm-menu">Menu</button>
+        <div class="attempts-layout">
+            <div class="attempts-left"></div>
+            <div class="attempts-note localized" data-lid="every_day_attempts">every day you acquire 125 free attempts
+            </div>
+            <button class="get-attempts-button localized" data-lid="get_more">get more</button>
+        </div>
+
+        <div class="unlimited-attempts-layout">
+            <div class="unlimited-head localized" data-lid="unlimited_attempts"></div>
+            <div class="unlimited-note localized" data-lid="unlimited_note"></div>
+        </div>
+
+        <div class="rating-inner-layout">
+            <div class="pause-title hidden localized" data-lid="paused">Game paused</div>
+            <div class="rating-wrap">
+                <div class="s-level-name"></div>
+                <div class="level-rating"></div>
+            </div>
+
+            <div class="chapter-rating-wrap hidden">
+                <div class="current-level-cr">
+                    <div class="cr-label localized" data-lid="level">Level</div>
+                    <div class="current-level-name"></div>
+                    <div class="current-level-rating"></div>
+                </div>
+
+                <div class="current-chapter-cr">
+                    <div class="cr-label localized" data-lid="chapter">Chapter</div>
+                    <div class="current-chapter-name"></div>
+                    <div class="chapter-rating"></div>
+                    <div class="star-ico"></div>
+                </div>
+
+                <div class="chapter-controls controls">
+                    <button id="cc-list" class="localized" data-lid="choose_another_chapter">Choose another chapter
+                    </button>
+                    <button class="localized share-level" data-lid="share_result">Share result</button>
+                </div>
+            </div>
+
+            <div class="level-controls controls">
+                <button class="step-button localized" data-lid="restart" id="restart-level">Restart</button>
+                <button class="step-button localized" data-lid="next" id="next-level">Next</button>
+                <button class="step-button share-level localized" data-lid="share_result">Share result</button>
+            </div>
+
+            <div class="pause-controls controls hidden">
+                <button class="step-button localized" data-lid="resume" id="resume-game">Resume</button>
+                <button class="step-button localized" data-lid="restart" id="clear-level">Restart</button>
+                <button class="step-button localized" data-lid="menu" id="pm-menu">Menu</button>
+            </div>
+        </div>
+
+        <div class="tape">
+            <div class="chapter-level">
+                <div class="finished-levels"></div>
+                <span class="localized" data-lid="of">of</span>
+
+                <div class="all-levels"></div>
+            </div>
+            <div id="tape-vs">
+                <div id="tape-es"></div>
+            </div>
+            <div id="tape-scrollbar"></div>
         </div>
     </div>
 
-    <div class="tape">
-        <div class="chapter-level">
-            <div class="finished-levels"></div>
-            <span class="localized" data-lid="of">of</span>
-
-            <div class="all-levels"></div>
-        </div>
-        <div id="tape-vs">
-            <div id="tape-es"></div>
-        </div>
-        <div id="tape-scrollbar"></div>
-    </div>
-</div>
-
-<div class="light-box hidden" id="wizard-controls">
-    <div class="controls-layout">
-        <div class="control-block">
-            <div class="ctrl-icon rotate"></div>
-            <div class="ctrl-instruction localized" data-lid="instruction_rotate"><b>To rotate the block,</b> use
-                your mouse wheel or buttons Q/E
+    <div class="light-box hidden" id="wizard-controls">
+        <div class="controls-layout">
+            <div class="control-block">
+                <div class="ctrl-icon rotate"></div>
+                <div class="ctrl-instruction localized" data-lid="instruction_rotate"><b>To rotate the block,</b> use
+                    your mouse wheel or buttons Q/E
+                </div>
             </div>
-        </div>
 
-        <div class="control-block">
-            <div class="ctrl-icon zoom-in"></div>
-            <div class="ctrl-instruction localized" data-lid="instruction_zoom_in"><b>To zoom camera in,</b> hold Z
-                and left-click
+            <div class="control-block">
+                <div class="ctrl-icon zoom-in"></div>
+                <div class="ctrl-instruction localized" data-lid="instruction_zoom_in"><b>To zoom camera in,</b> hold Z
+                    and left-click
+                </div>
             </div>
-        </div>
 
-        <div class="control-block">
-            <div class="ctrl-icon zoom-out"></div>
-            <div class="ctrl-instruction localized" data-lid="instruction_zoom_out"><b>To zoom camera out,</b> hold
-                Alt and left-click
+            <div class="control-block">
+                <div class="ctrl-icon zoom-out"></div>
+                <div class="ctrl-instruction localized" data-lid="instruction_zoom_out"><b>To zoom camera out,</b> hold
+                    Alt and left-click
+                </div>
             </div>
-        </div>
 
-        <div class="control-block">
-            <div class="ctrl-icon dragging"></div>
-            <div class="ctrl-instruction localized" data-lid="instruction_move">To move the camera,</b> use arrows
-                on the keyboard or press Space and drag
-                the
-                mouse.
+            <div class="control-block">
+                <div class="ctrl-icon dragging"></div>
+                <div class="ctrl-instruction localized" data-lid="instruction_move">To move the camera,</b> use arrows
+                    on the keyboard or press Space and drag
+                    the
+                    mouse.
+                </div>
             </div>
-        </div>
 
-        <div class="control-block">
-            <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction localized" data-lid="instruction_apply"><b>To apply physics or rewind,</b>
-                press Ctrl+Shift.
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction localized mac-dependant" data-lid="instruction_apply"><b>To apply physics
+                    or rewind,</b>
+                    press Ctrl+Shift.
+                </div>
             </div>
-        </div>
 
-        <div class="control-block">
-            <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction localized" data-lid="instruction_undo"><b>To undo the most recent
-                action,</b> press Ctrl+Z.
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction localized mac-dependant" data-lid="instruction_undo"><b>To undo the most
+                    recent
+                    action,</b> press Ctrl+Z.
+                </div>
             </div>
-        </div>
 
-        <div class="control-block">
-            <div class="ctrl-icon"></div>
-            <div class="ctrl-instruction localized" data-lid="instruction_remove"><b>To remove a block,</b> place
-                mouse over it and right-click.
+            <div class="control-block">
+                <div class="ctrl-icon"></div>
+                <div class="ctrl-instruction localized" data-lid="instruction_remove"><b>To remove a block,</b> place
+                    mouse over it and right-click.
+                </div>
             </div>
-        </div>
 
-        <div class="next-button-layout">
-            <button class="step-button try-button progress-step wizard-try localized" data-lid="ok">OK</button>
+            <div class="next-button-layout">
+                <button class="step-button try-button progress-step wizard-try localized" data-lid="ok">OK</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="light-box hidden" id="wizard-try"></div>
+    <div class="light-box hidden" id="wizard-try"></div>
 
-<div class="tutorial-progress hidden">
-    <div class="progress-step wizard-overview active-step"
-         title="Overview of controls, and the goal of the game"></div>
-    <div class="progress-step wizard-controls" title="Controls"></div>
-    <div class="progress-step wizard-try" title="Try to complete a level on your own"></div>
-</div>
+    <div class="tutorial-progress hidden">
+        <div class="progress-step wizard-overview active-step"
+             title="Overview of controls, and the goal of the game"></div>
+        <div class="progress-step wizard-controls" title="Controls"></div>
+        <div class="progress-step wizard-try" title="Try to complete a level on your own"></div>
+    </div>
 </div>
 
 <div class="bs-screen" id="howto">
@@ -288,8 +293,7 @@
                     id="hints-balance">2</span></div>
         </div>
         <div class="purchase-options hint-options"></div>
-    </div>
-    <div class="purchase-block">
+    </div><div class="purchase-block">
         <div class="purchase-block-head">
             <div class="purchase-headline localized" data-lid="attempts">Attempts</div>
             <div class="balance-layout"><span class="localized" data-lid="you_have">you have</span> <span
@@ -340,18 +344,18 @@
             <div class="fr-meta">
                 <div class="fr-name"><%=name%> <%=surname%></div>
                 <div class="usage-statistics">
-                    <div class="fr-dynamic localized-title" data-lid="amount_of_dynamic"
+                    <div class="fr-dynamic localized-title" data-tlid="amount_of_dynamic"
                          title="Amount of dynamic blocks">
                         <div class="fr-num fr-nd"><%=dynamic%></div>
                         <div class="fr-block fr-db"></div>
                     </div>
 
-                    <div class="fr-static localized-title" data-lid="amount_of_static" title="Amount of static blocks">
+                    <div class="fr-static localized-title" data-tlid="amount_of_static" title="Amount of static blocks">
                         <div class="fr-num fr-ns"><%=static%></div>
                         <div class="fr-block fr-sb"></div>
                     </div>
                 </div>
-                <div class="fr-result localized-title" data-lid="amount_of_stars"
+                <div class="fr-result localized-title" data-tlid="amount_of_stars"
                      title="Amount of stars acquired for this level">
                     <div class="fr-res-num"><%=result%></div>
                     <div class="fr-res-ico"></div>

@@ -2099,12 +2099,12 @@ div.active-step {
         background: url(img/rotate@2x.png);
     }
 
-    .zoom-in {
-        background: url(img/icon_plus@2x.png);
+    .plus {
+        background-image: url(img/icon_plus@2x.png);
     }
 
-    .zoom-out {
-        background: url(img/icon_minus@2x.png);
+    .minus {
+        background-image: url(img/icon_minus@2x.png);
     }
 
     .dragging {

@@ -7,8 +7,11 @@ locale.show_goal = 'Goal of the game';
 locale.zoom_in = 'Zoom camera in';
 locale.zoom_out = 'Zoom camera out';
 locale.apply_physics = 'Apply';
+locale.apply_shortcut = "Ctrl+Shift";
+locale.apply_shortcut_mac = "Cmd+Shift";
 locale.rewind = 'Rewind';
 locale.restart = "Restart";
+locale.restart_desc = "Remove all blocks and start the level again";
 locale.use_hint = 'Use hint';
 locale.dynamic = 'jumper';
 locale.static = 'shelf';
@@ -99,7 +102,7 @@ locale['6d'] = 'six';
 // Used in Dart
 locale.left = '%s left';
 locale.attempts_lack = "Lack of attempts";
-locale.attempts_lack_message = "You've unfortunately spent all attempts for today. Come back tomorrow, or:";
+locale.attempts_lack_message = "You've unfortunately spent all attempts for today.";
 locale.get_attempts = "Get more attempts";
 locale.spent_all_attempts = "You've spent all attempts for today";
 locale.hints_lack = "Lack of hints";
@@ -131,7 +134,7 @@ locale.wizard_zoom = "<b>Use zoom</b> for accuracy";
 locale.wizard_static = "Shelves don't fall when physics applied, and don't conduct energy.";
 
 // Wall posts
-locale.share_offer_text = 'Check out an excellent puzzle game! #twocubes';
+locale.share_offer_text = 'Check out an excellent puzzle game Two Cubes!';
 locale.completed_level_1 = "I've completed the level {0} in Two Cubes!";
 locale.completed_level_2 = "I've completed the level {0} in Two Cubes better than {1}!";
 locale.completed_level_3 = "I've completed the level {0} in Two Cubes better than {1} and {2}!";
