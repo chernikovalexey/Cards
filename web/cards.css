@@ -140,6 +140,7 @@ canvas {
     width: 793px;
     position: absolute;
     z-index: 99;
+    cursor: default;
 }
 
 button {
@@ -212,6 +213,18 @@ button:hover:not([disabled]) {
     position: relative;
 }
 
+#restart {
+    background: transparent;
+    opacity: 0.5;
+    padding: 0;
+    border-radius: 0;
+    margin-left: 5px;
+}
+
+#restart:hover {
+    opacity: 0.75;
+}
+
 .faded {
     opacity: 0.5;
 }
@@ -243,7 +256,7 @@ button:hover:not([disabled]) {
     font-weight: 700;
     font-size: 14px;
     position: relative;
-    top: -3px;
+    top: -2px;
 }
 
 .friends-finished-icon {
@@ -1980,7 +1993,7 @@ div.active-step {
 
 .prompt-close {
     position: relative;
-    top: -20px;
+    top: -18px;
     right: 15px;
     float: right;
     color: #fff;
@@ -2004,6 +2017,7 @@ div.active-step {
 .prompt-offer {
     padding: 10px 15px;
     background: rgba(255, 255, 255, 0.075);
+    margin-bottom: 15px;
 }
 
 .prompt-offer-text {
@@ -2028,6 +2042,7 @@ div.active-step {
 
 .prompt-buttons {
     padding: 15px;
+    padding-top: 0;
 }
 
 .prompt-button {

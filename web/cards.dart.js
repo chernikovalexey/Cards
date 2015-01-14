@@ -1522,9 +1522,14 @@ $.fl=!0}if(z.gNl(a)===!0&&J.UQ(J.UQ($.cM(),"Features"),"is_macintosh")===!0){$.t
 $.Uz=!0}A.Vx(a,!0)
 z=$.rW
 if(z!=null)z.call$1(a)},"call$1","Lz",2,0,14,11,[]],
-om:[function(a){A.Vx(a,!1)
+om:[function(a){var z
+A.Vx(a,!1)
 $.GT=!1
-$.tm=!1},"call$1","Wm",2,0,14,11,[]],
+$.tm=!1
+z=J.RE(a)
+if(z.gNl(a)!==!0&&z.gHQ(a)===91&&J.UQ(J.UQ($.cM(),"Features"),"is_macintosh")===!0){z=$.Nl()
+z.t(0,"z").CX=!1
+z.t(0,"z").OE=!1}},"call$1","Wm",2,0,14,11,[]],
 y7:[function(){$.fl=!1
 $.Uz=!1
 $.Zh=!1

@@ -160,7 +160,7 @@ class NotificationService
 
     private $messages;
 
-    private function getMessage($reason, $lang, $data)
+    private function getMessage($reason, $lang, $data = array())
     {
         if ($this->messages == null) {
             $this->messages = array();

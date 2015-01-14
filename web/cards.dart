@@ -1,6 +1,5 @@
 import 'dart:html';
 import 'dart:convert';
-import 'dart:isolate';
 import 'GameEngine.dart';
 import 'Input.dart';
 import 'package:animation/animation.dart';
@@ -18,6 +17,7 @@ import 'WebApi.dart';
 import 'GameWizard.dart';
 import 'Scroll.dart';
 import 'PromptWindow.dart';
+import 'Tooltip.dart';
 import 'package:sprintf/sprintf.dart';
 import 'LevelSerializer.dart';
 
@@ -241,6 +241,7 @@ void main() {
             applyPhysicsLabelToButton();
         }
     }, false);
+    querySelector("#restart").addEventListener("click", promptGameRestart, false);
     querySelector("#zoom-in").addEventListener("click", (event) => engine.zoom(true));
     querySelector("#zoom-out").addEventListener("click", (event) => engine.zoom(false));
 
@@ -269,6 +270,19 @@ bool updateAttempts() {
     }
 
     return true;
+}
+
+void promptGameRestart([Event event]) {
+    Tooltip.closeAll();
+
+    PromptWindow.show(context['locale']['restart_question'], context['locale']['surely_want_restart'], '', '', () {
+    }, (bool positive) {
+        if (positive) {
+            engine.clear();
+        }
+
+        PromptWindow.close();
+    });
 }
 
 void showLevelName(String name) {

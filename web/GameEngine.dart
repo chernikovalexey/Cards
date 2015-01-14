@@ -722,12 +722,13 @@ class GameEngine extends State {
         }
     }
 
-    void clear([bool noLocalStorageClear=false]) {
+    void clear([bool noLocalStorageClear = false]) {
         if (!noLocalStorageClear) {
             window.localStorage.remove("level_" + level.chapter.toString() + "_" + (level.current.index + 1).toString());
         }
 
         applyPhysicsLabelToButton();
+        history.clear();
         bobbin.erase();
         obstaclesBobbin.erase();
         List<Body> _cards = new List<Body>();

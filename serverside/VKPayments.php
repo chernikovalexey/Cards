@@ -9,6 +9,7 @@ class VKPayments implements IPayments
      * @var $db DB
      */
     private $db;
+    private $text;
 
     public function VKPayments(DB $db)
     {
@@ -47,6 +48,8 @@ class VKPayments implements IPayments
 
     private function route()
     {
+        Localization::setLang($this->input['lang'] == 'ru_RU' ? 'ru' : 'en');
+
         switch ($this->input['notification_type']) {
             case 'get_item':
             case 'get_item_test':
@@ -141,6 +144,10 @@ class VKPayments implements IPayments
 
     private function getItem($item)
     {
+        define("BASE_URL", "http://twopeoplesoftware.com/twocubes28340jfddv03jfd/web/img/purchases/");
+        define("ATTEMPTS_IMG", BASE_URL . "attempts_%s.png");
+        define("HINTS_IMG", BASE_URL . "hints_%s.png");
+        define("UNLOCK", BASE_URL . "unlock.png");
 
         // todo: Add a special method to get this info from item id
         $info = $this->getItemInfo($item);
@@ -150,24 +157,23 @@ class VKPayments implements IPayments
                 return array(
                     //todo: make item id int
                     'item_id' => $item,
-                    'title' => "Buy {$info['count']}-hints-pack!",
-                    'photo_url' => 'http://thumbs.dreamstime.com/thumb_370/1235836831WEhmZf.jpg',
+                    'title' => Localization::getPurchaseHintsMassage($info['count']),
+                    'photo_url' => sprintf(HINTS_IMG, $info['count']),
                     'price' => $this->getPrice($info['type'], $info['count'])
                 );
             case 'a':
-                $info['countname'] = ($info['count'] == -1) ? 'unlimited' : strval($info['count']);
                 return array(
                     'item_id' => $item,
-                    'title' => "Buy {$info['countname']}-attempts-pack!",
-                    'photo_url' => 'http://thumbs.dreamstime.com/thumb_370/1235836831WEhmZf.jpg',
+                    'title' => Localization::getPurchaseAttemptsMessage($info['count']),
+                    'photo_url' => sprintf(ATTEMPTS_IMG, $info['count']),
                     'price' => $this->getPrice($info['type'], $info['count'])
                 );
             case 'c':
                 $data = $this->getChapterInfo($info['platformUserId'], $info['count']);
                 return array(
                     'item_id' => $item,
-                    'title' => "Unlock the chapter: " . $data['name'],
-                    'photo_url' => 'http://twopeoplesoftware.com/twocubes28340jfddv03jfd/web/img/purchases/unlock.png',
+                    'title' => Localization::getPurchaseUnlockChapter($data['name']),
+                    'photo_url' => UNLOCK,
                     'price' => $data['price']
                 );
         }
@@ -177,7 +183,7 @@ class VKPayments implements IPayments
     {
         if ($status != 'chargeable')
             return array(
-                'error_code' => 100,
+                'error_code' => 10,
                 'error_msg' => 'Передано непонятно что вместо chargeable.',
                 'critical' => true
             );

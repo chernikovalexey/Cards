@@ -43,6 +43,9 @@ class PromptWindow {
             'id': id, 'headline': headline, 'message': message, 'offer_text': offer_text, 'offer_button': offer_button, 'positive': positive, 'negative': negative
         }).toString();
 
+        // check whether there is no offer
+        querySelector(".p-" + nid).querySelector(".prompt-offer").hidden = offer_text == "" && offer_button == "";
+
         querySelector(".po-" + nid).addEventListener("click", offerCallback, true);
 
         querySelector(".pp-" + nid).addEventListener("click", (event) {

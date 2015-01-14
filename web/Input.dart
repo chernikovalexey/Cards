@@ -80,7 +80,6 @@ class Input {
     }
 
     static void toggle(KeyboardEvent event, bool down) {
-        window.console.log(event);
         keys.forEach((String key, Key val) {
             if (val.code == event.keyCode) {
                 val.down = down;
