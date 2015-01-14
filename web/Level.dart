@@ -40,14 +40,21 @@ class Level {
     int findLastEmptyLevel(int ch) {
         int index = 0;
         bool found = false;
-        while (!found) {
+        out: while (!found) {
             ++index;
             if (window.localStorage.containsKey("level_" + ch.toString() + "_" + index.toString())) {
                 Map json = JSON.decode(window.localStorage["level_" + ch.toString() + "_" + index.toString()]);
-                if (!json["cd"] && !json["c"].isEmpty) {
+                if (!json["cd"]) {
                     found = true;
-                    --index;
-                    break;
+                    for (int i = index - 1; i >= 1;--i) {
+                        Map json2 = JSON.decode(window.localStorage["level_" + ch.toString() + "_" + i.toString()]);
+                        if (json2['cd'] || i == 1) {
+                            index = i;
+                            break out;
+                        }
+                    }
+                    //--index;
+                    //break;
                 }
             } else {
                 found = true;
@@ -109,6 +116,7 @@ class Level {
                 preloadFurtherLevels();
             } else {
                 currentSubLevel = findLastEmptyLevel(chapter);
+                print(currentSubLevel);
 
                 if (window.localStorage.containsKey("level_" + chapter.toString() + "_" + (currentSubLevel + 1).toString())) {
                     next();

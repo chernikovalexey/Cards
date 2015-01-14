@@ -2415,21 +2415,24 @@ var $$ = Object.create(null);
   Level: {
     "^": "Object;engine,current,subLevels,currentSubLevel,levels,chapter",
     findLastEmptyLevel$1: function(ch) {
-      var t1, index, found, json, t2, level;
-      for (t1 = J.getInterceptor(ch), index = 0, found = false; !found;) {
-        ++index;
-        if (window.localStorage.getItem(C.JSString_methods.$add("level_", t1.toString$0(ch)) + "_" + C.JSInt_methods.toString$0(index)) != null) {
-          json = C.JsonCodec_null_null.decode$1(window.localStorage.getItem(C.JSString_methods.$add("level_", t1.toString$0(ch)) + "_" + C.JSInt_methods.toString$0(index)));
-          t2 = J.getInterceptor$asx(json);
-          if (t2.$index(json, "cd") !== true && J.get$isEmpty$asx(t2.$index(json, "c")) !== true) {
-            --index;
-            break;
-          }
-        } else
-          found = true;
-        if (index === 12)
-          found = true;
-      }
+      var t1, index, found, i, level;
+      $out$0:
+        for (t1 = J.getInterceptor(ch), index = 0, found = false; !found;) {
+          ++index;
+          if (window.localStorage.getItem(C.JSString_methods.$add("level_", t1.toString$0(ch)) + "_" + C.JSInt_methods.toString$0(index)) != null) {
+            if (J.$index$asx(C.JsonCodec_null_null.decode$1(window.localStorage.getItem(C.JSString_methods.$add("level_", t1.toString$0(ch)) + "_" + C.JSInt_methods.toString$0(index))), "cd") !== true) {
+              for (i = index - 1; i >= 1; --i)
+                if (J.$index$asx(C.JsonCodec_null_null.decode$1(window.localStorage.getItem(C.JSString_methods.$add("level_", t1.toString$0(ch)) + "_" + C.JSInt_methods.toString$0(i))), "cd") === true || i === 1) {
+                  index = i;
+                  break $out$0;
+                }
+              found = true;
+            }
+          } else
+            found = true;
+          if (index === 12)
+            found = true;
+        }
       t1 = J.get$length$asx(this.levels);
       if (typeof t1 !== "number")
         return H.iae(t1);
@@ -2659,7 +2662,9 @@ var $$ = Object.create(null);
         t1.preloadFurtherLevels$0();
       } else {
         t2 = this.chapter_2;
-        t1.currentSubLevel = t1.findLastEmptyLevel$1(t2);
+        t3 = t1.findLastEmptyLevel$1(t2);
+        t1.currentSubLevel = t3;
+        P.print(t3);
         if (window.localStorage.getItem(C.JSString_methods.$add(C.JSString_methods.$add("level_", J.toString$0(t2)) + "_", J.toString$0(J.$add$ns(t1.currentSubLevel, 1)))) != null)
           t1.next$0();
         else
