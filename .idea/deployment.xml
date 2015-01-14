@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="Two Cubes Dev">
+  <component name="PublishConfigData" autoUpload="Always" serverName="Two Cubes Developer" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg,.sql">
     <serverData>
-      <paths name="Two Cubes">
+      <paths name="Two Cubes Developer">
         <serverdata>
           <mappings>
-            <mapping deploy="/twocubes28340jfddv03jfd" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/twocubes.test" local="$PROJECT_DIR$" web="" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="Two Cubes Dev">
+      <paths name="Two Cubes Production">
         <serverdata>
           <mappings>
-            <mapping deploy="/twocubes.test" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/twocubes28340jfddv03jfd" local="$PROJECT_DIR$" web="" />
           </mappings>
         </serverdata>
       </paths>
@@ -20,4 +20,3 @@
     <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>
-

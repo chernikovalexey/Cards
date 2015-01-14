@@ -606,10 +606,6 @@ class Body {
     return v;
   }
 
-  Vector2 getForce() {
-    return _force;
-  }
-
   /**
    * Get the world coordinates of a point given the local coordinates to the
    * given out parameter.

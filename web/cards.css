@@ -2118,7 +2118,7 @@ div.active-step {
 
     .locked .tape-rating {
         background: url(img/small_lock@2x.png);
-        background-position: 58px !important;
+        background-position: 63px !important;
         background-repeat: no-repeat !important;
     }
 }

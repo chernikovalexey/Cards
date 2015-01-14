@@ -1,17 +1,19 @@
-{"chapters": [
+{
+  "chapters": [
     {
-        "name": "Adventures of Po",
-        "unlock_stars": 0,
-        "levels": 12
+      "name": "Adventures of Po",
+      "unlock_stars": 0,
+      "levels": 12
     },
     {
-        "name": "Loopy Loop",
-        "unlock_stars": 30,
-        "levels": 12
+      "name": "Loopy Loop",
+      "unlock_stars": 30,
+      "levels": 12
     },
     {
-        "name": "Absolutely Crazy",
-        "unlock_stars": 60,
-        "levels": 12
+      "name": "Deutsche Welle",
+      "unlock_stars": 60,
+      "levels": 12
     }
-]}
+  ]
+}

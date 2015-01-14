@@ -31,8 +31,6 @@ class Api
         if (count($friends) > 0) {
             $r = array('user' => $user, 'results' => $this->db->getResults($friends, $this->platform, null, $inGameUsers));
             $this->db->bindFriends($user['userId'], $this->platform, $inGameUsers);
-            $user['lastVisit'] = time();
-            $this->db->submitUser($user);
             return $r;
         } else
             return array('user' => $user, 'results' => array());

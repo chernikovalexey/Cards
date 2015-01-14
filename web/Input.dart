@@ -80,6 +80,7 @@ class Input {
     }
 
     static void toggle(KeyboardEvent event, bool down) {
+        window.console.log(event);
         keys.forEach((String key, Key val) {
             if (val.code == event.keyCode) {
                 val.down = down;
@@ -110,6 +111,12 @@ class Input {
 
         isAltDown = false;
         isCmdDown = false;
+
+        // Spike for Mac which is not detecting keyup of Z
+        if (!event.metaKey && event.keyCode == 91 && context['Features']['is_macintosh']) {
+            keys['z'].down = false;
+            keys['z'].clicked = false;
+        }
     }
 
     static void update() {

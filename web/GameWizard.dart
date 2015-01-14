@@ -86,12 +86,14 @@ class GameWizard {
         } else if (chapter == 1 && level == 3) {
             showRotation();
         } else if (chapter == 1 && level == 6) {
-            showHintsTooltip();
+            //showHintsTooltip();
         } else if (chapter == 1 && level == 5) {
             showZoom();
         } else if (chapter == 1 && level == 8) {
             showStaticAppear();
         }
+
+        tryShowingHintsTooltip();
     }
 
     static void showHowto([Function closeCallback = null]) {
@@ -271,6 +273,12 @@ class GameWizard {
                     stream.cancel();
                 });
             }
+        });
+    }
+
+    static void tryShowingHintsTooltip() {
+        new Timer.periodic(new Duration(milliseconds: 20000), (Timer timer) {
+            timer.cancel();
         });
     }
 
