@@ -888,7 +888,7 @@ var FBFeatures = {
             id: fr.id,
             name: fr.first_name,
             surname: fr.last_name,
-            ava: fr.picture.data.url,
+            ava: "http://graph.facebook.com/" + fr.id + "/picture?type=normal",
             tag: fr.mention_tag
         };
     },
