@@ -6,7 +6,7 @@ locale.view_controls = 'View controls';
 locale.show_goal = 'Goal of the game';
 locale.zoom_in = 'Zoom camera in';
 locale.zoom_out = 'Zoom camera out';
-locale.apply_physics = 'Apply';
+locale.apply_physics = locale.apply_physics_mac = 'Apply';
 locale.apply_shortcut = "Ctrl+Shift";
 locale.apply_shortcut_mac = "Cmd+Shift";
 locale.rewind = 'Rewind';

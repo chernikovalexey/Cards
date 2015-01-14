@@ -209,6 +209,8 @@ class SubLevel {
             e.bobbin.list = frames;
             e.cards = cards;
 
+            completed = false;
+
             e.world.setGravity(new Vector2(0.0, gravity));
             if (gravity > 0.0) {
                 parallax.modifier = ParallaxManager.UP;

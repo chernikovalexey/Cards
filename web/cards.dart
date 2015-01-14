@@ -330,12 +330,12 @@ void togglePhysicsLabel() {
     }
 }
 
-void applyPhysicsLabelToButton() {
+void applyPhysicsLabelToButton([Function callback = null]) {
     var btn = querySelector("#toggle-physics");
     btn.classes.remove("rewind");
     btn.text = context['locale']['apply_physics'];
 
-    engine.rewind();
+    engine.rewind(callback);
 }
 
 void applyRewindLabelToButton([List list]) {

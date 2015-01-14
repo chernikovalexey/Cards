@@ -16,6 +16,7 @@ class LevelSerializer {
 
     static String toJSON(List<Body> cards, List<List> frames, List<Body> _do, List<List> doFrames, bool completed) {
         Map map = new Map();
+
         map['cd'] = completed;
         map['c'] = new List<Map>();
         map['f'] = new List();

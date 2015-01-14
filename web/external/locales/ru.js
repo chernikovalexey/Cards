@@ -6,7 +6,7 @@ locale.view_controls = 'Управление';
 locale.show_goal = 'Цель игры';
 locale.zoom_in = 'Приблизить камеру';
 locale.zoom_out = 'Отдалить камеру';
-locale.apply_physics = 'Вперед';
+locale.apply_physics = locale.apply_physics_mac = 'Вперед';
 locale.apply_shortcut = "Ctrl+Shift";
 locale.apply_shortcut_mac = "Cmd+Shift";
 locale.rewind = 'Назад';

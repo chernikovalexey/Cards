@@ -98,6 +98,7 @@ class GameEngine extends State {
     bool isRewinding = false;
     bool frontRewind = false;
 
+    Function rewindCallback = null;
     Function frontRewindLevelComplete = () {
     };
     Function frontRewindLevelFailed = () {
@@ -328,6 +329,7 @@ class GameEngine extends State {
             bobbin.erase();
             bobbin.enterFrame(cards);
         } else {
+            level.current.completed = false;
             (to.userData as Sprite).deactivate();
         }
 
@@ -397,6 +399,11 @@ class GameEngine extends State {
             }
 
             if (!isRewinding) {
+                if (rewindCallback != null) {
+                    rewindCallback();
+                    rewindCallback = null;
+                }
+
                 bobbin.erase();
                 obstaclesBobbin.erase();
                 if (bobbin.rewindComplete != null) bobbin.rewindComplete();
@@ -657,12 +664,10 @@ class GameEngine extends State {
         togglePhysics(true);
     }
 
-    void rewind([List list]) {
-        if (list != null) {
-            bobbin.list = list;
-        }
+    void rewind([Function callback]) {
         togglePhysics(false);
         isRewinding = true;
+        rewindCallback = callback;
     }
 
     void removeCard(Body c) {
@@ -727,14 +732,15 @@ class GameEngine extends State {
             window.localStorage.remove("level_" + level.chapter.toString() + "_" + (level.current.index + 1).toString());
         }
 
-        applyPhysicsLabelToButton();
-        history.clear();
-        bobbin.erase();
-        obstaclesBobbin.erase();
-        List<Body> _cards = new List<Body>();
-        _cards.addAll(cards);
-        for (Body b in _cards) {
-            removeCard(b);
-        }
+        applyPhysicsLabelToButton(() {
+            history.clear();
+            bobbin.erase();
+            obstaclesBobbin.erase();
+            List<Body> _cards = new List<Body>();
+            _cards.addAll(cards);
+            for (Body b in _cards) {
+                removeCard(b);
+            }
+        });
     }
 }

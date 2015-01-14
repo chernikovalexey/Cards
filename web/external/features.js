@@ -52,9 +52,25 @@ var getNumberAsWord = function (num) {
 };
 
 var user_sort = function (a, b) {
-    return a.result === b.result
-        ? 0
-        : (a.result > b.result ? -1 : 1);
+    var diff = 0;
+
+    if (a.result === b.result) {
+        if (a.dynamic != undefined && b.dynamic != undefined) {
+            if (a.dynamic == b.dynamic) {
+                if (a.static != undefined && b.static != undefined) {
+                    if (a.static !== b.static) {
+                        diff = a.static > b.static ? -1 : 1;
+                    }
+                }
+            } else {
+                diff = a.dynamic > b.dynamic ? -1 : 1;
+            }
+        }
+    } else {
+        diff = a.result > b.result ? -1 : 1;
+    }
+
+    return diff;
 };
 
 var imageLoaded = function (img) {
@@ -103,7 +119,6 @@ var Features = {
     },
 
     updateLoadingBar: function (percentage, callback) {
-        console.log(percentage);
         $('.running-bar').animate({width: 600 * percentage / 100}, 150, 'easeOutQuart', callback || function () {
         });
     },
@@ -397,7 +412,7 @@ var VKFeatures = {
                         var upload_url = data.response.upload_url;
 
                         var text;
-                        if (Features[chapter]) {
+                        if (Features.chapters[chapter]) {
                             var current_level_users = $.extend(true, {}, Features.chapters[chapter][level]);
                             current_level_users['u' + Features.user.platformUserId] = {
                                 name: Features.platformUser.first_name,
@@ -912,7 +927,7 @@ var FBFeatures = {
 
         var text;
 
-        if (Features[chapter]) {
+        if (Features.chapters[chapter]) {
             var current_level_users = $.extend(true, {}, Features.chapters[chapter][level]);
             current_level_users['u' + Features.user.platformUserId] = {
                 result: result

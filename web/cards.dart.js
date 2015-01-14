@@ -650,13 +650,11 @@ var $$ = Object.create(null);
 ["", "ChapterShower.dart", , O, {
   "^": "",
   ChapterShower_show: [function(chapters) {
-    var t1, id, chapter, line, t2, el, t3, t4, totalStars, left, t5, finished, bar;
+    var t1, id, chapter, t2, el, t3, t4, totalStars, left, t5, finished, bar;
     J.set$innerHtml$x(document.querySelector("#chapter-es"), "");
     A.Input_attachSingleEscClickCallback(new O.ChapterShower_show_closure());
     for (t1 = J.get$iterator$ax(chapters), id = 0; t1.moveNext$0();) {
       chapter = t1.get$current();
-      line = H.S(chapter);
-      H.printString(line);
       t2 = document.querySelector("#chapter-es");
       ++id;
       el = H.interceptedTypeCast(document.querySelector(".chapter-template"), "$isDivElement");
@@ -916,7 +914,10 @@ var $$ = Object.create(null);
     }
   },
   GameEngine: {
-    "^": "State;lastStepTime,physicsEnabled<,isPaused<,ready,canFinishLevel,finishedCurrentLevel,traversed,world,pool,contactListener,g,viewport,debugDraw,bcard,bobbin,obstaclesBobbin,camera,traverser,level,from,to<,history,cards<,stars,levels,staticBlocksSelected,isRewinding,frontRewind,frontRewindLevelComplete,frontRewindLevelFailed,onLevelEndCallback,cardDensity,cardFriction,cardRestitution,currentZoom,i",
+    "^": "State;lastStepTime,physicsEnabled<,isPaused<,ready,canFinishLevel,finishedCurrentLevel,traversed,world,pool,contactListener,g,viewport,debugDraw,bcard,bobbin,obstaclesBobbin,camera,traverser,level,from,to<,history,cards<,stars,levels,staticBlocksSelected,isRewinding,frontRewind,rewindCallback,frontRewindLevelComplete,frontRewindLevelFailed,onLevelEndCallback,cardDensity,cardFriction,cardRestitution,currentZoom,i",
+    rewindCallback$0: function() {
+      return this.rewindCallback.call$0();
+    },
     frontRewindLevelComplete$0: function() {
       return this.frontRewindLevelComplete.call$0();
     },
@@ -1127,8 +1128,9 @@ var $$ = Object.create(null);
       var t1, t2, body, sprite, t3, obstacle;
       this.traversed = false;
       this.physicsEnabled = active;
+      t1 = this.level;
       if (active) {
-        t1 = this.level.current;
+        t1 = t1.current;
         t2 = t1.get$attemptsUsed();
         if (typeof t2 !== "number")
           return t2.$add();
@@ -1136,8 +1138,10 @@ var $$ = Object.create(null);
         A.UserManager_decrement("allAttempts");
         this.bobbin.erase$0();
         this.bobbin.enterFrame$1(this.cards);
-      } else
+      } else {
+        t1.current.set$completed(false);
         H.interceptedTypeCast(this.to.userData, "$isSprite").deactivate$0();
+      }
       for (t1 = this.cards, t1 = new H.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
         body = t1.__internal$_current;
         sprite = H.interceptedTypeCast(body.get$userData(), "$isEnergySprite");
@@ -1200,6 +1204,10 @@ var $$ = Object.create(null);
         } else
           t1 = true;
         if (!t1) {
+          if (this.rewindCallback != null) {
+            this.rewindCallback$0();
+            this.rewindCallback = null;
+          }
           this.bobbin.erase$0();
           this.obstaclesBobbin.erase$0();
           t1 = this.bobbin;
@@ -1489,7 +1497,7 @@ var $$ = Object.create(null);
       }
     },
     restartLevel$0: function() {
-      T.applyPhysicsLabelToButton();
+      T.applyPhysicsLabelToButton(null);
       H.interceptedTypeCast(this.to.userData, "$isEnergySprite").energy = 0;
     },
     addHistoryState$2: function(body, remove) {
@@ -1530,13 +1538,6 @@ var $$ = Object.create(null);
           b = b.get$next();
         }
       }
-    },
-    rewind$1: function(list) {
-      this.togglePhysics$1(false);
-      this.isRewinding = true;
-    },
-    rewind$0: function() {
-      return this.rewind$1(null);
     },
     removeCard$1: function(c) {
       var t1, _history, t2, item, sprite;
@@ -1614,17 +1615,9 @@ var $$ = Object.create(null);
       }
     },
     clear$1: function(_, noLocalStorageClear) {
-      var _cards, t1;
       if (!noLocalStorageClear)
         J.remove$1$ax(window.localStorage, C.JSString_methods.$add(C.JSString_methods.$add("level_", J.toString$0(this.level.chapter)) + "_", J.toString$0(J.$add$ns(J.get$index$x(this.level.current), 1))));
-      T.applyPhysicsLabelToButton();
-      C.JSArray_methods.set$length(this.history, 0);
-      this.bobbin.erase$0();
-      this.obstaclesBobbin.erase$0();
-      _cards = H.setRuntimeTypeInfo([], [V.Body]);
-      C.JSArray_methods.addAll$1(_cards, this.cards);
-      for (t1 = new H.ListIterator(_cards, _cards.length, 0, null); t1.moveNext$0();)
-        this.removeCard$1(t1.__internal$_current);
+      T.applyPhysicsLabelToButton(new X.GameEngine_clear_closure(this));
     },
     clear$0: function($receiver) {
       return this.clear$1($receiver, false);
@@ -1709,6 +1702,20 @@ var $$ = Object.create(null);
     "^": "Closure:46;this_0",
     call$0: function() {
       this.this_0.camera.ignoreAutoCheck = false;
+    }
+  },
+  GameEngine_clear_closure: {
+    "^": "Closure:46;this_0",
+    call$0: function() {
+      var t1, _cards, t2;
+      t1 = this.this_0;
+      C.JSArray_methods.set$length(t1.history, 0);
+      t1.bobbin.erase$0();
+      t1.obstaclesBobbin.erase$0();
+      _cards = H.setRuntimeTypeInfo([], [V.Body]);
+      C.JSArray_methods.addAll$1(_cards, t1.cards);
+      for (t2 = new H.ListIterator(_cards, _cards.length, 0, null); t2.moveNext$0();)
+        t1.removeCard$1(t2.__internal$_current);
     }
   }
 }],
@@ -2622,7 +2629,7 @@ var $$ = Object.create(null);
           $.Level_eng.frontRewind = false;
       }, "call$0", "Level_onFrontRewindLevelComplete$closure", 0, 0, 0], Level_onFrontRewindLevelFailed: [function() {
         $.Level_eng.frontRewind = false;
-        T.applyPhysicsLabelToButton();
+        T.applyPhysicsLabelToButton(null);
       }, "call$0", "Level_onFrontRewindLevelFailed$closure", 0, 0, 0], Level_onLevelApplied: [function() {
         C.JSArray_methods.set$length($.Level_last.get$frames(), 0);
         C.JSArray_methods.set$length($.Level_last.get$obstaclesFrames(), 0);
@@ -2631,7 +2638,7 @@ var $$ = Object.create(null);
           $.Level_eng.level.current.set$levelApplied(Q.Level_onLevelApplied$closure());
         } else if (J.$eq($.Level_targetLevel, $.Level_eng.level.currentSubLevel)) {
           $.Level_eng.level.current.set$levelApplied(null);
-          T.applyPhysicsLabelToButton();
+          T.applyPhysicsLabelToButton(null);
         }
       }, "call$0", "Level_onLevelApplied$closure", 0, 0, 0]}
   },
@@ -2810,7 +2817,7 @@ var $$ = Object.create(null);
     return C.JsonCodec_null_null.encode$1(map);
   },
   LevelSerializer_fromJSON: function(json, e, subLevel, further) {
-    var state, t1, t2, t3, card, t4, b, $frames, len, i, t, t5, t6, t7, t8, obstacles, id, obstacle, doFrames;
+    var state, t1, t2, t3, card, t4, b, $frames, len, i, t, t5, t6, t7, t8, obstacles, id, obstacle, doFrames, btn;
     state = C.JsonCodec_null_null.decode$1(json);
     for (t1 = J.getInterceptor$asx(state), t2 = J.get$iterator$ax(t1.$index(state, "c")), t3 = subLevel != null; t2.moveNext$0();) {
       card = t2.get$current();
@@ -2891,7 +2898,13 @@ var $$ = Object.create(null);
         }
       }
     }
-    T.applyPhysicsLabelToButton();
+    btn = document.querySelector("#toggle-physics");
+    J.get$classes$x(btn).remove$1(0, "rewind");
+    btn.textContent = J.$index$asx(J.$index$asx($.get$context(), "locale"), "apply_physics");
+    t2 = $.engine;
+    t2.togglePhysics$1(false);
+    t2.isRewinding = true;
+    t2.rewindCallback = null;
     if (t3) {
       subLevel.set$frames($frames);
       subLevel.set$obstaclesFrames(doFrames);
@@ -3410,7 +3423,7 @@ var $$ = Object.create(null);
     J.remove$1$ax(window.localStorage, "last");
   },
   RatingShower_onTypeItemClick: [function(evt) {
-    var t1, level, t2;
+    var t1, level, t2, btn, t3;
     Z.RatingShower_hide();
     $.RatingShower_e.isPaused = false;
     t1 = J.getInterceptor$x(evt);
@@ -3430,7 +3443,13 @@ var $$ = Object.create(null);
     if (J.$eq(level, t1.level.currentSubLevel)) {
       t2 = $.Level_eng;
       t2.toString;
-      T.applyPhysicsLabelToButton();
+      btn = document.querySelector("#toggle-physics");
+      J.get$classes$x(btn).remove$1(0, "rewind");
+      btn.textContent = J.$index$asx(J.$index$asx($.get$context(), "locale"), "apply_physics");
+      t3 = $.engine;
+      t3.togglePhysics$1(false);
+      t3.isRewinding = true;
+      t3.rewindCallback = null;
       H.interceptedTypeCast(t2.to.userData, "$isEnergySprite").energy = 0;
       Q.Level_saveStarsForLoadedLevels(t1, level);
     } else if (J.$lt$n(level, $.Level_eng.level.currentSubLevel)) {
@@ -3823,7 +3842,7 @@ var $$ = Object.create(null);
       t1.physicsEnabled = false;
       t1.bobbin.erase$0();
       C.JSArray_methods.set$length(this.e.cards, 0);
-      T.applyPhysicsLabelToButton();
+      T.applyPhysicsLabelToButton(null);
       return true;
     },
     saveState$0: function() {
@@ -3859,7 +3878,9 @@ var $$ = Object.create(null);
       if (t1.physicsEnabled)
         if (!t1.frontRewind) {
           t1.bobbin.rewindComplete = f;
-          t1.rewind$0();
+          t1.togglePhysics$1(false);
+          t1.isRewinding = true;
+          t1.rewindCallback = null;
         } else
           f.call$0();
       else
@@ -4030,6 +4051,7 @@ var $$ = Object.create(null);
       t3.targetOffsetY = -(t4 / t5) * t5;
       t2.bobbin.list = t1.frames;
       t2.cards = t1.cards;
+      t1.completed = false;
       t2 = t2.world;
       t5 = t1.gravity;
       t4 = new Float32Array(H._checkLength(2));
@@ -4058,7 +4080,9 @@ var $$ = Object.create(null);
       if (t2.frontRewind)
         T.applyRewindLabelToButton(null);
       else {
-        t2.rewind$0();
+        t2.togglePhysics$1(false);
+        t2.isRewinding = true;
+        t2.rewindCallback = null;
         t1.e.bobbin.rewindComplete = new Z.SubLevel_apply__closure(t1);
       }
     }
@@ -14080,7 +14104,7 @@ var $$ = Object.create(null);
     C.Window_methods._ensureRequestAnimationFrame$0(t3);
     C.Window_methods._requestAnimationFrame$1(t3, W._wrapZone(t4));
     $.manager = t2;
-    t2 = new X.GameEngine(0, false, false, false, true, false, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null, H.setRuntimeTypeInfo([], [X.HItem]), H.setRuntimeTypeInfo([], [V.Body]), null, null, false, false, false, new X.closure(), new X.closure0(), new X.closure1(), 0.25, 0.115, 0, 1, 0);
+    t2 = new X.GameEngine(0, false, false, false, true, false, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null, H.setRuntimeTypeInfo([], [X.HItem]), H.setRuntimeTypeInfo([], [V.Body]), null, null, false, false, false, null, new X.closure(), new X.closure0(), new X.closure1(), 0.25, 0.115, 0, 1, 0);
     t2.g = g;
     t4 = new L.Camera(false, 1, 1, 1, 0, 0, 0, 0, null, null, null, null, false, false, true, true, false, new L.closure2(), new L.closure3(), R.DoubleAnimation$(1, 1, 75), R.DoubleAnimation$(0, 0, 75), R.DoubleAnimation$(0, 0, 75), null);
     t4.e = t2;
@@ -14206,11 +14230,15 @@ var $$ = Object.create(null);
   }, function() {
     return T.updateCanvasPositionAndDimension(null);
   }, null, "call$1", "call$0", "updateCanvasPositionAndDimension$closure", 0, 2, 21, 22, 4],
-  applyPhysicsLabelToButton: function() {
-    var btn = document.querySelector("#toggle-physics");
+  applyPhysicsLabelToButton: function(callback) {
+    var btn, t1;
+    btn = document.querySelector("#toggle-physics");
     J.get$classes$x(btn).remove$1(0, "rewind");
     btn.textContent = J.$index$asx(J.$index$asx($.get$context(), "locale"), "apply_physics");
-    $.engine.rewind$0();
+    t1 = $.engine;
+    t1.togglePhysics$1(false);
+    t1.isRewinding = true;
+    t1.rewindCallback = callback;
   },
   applyRewindLabelToButton: function(list) {
     var btn;
@@ -14483,7 +14511,7 @@ var $$ = Object.create(null);
           B.WebApi_updateAttemptsAmount($.engine.level.current.get$attemptsUsed());
         }
       } else
-        T.applyPhysicsLabelToButton();
+        T.applyPhysicsLabelToButton(null);
     }, "call$1", null, 2, 0, null, 4, "call"]
   },
   main_closure7: {
