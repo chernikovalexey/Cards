@@ -57,7 +57,7 @@ void main() {
 
     manager = new StateManager(g);
     engine = new GameEngine(g);
-    manager.addState(parallax = new ParallaxManager(engine, g, 24, 175));
+    manager.addState(parallax = new ParallaxManager(engine, g, 24, 200));
 
     canvas.onMouseMove.listen(Input.onMouseMove);
     canvas.onMouseDown.listen(Input.onMouseDown);

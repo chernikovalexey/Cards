@@ -29,11 +29,15 @@ class StateManager {
         states.remove(state);
     }
 
+    int n = 0;
+
     void run() {
+
         window.requestAnimationFrame(step);
     }
 
     void step(num time) {
+
 
         num delta = time - this.lastStepTime;
         g.setFillColorRgb(0, 0, 0);

@@ -1,107 +1,153 @@
 import 'dart:html';
-import 'dart:math';
+import 'dart:math' as Math;
+import 'dart:convert';
 import 'Input.dart';
 import 'StateManager.dart';
 import 'GameEngine.dart';
 import 'package:box2d/box2d_browser.dart';
+import "ChanceEngine.dart";
+import "cards.dart";
 
-Random random = new Random();
+Math.Random random = new Math.Random();
 
 Color3 YELLOW = new Color3.fromRGB(254, 251, 224);
+
 Color3 CYAN = new Color3.fromRGB(125, 165, 253);
 
 class Star {
+
+    int starId = 1;
+
+// 0-4 image id
+
     bool extinct = false;
+
     double x = 0.0, y = 0.0;
-    double speed;
-    double opacity;
-    int size = 2;
-    Color3 color = YELLOW;
 
-    Star(this.x, this.y, this.speed, this.opacity) {
+    double cx = Input.canvasWidth / 2, cy = Input.canvasHeight / 2;
 
-        // Add some diversity
-        if (random.nextInt(128) % 2 == 0) {
-            color = CYAN;
-        }
+    double r, startR;
 
-        if (random.nextInt(128) % 2 == 0) {
-            size = 1;
-        }
+    double size;
+
+    double speed, angle = .0;
+
+    double angularSpeed = 0.0, radiusSpeed;
+
+    List<Vector2> previous;
+
+    double tailSpeed = .15;
+
+    Star(this.x, this.y, this.speed) {
+
+        Vector2 pv = new Vector2(x, y);
+        Vector2 cv = new Vector2(cx, cy);
+        startR = r = pv.distanceTo(cv);
+        angle = random.nextDouble() * Math.PI * 2;
+        size = 16.0;
+
+        starId = ChanceEngine.SelectFired([.5, .25, .2499, .0001]);
     }
 
     void update(num delta, int modifier) {
-        y += speed * modifier;
+
+        angularSpeed = 1 / (r / 1.5);
+        var curAngSpeed = angularSpeed;
+        var curRSpeed = .1;
+        if (engine.ready && !engine.physicsEnabled) {
+            curAngSpeed /= -15;
+            curRSpeed /= -15;
+        }
+
+        x = cx + r * Math.sin(angle);
+        y = cy + r * Math.cos(angle);
+        angle += curAngSpeed;
+        r -= curRSpeed;
+        size = 16 * (r / startR);
+
+        if (r < 15) extinct = true;
+        return;
 
         if ((modifier == ParallaxManager.DOWN && y > Input.canvasHeight) || (modifier == ParallaxManager.UP && y < 0)) {
             extinct = true;
         }
     }
 
-    void render(CanvasRenderingContext2D g) {
-        g.fillStyle = 'rgba(' + color.x.toString() + ', ' + color.y.toString() + ', ' + color.z.toString() + ', ' + opacity.toString() + ')';
-        g.fillRect(x, y, size, size);
+    void render(CanvasRenderingContext2D g, ImageElement sprite) {
+
+        g.globalAlpha = .30;
+        g.drawImageScaledFromSource(sprite, starId * 16, 0, 16, 16, x, y, size, size);
+        g.globalAlpha = 1.0;
     }
 }
 
 class ParallaxManager extends State {
     GameEngine engine;
+
     CanvasRenderingContext2D g;
 
     num lastStepTime = 0;
+
     int layers, amount;
 
     static final int DOWN = 1;
+
     static final int UP = -1;
+
     int modifier = DOWN;
 
     List<Star> stars = new List<Star>();
 
-    ParallaxManager(this.engine, this.g, this.layers, this.amount);
+    ImageElement sprite;
 
-    static List getStarData(Random random, int layer, int layers) {
-        double speed = (random.nextDouble() - layer / layers) * 0.35 / 1.5;
-        while (speed < 0.01) speed += random.nextDouble() / 10;
+    ParallaxManager(this.engine, this.g, this.layers, this.amount) {
 
-        double opacity = speed + speed * layer / layers;
-        while (opacity > 0.25) opacity -= random.nextDouble() / 10;
+        sprite = new ImageElement(src: "img/stars.png");
+        sprite.onLoad.listen((e) {
+            print("stars are loaded");
+        });
+        for (int i = 0; i < amount; i++)
+            stars.add(new Star(random.nextDouble() * Input.canvasWidth * 2 - Input.canvasWidth / 2, random.nextDouble() * Input.canvasHeight * 2 - Input.canvasHeight / 2, 0.0));
+    }
 
-        return [speed, opacity];
+    static Star getStar() {
+
+        double x = ChanceEngine.InvokeFired([.5], [() => -random.nextDouble() * 400, () => Input.canvasWidth + random.nextDouble() * 400]) as double;
+        double y = ChanceEngine.InvokeFired([.5], [() => -random.nextDouble() * 400, () => Input.canvasHeight + random.nextDouble() * 400]) as double;
+        return new Star(x, y, 0.0);
     }
 
     @override
+
     void start([Map params]) {
     }
 
     @override
+
     void update(num delta) {
-        if (!engine.ready || (engine.ready && engine.physicsEnabled)) {
-            List<Star> _stars = new List<Star>();
-            _stars.addAll(stars);
-            for (Star star in _stars) {
-                star.update(delta, modifier);
+        List<Star> _stars = new List<Star>();
+        _stars.addAll(stars);
+        for (Star star in _stars) {
+            star.update(delta, modifier);
 
-                if (star.extinct) {
-                    stars.remove(star);
-                }
+            if (star.extinct) {
+                stars.remove(star);
             }
-
-            // Generate lacking stars
-            for (int i = 0; i < amount - stars.length; ++i) {
-                int layer = random.nextInt(layers);
-                var data = getStarData(random, layer, layers);
-                Star star = new Star(random.nextDouble() * Input.canvasWidth, random.nextDouble() * Input.canvasHeight, data[0], data[1]);
-                stars.add(star);
-            }
+        }
+// Generate lacking stars
+        for (int i = 0; i < amount - stars.length; ++i) {
+            int layer = random.nextInt(layers);
+            stars.add(getStar());
         }
     }
 
     @override
+
     void render() {
         g.fillStyle = 'rgba(0, 0, 0, 1)';
         g.fillRect(0, 0, Input.canvasWidth, Input.canvasHeight);
         for (Star star in stars) {
-            star.render(g);
+            star.render(g, sprite);
         }
     }
 }
