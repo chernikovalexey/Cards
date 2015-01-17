@@ -42,9 +42,9 @@ class BoundedCard {
         double delta = Math.PI / 24;
         double prev_angle = angle;
 
-        if (Input.keys['q'].down) {
+        if (Input.keys['q'].clicked) {
             angle += delta / 3;
-        } else if (Input.keys['e'].down) {
+        } else if (Input.keys['e'].clicked) {
             angle -= delta / 3;
         } else if (Input.keys['c'].clicked) {
             angle = 0.0;
