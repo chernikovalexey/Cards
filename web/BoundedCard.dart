@@ -46,6 +46,10 @@ class BoundedCard {
             angle += delta / 3;
         } else if (Input.keys['e'].down) {
             angle -= delta / 3;
+        } else if (Input.keys['c'].clicked) {
+            angle = 0.0;
+        } else if (Input.keys['v'].clicked) {
+            angle = Math.PI / 2;
         } else {
             angle -= Input.wheelDirection * delta;
         }

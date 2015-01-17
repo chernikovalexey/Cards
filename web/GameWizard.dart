@@ -85,12 +85,12 @@ class GameWizard {
             showOverview();
         } else if (chapter == 1 && level == 3) {
             showRotation();
-        } else if (chapter == 1 && level == 6) {
-            //showHintsTooltip();
         } else if (chapter == 1 && level == 5) {
             showZoom();
         } else if (chapter == 1 && level == 8) {
             showStaticAppear();
+        } else if (chapter == 3 && level == 1) {
+            showDynamicObstacles();
         }
 
         tryShowingHintsTooltip();
@@ -260,9 +260,9 @@ class GameWizard {
         }
     }
 
-    static void showHintsTooltip() {
-        new Timer(new Duration(seconds: 1), () {
-            if (manager.states.contains(engine)) {
+    static void tryShowingHintsTooltip() {
+        new Timer.periodic(new Duration(milliseconds: 90000), (Timer timer) {
+            if (manager.states.contains(engine) && !engine.isPaused && anyWindowsOpened()) {
                 Tooltip.show(querySelector("#hint"), context['locale']['wizard_hints'], Tooltip.BOTTOM, maxWidth: 300, xOffset: -90);
 
                 var stream = querySelector("#hint").onClick.listen((event) {
@@ -273,12 +273,6 @@ class GameWizard {
                     stream.cancel();
                 });
             }
-        });
-    }
-
-    static void tryShowingHintsTooltip() {
-        new Timer.periodic(new Duration(milliseconds: 20000), (Timer timer) {
-            timer.cancel();
         });
     }
 
@@ -306,6 +300,12 @@ class GameWizard {
             if (!_static.hidden) {
                 Tooltip.show(_static, context['locale']['wizard_static'], Tooltip.RIGHT, maxWidth: 300, yOffset: 0, yArrowOffset: -3);
             }
+        });
+    }
+
+    static void showDynamicObstacles() {
+        new Timer(new Duration(seconds: 1), () {
+            Tooltip.showSimple(context['locale']['dynamic_obstacles_tooltip'], 240, 300);
         });
     }
 }

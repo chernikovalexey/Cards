@@ -13,7 +13,7 @@ class Key {
 
 class Input {
     static final Map<String, Key> keys = {
-        'space': new Key(32), 'enter': new Key(13), 'delete': new Key(46), 'z': new Key(90), 'w': new Key(87), 'a': new Key(65), 's': new Key(83), 'd': new Key(68), 'n': new Key(78), 'p': new Key(80), '1': new Key(49), '2': new Key(50), 'esc': new Key(27), 'shift': new Key(16), 'ctrl': new Key(17), 'arrow_left': new Key(37), 'arrow_right': new Key(39), 'arrow_up': new Key(38), 'arrow_down': new Key(40), 'alt': new Key(18), 'q': new Key(81), 'e': new Key(69)
+        'space': new Key(32), 'enter': new Key(13), 'delete': new Key(46), 'z': new Key(90), 'w': new Key(87), 'a': new Key(65), 's': new Key(83), 'd': new Key(68), 'n': new Key(78), 'p': new Key(80), '1': new Key(49), '2': new Key(50), 'esc': new Key(27), 'shift': new Key(16), 'ctrl': new Key(17), 'arrow_left': new Key(37), 'arrow_right': new Key(39), 'arrow_up': new Key(38), 'arrow_down': new Key(40), 'alt': new Key(18), 'q': new Key(81), 'e': new Key(69), 'c': new Key(67), 'v': new Key(86)
     };
 
     static num canvasX, canvasY;

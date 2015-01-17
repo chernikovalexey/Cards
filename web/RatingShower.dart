@@ -46,6 +46,7 @@ class RatingShower {
     static void restartLevel(event) {
         hide();
         e.isPaused = false;
+        //promptGameRestart();
         e.restartLevel();
     }
 

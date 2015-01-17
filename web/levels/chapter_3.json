@@ -25,17 +25,10 @@
       "obstacles": [
         {
           "type": 1,
-          "x": 1,
+          "x": -20,
           "y": 1,
           "width": 21,
           "height": 783
-        },
-        {
-          "type": 1,
-          "x": 2,
-          "y": 1,
-          "width": 20,
-          "height": 784
         },
         {
           "type": 1,

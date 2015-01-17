@@ -63,14 +63,10 @@ class Star {
         y = cy + r * Math.cos(angle);
         angle += curAngSpeed;
         r -= curRSpeed;
-        size = 16 * (r / startR);
+        double k = r / startR;
+        size = 16 * (k < 1 ? k : 1);
 
         if (r < 15) extinct = true;
-        return;
-
-        if ((modifier == ParallaxManager.DOWN && y > Input.canvasHeight) || (modifier == ParallaxManager.UP && y < 0)) {
-            extinct = true;
-        }
     }
 
     void render(CanvasRenderingContext2D g, ImageElement sprite) {
@@ -118,12 +114,10 @@ class ParallaxManager extends State {
     }
 
     @override
-
     void start([Map params]) {
     }
 
     @override
-
     void update(num delta) {
         List<Star> _stars = new List<Star>();
         _stars.addAll(stars);
@@ -142,7 +136,6 @@ class ParallaxManager extends State {
     }
 
     @override
-
     void render() {
         g.fillStyle = 'rgba(0, 0, 0, 1)';
         g.fillRect(0, 0, Input.canvasWidth, Input.canvasHeight);

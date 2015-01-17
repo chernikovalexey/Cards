@@ -400,3 +400,13 @@ void fadeBoxOut(DivElement box, [int duration = 500, Function callback]) {
         if (callback != null) callback();
     });
 }
+
+bool anyWindowsOpened() {
+    bool opened = false;
+    querySelectorAll(".bs-screen").forEach((Element element) {
+        if (element.classes.contains("hidden") || element.style.opacity == "0.0") {
+            opened = true;
+        }
+    });
+    return opened;
+}

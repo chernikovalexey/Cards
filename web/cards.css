@@ -1259,7 +1259,7 @@ button:hover:not([disabled]) {
 .step-button {
     border: 1px solid transparent;
     background: rgba(255, 255, 255, 0.075);
-    min-width: 125px;
+    min-width: 160px;
 }
 
 .step-button:hover:not([disabled]) {

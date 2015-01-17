@@ -122,9 +122,7 @@ class Sprite {
         return s;
     }
 
-    static Sprite from(World w, [bool active
-
-    = true]) {
+    static Sprite from(World w, [bool active = true]) {
         EnergySprite s = new EnergySprite(w, false);
         s.isCard = false;
 
@@ -153,7 +151,7 @@ class Sprite {
 
     static Sprite ground() {
         Sprite s = new Sprite();
-        s.color = new Color4.fromRGB(200, 200, 200);
+        s.color = new Color4.fromRGBA(42, 42, 42, 1.0);
         return s;
     }
 
@@ -167,7 +165,7 @@ class Sprite {
                 return to(w);
             case 4:
                 Sprite obstacle = ground();
-                obstacle.color = new Color4.fromRGB(200, 144, 144);
+                obstacle.color = new Color4.fromRGB(96, 74, 74);
                 return obstacle;
         }
         return null;

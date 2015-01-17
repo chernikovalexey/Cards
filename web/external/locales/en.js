@@ -11,6 +11,7 @@ locale.apply_shortcut = "Ctrl+Shift";
 locale.apply_shortcut_mac = "Cmd+Shift";
 locale.rewind = 'Rewind';
 locale.restart = "Restart";
+locale.back_to_level = "Back to the level";
 locale.restart_desc = "Remove all blocks and start the level again";
 locale.use_hint = 'Use hint';
 locale.dynamic = 'jumper';
@@ -129,9 +130,10 @@ locale.wizard_limited_amount = "Amount of blocks is limited";
 locale.wizard_rewind = "Rewind to try again";
 locale.wizard_remove = "To remove a block, put the mouse over it and <b>right-click</b> or <b>press Delete</b>";
 locale.wizard_rotate = "<b>To rotate the block,</b> use your mouse wheel or buttons Q/E";
-locale.wizard_hints = "If you are in trouble with accomplishing this level, <b>use hints</b>";
+locale.wizard_hints = "Use hints in case of trouble!";
 locale.wizard_zoom = "<b>Use zoom</b> for accuracy";
 locale.wizard_static = "Shelves don't fall when physics applied, and don't conduct energy.";
+locale.dynamic_obstacles_tootip = "Red obstacles tend to fall";
 
 // Wall posts
 locale.share_offer_text = 'Check out an excellent puzzle game Two Cubes!';

@@ -78,6 +78,7 @@
 
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script>
+        var isFirstStart = true;
         var stats = {};
 
         stats.getData = function (callback) {
@@ -92,7 +93,7 @@
                         if (d[id]) {
                             if (id === 'users') {
                                 var prev_amount = +$(this).html();
-                                if (d[id] > prev_amount) {
+                                if (d[id] > prev_amount && !isFirstStart) {
                                     var audio = new Audio("http://static1.grsites.com/archive/sounds/battle/battle003.mp3");
                                     audio.play();
                                 }
@@ -102,6 +103,8 @@
                     });
 
                     $('.max-level').html(d.maxLevel.chapterId + "/" + d.maxLevel.levelId);
+
+                    isFirstStart = false;
                 });
             }, 1000);
         });

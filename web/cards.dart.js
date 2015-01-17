@@ -415,7 +415,7 @@ var $$ = Object.create(null);
           } else
             updated = false;
           if (dy !== 0) {
-            this.targetOffsetY += dy;
+            this.targetOffsetY = J.$add$ns(this.targetOffsetY, dy);
             updated = true;
           }
         } else
@@ -426,7 +426,7 @@ var $$ = Object.create(null);
       } else {
         t3.toggleBoundedCard$1(true);
         if (t1.$index(0, "arrow_up").get$down()) {
-          this.targetOffsetY -= 5.05;
+          this.targetOffsetY = J.$sub$n(this.targetOffsetY, 5.05);
           updated = true;
         } else
           updated = false;
@@ -435,7 +435,7 @@ var $$ = Object.create(null);
           updated = true;
         }
         if (t1.$index(0, "arrow_down").get$down()) {
-          this.targetOffsetY += 5.05;
+          this.targetOffsetY = J.$add$ns(this.targetOffsetY, 5.05);
           updated = true;
         }
         if (t1.$index(0, "arrow_right").get$down()) {
@@ -517,7 +517,7 @@ var $$ = Object.create(null);
       t2.debugDraw = B.SuperCanvasDraw$(t1, t2.g);
     },
     checkTarget$2: function(ignoreXCheck, ignoreYCheck) {
-      var t1, t2, t3, t4;
+      var t1, t2, t3;
       if (!ignoreXCheck) {
         if (J.$le$n(J.$div$n(this.targetOffsetX, $.GameEngine_scale), J.$div$n(this.bx1, 85)))
           this.targetOffsetX = J.$mul$ns(J.$div$n(this.bx1, 85), $.GameEngine_scale);
@@ -540,28 +540,25 @@ var $$ = Object.create(null);
         }
       }
       if (!ignoreYCheck) {
-        t1 = this.targetOffsetY;
-        t2 = $.GameEngine_scale;
+        t1 = J.$div$n(J.$negate$n(this.targetOffsetY), $.GameEngine_scale);
+        t2 = $.Input_canvasHeight;
+        t3 = $.GameEngine_scale;
         if (typeof t2 !== "number")
-          return H.iae(t2);
-        t3 = $.Input_canvasHeight;
+          return t2.$div();
         if (typeof t3 !== "number")
-          return t3.$div();
-        t3 /= t2;
-        t4 = this.by1;
-        if (typeof t4 !== "number")
-          return t4.$div();
-        t4 /= 85;
-        if (-t1 / t2 - t3 <= t4) {
-          t1 = -(t4 + t3) * t2;
-          this.targetOffsetY = t1;
+          return H.iae(t3);
+        if (J.$le$n(J.$sub$n(t1, t2 / t3), J.$div$n(this.by1, 85))) {
+          t1 = J.$div$n(this.by1, 85);
+          t2 = $.Input_canvasHeight;
+          t3 = $.GameEngine_scale;
+          if (typeof t2 !== "number")
+            return t2.$div();
+          if (typeof t3 !== "number")
+            return H.iae(t3);
+          this.targetOffsetY = J.$mul$ns(J.$negate$n(J.$add$ns(t1, t2 / t3)), $.GameEngine_scale);
         }
-        t3 = this.by2;
-        if (typeof t3 !== "number")
-          return t3.$div();
-        t3 /= 85;
-        if (-t1 / t2 >= t3)
-          this.targetOffsetY = -t3 * t2;
+        if (J.$ge$n(J.$div$n(J.$negate$n(this.targetOffsetY), $.GameEngine_scale), J.$div$n(this.by2, 85)))
+          this.targetOffsetY = J.$mul$ns(J.$negate$n(J.$div$n(this.by2, 85)), $.GameEngine_scale);
       }
     },
     checkTarget$0: function() {
@@ -614,6 +611,19 @@ var $$ = Object.create(null);
         this.contactingBodies.push(J.get$body$x(fx));
       }
     }
+  }
+}],
+["", "ChanceEngine.dart", , N, {
+  "^": "",
+  ChanceEngine_SelectFired: function(chances, results) {
+    var t, t1, ch, i;
+    t = $.get$ChanceEngine_r().nextDouble$0();
+    for (t1 = chances.length, ch = 0, i = 0; i < t1; ++i) {
+      ch += chances[i];
+      if (t < ch)
+        return i;
+    }
+    return t1;
   }
 }],
 ["", "Chapter.dart", , D, {
@@ -785,11 +795,9 @@ var $$ = Object.create(null);
   Color4: {
     "^": "Object;x*,y*,z,a*",
     $eq: function(_, other) {
-      var t1;
       if (other == null)
         return false;
-      t1 = J.getInterceptor(other);
-      return !!t1.$isColor3 && J.$eq(this.x, other.x) && this.y === other.y && this.z === other.z && J.$eq(this.a, t1.get$a(other));
+      return false;
     }
   }
 }],
@@ -1303,8 +1311,12 @@ var $$ = Object.create(null);
         t2 = $.get$Input_keys();
         if (t2.$index(0, "q").get$down())
           angle0 = angle + 0.04363323129985824;
+        else if (t2.$index(0, "e").get$down())
+          angle0 = angle - 0.04363323129985824;
+        else if (t2.$index(0, "c").get$clicked())
+          angle0 = 0;
         else
-          angle0 = t2.$index(0, "e").get$down() ? angle - 0.04363323129985824 : angle - $.Input_wheelDirection * 0.1308996938995747;
+          angle0 = t2.$index(0, "v").get$clicked() ? 1.5707963267948966 : angle - $.Input_wheelDirection * 0.1308996938995747;
         if (angle0 !== angle) {
           M.GameWizard_onBlockRotate();
           J.$index$asx($.get$context(), "Features").callMethod$1("scrollParentTop");
@@ -1760,6 +1772,8 @@ var $$ = Object.create(null);
       M.GameWizard_showZoom();
     else if (t1.$eq(chapter, 1) && J.$eq(level, 8))
       M.GameWizard_showStaticAppear();
+    else if (t1.$eq(chapter, 3) && J.$eq(level, 1))
+      M.GameWizard_showDynamicObstacles();
     M.GameWizard_tryShowingHintsTooltip();
   },
   GameWizard_showHowto: function(closeCallback) {
@@ -1809,7 +1823,7 @@ var $$ = Object.create(null);
     }
   },
   GameWizard_tryShowingHintsTooltip: function() {
-    P.Timer_Timer$periodic(P.Duration$(0, 0, 0, 20000, 0, 0), new M.GameWizard_tryShowingHintsTooltip_closure());
+    P.Timer_Timer$periodic(P.Duration$(0, 0, 0, 90000, 0, 0), new M.GameWizard_tryShowingHintsTooltip_closure());
   },
   GameWizard_showZoom: function() {
     P.Timer_Timer(P.Duration$(0, 0, 0, 0, 0, 3), new M.GameWizard_showZoom_closure());
@@ -1817,6 +1831,9 @@ var $$ = Object.create(null);
   GameWizard_showStaticAppear: function() {
     var _static = document.querySelector(".static");
     P.Timer_Timer(P.Duration$(0, 0, 0, 0, 0, 1), new M.GameWizard_showStaticAppear_closure(_static));
+  },
+  GameWizard_showDynamicObstacles: function() {
+    P.Timer_Timer(P.Duration$(0, 0, 0, 0, 0, 1), new M.GameWizard_showDynamicObstacles_closure());
   },
   GameWizard_enterStep_closure: {
     "^": "Closure:46;box_0,callback_1",
@@ -2011,8 +2028,28 @@ var $$ = Object.create(null);
   GameWizard_tryShowingHintsTooltip_closure: {
     "^": "Closure:59;",
     call$1: function(timer) {
-      timer.cancel$0();
+      var t1, stream;
+      if (C.JSArray_methods.contains$1($.manager.states, $.engine) && !$.engine.isPaused && T.anyWindowsOpened()) {
+        A.Tooltip_show(document.querySelector("#hint"), J.$index$asx(J.$index$asx($.get$context(), "locale"), "wizard_hints"), 3, null, 0, 300, 0, -90, 0, 0);
+        t1 = J.get$onClick$x(document.querySelector("#hint"));
+        stream = H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._target, t1._eventType, W._wrapZone(new M.GameWizard_tryShowingHintsTooltip__closure()), t1._useCapture), [H.getTypeArgumentByIndex(t1, 0)]);
+        stream._tryResume$0();
+        t1 = J.get$onClick$x(document.querySelector("#hint"));
+        H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._target, t1._eventType, W._wrapZone(new M.GameWizard_tryShowingHintsTooltip__closure0(stream)), t1._useCapture), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
+      }
     }
+  },
+  GameWizard_tryShowingHintsTooltip__closure: {
+    "^": "Closure:44;",
+    call$1: [function($event) {
+      A.Tooltip_closeAll();
+    }, "call$1", null, 2, 0, null, 4, "call"]
+  },
+  GameWizard_tryShowingHintsTooltip__closure0: {
+    "^": "Closure:44;stream_0",
+    call$1: [function($event) {
+      this.stream_0.cancel$0();
+    }, "call$1", null, 2, 0, null, 4, "call"]
   },
   GameWizard_showZoom_closure: {
     "^": "Closure:46;",
@@ -2051,6 +2088,12 @@ var $$ = Object.create(null);
       var t1 = this._static_0;
       if (t1.hidden !== true)
         A.Tooltip_show(t1, J.$index$asx(J.$index$asx($.get$context(), "locale"), "wizard_static"), 2, null, 0, 300, 0, 0, -3, 0);
+    }
+  },
+  GameWizard_showDynamicObstacles_closure: {
+    "^": "Closure:46;",
+    call$0: function() {
+      A.Tooltip_showSimple(J.$index$asx(J.$index$asx($.get$context(), "locale"), "dynamic_obstacles_tooltip"), 240, 300, null, "");
     }
   }
 }],
@@ -2988,94 +3031,173 @@ var $$ = Object.create(null);
 ["", "ParallaxManager.dart", , F, {
   "^": "",
   Star: {
-    "^": "Object;extinct<,x*,y*,speed,opacity,size,color",
+    "^": "Object;starId,extinct<,x*,y*,cx,cy,r,startR,size,speed,angle<,angularSpeed,radiusSpeed,previous,tailSpeed",
     update$2: function(delta, modifier) {
-      var t1, t2;
-      t1 = this.y;
-      if (typeof modifier !== "number")
-        return H.iae(modifier);
-      t1 += this.speed * modifier;
-      this.y = t1;
-      if (modifier === 1) {
-        t2 = $.Input_canvasHeight;
-        if (typeof t2 !== "number")
-          return H.iae(t2);
-        t2 = t1 > t2;
+      var t1, curAngSpeed, t2, curRSpeed, k;
+      t1 = this.r;
+      curAngSpeed = 1 / (t1 / 1.5);
+      this.angularSpeed = curAngSpeed;
+      t2 = $.engine;
+      if (t2.ready && !t2.physicsEnabled) {
+        curAngSpeed /= -15;
+        curRSpeed = -0.006666666666666667;
       } else
-        t2 = false;
-      if (!t2)
-        t1 = modifier === -1 && t1 < 0;
-      else
-        t1 = true;
-      if (t1)
+        curRSpeed = 0.1;
+      this.x = this.cx + t1 * Math.sin(H.checkNum(this.angle));
+      this.y = this.cy + this.r * Math.cos(H.checkNum(this.angle));
+      this.angle += curAngSpeed;
+      t1 = this.r -= curRSpeed;
+      k = t1 / this.startR;
+      this.size = 16 * (k < 1 ? k : 1);
+      if (t1 < 15)
         this.extinct = true;
     },
-    render$1: function(g) {
-      var t1, t2, t3, t4;
+    render$2: function(g, sprite) {
+      var t1, t2, t3, t4, t5;
       t1 = J.getInterceptor$x(g);
-      t1.set$fillStyle(g, C.JSString_methods.$add("rgba(", J.toString$0(this.color.x)) + ", " + C.JSNumber_methods.toString$0(this.color.y) + ", " + C.JSInt_methods.toString$0(this.color.z) + ", " + C.JSNumber_methods.toString$0(this.opacity) + ")");
-      t2 = this.x;
-      t3 = this.y;
-      t4 = this.size;
-      t1.fillRect$4(g, t2, t3, t4, t4);
-    }
+      t1.set$globalAlpha(g, 0.3);
+      t2 = this.starId;
+      t3 = this.x;
+      t4 = this.y;
+      t5 = this.size;
+      t1.drawImageScaledFromSource$9(g, sprite, t2 * 16, 0, 16, 16, t3, t4, t5, t5);
+      t1.set$globalAlpha(g, 1);
+    },
+    Star$3: function(x, y, speed) {
+      var t1, t2, t3;
+      t1 = this.x;
+      t2 = this.y;
+      t3 = new Float32Array(H._checkLength(2));
+      t3[0] = t1;
+      t3[1] = t2;
+      t2 = new Float32Array(H._checkLength(2));
+      t2[0] = this.cx;
+      t2[1] = this.cy;
+      t1 = new T.Vector2(new Float32Array(H._checkLength(2)));
+      t1.setFrom$1(new T.Vector2(t3));
+      t2 = t1.sub$1(new T.Vector2(t2));
+      t2 = t2.get$length(t2);
+      this.r = t2;
+      this.startR = t2;
+      this.angle = $.get$random().nextDouble$0() * 3.141592653589793 * 2;
+      this.size = 16;
+      this.starId = N.ChanceEngine_SelectFired([0.5, 0.25, 0.2499, 0.0001], null);
+    },
+    static: {Star$: function(x, y, speed) {
+        var t1, t2;
+        t1 = $.Input_canvasWidth;
+        if (typeof t1 !== "number")
+          return t1.$div();
+        t2 = $.Input_canvasHeight;
+        if (typeof t2 !== "number")
+          return t2.$div();
+        t2 = new F.Star(1, false, x, y, t1 / 2, t2 / 2, null, null, null, speed, 0, 0, null, null, 0.15);
+        t2.Star$3(x, y, speed);
+        return t2;
+      }}
   },
   ParallaxManager: {
-    "^": "State;engine,g,lastStepTime,layers,amount,modifier,stars",
+    "^": "State;engine,g,lastStepTime,layers,amount,modifier,stars,sprite",
     start$1: [function(_, params) {
     }, "call$1", "get$start", 0, 2, null, 22, 57],
     update$1: function(delta) {
-      var t1, _stars, star, t2, i, layer, data, t3, t4, t5, t6;
-      t1 = this.engine;
-      if (t1.ready)
-        t1 = t1.physicsEnabled;
-      else
-        t1 = true;
-      if (t1) {
-        _stars = H.setRuntimeTypeInfo([], [F.Star]);
-        C.JSArray_methods.addAll$1(_stars, this.stars);
-        for (t1 = new H.ListIterator(_stars, _stars.length, 0, null); t1.moveNext$0();) {
-          star = t1.__internal$_current;
-          star.update$2(delta, this.modifier);
-          if (star.get$extinct())
-            C.JSArray_methods.remove$1(this.stars, star);
-        }
-        for (t1 = this.amount, t2 = this.layers, i = 0; i < t1 - this.stars.length; ++i) {
-          layer = $.get$random().nextInt$1(t2);
-          data = F.ParallaxManager_getStarData($.get$random(), layer, t2);
-          t3 = $.get$random().nextDouble$0();
-          t4 = $.Input_canvasWidth;
-          if (typeof t4 !== "number")
-            return H.iae(t4);
-          t5 = $.get$random().nextDouble$0();
-          t6 = $.Input_canvasHeight;
-          if (typeof t6 !== "number")
-            return H.iae(t6);
-          star = new F.Star(false, t3 * t4, t5 * t6, data[0], data[1], 2, $.get$YELLOW());
-          if (C.JSInt_methods.$mod($.get$random().nextInt$1(128), 2) === 0)
-            star.color = $.get$CYAN();
-          if (C.JSInt_methods.$mod($.get$random().nextInt$1(128), 2) === 0)
-            star.size = 1;
-          this.stars.push(star);
-        }
+      var _stars, t1, star, t2, i;
+      _stars = H.setRuntimeTypeInfo([], [F.Star]);
+      C.JSArray_methods.addAll$1(_stars, this.stars);
+      for (t1 = new H.ListIterator(_stars, _stars.length, 0, null); t1.moveNext$0();) {
+        star = t1.__internal$_current;
+        star.update$2(delta, this.modifier);
+        if (star.get$extinct())
+          C.JSArray_methods.remove$1(this.stars, star);
+      }
+      for (t1 = this.amount, t2 = this.layers, i = 0; i < t1 - this.stars.length; ++i) {
+        $.get$random().nextInt$1(t2);
+        this.stars.push(F.ParallaxManager_getStar());
       }
     },
     render$0: function() {
       J.set$fillStyle$x(this.g, "rgba(0, 0, 0, 1)");
       J.fillRect$4$x(this.g, 0, 0, $.Input_canvasWidth, $.Input_canvasHeight);
       for (var t1 = this.stars, t1 = new H.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();)
-        t1.__internal$_current.render$1(this.g);
+        t1.__internal$_current.render$2(this.g, this.sprite);
     },
-    static: {"^": "ParallaxManager_DOWN,ParallaxManager_UP", ParallaxManager_getStarData: function(random, layer, layers) {
-        var speed, opacity;
-        speed = (random.nextDouble$0() - layer / layers) * 0.35 / 1.5;
-        for (; speed < 0.01;)
-          speed += random.nextDouble$0() / 10;
-        opacity = speed + speed * layer / layers;
-        for (; opacity > 0.25;)
-          opacity -= random.nextDouble$0() / 10;
-        return [speed, opacity];
+    ParallaxManager$4: function(engine, g, layers, amount) {
+      var e, t1, i, t2, t3, t4, t5, t6;
+      e = document.createElement("img", null);
+      J.set$src$x(e, "img/stars.png");
+      this.sprite = e;
+      t1 = J.get$onLoad$x(e);
+      H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._target, t1._eventType, W._wrapZone(new F.ParallaxManager_closure()), t1._useCapture), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
+      for (t1 = this.amount, i = 0; i < t1; ++i) {
+        t2 = this.stars;
+        t3 = $.get$random().nextDouble$0();
+        t4 = $.Input_canvasWidth;
+        if (typeof t4 !== "number")
+          return H.iae(t4);
+        t5 = $.get$random().nextDouble$0();
+        t6 = $.Input_canvasHeight;
+        if (typeof t6 !== "number")
+          return H.iae(t6);
+        t2.push(F.Star$(t3 * t4 * 2 - t4 / 2, t5 * t6 * 2 - t6 / 2, 0));
+      }
+    },
+    static: {"^": "ParallaxManager_DOWN,ParallaxManager_UP", ParallaxManager$: function(engine, g, layers, amount) {
+        var t1 = new F.ParallaxManager(engine, g, 0, layers, amount, 1, H.setRuntimeTypeInfo([], [F.Star]), null);
+        t1.ParallaxManager$4(engine, g, layers, amount);
+        return t1;
+      }, ParallaxManager_getStar: function() {
+        var t1, id, x;
+        t1 = [new F.ParallaxManager_getStar_closure(), new F.ParallaxManager_getStar_closure0()];
+        id = N.ChanceEngine_SelectFired([0.5], null);
+        if (id >= 2)
+          return H.ioore(t1, id);
+        x = H.doubleTypeCast(t1[id].call$0());
+        t1 = [new F.ParallaxManager_getStar_closure1(), new F.ParallaxManager_getStar_closure2()];
+        id = N.ChanceEngine_SelectFired([0.5], null);
+        if (id >= 2)
+          return H.ioore(t1, id);
+        return F.Star$(x, H.doubleTypeCast(t1[id].call$0()), 0);
       }}
+  },
+  ParallaxManager_closure: {
+    "^": "Closure:44;",
+    call$1: [function(e) {
+      P.print("stars are loaded");
+    }, "call$1", null, 2, 0, null, 9, "call"]
+  },
+  ParallaxManager_getStar_closure: {
+    "^": "Closure:46;",
+    call$0: function() {
+      return -$.get$random().nextDouble$0() * 400;
+    }
+  },
+  ParallaxManager_getStar_closure0: {
+    "^": "Closure:46;",
+    call$0: function() {
+      var t1, t2;
+      t1 = $.Input_canvasWidth;
+      t2 = $.get$random().nextDouble$0();
+      if (typeof t1 !== "number")
+        return t1.$add();
+      return t1 + t2 * 400;
+    }
+  },
+  ParallaxManager_getStar_closure1: {
+    "^": "Closure:46;",
+    call$0: function() {
+      return -$.get$random().nextDouble$0() * 400;
+    }
+  },
+  ParallaxManager_getStar_closure2: {
+    "^": "Closure:46;",
+    call$0: function() {
+      var t1, t2;
+      t1 = $.Input_canvasHeight;
+      t2 = $.get$random().nextDouble$0();
+      if (typeof t1 !== "number")
+        return t1.$add();
+      return t1 + t2 * 400;
+    }
   }
 }],
 ["", "PromptWindow.dart", , R, {
@@ -3585,7 +3707,7 @@ var $$ = Object.create(null);
         this.drawShape$3(b.get$fixtureList(), tf, new A.Color4(220, 30, 30, 0.425));
     },
     drawShape$3: function(fixture, xf, color) {
-      var t1, circle, radius, t2, t3, poly, vertexCount, vertices, i;
+      var t1, circle, radius, t2, t3, t4, poly, vertexCount, vertices, i;
       if (J.$eq(fixture.userData, false)) {
         fixture = fixture.next;
         if (fixture != null)
@@ -3606,22 +3728,14 @@ var $$ = Object.create(null);
           t1 = t1.storage;
           t1[0] = t3;
           t1[1] = t2;
-          t1 = this.canvasDraw;
-          t2 = t1.flags;
+          t1 = this.canvasDraw.get$flags();
+          t2 = this.canvasDraw;
           t3 = this.center;
-          if (0 !== (t2 & 64)) {
-            t2 = t1.viewportTransform.scale;
-            if (typeof t2 !== "number")
-              return H.iae(t2);
-            t1._pathCircle$3(t3, radius * t2, color);
-            J.stroke$0$x(t1.ctx);
-          } else {
-            t2 = t1.viewportTransform.scale;
-            if (typeof t2 !== "number")
-              return H.iae(t2);
-            t1._pathCircle$3(t3, radius * t2, color);
-            J.fill$0$x(t1.ctx);
-          }
+          t4 = this.axis;
+          if (0 !== (t1 & 64))
+            t2.drawCircle$4(t3, radius, color, t4);
+          else
+            t2.drawSolidCircle$4(t3, radius, color, t4);
           break;
         case 1:
           poly = t1.get$shape(fixture);
@@ -3636,16 +3750,14 @@ var $$ = Object.create(null);
               return H.ioore(vertices, i);
             V.Transform_mulToOut(xf, t1, vertices[i]);
           }
-          t1 = this.canvasDraw;
-          if (0 !== (t1.flags & 64)) {
-            t1._pathPolygon$3(vertices, vertexCount, color);
-            J.stroke$0$x(t1.ctx);
-          } else if (vertexCount > 2) {
-            t1._pathPolygon$3(vertices, vertexCount, color);
-            J.fill$0$x(t1.ctx);
-          } else {
-            t1._pathPolygon$3(vertices, vertexCount, color);
-            J.stroke$0$x(t1.ctx);
+          if (0 !== (this.canvasDraw.get$flags() & 64))
+            this.canvasDraw.drawPolygon$3(vertices, vertexCount, color);
+          else {
+            t1 = this.canvasDraw;
+            if (vertexCount > 2)
+              t1.drawSolidPolygon$3(vertices, vertexCount, color);
+            else
+              t1.drawPolygon$3(vertices, vertexCount, color);
           }
           break;
       }
@@ -3685,7 +3797,7 @@ var $$ = Object.create(null);
             s = new R.Sprite(0, false, false, false, false, false, false, false, false, true, 0, 0, 0, null, null, null, null, null, null);
             s.center = new T.Vector2(new Float32Array(2));
             s.axis = new T.Vector2(new Float32Array(2));
-            s.color = new A.Color4(200, 200, 200, 1);
+            s.color = new A.Color4(42, 42, 42, 1);
             return s;
           case 2:
             return R.Sprite_from(w, true);
@@ -3699,8 +3811,8 @@ var $$ = Object.create(null);
             s = new R.Sprite(0, false, false, false, false, false, false, false, false, true, 0, 0, 0, null, null, null, null, null, null);
             s.center = new T.Vector2(new Float32Array(2));
             s.axis = new T.Vector2(new Float32Array(2));
-            s.color = new A.Color4(200, 200, 200, 1);
-            s.color = new A.Color4(200, 144, 144, 1);
+            s.color = new A.Color4(42, 42, 42, 1);
+            s.color = new A.Color4(96, 74, 74, 1);
             return s;
         }
         return;
@@ -3778,7 +3890,7 @@ var $$ = Object.create(null);
     "^": "Object;"
   },
   StateManager: {
-    "^": "Object;states,lastStepTime,g",
+    "^": "Object;states,lastStepTime,g,n",
     step$1: [function(_, time) {
       var delta, t1, state, t2;
       delta = J.$sub$n(time, this.lastStepTime);
@@ -3812,7 +3924,7 @@ var $$ = Object.create(null);
       t1.targetOffsetX = 0;
       t1.targetOffsetY = 0;
       t2 = this.x;
-      t1.setBounds$4(t2, this.y, J.$add$ns(t2, this.w), this.y + this.h);
+      t1.setBounds$4(t2, this.y, J.$add$ns(t2, this.w), J.$add$ns(this.y, this.h));
     },
     getRating$0: function() {
       if (J.$ge$n(J.$index$asx(this.stars, 0), this.e.cards.length)) {
@@ -4038,31 +4150,29 @@ var $$ = Object.create(null);
   SubLevel_apply_closure: {
     "^": "Closure:46;this_0",
     call$0: function() {
-      var t1, t2, t3, t4, t5;
+      var t1, t2, t3, t4;
       t1 = this.this_0;
       t2 = t1.e.camera;
       t3 = t1.x;
-      t2.setBounds$4(t3, t1.y, J.$add$ns(t3, t1.w), t1.y + t1.h);
+      t2.setBounds$4(t3, t1.y, J.$add$ns(t3, t1.w), J.$add$ns(t1.y, t1.h));
       t3 = t1.e.camera;
       t2 = J.$div$n(t1.x, $.GameEngine_scale);
       t3.toString;
       t3.targetOffsetX = J.$mul$ns(t2, $.GameEngine_scale);
-      t2 = t1.e;
-      t3 = t2.camera;
-      t4 = t1.y;
-      t5 = $.GameEngine_scale;
-      if (typeof t5 !== "number")
-        return H.iae(t5);
-      t3.targetOffsetY = -(t4 / t5) * t5;
-      t2.bobbin.list = t1.frames;
-      t2.cards = t1.cards;
+      t2 = t1.e.camera;
+      t3 = J.$div$n(t1.y, $.GameEngine_scale);
+      t2.toString;
+      t2.targetOffsetY = J.$mul$ns(J.$negate$n(t3), $.GameEngine_scale);
+      t3 = t1.e;
+      t3.bobbin.list = t1.frames;
+      t3.cards = t1.cards;
       t1.completed = false;
-      t2 = t2.world;
-      t5 = t1.gravity;
+      t3 = t3.world;
+      t2 = t1.gravity;
       t4 = new Float32Array(H._checkLength(2));
       t4[0] = 0;
-      t4[1] = t5;
-      t2.setGravity$1(new T.Vector2(t4));
+      t4[1] = t2;
+      t3.setGravity$1(new T.Vector2(t4));
       t2 = t1.gravity;
       t3 = $.parallax;
       if (t2 > 0)
@@ -4109,6 +4219,14 @@ var $$ = Object.create(null);
   "^": "",
   SuperCanvasDraw: {
     "^": "Object;ctx,flags@,viewportTransform",
+    drawPolygon$3: function(vertices, vertexCount, color) {
+      this._pathPolygon$3(vertices, vertexCount, color);
+      J.stroke$0$x(this.ctx);
+    },
+    drawSolidPolygon$3: function(vertices, vertexCount, color) {
+      this._pathPolygon$3(vertices, vertexCount, color);
+      J.fill$0$x(this.ctx);
+    },
     _pathPolygon$3: function(vertices, vertexCount, color) {
       var i, t1, t2, t3;
       this.set$_color(color);
@@ -4142,6 +4260,20 @@ var $$ = Object.create(null);
         return H.ioore(vertices, 0);
       t2.lineTo$2(t1, t3, J.get$y$x(vertices[0]));
       t2.closePath$0(t1);
+    },
+    drawCircle$4: function(center, radius, color, axis) {
+      var t1 = this.viewportTransform.scale;
+      if (typeof t1 !== "number")
+        return H.iae(t1);
+      this._pathCircle$3(center, radius * t1, color);
+      J.stroke$0$x(this.ctx);
+    },
+    drawSolidCircle$4: function(center, radius, color, axis) {
+      var t1 = this.viewportTransform.scale;
+      if (typeof t1 !== "number")
+        return H.iae(t1);
+      this._pathCircle$3(center, radius * t1, color);
+      J.fill$0$x(this.ctx);
     },
     _pathCircle$3: function(center, radius, color) {
       var t1, t2, t3;
@@ -6856,6 +6988,11 @@ var $$ = Object.create(null);
     reflectionInfo.fixed$length = Array;
     return H.Closure_fromTearOff(receiver, functions, reflectionInfo, !!isStatic, jsArguments, $name);
   },
+  doubleTypeCast: function(value) {
+    if (typeof value === "number" || value == null)
+      return value;
+    throw H.wrapException(H.CastErrorImplementation$(H.Primitives_objectTypeName(value), "double"));
+  },
   numTypeCast: function(value) {
     if (typeof value === "number" || value == null)
       return value;
@@ -8896,7 +9033,7 @@ var $$ = Object.create(null);
         t2 = J.getInterceptor$x(v2);
         t3 = manifold.localPoint.storage;
         t3[0] = J.$mul$ns(J.$add$ns(t1.get$x(v1), t2.get$x(v2)), 0.5);
-        t3[1] = J.$add$ns(t1.get$y(v1), t2.get$y(v2)) * 0.5;
+        t3[1] = J.$mul$ns(J.$add$ns(t1.get$y(v1), t2.get$y(v2)), 0.5);
         mpoint = manifold.points[0];
         t2 = mpoint.get$localPoint();
         t1 = circle.get$position(circle);
@@ -8919,6 +9056,8 @@ var $$ = Object.create(null);
       temp2Y = J.$sub$n(t4.get$y(v2), t1.get$y(v1));
       if (typeof temp2X !== "number")
         return H.iae(temp2X);
+      if (typeof temp2Y !== "number")
+        return H.iae(temp2Y);
       t5 = t4.get$x(v2);
       if (typeof t5 !== "number")
         return H.iae(t5);
@@ -8929,6 +9068,8 @@ var $$ = Object.create(null);
       temp4Y = J.$sub$n(t1.get$y(v1), t4.get$y(v2));
       if (typeof temp4X !== "number")
         return H.iae(temp4X);
+      if (typeof temp4Y !== "number")
+        return H.iae(temp4Y);
       if ((cLocalx - t2) * temp2X + (cLocaly - t3) * temp2Y <= 0) {
         t2 = t1.get$x(v1);
         if (typeof t2 !== "number")
@@ -8987,9 +9128,11 @@ var $$ = Object.create(null);
         J.get$id$x(t1[0]).zero$0();
       } else {
         fcx = J.$mul$ns(J.$add$ns(t1.get$x(v1), t4.get$x(v2)), 0.5);
-        fcy = J.$add$ns(t1.get$y(v1), t4.get$y(v2)) * 0.5;
+        fcy = J.$mul$ns(J.$add$ns(t1.get$y(v1), t4.get$y(v2)), 0.5);
         if (typeof fcx !== "number")
           return H.iae(fcx);
+        if (typeof fcy !== "number")
+          return H.iae(fcy);
         norm = normals[normalIndex];
         t1 = J.getInterceptor$x(norm);
         t2 = t1.get$x(norm);
@@ -10918,15 +11061,6 @@ var $$ = Object.create(null);
       return new T.Vector2(new Float32Array(H._checkLength(2)));
     }
   },
-  Color3: {
-    "^": "Object;x*,y*,z",
-    $eq: function(_, other) {
-      if (other == null)
-        return false;
-      return !!J.getInterceptor(other).$isColor3 && J.$eq(this.x, other.x) && this.y === other.y && this.z === other.z;
-    },
-    $isColor3: true
-  },
   Sweep: {
     "^": "Object;localCenter<,centerZero<,center<,angleZero<,angle<",
     $eq: function(_, other) {
@@ -11030,6 +11164,8 @@ var $$ = Object.create(null);
       gridCorrectedX = J.$add$ns(J.$mul$ns(t1.get$x(argWorld), this.scale), t2[0]);
       t2 = t2[1];
       t1 = J.$mul$ns(t1.get$y(argWorld), this.scale);
+      if (typeof t1 !== "number")
+        return H.iae(t1);
       argScreen.setValues$2(J.$add$ns(gridCorrectedX, this.get$translation().storage[0]), t2 - t1 + -this.get$translation().storage[1]);
     }
   },
@@ -14103,7 +14239,7 @@ var $$ = Object.create(null);
     $.canvas = t2;
     g = J.getContext$1$x(t2, "2d");
     T.updateCanvasPositionAndDimension(null);
-    t2 = new D.StateManager(H.setRuntimeTypeInfo([], [D.State]), 0, g);
+    t2 = new D.StateManager(H.setRuntimeTypeInfo([], [D.State]), 0, g, 0);
     t3 = window;
     t4 = t2.get$step(t2);
     C.Window_methods._ensureRequestAnimationFrame$0(t3);
@@ -14117,7 +14253,7 @@ var $$ = Object.create(null);
     t2.camera = t4;
     $.engine = t2;
     t4 = $.manager;
-    t2 = new F.ParallaxManager(t2, g, 0, 24, 175, 1, H.setRuntimeTypeInfo([], [F.Star]));
+    t2 = F.ParallaxManager$(t2, g, 24, 200);
     $.parallax = t2;
     t4.states.push(t2);
     t2.start$1(0, null);
@@ -14296,6 +14432,14 @@ var $$ = Object.create(null);
   fadeBoxOut: function(box, duration, callback) {
     L.animate(box, duration, C.Easing_13, null, P.LinkedHashMap_LinkedHashMap$_literal(["opacity", 0], null, null));
     P.Timer_Timer(P.Duration$(0, 0, 0, duration, 0, 0), new T.fadeBoxOut_closure(box, callback));
+  },
+  anyWindowsOpened: function() {
+    var t1, t2;
+    t1 = {};
+    t1.opened_0 = false;
+    t2 = W._FrozenElementList$_wrap(document.querySelectorAll(".bs-screen"), null);
+    t2.forEach$1(t2, new T.anyWindowsOpened_closure(t1));
+    return t1.opened_0;
   },
   rateLimit_closure: {
     "^": "Closure:60;box_0,callback_1,time_2",
@@ -14589,6 +14733,14 @@ var $$ = Object.create(null);
       if (t1 != null)
         t1.call$0();
     }
+  },
+  anyWindowsOpened_closure: {
+    "^": "Closure:66;box_0",
+    call$1: function(element) {
+      var t1 = J.getInterceptor$x(element);
+      if (t1.get$classes(element).readClasses$0().contains$1(0, "hidden") || J.get$opacity$x(t1.get$style(element)) === "0.0")
+        this.box_0.opened_0 = true;
+    }
   }
 },
 1],
@@ -14853,6 +15005,11 @@ var $$ = Object.create(null);
     },
     get$isEmpty: function(_) {
       return this.get$length(this) === 0;
+    },
+    get$first: function(_) {
+      if (this.get$length(this) === 0)
+        throw H.wrapException(H.IterableElementError_noElement());
+      return this.elementAt$1(0, 0);
     },
     map$1: function(_, f) {
       return H.setRuntimeTypeInfo(new H.MappedListIterable(this, f), [null, null]);
@@ -20147,6 +20304,9 @@ var $$ = Object.create(null);
   },
   BodyElement: {
     "^": "HtmlElement;",
+    get$onLoad: function(receiver) {
+      return C.EventStreamProvider_load0.forElement$1(receiver);
+    },
     $isBodyElement: true,
     $isEventTarget: true,
     "%": "HTMLBodyElement"
@@ -20168,7 +20328,7 @@ var $$ = Object.create(null);
     "%": "HTMLCanvasElement"
   },
   CanvasRenderingContext2D: {
-    "^": "Interceptor;fillStyle}",
+    "^": "Interceptor;fillStyle},globalAlpha}",
     beginPath$0: function(receiver) {
       return receiver.beginPath();
     },
@@ -20201,6 +20361,9 @@ var $$ = Object.create(null);
     },
     arc$6: function(receiver, x, y, radius, startAngle, endAngle, anticlockwise) {
       receiver.arc(x, y, radius, startAngle, endAngle, anticlockwise);
+    },
+    drawImageScaledFromSource$9: function(receiver, source, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight) {
+      return receiver.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
     },
     fill$1: function(receiver, winding) {
       receiver.fill(winding);
@@ -20501,12 +20664,15 @@ var $$ = Object.create(null);
     get$onContextMenu: function(receiver) {
       return C.EventStreamProvider_contextmenu.forElement$1(receiver);
     },
+    get$onLoad: function(receiver) {
+      return C.EventStreamProvider_load0.forElement$1(receiver);
+    },
     $isElement: true,
     $isEventTarget: true,
     "%": ";Element"
   },
   EmbedElement: {
-    "^": "HtmlElement;height=,name=,src=,type%,width=",
+    "^": "HtmlElement;height=,name=,src%,type%,width=",
     "%": "HTMLEmbedElement"
   },
   ErrorEvent: {
@@ -20626,7 +20792,7 @@ var $$ = Object.create(null);
     "%": ";XMLHttpRequestEventTarget"
   },
   IFrameElement: {
-    "^": "HtmlElement;height=,name=,src=,width=",
+    "^": "HtmlElement;height=,name=,src%,width=",
     "%": "HTMLIFrameElement"
   },
   ImageData: {
@@ -20635,14 +20801,14 @@ var $$ = Object.create(null);
     "%": "ImageData"
   },
   ImageElement: {
-    "^": "HtmlElement;height=,src=,width=",
+    "^": "HtmlElement;height=,src%,width=",
     complete$0: function($receiver) {
       return $receiver.complete.call$0();
     },
     "%": "HTMLImageElement"
   },
   InputElement: {
-    "^": "HtmlElement;height=,name=,src=,type%,value=,width=",
+    "^": "HtmlElement;height=,name=,src%,type%,value=,width=",
     $isElement: true,
     $isEventTarget: true,
     $isNode: true,
@@ -20679,7 +20845,7 @@ var $$ = Object.create(null);
     "%": "HTMLMapElement"
   },
   MediaElement: {
-    "^": "HtmlElement;error=,src=",
+    "^": "HtmlElement;error=,src%",
     "%": "HTMLAudioElement;HTMLMediaElement"
   },
   MediaError: {
@@ -20853,7 +21019,7 @@ var $$ = Object.create(null);
     "%": "ProgressEvent|ResourceProgressEvent|XMLHttpRequestProgressEvent"
   },
   ScriptElement0: {
-    "^": "HtmlElement;src=,type%",
+    "^": "HtmlElement;src%,type%",
     "%": "HTMLScriptElement"
   },
   SelectElement: {
@@ -20868,7 +21034,7 @@ var $$ = Object.create(null);
     "%": "ShadowRoot"
   },
   SourceElement: {
-    "^": "HtmlElement;src=,type%",
+    "^": "HtmlElement;src%,type%",
     "%": "HTMLSourceElement"
   },
   SpeechRecognitionError: {
@@ -21013,7 +21179,7 @@ var $$ = Object.create(null);
     "%": "TouchEvent"
   },
   TrackElement: {
-    "^": "HtmlElement;src=",
+    "^": "HtmlElement;src%",
     "%": "HTMLTrackElement"
   },
   UIEvent: {
@@ -21267,6 +21433,39 @@ var $$ = Object.create(null);
   Interceptor_CssStyleDeclarationBase: {
     "^": "Interceptor+CssStyleDeclarationBase;"
   },
+  _CssStyleDeclarationSet: {
+    "^": "Object_CssStyleDeclarationBase;_elementIterable,_elementCssStyleDeclarationSetIterable",
+    getPropertyValue$1: function(_, propertyName) {
+      var t1 = this._elementCssStyleDeclarationSetIterable;
+      return J.getPropertyValue$1$x(t1.get$first(t1), propertyName);
+    },
+    setProperty$3: function(_, propertyName, value, priority) {
+      this._elementCssStyleDeclarationSetIterable.forEach$1(0, new W._CssStyleDeclarationSet_setProperty_closure(propertyName, value, priority));
+    },
+    _CssStyleDeclarationSet$1: function(_elementIterable) {
+      this._elementCssStyleDeclarationSetIterable = H.setRuntimeTypeInfo(new H.MappedListIterable(P.List_List$from(this._elementIterable, true, null), new W._CssStyleDeclarationSet_closure()), [null, null]);
+    },
+    static: {_CssStyleDeclarationSet$: function(_elementIterable) {
+        var t1 = new W._CssStyleDeclarationSet(_elementIterable, null);
+        t1._CssStyleDeclarationSet$1(_elementIterable);
+        return t1;
+      }}
+  },
+  Object_CssStyleDeclarationBase: {
+    "^": "Object+CssStyleDeclarationBase;"
+  },
+  _CssStyleDeclarationSet_closure: {
+    "^": "Closure:44;",
+    call$1: [function(e) {
+      return J.get$style$x(e);
+    }, "call$1", null, 2, 0, null, 9, "call"]
+  },
+  _CssStyleDeclarationSet_setProperty_closure: {
+    "^": "Closure:44;propertyName_0,value_1,priority_2",
+    call$1: function(e) {
+      return J.setProperty$3$x(e, this.propertyName_0, this.value_1, this.priority_2);
+    }
+  },
   CssStyleDeclarationBase: {
     "^": "Object;",
     get$clear: function(receiver) {
@@ -21292,6 +21491,9 @@ var $$ = Object.create(null);
     },
     set$maxWidth: function(receiver, value) {
       this.setProperty$3(receiver, "max-width", value, "");
+    },
+    get$opacity: function(receiver) {
+      return this.getPropertyValue$1(receiver, "opacity");
     },
     set$opacity: function(receiver, value) {
       this.setProperty$3(receiver, "opacity", value, "");
@@ -21389,6 +21591,9 @@ var $$ = Object.create(null);
     },
     get$classes: function(_) {
       return W._MultiElementCssClassSet$(this._elementList);
+    },
+    get$style: function(_) {
+      return W._CssStyleDeclarationSet$(this._elementList);
     },
     get$onClick: function(_) {
       return C.EventStreamProvider_click._forElementList$1(this);
@@ -22634,6 +22839,9 @@ var $$ = Object.create(null);
     },
     get$onContextMenu: function(receiver) {
       return C.EventStreamProvider_contextmenu.forElement$1(receiver);
+    },
+    get$onLoad: function(receiver) {
+      return C.EventStreamProvider_load0.forElement$1(receiver);
     },
     $isSvgElement: true,
     $isEventTarget: true,
@@ -24649,6 +24857,12 @@ $$ = null;
 // Runtime type support
 ;(function() {
   var TRUE = !0, _;
+  _ = P.$double;
+  _.$is$double = TRUE;
+  _.$isnum = TRUE;
+  _.$isComparable = TRUE;
+  _.$asComparable = [P.num];
+  _.$isObject = TRUE;
   _ = P.String;
   _.$isString = TRUE;
   _.$isComparable = TRUE;
@@ -24656,12 +24870,6 @@ $$ = null;
   _.$isObject = TRUE;
   _ = P.$int;
   _.$is$int = TRUE;
-  _.$isnum = TRUE;
-  _.$isComparable = TRUE;
-  _.$asComparable = [P.num];
-  _.$isObject = TRUE;
-  _ = P.$double;
-  _.$is$double = TRUE;
   _.$isnum = TRUE;
   _.$isComparable = TRUE;
   _.$asComparable = [P.num];
@@ -24694,7 +24902,6 @@ $$ = null;
   D.State.$isObject = TRUE;
   X.HItem.$isObject = TRUE;
   V.Body.$isObject = TRUE;
-  F.Star.$isObject = TRUE;
   _ = W.MouseEvent;
   _.$isMouseEvent = TRUE;
   _.$isEvent = TRUE;
@@ -24757,6 +24964,7 @@ $$ = null;
   V.TimeOfImpactConstraint.$isObject = TRUE;
   V.SimplexVertex.$isObject = TRUE;
   V.ClipVertex.$isObject = TRUE;
+  F.Star.$isObject = TRUE;
   V.Joint.$isObject = TRUE;
   V.Velocity.$isObject = TRUE;
   V.Position0.$isObject = TRUE;
@@ -24815,11 +25023,11 @@ $$ = null;
   _ = P.AsyncError;
   _.$isAsyncError = TRUE;
   _.$isObject = TRUE;
-  _ = P.Future;
-  _.$isFuture = TRUE;
-  _.$isObject = TRUE;
   _ = P._EventSink;
   _.$is_EventSink = TRUE;
+  _.$isObject = TRUE;
+  _ = P.Future;
+  _.$isFuture = TRUE;
   _.$isObject = TRUE;
   _ = W.HtmlElement;
   _.$isHtmlElement = TRUE;
@@ -25192,6 +25400,12 @@ J.get$onClick$x = function(receiver) {
 J.get$onContextMenu$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$onContextMenu(receiver);
 };
+J.get$onLoad$x = function(receiver) {
+  return J.getInterceptor$x(receiver).get$onLoad(receiver);
+};
+J.get$opacity$x = function(receiver) {
+  return J.getInterceptor$x(receiver).get$opacity(receiver);
+};
 J.get$parent$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$parent(receiver);
 };
@@ -25212,6 +25426,9 @@ J.get$shape$x = function(receiver) {
 };
 J.get$src$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$src(receiver);
+};
+J.get$style$x = function(receiver) {
+  return J.getInterceptor$x(receiver).get$style(receiver);
 };
 J.get$tagName$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$tagName(receiver);
@@ -25303,6 +25520,9 @@ J.set$opacity$x = function(receiver, value) {
 J.set$parent$x = function(receiver, value) {
   return J.getInterceptor$x(receiver).set$parent(receiver, value);
 };
+J.set$src$x = function(receiver, value) {
+  return J.getInterceptor$x(receiver).set$src(receiver, value);
+};
 J.set$top$x = function(receiver, value) {
   return J.getInterceptor$x(receiver).set$top(receiver, value);
 };
@@ -25329,6 +25549,9 @@ J.setInnerHtml$1$x = function(receiver, a0) {
 };
 J.setProperty$2$x = function(receiver, a0, a1) {
   return J.getInterceptor$x(receiver).setProperty$2(receiver, a0, a1);
+};
+J.setProperty$3$x = function(receiver, a0, a1, a2) {
+  return J.getInterceptor$x(receiver).setProperty$3(receiver, a0, a1, a2);
 };
 J.setTransform$2$x = function(receiver, a0, a1) {
   return J.getInterceptor$x(receiver).setTransform$2(receiver, a0, a1);
@@ -25425,6 +25648,7 @@ C.EventStreamProvider_error = new W.EventStreamProvider("error");
 C.EventStreamProvider_keydown = new W.EventStreamProvider("keydown");
 C.EventStreamProvider_keyup = new W.EventStreamProvider("keyup");
 C.EventStreamProvider_load = new W.EventStreamProvider("load");
+C.EventStreamProvider_load0 = new W.EventStreamProvider("load");
 C.EventStreamProvider_mousedown = new W.EventStreamProvider("mousedown");
 C.EventStreamProvider_mousemove = new W.EventStreamProvider("mousemove");
 C.EventStreamProvider_mouseup = new W.EventStreamProvider("mouseup");
@@ -25665,6 +25889,9 @@ $.Device__isIE = null;
 $.Device__isFirefox = null;
 $.Device__isWebKit = null;
 $.Device__cachedCssPrefix = null;
+Isolate.$lazy($, "r", "ChanceEngine_r", "get$ChanceEngine_r", function() {
+  return C.C__JSRandom;
+});
 Isolate.$lazy($, "storage", "GameWizard_storage", "get$GameWizard_storage", function() {
   return window.localStorage;
 });
@@ -25672,16 +25899,10 @@ Isolate.$lazy($, "progress", "GameWizard_progress", "get$GameWizard_progress", f
   return document.querySelector(".tutorial-progress");
 });
 Isolate.$lazy($, "keys", "Input_keys", "get$Input_keys", function() {
-  return P.LinkedHashMap_LinkedHashMap$_literal(["space", new A.Key(32, false, false), "enter", new A.Key(13, false, false), "delete", new A.Key(46, false, false), "z", new A.Key(90, false, false), "w", new A.Key(87, false, false), "a", new A.Key(65, false, false), "s", new A.Key(83, false, false), "d", new A.Key(68, false, false), "n", new A.Key(78, false, false), "p", new A.Key(80, false, false), "1", new A.Key(49, false, false), "2", new A.Key(50, false, false), "esc", new A.Key(27, false, false), "shift", new A.Key(16, false, false), "ctrl", new A.Key(17, false, false), "arrow_left", new A.Key(37, false, false), "arrow_right", new A.Key(39, false, false), "arrow_up", new A.Key(38, false, false), "arrow_down", new A.Key(40, false, false), "alt", new A.Key(18, false, false), "q", new A.Key(81, false, false), "e", new A.Key(69, false, false)], null, null);
+  return P.LinkedHashMap_LinkedHashMap$_literal(["space", new A.Key(32, false, false), "enter", new A.Key(13, false, false), "delete", new A.Key(46, false, false), "z", new A.Key(90, false, false), "w", new A.Key(87, false, false), "a", new A.Key(65, false, false), "s", new A.Key(83, false, false), "d", new A.Key(68, false, false), "n", new A.Key(78, false, false), "p", new A.Key(80, false, false), "1", new A.Key(49, false, false), "2", new A.Key(50, false, false), "esc", new A.Key(27, false, false), "shift", new A.Key(16, false, false), "ctrl", new A.Key(17, false, false), "arrow_left", new A.Key(37, false, false), "arrow_right", new A.Key(39, false, false), "arrow_up", new A.Key(38, false, false), "arrow_down", new A.Key(40, false, false), "alt", new A.Key(18, false, false), "q", new A.Key(81, false, false), "e", new A.Key(69, false, false), "c", new A.Key(67, false, false), "v", new A.Key(86, false, false)], null, null);
 });
 Isolate.$lazy($, "random", "random", "get$random", function() {
   return C.C__JSRandom;
-});
-Isolate.$lazy($, "YELLOW", "YELLOW", "get$YELLOW", function() {
-  return new V.Color3(254, 251, 224);
-});
-Isolate.$lazy($, "CYAN", "CYAN", "get$CYAN", function() {
-  return new V.Color3(125, 165, 253);
 });
 Isolate.$lazy($, "closeListener", "Tooltip_closeListener", "get$Tooltip_closeListener", function() {
   return new A.closure4();

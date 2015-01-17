@@ -11,6 +11,7 @@ locale.apply_shortcut = "Ctrl+Shift";
 locale.apply_shortcut_mac = "Cmd+Shift";
 locale.rewind = 'Назад';
 locale.restart = "Заново";
+locale.back_to_level = "Вернуться к уровню";
 locale.restart_desc = "Удалить все блоки и начать уровень сначала";
 locale.use_hint = 'Подсказка';
 locale.dynamic = 'прыгун';
@@ -131,9 +132,10 @@ locale.wizard_limited_amount = "Количество ограничено";
 locale.wizard_rewind = "Назад, чтобы попробовать снова";
 locale.wizard_remove = "Чтобы удалить блок, наведите на него курсор и <b>нажмите правую кнопку</b> или <b>Delete</b>";
 locale.wizard_rotate = "<b>Чтобы вращать блок,</b> используйте колесо мыши или кнопки Q/E";
-locale.wizard_hints = "Если у вас возникают проблемы с прохождением, <b>используйте подсказки</b>";
+locale.wizard_hints = "Используйте подсказки в трудные моменты!";
 locale.wizard_zoom = "<b>Используйте приближение</b> для точности";
 locale.wizard_static = "Полки не падают, но и не проводят энергию";
+locale.dynamic_obstacles_tootip = "Красные препятствия падают";
 
 // Wall posts
 locale.share_offer_text = 'Ставьте блоки и соединяйте кубы в отличной головоломке Two Cubes!';
