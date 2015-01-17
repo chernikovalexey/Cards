@@ -69,7 +69,7 @@
         </button>
 
         <div class="right-buttons">
-            <div class="friends-finished-button localized-title" data-tlid="some_friends" title="">
+            <div class="friends-finished-button localized-title hidden" data-tlid="some_friends" title="">
                 <div class="friends-finished-amount"></div>
                 <div class="friends-finished-icon"></div>
             </div>
@@ -96,6 +96,12 @@
 
     <div class="canvas-layout">
         <canvas width="800" height="600" id="graphics"></canvas>
+        <div id="finished-vs">
+            <div id="finished-es">
+                <div class="friends-ribbon"></div>
+            </div>
+        </div>
+        <div id="finished-scrollbar"></div>
     </div>
 
     <div class="light-box" id="menu-box">
@@ -305,20 +311,13 @@
     </div>
 </div>
 
-<div class="bs-screen hidden" id="friends-finished">
+<!--<div class="bs-screen hidden" id="friends-finished">
     <div class="bs-screen-topbar">
         <div class="bs-screen-headline localized" data-lid="friends_completed">Friends completed this level</div>
         <div class="bs-screen-close close-finished localized" data-lid="close">close</div>
     </div>
     <div class="bs-screen-blurry-bar"></div>
-
-    <div id="finished-vs" class="bottom-sliding-vs">
-        <div id="finished-es" class="bottom-sliding-es invite-users">
-            <div class="users-block card-users finished-friends"></div>
-        </div>
-    </div>
-    <div id="finished-scrollbar" class="bottom-sliding-scrollbar"></div>
-</div>
+</div>-->
 
 <div class="bs-screen friends hidden">
     <div class="bs-screen-topbar">

@@ -117,7 +117,6 @@ img {
 
 .canvas-layout {
     width: 800px;
-    height: 600px;
     overflow: hidden;
 }
 
@@ -1780,11 +1779,78 @@ div.active-step {
     color: #c7c6c2;
 }
 
+.friends-ribbon {
+    background: #000;
+}
+
+/**
+*****
+*/
+
+#finished-vs {
+    display: none;
+    position: relative;
+    top: -4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.125);
+    width: 800px;
+    height: 80px;
+    overflow: hidden;
+}
+
+#finished-es {
+    width: 2000px;
+    height: 80px;
+}
+
+#finished-scrollbar {
+    position: relative;
+    top: -4px;
+    width: 800px;
+    height: 11px;
+    font-size: 1px;
+}
+
+#finished-scrollbar .track {
+    position: absolute;
+    width: 800px;
+    height: 11px;
+    background-color: #2c2c2c;
+}
+
+#finished-scrollbar .dragBar {
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    height: 9px;
+    width: 20px;
+    background-color: #1b1b1b;
+}
+
+#finished-scrollbar {
+    -moz-user-select: none;
+    -khtml-user-select: none;
+}
+
+#finished-vs:focus, #finished-scrollbar:focus, #finished-scrollbar .track:focus, #finished-scrollbar .dragBar:focus {
+    outline: none;
+}
+
+/*
+*****
+*/
+
 .friend-card {
     padding: 15px;
     padding-bottom: 0;
     width: 500px;
     margin: 0 auto;
+}
+
+#finished-vs .friend-card {
+    padding: 15px;
+    width: 225px;
+    display: inline-block;
+    border-right: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .fr-pos {
@@ -1795,6 +1861,10 @@ div.active-step {
     vertical-align: top;
     opacity: 0.5;
     cursor: default;
+}
+
+#finished-vs .fr-pos {
+    padding-left: 0;
 }
 
 .fr-ava {
@@ -1823,6 +1893,11 @@ div.active-step {
     left: 10px;
 }
 
+#finished-vs .fr-meta {
+    border-bottom: none;
+    width: 150px;
+}
+
 .fr-name {
     font-family: Tahoma, Verdana;
     color: silver;
@@ -1837,6 +1912,10 @@ div.active-step {
 
 .finished-friend .fr-name {
     width: 430px;
+}
+
+#finished-vs .fr-name {
+    width: 150px;
 }
 
 .fr-succeeded {
@@ -1874,6 +1953,30 @@ div.active-step {
     height: 19px;
     background-image: url(img/new_star.png);
     background-size: contain;
+}
+
+#finished-vs .finished-friend .fr-result {
+    margin-top: 0;
+    float: left;
+    display: inline-block;
+    width: auto;
+    padding: 2px 11px 5px 11px;
+    background: rgba(0, 0, 0, 0.725);
+    text-align: center;
+    top: 26px;
+    left: -61px;
+    right: auto;
+}
+
+#finished-vs .fr-res-num {
+    font-size: 14px;
+    top: -1px;
+    left: 3px;
+}
+
+#finished-vs .fr-res-ico {
+    width: 16px;
+    height: 15px;
 }
 
 .usage-statistics {

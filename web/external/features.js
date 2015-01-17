@@ -187,7 +187,7 @@ var Features = {
         var counter = 0;
 
         $(users).each(function () {
-            $('.finished-friends').append(TemplateEngine.parseTemplate($('.finished-friend-template').html(), $.extend(this, {
+            $('.friends-ribbon').append(TemplateEngine.parseTemplate($('.finished-friend-template').html(), $.extend(this, {
                 pos: ++counter
             })));
         });

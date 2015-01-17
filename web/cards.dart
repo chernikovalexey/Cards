@@ -410,3 +410,13 @@ bool anyWindowsOpened() {
     });
     return opened;
 }
+
+void showFriendsBar() {
+    context['VK'].callMethod('callMethod', ['resizeWindow', 800, 600 + 91]);
+    querySelector("#finished-vs").style.display = "block";
+}
+
+void collapseFriendsBar() {
+    context['VK'].callMethod('callMethod', ['resizeWindow', 800, 600]);
+    querySelector("#finished-vs").style.display = "none";
+}

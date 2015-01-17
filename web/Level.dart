@@ -189,36 +189,34 @@ class Level {
             JsObject flevel_js = fchapter[engine.level.currentSubLevel.toString()];
 
             if (flevel_js != null) {
-                finished.classes.remove("hidden");
+                //finished.classes.remove("hidden");
 
                 JsMap flevel = new JsMap.fromJsObject(flevel_js);
 
-                querySelector(".friends-finished-amount").innerHtml = flevel.length.toString();
+                //querySelector(".friends-finished-amount").innerHtml = flevel.length.toString();
 
-                finished.addEventListener("click", (event) {
-                    PromptWindow.close();
-                    Tooltip.closeAll();
+                //finished.addEventListener("click", (event) {
+                //PromptWindow.close();
+                //Tooltip.closeAll();
 
-                    DivElement box = querySelector('#friends-finished') as DivElement;
+                /*DivElement box = querySelector('#friends-finished') as DivElement;
                     box.classes.remove('hidden');
                     animate(box, properties: {
                         'top': 0, 'opacity': 1.0
                     }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
 
-                    new Timer(new Duration(milliseconds: 125), () {
-                        context['Features'].callMethod('showFinishedFriends', [engine.level.chapter, engine.level.currentSubLevel, () {
-                            querySelector(".game-box").classes.add("blurred");
+                    new Timer(new Duration(milliseconds: 125), () {*/
+                context['Features'].callMethod('showFinishedFriends', [engine.level.chapter, engine.level.currentSubLevel, () {
+                    //querySelector(".game-box").classes.add("blurred");
 
-                            Input.attachSingleEscClickCallback(() {
+                    /*Input.attachSingleEscClickCallback(() {
                                 querySelector(".close-finished").click();
-                            });
+                            });*/
 
-                            var bar = Scroll.setup('finished-vs', 'finished-es', 'finished-scrollbar');
-                            context['dw_Scrollbar_Co'].callMethod('addEvent', [bar, 'on_scroll', (var x, var y) {
-                                querySelector("#finished-blur-g").style.transform = "translatey(" + (y + 80).toString() + "px)";
-                            }]);
+                    querySelector("#finished-es").style.width = (261 * flevel.length).toString() + "px";
+                    var bar = Scroll.setup('finished-vs', 'finished-es', 'finished-scrollbar', 'h');
 
-                            context.callMethod('html2canvas', [querySelector('#finished-es'), new JsObject.jsify({
+                    /*context.callMethod('html2canvas', [querySelector('#finished-es'), new JsObject.jsify({
                                 'onrendered': (CanvasElement canvas) {
                                     canvas.id = "finished-blur-g";
                                     querySelector("#friends-finished .bs-screen-blurry-bar").append(canvas);
@@ -226,22 +224,22 @@ class Level {
                                     g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                                     g.fillRect(0, 0, canvas.width, canvas.height);
                                 }
-                            })]);
-                        }]);
-                    });
-                }, true);
+                            })]);*/
+                }]);
+                //});
+                //}, true);
 
-                querySelector(".close-finished").addEventListener("click", (event) {
+                /*querySelector(".close-finished").addEventListener("click", (event) {
                     querySelector('.game-box').classes.remove('blurred');
                     animate(querySelector('#friends-finished'), properties: {
                         'top': 800, 'opacity': 0.0
                     }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
-                }, false);
+                }, false);*/
             } else {
-                finished.classes.add("hidden");
+                //finished.classes.add("hidden");
             }
         } else {
-            finished.classes.add("hidden");
+            //finished.classes.add("hidden");
         }
     }
 

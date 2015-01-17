@@ -1,5 +1,6 @@
 import 'dart:html';
 import 'Input.dart';
+import 'cards.dart';
 
 abstract class State {
     void start([Map params]);
@@ -23,10 +24,18 @@ class StateManager {
     void addState(State state, [Map params = null]) {
         states.add(state);
         state.start(params);
+
+        if (state == engine) {
+            showFriendsBar();
+        }
     }
 
     void removeState(State state) {
         states.remove(state);
+
+        if (state == engine) {
+            collapseFriendsBar();
+        }
     }
 
     int n = 0;

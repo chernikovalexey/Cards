@@ -261,9 +261,9 @@ class GameWizard {
     }
 
     static void tryShowingHintsTooltip() {
-        new Timer.periodic(new Duration(milliseconds: 90000), (Timer timer) {
+        new Timer.periodic(new Duration(milliseconds: 180000), (Timer timer) {
             if (manager.states.contains(engine) && !engine.isPaused && anyWindowsOpened()) {
-                Tooltip.show(querySelector("#hint"), context['locale']['wizard_hints'], Tooltip.BOTTOM, maxWidth: 300, xOffset: -90);
+                Tooltip.show(querySelector("#hint"), context['locale']['wizard_hints'], Tooltip.BOTTOM, maxWidth: 300, xOffset: -90, yOffset: -1);
 
                 var stream = querySelector("#hint").onClick.listen((event) {
                     Tooltip.closeAll();

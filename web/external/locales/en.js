@@ -133,7 +133,7 @@ locale.wizard_rotate = "<b>To rotate the block,</b> use your mouse wheel or butt
 locale.wizard_hints = "Use hints in case of trouble!";
 locale.wizard_zoom = "<b>Use zoom</b> for accuracy";
 locale.wizard_static = "Shelves don't fall when physics applied, and don't conduct energy.";
-locale.dynamic_obstacles_tootip = "Red obstacles tend to fall";
+locale.dynamic_obstacles_tooltip = "Red obstacles tend to fall";
 
 // Wall posts
 locale.share_offer_text = 'Check out an excellent puzzle game Two Cubes!';
