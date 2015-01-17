@@ -638,10 +638,16 @@ class GameEngine extends State {
     void render() {
         if (ready) {
             Body b = world.bodyList;
+
             while (b != null) {
+                if (b == this.bcard.b) {
+                    b = b.next;
+                    continue;
+                }
                 if (b.userData != null) (b.userData as Sprite).render(debugDraw, b);
                 b = b.next;
             }
+            (bcard.b.userData as Sprite).render(debugDraw, bcard.b);
         }
     }
 

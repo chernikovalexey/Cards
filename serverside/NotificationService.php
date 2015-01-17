@@ -84,7 +84,7 @@ class NotificationService
         $platforms = $this->groupBy($notifications, 'platformId');
         $vk = $this->sendVk($platforms['vk']);
         $fb = $this->sendFb($platforms['fb']);
-        //return array('vk' => $vk, 'fb' => $fb);
+        return array('vk' => $vk, 'fb' => $fb);
         //$this->sendVk($vk);
     }
 
@@ -132,7 +132,6 @@ class NotificationService
         $methods = VKServerMethods::getInstance($this->db);
         $data = $methods->usersGet($this->getIds($vk), 'online,online_mobile,name');
         $byUserId = $this->groupBy($vk, 'platformUserId');
-
         $forSend = array();
         foreach ($data['response'] as $u) {
             if ($u['online'] == 1 && (!isset($u['online_mobile']) || $u['online_mobile'] != 1)) {
@@ -142,6 +141,7 @@ class NotificationService
                 $forSend[$r][] = $byUserId[$u['uid']][0];
             }
         };
+        var_dump($forSend);
         $sentNotifications = array();
         foreach ($forSend as $reason => $reasonArray) {
             if ($reason != 2) //needs extra data
