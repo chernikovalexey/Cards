@@ -1,1 +1,1 @@
-<?php phpinfo();
+<?header('Location: /web/cards.html')
