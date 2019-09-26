@@ -8,7 +8,7 @@
 
 session_start();
 define('SITE_PATH', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-error_reporting(E_ALL);
+error_reporting(E_ERROR);
 
 require_once "Router.php";
 require_once "dbconnect.php";

@@ -2,22 +2,34 @@
 # See http://pub.dartlang.org/doc/glossary.html#lockfile
 packages:
   animation:
-    description: animation
+    description:
+      name: animation
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.24"
   box2d:
-    description: box2d
+    description:
+      name: box2d
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.7"
+    version: "0.4.0"
   browser:
-    description: browser
+    description:
+      name: browser
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.0+1"
+    version: "0.10.0+3"
   sprintf:
-    description: sprintf
+    description:
+      name: sprintf
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.8"
+    version: "4.0.2"
   vector_math:
-    description: vector_math
+    description:
+      name: vector_math
+      url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.3"
+    version: "2.0.7"
+sdks:
+  dart: ">=1.21.0 <2.0.0"

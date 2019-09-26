@@ -1,4 +1,4 @@
-import 'dart:html';
+import 'dart:html' as Html;
 import 'dart:math' as Math;
 import 'package:box2d/box2d_browser.dart';
 import 'cards.dart';
@@ -74,7 +74,7 @@ class GameEngine extends State {
     World world;
     DefaultWorldPool pool;
     CardContactListener contactListener;
-    CanvasRenderingContext2D g;
+    Html.CanvasRenderingContext2D g;
     ViewportTransform viewport;
     SuperCanvasDraw debugDraw;
     BoundedCard bcard;
@@ -109,7 +109,7 @@ class GameEngine extends State {
     double cardDensity = 0.25, cardFriction = 0.115, cardRestitution = 0.0;
     double currentZoom = 1.0;
 
-    GameEngine(CanvasRenderingContext2D g) {
+    GameEngine(Html.CanvasRenderingContext2D g) {
         this.g = g;
         camera = new Camera(this);
     }

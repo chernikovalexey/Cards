@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  twocubes:
+    container_name: twocubes
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: twopeoplesoftware/twocubes
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: PP4ScMGr3zbFQkHL
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+  db:
+    container_name: db
+    restart: always
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    image: twopeoplesoftware/twocubes_db
+    environment:
+        MYSQL_ROOT_PASSWORD: PP4ScMGr3zbFQkHL
+    ports:
+      - "3306:3306"

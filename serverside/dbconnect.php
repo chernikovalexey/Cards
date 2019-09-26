@@ -23,13 +23,8 @@ function endsWith($haystack, $needle)
 }
 
 try {
-    $connectionString = "mysql:host=%host%;dbname=%dbname%";
-    if (!endsWith(SITE_PATH, '28340jfddv03jfd' . DIRECTORY_SEPARATOR)) {
-        $connectionString .= '.test';
-        define('TEST', true, true);
-    } else {
-        define('TEST', false, true);
-    }
+    $connectionString = "mysql:host=db;dbname=twocubes";
+    define('TEST', false, true);
 
     if (TEST) {
         define("VK_SECRET_KEY", "%vksecretkeytest%", true);
@@ -40,7 +35,7 @@ try {
         define("VK_APP_ID", 0, true);
     }
 
-    $db = new PDO($connectionString, "%username%", "%pass%");
+    $db = new PDO($connectionString, "root", getenv('MYSQL_ROOT_PASSWORD'));
     $DB = new DB($db);
 } catch (PDOException $e) {
     die("Error: " . $e->getMessage());

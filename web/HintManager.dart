@@ -1,4 +1,4 @@
-import "dart:html";
+import "dart:html" as Html;
 import "GameEngine.dart";
 import 'dart:js';
 import 'PromptWindow.dart';
@@ -6,7 +6,7 @@ import 'package:box2d/box2d_browser.dart';
 import 'package:sprintf/sprintf.dart';
 import 'EnergySprite.dart';
 import 'Color4.dart';
-import 'dart:async';
+import 'dart:async' as Async;
 import 'package:animation/animation.dart';
 import 'UserManager.dart';
 import 'WebApi.dart';
@@ -18,7 +18,7 @@ class HintManager {
 
     HintManager(this.engine);
 
-    void onClick(Event e) {
+    void onClick(Html.Event e) {
         int balance = UserManager.getAsInt("balance");
 
         Tooltip.closeAll();
@@ -30,14 +30,14 @@ class HintManager {
                         'chapter': engine.level.chapter, 'level': engine.level.currentSubLevel
                     }), (Map hints) {
                         UserManager.set("balance", hints['user']['balance']);
-                        querySelector("#hints-amount").innerHtml = hints['user']['balance'].toString();
+                        Html.querySelector("#hints-amount").innerHtml = hints['user']['balance'].toString();
 
                         for (Map card in hints['hint']) {
                             addHintCard(card['x'].toDouble(), card['y'].toDouble(), card['angle'].toDouble(), card['energy'].toDouble(), card['static']);
                         }
 
                         // 6.5 sec enough?
-                        new Timer(new Duration(milliseconds: 6500), () {
+                        new Async.Timer(new Duration(milliseconds: 6500), () {
                             clearHintCards();
                         });
 
@@ -54,20 +54,20 @@ class HintManager {
 
     void orderSuccessCallback() {
         WebApi.getUser(() {
-            querySelector("#hints-amount").innerHtml = querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
-            querySelector("#attempts-balance").innerHtml = querySelector(".attempts-left").innerHtml = UserManager.getAsInt('boughtAttempts') == -1 ? "∞" : UserManager.getAsString("allAttempts");
+            Html.querySelector("#hints-amount").innerHtml = Html.querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
+            Html.querySelector("#attempts-balance").innerHtml = Html.querySelector(".attempts-left").innerHtml = UserManager.getAsInt('boughtAttempts') == -1 ? "∞" : UserManager.getAsString("allAttempts");
 
             WebApi.onOrderSuccess(orderSuccessCallback);
 
             if (UserManager.getAsInt('boughtAttempts') == -1) {
-                querySelector(".attempt-options").innerHtml = '<div class="unlimited-attempts">' + context['locale']['unlimited_attempts'] + '</div>';
+                Html.querySelector(".attempt-options").innerHtml = '<div class="unlimited-attempts">' + context['locale']['unlimited_attempts'] + '</div>';
             }
         });
     }
 
     bool purchasesOpened = false;
 
-    void getMoreHints([Event event]) {
+    void getMoreHints([Html.Event event]) {
         if (!purchasesWindowLoaded) {
             WebApi.loadPurchasesWindow();
             purchasesWindowLoaded = true;
@@ -77,19 +77,19 @@ class HintManager {
 
         WebApi.onOrderSuccess(orderSuccessCallback);
 
-        querySelector('#purchases').classes.remove("hidden");
-        animate(querySelector('#purchases'), properties: {
+        Html.querySelector('#purchases').classes.remove("hidden");
+        animate(Html.querySelector('#purchases'), properties: {
             'top': 0, 'opacity': 1.0
         }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
 
         purchasesOpened = true;
 
-        querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
-        querySelector("#attempts-balance").innerHtml = UserManager.getAsInt('boughtAttempts') == -1 ? "∞" : UserManager.getAsString("allAttempts");
+        Html.querySelector("#hints-balance").innerHtml = UserManager.getAsString("balance");
+        Html.querySelector("#attempts-balance").innerHtml = UserManager.getAsInt('boughtAttempts') == -1 ? "∞" : UserManager.getAsString("allAttempts");
 
-        querySelector(".close-purchases").addEventListener("click", (event) {
-            querySelector('.game-box').classes.remove('blurred');
-            animate(querySelector('#purchases'), properties: {
+        Html.querySelector(".close-purchases").addEventListener("click", (event) {
+            Html.querySelector('.game-box').classes.remove('blurred');
+            animate(Html.querySelector('#purchases'), properties: {
                 'top': 800, 'opacity': 0.0
             }, duration: 125, easing: Easing.SINUSOIDAL_EASY_IN);
             purchasesOpened = false;
@@ -102,7 +102,7 @@ class HintManager {
             col = new Color4.fromRGBA(235, 235, 215, 0.25);
         }
         Body b = engine.addCard(x, y, angle, _static, null, col, true);
-        b.type = BodyType.STATIC;
+        b.setType(BodyType.STATIC);
         (b.userData as EnergySprite).energy = energy;
     }
 

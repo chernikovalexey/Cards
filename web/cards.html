@@ -9,7 +9,6 @@
 
     <script src="external/scrollbar.js"></script>
     <script src="external/html2canvas.js"></script>
-    <script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="external/jqEase.js"></script>
     <script src="external/TemplateEngine.js"></script>
@@ -17,26 +16,8 @@
     <script src="external/features.js"></script>
 
     <script type="application/dart" src="cards.dart"></script>
-    <script type="text/javascript" src="packages/browser/interop.js"></script>
-    <script type="text/javascript" src="packages/browser/dart.js"></script>
-
-    <script type="text/javascript">
-        var evt_name = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel";
-
-        var on_scroll = function (e) {
-            if (e.preventDefault) e.preventDefault();
-            e.returnValue = false;
-            return false;
-        };
-
-        if (document.attachEvent) {
-            document.attachEvent("on" + evt_name, on_scroll);
-        } else if (document.addEventListener) {
-            document.addEventListener(evt_name, on_scroll, false);
-        }
-
-        window.onkeydown = on_scroll;
-    </script>
+    <script type="text/javascript" src="/packages/browser/interop.js"></script>
+    <script type="text/javascript" src="/packages/browser/dart.js"></script>
 </head>
 <body>
 

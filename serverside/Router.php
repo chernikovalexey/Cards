@@ -41,16 +41,14 @@ class Router
             $Api->checkPlatform($arguments);
             $rm = new ReflectionMethod($Api, $method);
             //todo: Add clause if user not valid
-            if ($platform != 'no') {
-                $user = $this->db->validateUser($arguments['userId'], $platform);
-                $this->db->countAttempts($user);
-                $arguments['userId'] = $user; // что бы при вызове invokeArgs этот параметр шел первым, в методы Апи уже попадет как массив $user
+            $user = $this->db->validateUser($arguments['userId'], $platform);
+            $this->db->countAttempts($user);
+            $arguments['userId'] = $user; // что бы при вызове invokeArgs этот параметр шел первым, в методы Апи уже попадет как массив $user
 
-                Analytics::init($user['userId'], $platform);
+            Analytics::init($user['userId'], $platform);
 
-                if ($user['isNew'])
-                    Analytics::push(new AnalyticsEvent("user", "new", array('platform' => $platform)));
-            }
+            if ($user['isNew'])
+                Analytics::push(new AnalyticsEvent("user", "new", array('platform' => $platform)));
             if ($arguments == null) $arguments = array();
             $result = $rm->invokeArgs($Api, $arguments);
             return $this->prepare($result);

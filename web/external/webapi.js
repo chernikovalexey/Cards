@@ -1,11 +1,7 @@
 function WebApi(method, data, callback, async) {
     var json = JSON.stringify(data);
 
-    var url = "/twocubes28340jfddv03jfd/serverside/index.php";
-    if (document.location.href.indexOf('28340jfddv03jfd') == -1) {
-        url = "/twocubes.test/serverside/index.php";
-    }
-
+    var url = "/serverside/index.php";
     $.ajax({
         type: 'POST',
         url: url,
