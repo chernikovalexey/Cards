@@ -1191,6 +1191,7 @@ var NoFeatures = {
     },
 
     load: function (callback) {
+        this.user.allAttempts = 99999;
         this.initFields(callback);
     },
 
