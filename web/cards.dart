@@ -228,7 +228,7 @@ void main() {
 
     querySelector('#toggle-physics').addEventListener("click", (event) {
         if (!(event.target as ButtonElement).classes.contains("rewind")) {
-            int attempts = UserManager.getAsInt("allAttempts");
+            int attempts = 99999;
             int boughtAttempts = UserManager.getAsInt("boughtAttempts");
 
             if (attempts > 0 || boughtAttempts == -1) {
