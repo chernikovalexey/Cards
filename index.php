@@ -1,1 +1,1 @@
-<?header('Location: /web/cards.html')
+<?header('Location: /web/cards.html');
