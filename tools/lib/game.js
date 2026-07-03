@@ -67,6 +67,14 @@ const PAGE_HELPERS = `window.__game = {
     },
     restart(expectedDynamic, expectedStatic) {
         document.querySelectorAll('.tt').forEach((el) => el.remove());
+        // After a win the rating box is up and the engine is paused; "Back to
+        // the level" (RatingShower.restartLevel) unpauses and rewinds first.
+        const rb = document.querySelector('#rating-box');
+        if (rb && !rb.classList.contains('hidden')) {
+            const back = document.querySelector('#restart-level');
+            if (back) back.click();
+            window.__harness.tick(10);
+        }
         document.querySelector('#restart').click();
         const btns = document.querySelectorAll('.prompt-window .prompt-positive');
         btns[btns.length - 1].click();
