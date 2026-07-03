@@ -2,10 +2,51 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const profiles = require('./profiles');
 const { createHarness } = require('./harness');
 const { Game } = require('./game');
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Record a single level's solution as proofs/chapter_C/level_LL.webm.
+// The session is seeded with the true progression context (world state after
+// the previous level's win), so the video shows the real board.
+async function proveLevel(chapter, level, cards, { outDir = 'proofs' } = {}) {
+    const dir = path.join(outDir, `chapter_${chapter}`);
+    fs.mkdirSync(dir, { recursive: true });
+    const h = await createHarness({
+        turbo: false,
+        realTime: true,
+        videoDir: dir,
+        profile: profiles.contextProfile(chapter, level),
+    });
+    const g = new Game(h);
+    const video = h.page.video();
+    let outcome = 'error';
+    let stars = null;
+    let error = null;
+    try {
+        const at = await g.gotoLevel(chapter);
+        if (at.level !== level) throw new Error(`landed on level ${at.level}, wanted ${level}`);
+        await sleep(700);
+        for (const card of cards) {
+            const p = await g.place(card);
+            if (!p.ok) throw new Error(`placement rejected: ${p.reason} at (${card.x}, ${card.y})`);
+            await sleep(300);
+        }
+        const r = await g.applyRealtime();
+        outcome = r.outcome;
+        stars = r.stars ?? null;
+        await sleep(1500); // show the star rating (or the settled failure)
+    } catch (e) {
+        error = String(e.message || e);
+    } finally {
+        await h.close();
+    }
+    const finalVideo = path.join(dir, `level_${String(level).padStart(2, '0')}.webm`);
+    fs.renameSync(await video.path(), finalVideo);
+    return { outcome, stars, video: finalVideo, ...(error ? { error } : {}) };
+}
 
 async function proveChapter(chapter, solution, { outDir, profile = {}, levelsLimit = Infinity } = {}) {
     fs.mkdirSync(outDir, { recursive: true });
@@ -84,4 +125,4 @@ async function cmdProve(args) {
     process.stdout.write(JSON.stringify(summary, null, 2) + '\n');
 }
 
-module.exports = { proveChapter, cmdProve };
+module.exports = { proveChapter, proveLevel, cmdProve };

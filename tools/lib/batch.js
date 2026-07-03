@@ -1,7 +1,7 @@
 // Batch scenario runner: the "test thousands of scenarios fast" clause.
 'use strict';
 const fs = require('fs');
-const levels = require('./levels');
+const profiles = require('./profiles');
 const { createHarness } = require('./harness');
 const { Game } = require('./game');
 
@@ -22,7 +22,10 @@ async function runScenarios(scenarios, { parallel = 4, onResult = null, stopWhen
         while (queue.length && !stopped) {
             const group = queue.shift();
             const { chapter, level } = group[0];
-            const h = await createHarness({ profile: levels.searchProfile(chapter, level) });
+            // Context matters: previous levels' settled cards are solid
+            // bodies in the world, so search runs in the true progression
+            // state (throws until the previous level is recorded).
+            const h = await createHarness({ profile: profiles.contextProfile(chapter, level) });
             const g = new Game(h);
             try {
                 await g.gotoLevel(chapter);

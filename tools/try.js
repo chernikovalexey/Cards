@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const levels = require('./lib/levels');
+const profiles = require('./lib/profiles');
 const { createHarness } = require('./lib/harness');
 const { Game } = require('./lib/game');
 
@@ -16,10 +17,16 @@ async function main() {
     const level = parseInt(get('level'), 10);
     const cards = JSON.parse(get('cards') || (get('cards-file') ? fs.readFileSync(get('cards-file'), 'utf8') : '[]'));
     const shots = get('shots');
-    if (!chapter || !level) { console.error('usage: try.js --chapter C --level L --cards JSON | --cards-file F [--shots DIR] [--no-apply]'); process.exit(2); }
+    if (!chapter || !level) { console.error('usage: try.js --chapter C --level L --cards JSON | --cards-file F [--shots DIR] [--no-apply] [--isolated]'); process.exit(2); }
     if (shots) fs.mkdirSync(shots, { recursive: true });
 
-    const h = await createHarness({ profile: levels.searchProfile(chapter, level) });
+    // Default: true progression context (previous levels' cards in the
+    // world). --isolated uses an empty world — geometry peeks only; a win
+    // there does NOT guarantee a win in context.
+    const profile = args.includes('--isolated')
+        ? levels.searchProfile(chapter, level)
+        : profiles.contextProfile(chapter, level);
+    const h = await createHarness({ profile });
     const g = new Game(h);
     const out = { chapter, level, placements: [] };
     try {

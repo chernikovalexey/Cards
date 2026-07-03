@@ -7,6 +7,9 @@ const fs = require('fs');
 const path = require('path');
 const levels = require('./lib/levels');
 const { runScenarios } = require('./lib/batch');
+const solutions = require('./lib/solutions');
+const profiles = require('./lib/profiles');
+const { verifyAndRecord } = require('./lib/recorder');
 
 const STEP = Math.PI / 72;
 const CARD_W = levels.CARD.w;
@@ -19,7 +22,10 @@ function center(rect) { return { x: rect.x + rect.w / 2, y: rect.y + rect.h / 2 
 function generateCandidates(info, { rounds = 20 } = {}) {
     const up = info.gravity > 0; // blocks fall upward
     const A = center(info.from), B = center(info.to);
-    const restY = (rect) => (up ? rect.y - CARD_H / 2 - 0.02 : rect.y + rect.h + CARD_H / 2 + 0.02);
+    // Clearances must beat box2d's polygon skin (~0.02 wu) or the ghost
+    // registers a contact and the placement is rejected.
+    const CLEAR = 0.05;
+    const restY = (rect) => (up ? rect.y - CARD_H / 2 - CLEAR : rect.y + rect.h + CARD_H / 2 + CLEAR);
     const yA = restY(info.from), yB = restY(info.to);
     const budgetD = info.blocks.dynamic, budgetS = info.blocks.static;
     const asStatic = budgetD === 0;
@@ -33,7 +39,7 @@ function generateCandidates(info, { rounds = 20 } = {}) {
 
     const budget = budgetD + budgetS;
     const span = Math.abs(B.x - A.x);
-    const STAGGER = 0.05; // > card thickness: staggered planks never overlap at placement
+    const STAGGER = CARD_H + 0.055; // surface gap stays above the contact skin
 
     // 1. single card spanning both cubes
     if (span < CARD_W * 0.95) {
@@ -41,25 +47,37 @@ function generateCandidates(info, { rounds = 20 } = {}) {
         mk([{ x: (A.x + B.x) / 2, y: (yA + yB) / 2, angle: 0, static: asStatic }]);
     }
 
-    // 2. plank chain: horizontally overlapping cards, each one STAGGER higher
-    // than the previous so nothing overlaps at placement; they settle into a
-    // connected ramp when physics run. Both directions (low->high, high->low).
-    for (let n = 2; n <= Math.min(8, budget); n++) {
-        const reach = CARD_W + (n - 1) * CARD_W * 0.55; // ~45% overlap between planks
-        if (reach < span * 0.95) continue;
-        const step = n > 1 ? (B.x - A.x) / (n - 1) * ((span - CARD_W * 0.5) / span) : 0;
-        for (const dir of [1, -1]) {
+    // 2. plank bridges between the cube tops. Two patterns per card count:
+    //    - weave (brick bond): even planks at rest height, odd planks lying
+    //      across their joints one STAGGER up — stable despite low friction;
+    //    - cascade: each plank one STAGGER above the previous (a ramp).
+    for (let n = 2; n <= Math.min(10, budget); n++) {
+        const sgn = B.x >= A.x ? 1 : -1;
+        const x0 = A.x + sgn * CARD_W * 0.3;               // anchored over cube A
+        const x1 = B.x - sgn * CARD_W * 0.3;               // anchored over cube B
+        const step = (x1 - x0) / Math.max(1, n - 1);
+        const lineY = (t) => yA + (yB - yA) * t;
+        const row = (pattern) => {
             const cards = [];
             for (let i = 0; i < n; i++) {
-                const k = dir === 1 ? i : n - 1 - i;
+                const t = n === 1 ? 0.5 : i / (n - 1);
                 cards.push({
-                    x: A.x + step * k + (B.x > A.x ? 1 : -1) * CARD_W * 0.2,
-                    y: (yA + (yB - yA) * (k / Math.max(1, n - 1))) + (up ? -1 : 1) * i * STAGGER,
+                    x: x0 + step * i,
+                    y: lineY(t) + (up ? -1 : 1) * pattern(i) * STAGGER,
                     angle: 0,
                     static: asStatic,
                 });
             }
-            mk(cards);
+            return cards;
+        };
+        // weave (brick bond): same-row planks must not overlap, odd planks
+        // must rest on both neighbors
+        if (Math.abs(step) >= (CARD_W + 0.06) / 2 && Math.abs(step) <= CARD_W * 0.8) {
+            mk(row((i) => i % 2));
+        }
+        // cascade ramp: dense overlap, each plank a step above the previous
+        if (Math.abs(step) <= CARD_W * 0.48) {
+            mk(row((i) => i));
         }
     }
 
@@ -69,14 +87,18 @@ function generateCandidates(info, { rounds = 20 } = {}) {
     const highRect = A.y < B.y ? info.to : info.from;
     const highC = A.y < B.y ? B : A;
     const dy = Math.abs(B.y - A.y);
-    const seg = CARD_W + 0.008;
+    const seg = CARD_W + 0.05;
     if (dy > CARD_W * 0.5) {
-        const base = lowRect.y + lowRect.h + 0.01;         // stack base on the low cube's top
+        const base = lowRect.y + lowRect.h + 0.05;         // stack base on the low cube's top
         const target = highRect.y + 0.1;                   // overlap slightly past the high cube's underside
         const nV = Math.ceil(Math.max(0, target - base - CARD_W) / seg) + 1;
         if (nV >= 1 && nV <= budget) {
             const lowX = lowRect.x + lowRect.w / 2;
-            for (const baseX of new Set([lowX, highC.x])) {
+            // Standing beside the high cube (touching its side) avoids the
+            // placement-overlap rejection a through-the-cube stack hits.
+            const leftOfHigh = highRect.x - 0.055;
+            const rightOfHigh = highRect.x + highRect.w + 0.055;
+            for (const baseX of new Set([lowX, leftOfHigh, rightOfHigh])) {
                 const cards = [];
                 for (let i = 0; i < nV; i++) {
                     cards.push({ x: baseX, y: base + CARD_W / 2 + i * seg, angle: Math.PI / 2, static: asStatic });
@@ -138,42 +160,42 @@ async function solveLevel(chapter, level, { parallel = 4, rounds = 20 } = {}) {
     return winners[0];
 }
 
-function mergeSolution(chapter, level, sol) {
-    const dir = path.join(__dirname, '..', 'solutions');
-    fs.mkdirSync(dir, { recursive: true });
-    const file = path.join(dir, `chapter_${chapter}.json`);
-    const doc = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : { chapter, levels: [] };
-    doc.levels = doc.levels.filter((l) => l.level !== level);
-    doc.levels.push({ level, stars: sol.stars, cards: sol.cards });
-    doc.levels.sort((a, b) => a.level - b.level);
-    fs.writeFileSync(file, JSON.stringify(doc, null, 2));
-    return file;
-}
-
 async function main() {
     const args = process.argv.slice(2);
     const get = (k) => { const i = args.indexOf(`--${k}`); return i >= 0 ? args[i + 1] : null; };
     const chapter = parseInt(get('chapter'), 10);
-    if (!chapter) { console.error('usage: solve.js --chapter C [--level L] [--parallel N] [--rounds R] [--force]'); process.exit(2); }
+    if (!chapter) { console.error('usage: solve.js --chapter C [--level L] [--parallel N] [--rounds R] [--force] [--no-video]'); process.exit(2); }
     const onlyLevel = get('level') ? parseInt(get('level'), 10) : null;
     const parallel = parseInt(get('parallel'), 10) || 4;
     const rounds = parseInt(get('rounds'), 10) || 20;
     const force = args.includes('--force');
 
-    const file = path.join(__dirname, '..', 'solutions', `chapter_${chapter}.json`);
-    const have = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')).levels.map((l) => l.level) : [];
+    // Levels are sequential: level L is searched in the world state left by
+    // winning L-1 (context profile). Without --force, levels that already
+    // hold a 3-star solution are skipped; lower-star levels stay in scope.
+    const have = new Map(solutions.load(chapter).levels.map((l) => [l.level, l.stars]));
     const targets = onlyLevel ? [onlyLevel]
         : Array.from({ length: levels.loadChapter(chapter).levels.length }, (_, i) => i + 1)
-            .filter((l) => force || !have.includes(l));
+            .filter((l) => force || (have.get(l) || 0) < 3);
 
     for (const level of targets) {
-        const sol = await solveLevel(chapter, level, { parallel, rounds });
-        if (sol) {
-            mergeSolution(chapter, level, sol);
-            process.stderr.write(`level ${chapter}-${level}: SOLVED with ${sol.cards.length} cards, ${sol.stars} stars\n`);
-        } else {
-            process.stderr.write(`level ${chapter}-${level}: unsolved — needs interactive play\n`);
+        try {
+            profiles.contextProfile(chapter, level); // throws if predecessor unrecorded
+        } catch (e) {
+            process.stderr.write(`level ${chapter}-${level}: SKIPPED — ${e.message}\n`);
+            continue;
         }
+        const sol = await solveLevel(chapter, level, { parallel, rounds });
+        if (!sol) {
+            process.stderr.write(`level ${chapter}-${level}: no win found — needs interactive play\n`);
+            continue;
+        }
+        // Re-verify + persist through the shared pipeline (solution merge,
+        // context snapshot for the next level, proof video).
+        const r = await verifyAndRecord(chapter, level, sol.cards, { video: !args.includes('--no-video') });
+        process.stderr.write(`level ${chapter}-${level}: ${r.ok
+            ? `won ${r.verified.stars}* with ${r.verified.cardsUsed} cards (saved=${r.saved}, video=${r.videoRefreshed ? 'recorded' : 'kept'})`
+            : `verification failed (${r.verified})`}\n`);
     }
 }
 

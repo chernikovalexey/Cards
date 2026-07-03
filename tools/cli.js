@@ -3,6 +3,7 @@
 'use strict';
 const readline = require('readline');
 const levels = require('./lib/levels');
+const profiles = require('./lib/profiles');
 const { createHarness } = require('./lib/harness');
 const { Game } = require('./lib/game');
 
@@ -35,8 +36,9 @@ function cmdInfo(args) {
 async function cmdPlay(args) {
     const chapter = args.chapter ? parseInt(args.chapter, 10) : null;
     const level = args.level ? parseInt(args.level, 10) : 1;
+    // Sessions play in the true progression context unless --isolated.
     const profile = chapter
-        ? levels.searchProfile(chapter, level)
+        ? (args.isolated ? levels.searchProfile(chapter, level) : profiles.contextProfile(chapter, level))
         : { seen_howto: 'true', runout_occured: 'true' };
     const h = await createHarness({
         turbo: !args['no-turbo'],
