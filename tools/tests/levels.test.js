@@ -38,3 +38,10 @@ test('searchProfile seeds direct entry and chapter unlock', () => {
     assert.ok(JSON.parse(p.stars).total >= 60); // chapter 3 needs 60 stars
     assert.equal(p.seen_howto, 'true');
 });
+
+test('levels beyond the first inherit from = previous to (SubLevel.dart)', () => {
+    const l2 = L.levelInfo(1, 2);
+    // level 1's to cube is at (150, 50) px
+    assert.ok(Math.abs(l2.from.x - 150 / 85) < 1e-9);
+    assert.ok(Math.abs(l2.from.y - 50 / 85) < 1e-9);
+});

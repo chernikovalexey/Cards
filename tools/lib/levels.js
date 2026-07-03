@@ -26,6 +26,10 @@ function cubeRect(raw) {
 function levelInfo(chapter, level) {
     const raw = loadChapter(chapter).levels[level - 1];
     if (!raw) throw new Error(`no level ${chapter}-${level}`);
+    // SubLevel.dart:79-82 — for level > 1 the from cube IS the previous
+    // level's to cube; the JSON "from" of those levels (often {offset}) is
+    // ignored by the engine.
+    const fromRaw = level > 1 ? loadChapter(chapter).levels[level - 2].to : raw.from;
     return {
         chapter,
         level,
@@ -34,7 +38,7 @@ function levelInfo(chapter, level) {
         blocks: { static: raw.blocks[0], dynamic: raw.blocks[1] },
         stars: raw.stars,
         bounds: { x: raw.x, y: raw.y, width: raw.width, height: raw.height },
-        from: cubeRect(raw.from),
+        from: cubeRect(fromRaw),
         to: cubeRect(raw.to),
         obstacles: raw.obstacles.map((o) => {
             const out = { type: o.type, dynamic: o.type === 5 || o.type === 6 };
