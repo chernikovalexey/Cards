@@ -125,11 +125,11 @@ runtime by the harness:
   thresholds, gravity.
 - **`play [--chapter C --level L] [--turbo] [--screenshot-dir D]`** —
   interactive JSONL protocol on stdin/stdout for machine play. Commands:
-  `goto {chapter, level}`, `place {x, y, angle, static}`, `undo`, `clear`,
-  `apply {maxTicks}`, `rewind`, `next`, `state`, `screenshot`, `tick {n}`,
-  `reset`, `quit`. Every response carries `ok`, the current
-  chapter/level/blocks-remaining, and after `apply`: `{outcome: "won"|"failed"
-  |"timeout", stars, ticks}`.
+  `goto {chapter}`, `place {x, y, angle, static}`, `restart` (rewind + remove
+  all cards, the between-attempts reset), `apply {maxTicks}`, `next`, `state`,
+  `cards` (exact placed positions), `info`, `screenshot {path}`, `tick {n}`,
+  `quit`. Every response carries `ok`; `apply` returns `{outcome:
+  "won"|"failed"|"timeout", stars, ticks}`.
 - **`run <scenarios.json> [--parallel N] [--turbo]`** — batch mode for
   thousands of scenarios: input is a list of `{chapter, level, cards:
   [{x, y, angle, static}]}`; each is played (clear → place → apply → record)
