@@ -1,0 +1,19 @@
+{
+  "name": "cards",
+  "version": "1.0.0",
+  "description": "Two Cubes – the web puzzle game",
+  "scripts": {
+    "test": "playwright test",
+    "test:prod": "BASE_URL=https://twocubes.io playwright test",
+    "deploy": "rm -rf dist && mkdir dist && cp -r web packages dist/ && cp index.html cubes.png dist/ && wrangler pages deploy dist --project-name twocubes --branch master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chernikovalexey/Cards.git"
+  },
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}
