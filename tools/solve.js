@@ -31,51 +31,68 @@ function generateCandidates(info, { rounds = 20 } = {}) {
         if (d <= budgetD && s <= budgetS && cards.length > 0) bases.push({ cards });
     };
 
-    // 1. flat bridge(s) across the gap at resting height
+    const budget = budgetD + budgetS;
     const span = Math.abs(B.x - A.x);
-    for (let n = 1; n <= Math.min(4, budgetD + budgetS); n++) {
-        if (n * CARD_W * 0.95 < span - CARD_W) continue; // cannot reach
-        const cards = [];
-        for (let i = 0; i < n; i++) {
-            const t = n === 1 ? 0.5 : i / (n - 1);
-            cards.push({
-                x: A.x + (B.x - A.x) * t,
-                y: (yA + yB) / 2,
-                angle: 0,
-                static: asStatic,
-            });
-        }
-        mk(cards);
+    const STAGGER = 0.05; // > card thickness: staggered planks never overlap at placement
+
+    // 1. single card spanning both cubes
+    if (span < CARD_W * 0.95) {
+        mk([{ x: (A.x + B.x) / 2, y: Math.max(yA, yB), angle: 0, static: asStatic }]);
+        mk([{ x: (A.x + B.x) / 2, y: (yA + yB) / 2, angle: 0, static: asStatic }]);
     }
 
-    // 2. inclined chain along the from->to segment
-    const segAngle = snap(Math.atan2(yB - yA, B.x - A.x));
-    for (let n = 1; n <= Math.min(4, budgetD + budgetS); n++) {
-        const cards = [];
-        for (let i = 0; i < n; i++) {
-            const t = (i + 0.5) / n;
-            cards.push({
-                x: A.x + (B.x - A.x) * t,
-                y: yA + (yB - yA) * t + (up ? -0.03 : 0.03),
-                angle: segAngle,
-                static: asStatic,
-            });
+    // 2. plank chain: horizontally overlapping cards, each one STAGGER higher
+    // than the previous so nothing overlaps at placement; they settle into a
+    // connected ramp when physics run. Both directions (low->high, high->low).
+    for (let n = 2; n <= Math.min(8, budget); n++) {
+        const reach = CARD_W + (n - 1) * CARD_W * 0.55; // ~45% overlap between planks
+        if (reach < span * 0.95) continue;
+        const step = n > 1 ? (B.x - A.x) / (n - 1) * ((span - CARD_W * 0.5) / span) : 0;
+        for (const dir of [1, -1]) {
+            const cards = [];
+            for (let i = 0; i < n; i++) {
+                const k = dir === 1 ? i : n - 1 - i;
+                cards.push({
+                    x: A.x + step * k + (B.x > A.x ? 1 : -1) * CARD_W * 0.2,
+                    y: (yA + (yB - yA) * (k / Math.max(1, n - 1))) + (up ? -1 : 1) * i * STAGGER,
+                    angle: 0,
+                    static: asStatic,
+                });
+            }
+            mk(cards);
         }
-        mk(cards);
     }
 
-    // 3. tower: vertical cards stacked from the lower cube toward the higher
-    const dy = Math.abs(yB - yA);
-    if (dy > CARD_W / 2) {
-        const lower = yA < yB ? A : B;
-        const lowY = Math.min(yA, yB);
-        const nV = Math.min(Math.ceil(dy / (CARD_W * 0.9)), Math.max(0, budgetD + budgetS - 1));
-        const cards = [];
-        for (let i = 0; i < nV; i++) {
-            cards.push({ x: lower.x, y: lowY + CARD_W / 2 + i * CARD_W * 0.9, angle: Math.PI / 2, static: asStatic });
+    // 3. tower: vertical cards stacked end-on-end from the lower cube's top
+    // up to the higher cube (angular damping keeps aligned stacks standing).
+    const lowRect = A.y < B.y ? info.from : info.to;
+    const highRect = A.y < B.y ? info.to : info.from;
+    const highC = A.y < B.y ? B : A;
+    const dy = Math.abs(B.y - A.y);
+    const seg = CARD_W + 0.008;
+    if (dy > CARD_W * 0.5) {
+        const base = lowRect.y + lowRect.h + 0.01;         // stack base on the low cube's top
+        const target = highRect.y + 0.1;                   // overlap slightly past the high cube's underside
+        const nV = Math.ceil(Math.max(0, target - base - CARD_W) / seg) + 1;
+        if (nV >= 1 && nV <= budget) {
+            const lowX = lowRect.x + lowRect.w / 2;
+            for (const baseX of new Set([lowX, highC.x])) {
+                const cards = [];
+                for (let i = 0; i < nV; i++) {
+                    cards.push({ x: baseX, y: base + CARD_W / 2 + i * seg, angle: Math.PI / 2, static: asStatic });
+                }
+                mk(cards);
+                // tower + top plank toward the target cube
+                if (cards.length + 1 <= budget && Math.abs(highC.x - baseX) > 0.1) {
+                    mk([...cards, {
+                        x: (baseX + highC.x) / 2,
+                        y: base + nV * seg + STAGGER,
+                        angle: 0,
+                        static: asStatic,
+                    }]);
+                }
+            }
         }
-        cards.push({ x: (A.x + B.x) / 2, y: Math.max(yA, yB), angle: 0, static: asStatic });
-        mk(cards);
     }
 
     // 4. jittered variants of every base
