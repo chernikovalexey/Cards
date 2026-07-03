@@ -65,6 +65,31 @@ const PAGE_HELPERS = `window.__game = {
         }
         return { outcome: 'timeout', ticks };
     },
+    restart(expectedDynamic, expectedStatic) {
+        document.querySelectorAll('.tt').forEach((el) => el.remove());
+        document.querySelector('#restart').click();
+        const btns = document.querySelectorAll('.prompt-window .prompt-positive');
+        btns[btns.length - 1].click();
+        const H = window.__harness;
+        let t = 0;
+        while (t < 4000) {
+            H.tick(25); t += 25;
+            const r = this.remaining();
+            const staticOk = expectedStatic === 0 || r.static === expectedStatic;
+            if (r.dynamic === expectedDynamic && staticOk) return { ok: true, remaining: r, ticks: t };
+        }
+        return { ok: false, remaining: this.remaining(), ticks: t };
+    },
+    probeCards(storageKey) {
+        // Esc pauses and persists exact card state (RatingShower.pause ->
+        // saveCurrentProgress -> LevelSerializer.toJSON).
+        this.key('keydown', 27); window.__harness.tick(1); this.key('keyup', 27);
+        const raw = localStorage.getItem(storageKey);
+        const resume = document.querySelector('#resume-game');
+        if (resume) resume.click();
+        window.__harness.tick(2);
+        return raw ? JSON.parse(raw).c : [];
+    },
 };`;
 
 class Game {
@@ -154,6 +179,48 @@ class Game {
         return this.page.evaluate(
             ([mt, ft]) => window.__game.applyPhysics(mt, ft),
             [maxTicks, FAIL_TEXT]);
+    }
+
+    async restartLevel() {
+        await this._ensureHelpers();
+        if (!this.rawLevel) await this._syncLevel();
+        const inf = this.info();
+        return this.page.evaluate(
+            ([d, s]) => window.__game.restart(d, s),
+            [inf.blocks.dynamic, inf.blocks.static]);
+    }
+
+    async nextLevel() {
+        await this._ensureHelpers();
+        await this.page.evaluate(() => document.querySelector('#next-level').click());
+        const prev = this.level;
+        await this.page.waitForFunction(
+            (lv) => { const l = localStorage.getItem('last'); return l && JSON.parse(l).level !== lv; },
+            prev, { timeout: 30000 });
+        await this.h.tick(160); // camera settle for the new level
+        await this.page.evaluate(() => document.body.click()); // clear any tutorial hint card
+        await this.h.tick(2);
+        return this._syncLevel();
+    }
+
+    async cards() {
+        await this._ensureHelpers();
+        if (!this.rawLevel) await this._syncLevel();
+        return this.page.evaluate(
+            (key) => window.__game.probeCards(key),
+            `level_${this.chapter}_${this.level}`);
+    }
+
+    async screenshot(path) {
+        const wasTurbo = await this.page.evaluate(() => {
+            const t = window.__harness.turbo;
+            window.__harness.turbo = false;
+            window.__harness.tick(1);
+            return t;
+        });
+        const buf = await this.page.screenshot(path ? { path } : {});
+        await this.page.evaluate((t) => { window.__harness.turbo = t; }, wasTurbo);
+        return buf;
     }
 
     async state() {
