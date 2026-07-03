@@ -98,9 +98,15 @@ function generateCandidates(info, { rounds = 20 } = {}) {
 async function solveLevel(chapter, level, { parallel = 4, rounds = 20 } = {}) {
     const info = levels.levelInfo(chapter, level);
     const candidates = generateCandidates(info, { rounds });
+    // Cheapest structures first: fewer cards means a better star rating.
+    candidates.sort((a, b) => a.cards.length - b.cards.length);
     const scenarios = candidates.map((c, i) => ({ chapter, level, cards: c.cards, shard: i % parallel }));
     process.stderr.write(`level ${chapter}-${level}: trying ${scenarios.length} candidates\n`);
-    const results = await runScenarios(scenarios, { parallel });
+    const results = await runScenarios(scenarios, {
+        parallel,
+        // A 3-star win can't be beaten — stop the search early.
+        stopWhen: (r) => r.outcome === 'won' && r.stars === 3,
+    });
     const winners = results
         .filter((r) => r && r.outcome === 'won')
         .map((r) => ({ cards: scenarios[r.index].cards, stars: r.stars }));

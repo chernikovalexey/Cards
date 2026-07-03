@@ -5,7 +5,8 @@ const levels = require('./levels');
 const { createHarness } = require('./harness');
 const { Game } = require('./game');
 
-async function runScenarios(scenarios, { parallel = 4, onResult = null } = {}) {
+async function runScenarios(scenarios, { parallel = 4, onResult = null, stopWhen = null } = {}) {
+    let stopped = false;
     // Group by level so each worker keeps one warm page per level. A shard
     // field lets callers split one level's scenarios across several workers.
     const groups = new Map();
@@ -18,7 +19,7 @@ async function runScenarios(scenarios, { parallel = 4, onResult = null } = {}) {
     const results = new Array(scenarios.length);
 
     async function worker() {
-        while (queue.length) {
+        while (queue.length && !stopped) {
             const group = queue.shift();
             const { chapter, level } = group[0];
             const h = await createHarness({ profile: levels.searchProfile(chapter, level) });
@@ -26,9 +27,11 @@ async function runScenarios(scenarios, { parallel = 4, onResult = null } = {}) {
             try {
                 await g.gotoLevel(chapter);
                 for (const sc of group) {
+                    if (stopped) break;
                     const r = await playScenario(g, sc);
                     results[sc.index] = r;
                     if (onResult) onResult(r);
+                    if (stopWhen && stopWhen(r)) stopped = true;
                 }
             } finally {
                 await h.close();
