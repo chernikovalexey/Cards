@@ -126,7 +126,13 @@ async function solveLevel(chapter, level, { parallel = 4, rounds = 20 } = {}) {
     });
     const winners = results
         .filter((r) => r && r.outcome === 'won')
-        .map((r) => ({ cards: scenarios[r.index].cards, stars: r.stars }));
+        .map((r) => ({
+            // Keep only the placements the game accepted — a solution must
+            // replay cleanly in prove mode (rejected cards abort the replay).
+            cards: scenarios[r.index].cards.filter(
+                (c) => !(r.rejected || []).some((j) => j.card === c)),
+            stars: r.stars,
+        }));
     if (!winners.length) return null;
     winners.sort((a, b) => (b.stars - a.stars) || (a.cards.length - b.cards.length));
     return winners[0];
