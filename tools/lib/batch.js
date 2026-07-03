@@ -6,10 +6,11 @@ const { createHarness } = require('./harness');
 const { Game } = require('./game');
 
 async function runScenarios(scenarios, { parallel = 4, onResult = null } = {}) {
-    // Group by level so each worker keeps one warm page per level.
+    // Group by level so each worker keeps one warm page per level. A shard
+    // field lets callers split one level's scenarios across several workers.
     const groups = new Map();
     scenarios.forEach((s, index) => {
-        const key = `${s.chapter}:${s.level}`;
+        const key = `${s.chapter}:${s.level}:${s.shard || 0}`;
         if (!groups.has(key)) groups.set(key, []);
         groups.get(key).push({ ...s, index });
     });

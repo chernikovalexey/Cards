@@ -98,7 +98,7 @@ function generateCandidates(info, { rounds = 20 } = {}) {
 async function solveLevel(chapter, level, { parallel = 4, rounds = 20 } = {}) {
     const info = levels.levelInfo(chapter, level);
     const candidates = generateCandidates(info, { rounds });
-    const scenarios = candidates.map((c) => ({ chapter, level, cards: c.cards }));
+    const scenarios = candidates.map((c, i) => ({ chapter, level, cards: c.cards, shard: i % parallel }));
     process.stderr.write(`level ${chapter}-${level}: trying ${scenarios.length} candidates\n`);
     const results = await runScenarios(scenarios, { parallel });
     const winners = results
