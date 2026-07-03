@@ -231,6 +231,32 @@ class Game {
         return buf;
     }
 
+    // Real-time counterpart of apply(): physics runs on live rAF; we poll.
+    async applyRealtime(timeoutMs = 90000) {
+        await this._ensureHelpers();
+        await this.page.evaluate(() => {
+            localStorage.removeItem('apply_fail_occured');
+            document.querySelectorAll('.tt').forEach((el) => el.remove());
+            window.__game.applyStart = window.__harness.events.length;
+            document.querySelector('#toggle-physics').click();
+        });
+        const deadline = Date.now() + timeoutMs;
+        let failSeenAt = 0;
+        while (Date.now() < deadline) {
+            const s = await this.page.evaluate((ft) => ({
+                won: window.__harness.events.length > window.__game.applyStart
+                    ? window.__harness.events[window.__harness.events.length - 1] : null,
+                fail: [...document.querySelectorAll('.tooltip .tooltip-text')]
+                    .some((t) => t.textContent.includes(ft)),
+            }), FAIL_TEXT);
+            if (s.won) return { outcome: 'won', stars: s.won.stars, event: s.won };
+            if (s.fail && !failSeenAt) failSeenAt = Date.now();
+            if (failSeenAt && Date.now() - failSeenAt > 2500) return { outcome: 'failed' };
+            await new Promise((r) => setTimeout(r, 250));
+        }
+        return { outcome: 'timeout' };
+    }
+
     async state() {
         await this._ensureHelpers();
         const s = await this.page.evaluate(() => ({
