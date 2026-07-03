@@ -41,8 +41,10 @@ function generateCandidates(info, { rounds = 20 } = {}) {
     const span = Math.abs(B.x - A.x);
     const STAGGER = CARD_H + 0.055; // surface gap stays above the contact skin
 
-    // 1. single card spanning both cubes
-    if (span < CARD_W * 0.95) {
+    // 1. single card spanning both cubes — feasible when the gap between the
+    // cubes' inner edges is well under the card length (anchors on each side)
+    const innerGap = span - levels.CUBE;
+    if (innerGap < CARD_W * 0.85) {
         mk([{ x: (A.x + B.x) / 2, y: Math.max(yA, yB), angle: 0, static: asStatic }]);
         mk([{ x: (A.x + B.x) / 2, y: (yA + yB) / 2, angle: 0, static: asStatic }]);
     }
