@@ -1692,6 +1692,31 @@ div.active-step {
     opacity: 0.75 !important;
 }
 
+/* The VK/Facebook integrations are gone, so social UI is hidden. The DOM
+   nodes must stay: the compiled Dart engine wires listeners and writes text
+   into them at boot and would crash on missing elements. */
+.share-offer,
+.share-level,
+.invite-friends-layout,
+.friends-finished-button {
+    display: none !important;
+}
+
+/* The how-to overlay reveals its close button at inline opacity 0.5 (set by
+   the game engine), which left plain text unreadable on the dark backdrop.
+   Give this one a bright pill so it stays visible even at half opacity. */
+.close-howto {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 18px;
+    padding: 8px 20px;
+    top: 18px;
+    right: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 .bs-screen-blurry-bar {
     position: fixed;
     background: transparent;

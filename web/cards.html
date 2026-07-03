@@ -14,19 +14,7 @@
     <meta name="twitter:image" content="../cubes.png"/>
     <title>Two Cubes – the web puzzle game.</title>
 
-    <link rel="stylesheet" type="text/css" href="cards.css"/>
-
-    <script src="external/scrollbar.js"></script>
-    <script src="external/html2canvas.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="external/jqEase.js"></script>
-    <script src="external/TemplateEngine.js"></script>
-    <script src="external/webapi.js"></script>
-    <script src="external/features.js"></script>
-
-    <script type="application/dart" src="cards.dart"></script>
-    <script type="text/javascript" src="/packages/browser/interop.js"></script>
-    <script type="text/javascript" src="/packages/browser/dart.js"></script>
+    <!-- cards.css is loaded by the retrying loader at the end of <body>. -->
 </head>
 <body>
 
@@ -468,5 +456,69 @@
     </div>
 </div>
 
+<!-- All scripts are loaded by this inline loader, sequentially and with
+     retries, for two reasons:
+     1. A dropped subresource must not kill the game. Cloudflare + Firefox
+        HTTP/3 connections sporadically fail (NS_ERROR_NET_HTTP3_PROTOCOL_ERROR)
+        on first load; a plain <script> tag never retries, which left e.g.
+        scrollbar.js unloaded and made the chapter screen unclickable. The
+        retry goes over HTTP/2 once the browser demotes the broken connection.
+     2. The Dart bootstrap must run after the DOM exists: compiled main()
+        grabs #graphics immediately, and loading it from <head> raced page
+        parsing on warm caches (stuck loading screen on revisits).
+     cards.dart.js is loaded directly instead of via packages/browser/dart.js
+     (whose only job was rewriting the .dart src to .dart.js). -->
+<script>
+(function () {
+    function retrying(create, name, attempt, done) {
+        var el = create();
+        el.onload = function () {
+            if (done) done();
+        };
+        el.onerror = function () {
+            el.parentNode.removeChild(el);
+            if (attempt >= 6) {
+                console.error('Giving up on ' + name);
+                return;
+            }
+            setTimeout(function () {
+                retrying(create, name, attempt + 1, done);
+            }, 100 * attempt);
+        };
+        document.body.appendChild(el);
+    }
+
+    retrying(function () {
+        var l = document.createElement('link');
+        l.rel = 'stylesheet';
+        l.href = 'cards.css';
+        return l;
+    }, 'cards.css', 1);
+
+    var scripts = [
+        'external/scrollbar.js',
+        'external/html2canvas.js',
+        'external/jquery-2.1.1.min.js',
+        'external/jqEase.js',
+        'external/TemplateEngine.js',
+        'external/webapi.js',
+        'external/features.js',
+        'cards.dart.js'
+    ];
+
+    function loadScript(index) {
+        if (index >= scripts.length) return;
+        retrying(function () {
+            var s = document.createElement('script');
+            s.src = scripts[index];
+            return s;
+        }, scripts[index], 1, function () {
+            loadScript(index + 1);
+        });
+    }
+
+    loadScript(0);
+})();
+</script>
 </body>
 </html>
