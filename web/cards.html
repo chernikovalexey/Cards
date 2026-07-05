@@ -3,6 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover"/>
+    <link rel="manifest" href="/manifest.webmanifest"/>
+    <meta name="theme-color" content="#000000"/>
+    <link rel="apple-touch-icon" href="/web/img/pwa-192.png"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
     <meta name="twitter:title" content="Two Cubes – the web puzzle game."/>
     <meta property="og:title" content="Two Cubes – the web puzzle game."/>
     
@@ -521,6 +527,17 @@
     }
 
     loadScript(0);
+
+    // PWA: offline cache + installability (sw.js at the web root for
+    // full scope). Registered after load so it never competes with the
+    // boot fetches above.
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function (e) {
+                console.log('sw registration failed', e);
+            });
+        });
+    }
 })();
 </script>
 </body>
