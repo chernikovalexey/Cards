@@ -58,6 +58,22 @@ self.addEventListener('activate', function (event) {
     );
 });
 
+// Navigations must not be answered with a redirected response (a security
+// error that fails the load), and Cloudflare Pages' pretty URLs redirect
+// /web/cards.html -> /web/cards, so both the cached copy can carry the
+// redirected flag and the live URL can miss the cache key. Rebuild the
+// response body to strip the flag.
+function cleanResponse(hit) {
+    if (!hit.redirected) return Promise.resolve(hit);
+    return hit.blob().then(function (body) {
+        return new Response(body, {
+            status: hit.status,
+            statusText: hit.statusText,
+            headers: hit.headers,
+        });
+    });
+}
+
 self.addEventListener('fetch', function (event) {
     var req = event.request;
     if (req.method !== 'GET') return;
@@ -75,8 +91,15 @@ self.addEventListener('fetch', function (event) {
             return res;
         }).catch(function () {
             return caches.match(req, { ignoreSearch: true }).then(function (hit) {
-                if (hit) return hit;
-                throw new Error('offline and not cached: ' + url.pathname);
+                // The game is a single page: any same-origin navigation
+                // can fall back to the cached shell page.
+                if (!hit && req.mode === 'navigate') {
+                    return caches.match('/web/cards.html');
+                }
+                return hit;
+            }).then(function (hit) {
+                if (!hit) throw new Error('offline and not cached: ' + url.pathname);
+                return req.mode === 'navigate' ? cleanResponse(hit) : hit;
             });
         })
     );
