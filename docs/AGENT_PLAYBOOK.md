@@ -17,8 +17,10 @@ they are how later chapters open.
 Success criteria for the campaign:
 1. every level has a saved, verified solution (any stars),
 2. `proofs/chapter_C/level_LL.webm` exists for every solved level,
-3. chapter 1 + 2 stars ≥ 60 so chapter 3 is legitimately reachable,
-4. final full-chapter videos via `npm run cli -- prove`.
+3. each solved prefix has a JSON proof of the best stored solutions for
+   levels 1..N, including block counts checked against the level budget,
+4. chapter 1 + 2 stars ≥ 60 so chapter 3 is legitimately reachable,
+5. final full-chapter videos via `npm run cli -- prove`.
 
 ## 2. The game in one paragraph
 
@@ -195,6 +197,52 @@ npm run cli -- prove                     # all three chapters, carrying progress
 Run this only when a chapter is fully solved. Per-level videos are already
 handled by `record.js` / `solve.js`.
 
+### 4.8 Prefix proof JSON (levels 1..N)
+
+Every handoff or "frontier advanced" report must include a machine-readable
+proof JSON for the solved prefix of the chapter. This is separate from the
+video proof: it lets the next agent verify that the best stored solution for
+each level uses no more blocks than the level actually provides.
+
+Shape:
+
+```json
+{
+  "chapter": 1,
+  "solvedThrough": 5,
+  "levels": [
+    {
+      "level": 1,
+      "stars": 3,
+      "cards": 1,
+      "used": { "static": 0, "dynamic": 1 },
+      "available": { "static": 0, "dynamic": 3 },
+      "budgetOk": true,
+      "video": "proofs/chapter_1/level_01.webm"
+    }
+  ]
+}
+```
+
+Rules:
+- Read the best solution from `solutions/chapter_C.json`; never invent card
+  counts from memory.
+- Treat this as a proof of the stored best solution, not of the historical
+  reference snapshot. If the repo contains extracted reference JSON, use it
+  only as inspection input unless `record.js` has verified and stored the
+  same cards in `solutions/chapter_C.json`.
+- Read the available block budget with
+  `npm run cli -- info --chapter C --level L`.
+- `used.static` is the count of cards with `"static": true`; `used.dynamic`
+  is every other card. Both must be ≤ `available`.
+- Also compare the best stored solution's total card count against the level
+  budget before advancing. If the stored JSON uses more blocks than the level
+  provides, the chapter is not valid progress even if it wins.
+- If any `budgetOk` is false, do not advance the frontier. Re-run
+  `record.js` with a legal solution or mark the level broken.
+- The proof JSON is a report artifact/checklist. It does not replace
+  `record.js`, `solutions/chapter_C.json`, context profiles, or videos.
+
 ## 5. Building structures that win — heuristics
 
 Compute these numbers from `info` first:
@@ -227,33 +275,62 @@ y_i = restY(cubeTop line) + (i % 2) · 0.084
 ```
 Fails by sliding apart when overlaps are thin — increase n / overlap.
 
-### 5.3 Cascade ramp (gentle slopes)
+### 5.3 Settled raft exemplar (flat gaps that beat sparse bridges)
+The original embedded hint/save JSON in old `serverside/chapter1.full.json`
+contains completed card traces. Treat those cards as **settled shapes**, not
+as legal placement commands. They are valuable because they show which
+structures survive physics:
+
+- level 1-6 uses a dense, almost-horizontal two-band raft across the two cube
+  tops: all 7 cards are within about 0.09 vertical units and most angles are
+  within 0.02 rad of flat;
+- levels 1-8 and 1-9 repeat the same idea on wider gaps: two static shelf
+  anchors when available, then many nearly-horizontal dynamic planks in close
+  x spacing;
+- level 1-5 uses a near-vertical tower with slight lean and x drift, plus a
+  base brace; the minimal 4-card win is a cleaned-up version of that shape;
+- levels 1-10 and 1-11 use paired vertical stacks plus short flat caps, not a
+  long suspended chain.
+
+When a sparse weave/cascade fails on a flat gap, switch to a raft search:
+build 2 close height bands above the cube tops, with mostly flat cards,
+small alternating slopes (`±0.02` rad), and x centers from the left support
+center to the right support center. Search the legal placement version of the
+shape: same-band centers need placement clearance, so use fewer cards than
+the settled trace, stagger row heights by `0.045..0.09`, and validate each
+candidate with `try.js`. Do not copy the embedded arrays into solutions; use
+them only to choose structure class, density, slope, and support locations.
+
+### 5.4 Cascade ramp (gentle slopes)
 Each card one layer (0.084) above the previous, dense horizontal overlap
 (|step| ≤ 0.25). Good when `rise` is between 0.3 and 1.5 over the span.
 
-### 5.4 Tower (vertical rise > 0.5, e.g. shafts)
+### 5.5 Tower (vertical rise > 0.5, e.g. shafts)
 Vertical cards (angle π/2) stacked end-on-end. Spacing between centers:
 **0.579** (= 0.529 card length + 0.05 clearance). Base card center:
 `lowCubeTop + 0.05 + 0.265`. The stack must stand BESIDE the target cube
 (x = to.x − 0.055 or to.x + to.w + 0.055), never through it — a card
 overlapping the cube is rejected. Stacks stand because rotation is damped,
-but they are fragile: keep all x identical. Cap with one horizontal card
-on top reaching toward the target if the tower is off to the side.
+but they are fragile. The embedded traces show that a slight lean and drift
+are often better than a perfectly straight column: try `π/2 ± 0.02..0.10`
+and x drift toward the target, then add a low brace if the base walks.
+Cap with one horizontal card on top reaching toward the target if the tower
+is off to the side.
 
-### 5.5 Static anchors
+### 5.6 Static anchors
 If `blocks.static > 0`, the level almost certainly NEEDS them: place static
 blocks (`"static": true`) as fixed supports where dynamic structures would
 slip — mid-gap pillars to rest planks on, shelf under an overhang. Statics
 don't fall; build the dynamic path on top of them.
 
-### 5.6 What tends NOT to work
+### 5.7 What tends NOT to work
 - Long chains of barely-overlapping planks — friction 0.115, they slip.
 - Free-standing towers taller than ~6 cards without a wall/cube beside them.
 - Anything touching at placement time (< 0.05 clearance) — rejected.
 - Cards resting half on a cube edge — they see-saw and tip; keep the card's
   center above the supporting surface.
 
-### 5.7 Iteration discipline
+### 5.8 Iteration discipline
 Change ONE thing between tries. Rejected placement → fix coordinates (bump
 y by +0.05). Structure collapsed left → shift anchor left / add overlap.
 `timeout` → something is still moving; usually a card rolling — flatten it.
@@ -278,10 +355,26 @@ problem is physics, not coordinates.
 ## 7. Multi-agent pipeline (coordinator + subagents)
 
 Because levels are sequential (§2b), a chapter advances one level at a time.
-Parallelism happens INSIDE the current level: several subagents attack the
-same level with different structure ideas; the store keeps whichever
-recorded solution is best. The store and video writing are lock-protected,
-so concurrent `record.js` calls are safe.
+Do not spend the whole search budget on blind concurrent variants. Use a
+staged search: try the obvious heuristics briefly, then switch to a thinking
+subagent that studies the actual geometry and physics failure modes before
+more candidates are generated. The store keeps whichever recorded solution
+is best, and `record.js` remains safe to call concurrently, but concurrency
+is for validating selected ideas, not replacing analysis.
+
+**Smart-search escalation rule:**
+- Give the basic heuristics (§5.1–§5.6) only 2–3 serious attempts per
+  structure class, or 6 total failed attempts, whichever comes first.
+- Escalate immediately if attempts fail for different reasons than expected
+  (e.g. a bridge idea turns into a sliding/tipping problem, an obstacle
+  blocks the only clean span, or block budget makes the obvious plan too
+  expensive).
+- After escalation, stop random nudging. Ask the analysis subagent for a
+  small ranked list of new ideas, seeded by the embedded trace heuristics
+  in §5.3 when the geometry matches, and include the best stored JSON
+  solution as a baseline to beat. The subagent should reason about geometry
+  and physics, then return concrete candidates that you validate with
+  `try.js`. Only ideas that actually win are passed to `record.js`.
 
 **Coordinator loop (per chapter C):**
 1. `node tools/status.js --json` → find the frontier: the lowest level L
@@ -290,44 +383,69 @@ so concurrent `record.js` calls are safe.
    --rounds 30`. It walks levels in order, searches generated candidates in
    context, and records wins + snapshots + videos automatically. Levels it
    reports `no win found` are the frontier for subagents.
-3. For the frontier level L, spawn 2–4 subagents in parallel, each with:
-   this playbook path, chapter C, level L, a DISTINCT structure class to
-   pursue (§5.1–§5.5 — e.g. one tries weave bridges, one towers, one
-   static-anchor builds), and the current best entry to beat (from
-   `solutions/chapter_C.json`, may be absent).
-4. Wait for all subagents. If the level now has 3 stars — advance to L+1.
+3. For the frontier level L, run one focused heuristic pass: read `info`,
+   inspect the empty/context board screenshot, and try at most 6 total
+   candidates from the obvious classes (§5.1–§5.6). Record any win
+   immediately.
+4. If no 3-star win appears quickly, spawn one analysis subagent with:
+   this playbook path, chapter C, level L, the `info` JSON, before/after
+   screenshots for failed attempts, the failed cards/results, and the
+   current best entry to beat (from `solutions/chapter_C.json`, may be
+   absent). Its job is to reason about geometry and physics, then return
+   3–5 ranked candidate strategies with concrete cards or generation ranges.
+5. Validate the ranked ideas with `try.js`, in small parallel batches only
+   when the candidates are independent. Record every winning candidate with
+   `record.js`; discard ideas that do not place cleanly or do not win.
+6. If the level now has 3 stars — advance to L+1.
    If it is won but < 3 stars, run ONE more improvement round (fresh
-   subagents, told the current card count to beat); then accept the best
+   analysis, told the current card count to beat); then accept the best
    and advance — do not stall the chapter forever (you can return later,
    but that requires re-validating everything after it, §2b.3).
-5. If an already-passed level was improved later:
+7. Before advancing, produce the prefix proof JSON (§4.8) for levels 1..L.
+   Check every best stored solution against `info.blocks`; a level whose
+   best JSON uses too many static or dynamic cards is not valid progress.
+8. If an already-passed level was improved later:
    `node tools/validate.js --chapter C` immediately, and re-solve any level
    it reports broken before doing anything else.
-6. When all 12 levels are recorded, run `npm run cli -- prove --chapter C`
+9. When all 12 levels are recorded, run `npm run cli -- prove --chapter C`
    for the full-chapter cinematic video, check `proofs/summary.json` says
    `completed: true`, then move to the next chapter.
-7. Star budget check before leaving a chapter: `status.js` shows unlock
+10. Star budget check before leaving a chapter: `status.js` shows unlock
    thresholds (ch2 needs 30 stars from ch1; ch3 needs 60 from ch1+ch2). If
    short, pick the passed levels with the largest `threeStarTarget` minus
-   used-cards slack and run improvement rounds on them (then step 5).
+   used-cards slack and run improvement rounds on them (then step 7).
 
-**Subagent loop (assigned chapter C, level L, structure class S):**
-1. `npm run cli -- info --chapter C --level L` — extract the §5 numbers.
-2. `node tools/try.js --chapter C --level L --cards '[]' --no-apply
-   --shots <dir>` — look at the board FIRST: previous levels' structures
-   are in the world and may help or block you.
-3. Iterate `try.js` per §5/§6 using your structure class S. Change one
-   thing per attempt. If a stored solution exists, you may instead start
-   from its cards and remove/nudge to shrink the count.
-4. On EVERY win — even 1 star — IMMEDIATELY
+**Analysis subagent loop (assigned chapter C, level L):**
+1. Read `info` and the supplied screenshots/results. Compute span, rise,
+   cube tops, obstacle clearance, block budget, and star thresholds.
+2. Classify why the first attempts failed: placement rejection, sliding,
+   tipping, insufficient contact chain, timeout, obstacle interference, or
+   too many blocks for the star target.
+3. Think from physics, not templates: identify stable anchors, old
+   structures that can support the new path, likely slide directions,
+   where a static block would remove a failure mode, and where clearance
+   must be increased.
+4. Return 3–5 ranked ideas. Each idea must include:
+   intended support path, expected failure mode, exact initial card JSON or
+   a tight coordinate range, estimated static/dynamic counts, and why it can
+   beat the current best.
+5. Validate ideas with `try.js`. If an idea fails, revise it once based on
+   `-after.png`; if the same physical failure remains, discard that idea.
+6. On EVERY win — even 1 star — IMMEDIATELY
    `node tools/record.js --chapter C --level L --cards '[...]'`.
    It re-verifies in context, keeps it only if better, writes the context
    snapshot for level L+1, and records the proof video. A win that isn't
    recorded doesn't exist.
-5. Check `record.js` output `best.stars`. If < 3: keep iterating with
-   fewer cards (target `info.stars[0]`). If 3: report done and stop.
-6. Hard stop after ~15 failed structure attempts: report the level stuck,
-   with your best `-before/-after` screenshots and what you tried.
+7. After `record.js`, read the best stored level entry and make/update the
+   prefix proof JSON (§4.8). Explicitly compare that best solution's
+   `used.static` and `used.dynamic` counts to `info.blocks`; report the
+   counts with the `record.js` JSON.
+8. Check `record.js` output `best.stars`. If < 3: keep iterating with
+   fewer cards (target `info.stars[0]`). If 3 and `budgetOk` is true:
+   report done and stop.
+9. Hard stop after 2 analysis rounds or ~12 validated candidate attempts:
+   report the level stuck, with the ranked ideas, best `-before/-after`
+   screenshots, and the concrete physics failure that remains.
 
 **Rules for every agent:**
 - Only `record.js` writes solutions/profiles. No manual JSON edits, no git
@@ -335,6 +453,11 @@ so concurrent `record.js` calls are safe.
 - Work only on your assigned level; never start a level whose predecessor
   has no recorded win (the tools enforce this with `no context profile`).
 - Every claim of "solved" must quote the `record.js` JSON output.
+- Every claim of "frontier advanced" must include the prefix proof JSON for
+  levels 1..N and show `budgetOk: true` for each level.
+- After the first quick heuristic budget is spent, every new candidate must
+  come from a stated geometry/physics hypothesis, not random coordinate
+  drift.
 
 ## 8. Worked example (level 1-1, start to finish)
 

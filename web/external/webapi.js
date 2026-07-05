@@ -1,15 +1,16 @@
 // Local, in-browser replacement for the old PHP backend
 // (serverside/index.php). The game is fully client-side: progress, stars and
 // level state already live in localStorage; the server only ever provided the
-// user/attempts object and the chapter list.
+// user/attempts object, the chapter list, and hint payloads.
 //
 // Response shapes reproduce the production deploy (twocubes.io, probed
 // 2026-07-03) and are pinned by tests/parity.spec.js. Production was
 // effectively stateless for the "no" platform (its user INSERT failed
-// silently), so these handlers are stateless too.
+// silently), except for local hint balance during a browser session.
 
 var LocalServer = {
     chapters: null,
+    hintBalance: null,
 
     freshUser: function (data) {
         return {
@@ -17,6 +18,7 @@ var LocalServer = {
             platformId: 'no',
             platformUserId: String(data.userId),
             isNew: true,
+            balance: LocalServer.hintBalance == null ? 2 : LocalServer.hintBalance,
             dayAttempts: 125,
             allAttempts: 125
         };
@@ -75,6 +77,16 @@ var LocalServer = {
             user.dayAttempts = 125 - delta;
             user.allAttempts = 125 - delta;
             respond(user);
+        },
+
+        getHint: function (data, respond) {
+            var hints = (window.LocalHintData && window.LocalHintData.chapters) || {};
+            var chapterHints = hints[String(data.chapter)] || [];
+            var hint = chapterHints[(data.level || 1) - 1] || [];
+            var balance = LocalServer.hintBalance == null ? 2 : LocalServer.hintBalance;
+            LocalServer.hintBalance = Math.max(0, balance - 1);
+            var user = LocalServer.freshUser(data);
+            respond({user: user, hint: hint});
         },
 
         // Production computed "unlocked" from a per-user star total in the

@@ -1,0 +1,1094 @@
+{
+  "source": {
+    "gitObject": "9669a3e^:serverside/chapter1.full.json",
+    "note": "Historical localStorage snapshot extracted from git history. These are embedded/completed states for inspection, not verified current solutions."
+  },
+  "chapters": [
+    1
+  ],
+  "levels": [
+    {
+      "key": "level_1_1",
+      "chapter": 1,
+      "level": 1,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 1.6,
+          "y": 1.03,
+          "angle": 0,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 41,
+      "finalFrame": [
+        {
+          "x": 1.6,
+          "y": 1.03,
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "key": "level_1_2",
+      "chapter": 1,
+      "level": 2,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 2.303,
+          "y": 1.03,
+          "angle": 0.001,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 38,
+      "finalFrame": [
+        {
+          "x": 2.303,
+          "y": 1.03,
+          "angle": 0.001
+        }
+      ]
+    },
+    {
+      "key": "level_1_3",
+      "chapter": 1,
+      "level": 3,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 2.882,
+          "y": 0.387,
+          "angle": -1.232,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 3.439,
+          "y": 0.394,
+          "angle": 1.337,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 3.212,
+          "y": 0.312,
+          "angle": 0.686,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 82,
+      "finalFrame": [
+        {
+          "x": 2.882,
+          "y": 0.387,
+          "angle": -1.232
+        },
+        {
+          "x": 3.439,
+          "y": 0.394,
+          "angle": 1.337
+        },
+        {
+          "x": 3.212,
+          "y": 0.312,
+          "angle": 0.686
+        }
+      ]
+    },
+    {
+      "key": "level_1_4",
+      "chapter": 1,
+      "level": 4,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 4.004,
+          "y": 1.271,
+          "angle": 1.254,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 41,
+      "finalFrame": [
+        {
+          "x": 4.004,
+          "y": 1.271,
+          "angle": 1.254
+        }
+      ]
+    },
+    {
+      "key": "level_1_5",
+      "chapter": 1,
+      "level": 5,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 4.259,
+          "y": 2.103,
+          "angle": 1.576,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 4.258,
+          "y": 2.648,
+          "angle": 1.569,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 4.259,
+          "y": 3.192,
+          "angle": 1.57,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 4.231,
+          "y": 3.737,
+          "angle": 1.665,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 4.366,
+          "y": 2.099,
+          "angle": 1.819,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 125,
+      "finalFrame": [
+        {
+          "x": 4.259,
+          "y": 2.103,
+          "angle": 1.576
+        },
+        {
+          "x": 4.258,
+          "y": 2.648,
+          "angle": 1.569
+        },
+        {
+          "x": 4.259,
+          "y": 3.192,
+          "angle": 1.57
+        },
+        {
+          "x": 4.231,
+          "y": 3.736,
+          "angle": 1.665
+        },
+        {
+          "x": 4.366,
+          "y": 2.099,
+          "angle": 1.819
+        }
+      ]
+    },
+    {
+      "key": "level_1_6",
+      "chapter": 1,
+      "level": 6,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 4.257,
+          "y": 4.322,
+          "angle": -0.017,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 5.021,
+          "y": 4.324,
+          "angle": 0.005,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 4.67,
+          "y": 4.366,
+          "angle": 0.007,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 5.304,
+          "y": 4.369,
+          "angle": -0.008,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 3.973,
+          "y": 4.371,
+          "angle": -0.018,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 5.198,
+          "y": 4.414,
+          "angle": -0.008,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 4.126,
+          "y": 4.411,
+          "angle": -0.02,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 42,
+      "finalFrame": [
+        {
+          "x": 4.257,
+          "y": 4.322,
+          "angle": -0.017
+        },
+        {
+          "x": 5.021,
+          "y": 4.324,
+          "angle": 0.005
+        },
+        {
+          "x": 4.67,
+          "y": 4.366,
+          "angle": 0.007
+        },
+        {
+          "x": 5.304,
+          "y": 4.369,
+          "angle": -0.008
+        },
+        {
+          "x": 3.973,
+          "y": 4.371,
+          "angle": -0.018
+        },
+        {
+          "x": 5.198,
+          "y": 4.414,
+          "angle": -0.008
+        },
+        {
+          "x": 4.126,
+          "y": 4.411,
+          "angle": -0.02
+        }
+      ]
+    },
+    {
+      "key": "level_1_7",
+      "chapter": 1,
+      "level": 7,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 6.154,
+          "y": 3.986,
+          "angle": -1.573,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 6.319,
+          "y": 4.28,
+          "angle": -3.139,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 5.828,
+          "y": 4.368,
+          "angle": -3.309,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 6.413,
+          "y": 3.986,
+          "angle": -4.713,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 0,
+      "finalFrame": []
+    },
+    {
+      "key": "level_1_8",
+      "chapter": 1,
+      "level": 8,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 7.272,
+          "y": 3.686,
+          "angle": -9.425,
+          "static": true,
+          "energy": 0
+        },
+        {
+          "x": 8.743,
+          "y": 3.686,
+          "angle": -9.425,
+          "static": true,
+          "energy": 0
+        },
+        {
+          "x": 6.767,
+          "y": 3.733,
+          "angle": -9.435,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 7.201,
+          "y": 3.776,
+          "angle": -9.425,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 7.484,
+          "y": 3.73,
+          "angle": -9.428,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 7.931,
+          "y": 3.772,
+          "angle": -9.437,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 8.376,
+          "y": 3.728,
+          "angle": -9.403,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 9.189,
+          "y": 3.733,
+          "angle": -9.414,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 8.707,
+          "y": 3.778,
+          "angle": -9.418,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 8.588,
+          "y": 4.072,
+          "angle": -10.99,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 141,
+      "finalFrame": [
+        {
+          "x": 7.272,
+          "y": 3.686,
+          "angle": -9.425
+        },
+        {
+          "x": 8.743,
+          "y": 3.686,
+          "angle": -9.425
+        },
+        {
+          "x": 6.767,
+          "y": 3.733,
+          "angle": -9.435
+        },
+        {
+          "x": 7.201,
+          "y": 3.776,
+          "angle": -9.425
+        },
+        {
+          "x": 7.484,
+          "y": 3.73,
+          "angle": -9.428
+        },
+        {
+          "x": 7.931,
+          "y": 3.772,
+          "angle": -9.437
+        },
+        {
+          "x": 8.376,
+          "y": 3.728,
+          "angle": -9.403
+        },
+        {
+          "x": 9.189,
+          "y": 3.733,
+          "angle": -9.414
+        },
+        {
+          "x": 8.707,
+          "y": 3.778,
+          "angle": -9.418
+        },
+        {
+          "x": 8.588,
+          "y": 4.072,
+          "angle": -10.99
+        }
+      ]
+    },
+    {
+      "key": "level_1_9",
+      "chapter": 1,
+      "level": 9,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 9.888,
+          "y": 3.735,
+          "angle": -18.857,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.11,
+          "y": 3.733,
+          "angle": -18.815,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 9.536,
+          "y": 3.78,
+          "angle": -18.848,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.699,
+          "y": 3.735,
+          "angle": -18.87,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.369,
+          "y": 3.787,
+          "angle": -18.856,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 10.175,
+          "y": 3.776,
+          "angle": -18.891,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 10.79,
+          "y": 3.763,
+          "angle": -18.753,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 10.524,
+          "y": 3.812,
+          "angle": -18.867,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.099,
+          "y": 3.833,
+          "angle": -18.856,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.358,
+          "y": 3.876,
+          "angle": -18.856,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 9.779,
+          "y": 3.828,
+          "angle": -18.828,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 9.502,
+          "y": 3.865,
+          "angle": -18.805,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.688,
+          "y": 3.829,
+          "angle": -18.856,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 9.5,
+          "y": 3.908,
+          "angle": -18.805,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 9.465,
+          "y": 3.95,
+          "angle": -18.805,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 9.599,
+          "y": 4,
+          "angle": -18.806,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.345,
+          "y": 3.92,
+          "angle": -18.856,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 116,
+      "finalFrame": [
+        {
+          "x": 9.888,
+          "y": 3.735,
+          "angle": -18.857
+        },
+        {
+          "x": 11.11,
+          "y": 3.733,
+          "angle": -18.815
+        },
+        {
+          "x": 9.536,
+          "y": 3.78,
+          "angle": -18.848
+        },
+        {
+          "x": 11.699,
+          "y": 3.735,
+          "angle": -18.87
+        },
+        {
+          "x": 11.369,
+          "y": 3.787,
+          "angle": -18.856
+        },
+        {
+          "x": 10.175,
+          "y": 3.776,
+          "angle": -18.891
+        },
+        {
+          "x": 10.79,
+          "y": 3.763,
+          "angle": -18.753
+        },
+        {
+          "x": 10.524,
+          "y": 3.812,
+          "angle": -18.867
+        },
+        {
+          "x": 11.099,
+          "y": 3.833,
+          "angle": -18.856
+        },
+        {
+          "x": 11.358,
+          "y": 3.876,
+          "angle": -18.856
+        },
+        {
+          "x": 9.779,
+          "y": 3.828,
+          "angle": -18.828
+        },
+        {
+          "x": 9.502,
+          "y": 3.865,
+          "angle": -18.805
+        },
+        {
+          "x": 11.688,
+          "y": 3.829,
+          "angle": -18.856
+        },
+        {
+          "x": 9.5,
+          "y": 3.908,
+          "angle": -18.805
+        },
+        {
+          "x": 9.465,
+          "y": 3.95,
+          "angle": -18.805
+        },
+        {
+          "x": 9.599,
+          "y": 4,
+          "angle": -18.806
+        },
+        {
+          "x": 11.345,
+          "y": 3.92,
+          "angle": -18.856
+        }
+      ]
+    },
+    {
+      "key": "level_1_10",
+      "chapter": 1,
+      "level": 10,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 11.214,
+          "y": 1.28,
+          "angle": -20.421,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.214,
+          "y": 1.824,
+          "angle": -20.428,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.22,
+          "y": 2.368,
+          "angle": -23.581,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 10.971,
+          "y": 2.685,
+          "angle": -22.081,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 10.717,
+          "y": 2.412,
+          "angle": -23.562,
+          "static": true,
+          "energy": 0
+        },
+        {
+          "x": 10.977,
+          "y": 2.727,
+          "angle": -25.224,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 10.99,
+          "y": 2.769,
+          "angle": -25.225,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.104,
+          "y": 3.054,
+          "angle": -26.865,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 49,
+      "finalFrame": [
+        {
+          "x": 11.214,
+          "y": 1.28,
+          "angle": -20.421
+        },
+        {
+          "x": 11.214,
+          "y": 1.824,
+          "angle": -20.428
+        },
+        {
+          "x": 11.22,
+          "y": 2.368,
+          "angle": -23.581
+        },
+        {
+          "x": 10.971,
+          "y": 2.685,
+          "angle": -22.081
+        },
+        {
+          "x": 10.717,
+          "y": 2.412,
+          "angle": -23.562
+        },
+        {
+          "x": 10.977,
+          "y": 2.727,
+          "angle": -25.224
+        },
+        {
+          "x": 10.99,
+          "y": 2.769,
+          "angle": -25.225
+        },
+        {
+          "x": 11.104,
+          "y": 3.054,
+          "angle": -26.865
+        }
+      ]
+    },
+    {
+      "key": "level_1_11",
+      "chapter": 1,
+      "level": 11,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 11.585,
+          "y": 1.28,
+          "angle": -26.703,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.584,
+          "y": 1.824,
+          "angle": -26.703,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.584,
+          "y": 2.368,
+          "angle": -26.7,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 11.713,
+          "y": 2.648,
+          "angle": -28.404,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 12.39,
+          "y": 1.28,
+          "angle": -29.85,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 12.394,
+          "y": 1.824,
+          "angle": -29.852,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 12.397,
+          "y": 2.368,
+          "angle": -29.855,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 12.167,
+          "y": 2.665,
+          "angle": -31.426,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 62,
+      "finalFrame": [
+        {
+          "x": 11.585,
+          "y": 1.28,
+          "angle": -26.703
+        },
+        {
+          "x": 11.584,
+          "y": 1.824,
+          "angle": -26.703
+        },
+        {
+          "x": 11.584,
+          "y": 2.368,
+          "angle": -26.7
+        },
+        {
+          "x": 11.713,
+          "y": 2.648,
+          "angle": -28.404
+        },
+        {
+          "x": 12.39,
+          "y": 1.28,
+          "angle": -29.85
+        },
+        {
+          "x": 12.394,
+          "y": 1.824,
+          "angle": -29.852
+        },
+        {
+          "x": 12.397,
+          "y": 2.368,
+          "angle": -29.855
+        },
+        {
+          "x": 12.167,
+          "y": 2.665,
+          "angle": -31.426
+        }
+      ]
+    },
+    {
+      "key": "level_1_12",
+      "chapter": 1,
+      "level": 12,
+      "completed": true,
+      "physicsEnabled": true,
+      "cards": [
+        {
+          "x": 12.341,
+          "y": 0.147,
+          "angle": -34.558,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 12.694,
+          "y": 0.191,
+          "angle": -34.558,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 13.067,
+          "y": 0.147,
+          "angle": -34.557,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 13.449,
+          "y": 0.191,
+          "angle": -34.557,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 13.851,
+          "y": 0.147,
+          "angle": -34.557,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 14.328,
+          "y": 0.192,
+          "angle": -34.558,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 14.818,
+          "y": 0.147,
+          "angle": -34.558,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 15.288,
+          "y": 0.191,
+          "angle": -34.558,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 15.71,
+          "y": 0.147,
+          "angle": -34.557,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 15.681,
+          "y": 0.442,
+          "angle": -36.163,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 15.437,
+          "y": 0.676,
+          "angle": -37.478,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 15.027,
+          "y": 0.653,
+          "angle": -37.566,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 14.629,
+          "y": 0.851,
+          "angle": -38.853,
+          "static": false,
+          "energy": 1
+        },
+        {
+          "x": 15.739,
+          "y": 0.674,
+          "angle": -39.27,
+          "static": true,
+          "energy": 0
+        },
+        {
+          "x": 12.282,
+          "y": 0.442,
+          "angle": -39.413,
+          "static": false,
+          "energy": 1
+        }
+      ],
+      "framesCount": 45,
+      "finalFrame": [
+        {
+          "x": 12.341,
+          "y": 0.147,
+          "angle": -34.558
+        },
+        {
+          "x": 12.694,
+          "y": 0.191,
+          "angle": -34.558
+        },
+        {
+          "x": 13.067,
+          "y": 0.147,
+          "angle": -34.557
+        },
+        {
+          "x": 13.449,
+          "y": 0.191,
+          "angle": -34.557
+        },
+        {
+          "x": 13.851,
+          "y": 0.147,
+          "angle": -34.557
+        },
+        {
+          "x": 14.328,
+          "y": 0.192,
+          "angle": -34.558
+        },
+        {
+          "x": 14.818,
+          "y": 0.147,
+          "angle": -34.558
+        },
+        {
+          "x": 15.288,
+          "y": 0.191,
+          "angle": -34.558
+        },
+        {
+          "x": 15.71,
+          "y": 0.147,
+          "angle": -34.557
+        },
+        {
+          "x": 15.681,
+          "y": 0.442,
+          "angle": -36.163
+        },
+        {
+          "x": 15.437,
+          "y": 0.676,
+          "angle": -37.478
+        },
+        {
+          "x": 15.027,
+          "y": 0.653,
+          "angle": -37.566
+        },
+        {
+          "x": 14.629,
+          "y": 0.851,
+          "angle": -38.853
+        },
+        {
+          "x": 15.739,
+          "y": 0.674,
+          "angle": -39.27
+        },
+        {
+          "x": 12.282,
+          "y": 0.442,
+          "angle": -39.413
+        }
+      ]
+    }
+  ]
+}
