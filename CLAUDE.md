@@ -17,6 +17,16 @@ docker-compose up               # same, via nginx
 npm test                        # Playwright suite against a local server (auto-spawned)
 npm run test:prod               # same suite against production twocubes.io
 npx playwright test -g "boots"  # single test by title
+
+npm run cli -- info --chapter 1 --level 1   # level geometry in world units
+npm run cli -- play --chapter 1 --level 1   # machine-play session (JSONL on stdin/stdout)
+npm run cli -- run scenarios.json           # batch scenario search (turbo)
+npm run cli -- prove                        # replay solutions/ with video -> proofs/
+node tools/solve.js --chapter 1             # heuristic auto-solver (saves + records videos)
+node tools/try.js --chapter 1 --level 2 --cards '[{"x":2.3,"y":1.03}]' --shots /tmp/s  # one-shot probe
+node tools/record.js --chapter 1 --level 2 --cards '[...]'  # verify + save + proof video
+node tools/status.js                        # per-level stars / videos / unlock progress
+npm run test:cli                            # harness self-tests (node --test)
 ```
 
 First-time test setup: `npm install && npx playwright install chromium`.
@@ -32,6 +42,8 @@ The repo root must be the web root: `web/cards.html` references `/packages/brows
 - All persistence is localStorage: `userId`, `stars`, `last` (last played level), `level_<c>_<l>` results, `seen_howto`.
 - The VK/Facebook platform integrations were removed (2026-07): `features.js` now only has the base `Features` + `NoFeatures` objects. Social UI elements (share buttons, invite-friends) are hidden via CSS in `cards.css` but their **DOM nodes must stay** — the compiled Dart wires listeners and writes into them at boot and crashes on missing elements. Same for JS methods the Dart bridge calls (`shareWithFriends`, `prepareLevelWallPost` are kept as no-op stubs).
 - Localization: `web/external/locales/{en,ru}.js`; elements with class `localized` + `data-lid` get translated at boot. Only `en` is reachable (language selection was VK-specific).
+- Touch support (phones): `web/external/touch.js` (loaded right before `cards.dart.js` — it overrides the canvas `getBoundingClientRect` before compiled `main()` runs) resizes the canvas to the device viewport (the engine adapts — all world math derives from `Input.canvasWidth/Height`) and drives play with gestures: tap = place, double-tap = precision zoom + pixel grid, 1-finger drag = pan, 2 fingers = rotate (animated dotted line), long-press = delete. Synthetic mouse/keyboard events feed the compiled engine. Activates only under `(pointer: coarse)`/`ontouchstart` (`?touch=0/1` overrides); desktop is untouched. Design: `docs/superpowers/specs/2026-07-05-touch-support-design.md` (v2 section). Tests: `npx playwright test --project=mobile`.
+- Machine play: `tools/` drives the real game in headless Chromium (rAF tick pump — the engine does one fixed `world.step(1/60)` per frame; success hook = wrapping `Features.onLevelFinish`). Solutions live in `solutions/` (write only via `tools/record.js` — it verifies, keeps the better solution, and records `proofs/chapter_C/level_LL.webm`). No game file is modified by the harness. Design: `docs/superpowers/specs/2026-07-03-cli-play-api-design.md`; agent instructions & solving heuristics: `docs/AGENT_PLAYBOOK.md`.
 
 ## Testing
 

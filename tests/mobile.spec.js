@@ -1,0 +1,388 @@
+// Mobile touch suite, v2 gesture UX. Runs only in the 'mobile' Playwright
+// project (chromium, phone viewport, hasTouch) — see playwright.config.js.
+// tap = place, double-tap = precision zoom + grid, 1-finger drag = pan,
+// 2 fingers = rotate (dotted line), long-press = delete.
+// Touch design: docs/superpowers/specs/2026-07-05-touch-support-design.md
+'use strict';
+const { test, expect } = require('@playwright/test');
+const levels = require('../tools/lib/levels');
+
+const NSCALE = 85;
+const TOPBAR = 56;
+const PZOOM = 3;
+
+// With the responsive canvas, screen px == canvas px == engine px.
+// Returns the screen point for a world point, using the live camera
+// prediction for a never-panned camera at the real canvas size.
+function screenForWorld(page, chapter, level, wx, wy) {
+    const raw = levels.loadChapter(chapter).levels[level - 1];
+    return page.evaluate(([wx, wy, raw, TOPBAR]) => {
+        const L = window.__touch.state.layout;
+        // replicate tools/lib/levels.cameraOffsets inline (browser side)
+        const S = 85, W = L.w / S, H = L.h / S;
+        const bx1 = raw.x, bx2 = raw.x + raw.width;
+        const by1 = raw.y, by2 = raw.y + raw.height;
+        let mx = raw.x / S;
+        if (mx <= bx1 / S) mx = bx1 / S;
+        if (mx + W >= bx2 / S) mx = bx2 / S - W;
+        let my = raw.y / S;
+        if (my - H <= by1 / S) my = by1 / S + H;
+        if (my >= by2 / S) my = by2 / S;
+        const pxOffsetX = mx * S, pxOffsetY = -my * S;
+        return {
+            x: L.left + wx * S - pxOffsetX,
+            y: L.top + (-wy * S - pxOffsetY),
+        };
+    }, [wx, wy, raw, TOPBAR]);
+}
+
+// Esc-pause persists exact card state to localStorage (same probe the
+// machine-play harness uses), then resumes.
+async function probeCards(page) {
+    return page.evaluate(async () => {
+        const last = JSON.parse(localStorage.getItem('last'));
+        const key = 'level_' + last.chapter + '_' + last.level;
+        window.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 27, which: 27, bubbles: true }));
+        await new Promise((r) => setTimeout(r, 300));
+        window.dispatchEvent(new KeyboardEvent('keyup', { keyCode: 27, which: 27, bubbles: true }));
+        const raw = localStorage.getItem(key);
+        const resume = document.querySelector('#resume-game');
+        if (resume) resume.click();
+        await new Promise((r) => setTimeout(r, 300));
+        return raw ? JSON.parse(raw).c : [];
+    });
+}
+
+async function enterLevel11(page) {
+    await page.addInitScript(() => {
+        localStorage.setItem('seen_howto', 'true');
+        localStorage.setItem('runout_occured', 'true');
+        localStorage.setItem('apply_fail_occured', 'true');
+    });
+    await page.goto('/web/cards.html');
+    await expect(page.locator('#new-game')).toBeVisible({ timeout: 30000 });
+    await page.locator('#new-game').tap();
+    await expect(page.locator('#chapter-selection')).toBeVisible();
+    await page.locator('.chapter[data-id="1"]').tap();
+    await page.waitForFunction(() => {
+        const l = localStorage.getItem('last');
+        return l && JSON.parse(l).chapter === 1;
+    }, null, { timeout: 30000 });
+    await page.waitForTimeout(2000);          // camera settle animation
+    // clear the tutorial hint card/tooltips without touching the canvas
+    // (a canvas tap would schedule a placement in the v2 UX)
+    await page.evaluate(() => document.body.click());
+    await page.waitForTimeout(300);
+    await expect(page.locator('#touch-apply')).toBeVisible();
+}
+
+async function remainingDynamic(page) {
+    const txt = await page.evaluate(() =>
+        document.querySelector('.dynamic .remaining').textContent);
+    const m = txt.match(/\d+/);
+    return m ? parseInt(m[0], 10) : null;
+}
+
+// tap that waits out the double-tap window so the single-tap action fires
+async function tapPlace(page, x, y) {
+    await page.touchscreen.tap(x, y);
+    await page.waitForTimeout(700);   // 350ms double-tap window + frames
+}
+
+async function doubleTap(page, x, y) {
+    await page.touchscreen.tap(x, y);
+    await page.waitForTimeout(80);
+    await page.touchscreen.tap(x, y);
+    await page.waitForTimeout(400);   // precision zoom transition
+}
+
+// In-page touch dispatch for gestures Playwright's touchscreen can't do
+// (drags, multi-touch, long holds).
+async function fingerDrag(page, frames, holdMs = 0) {
+    await page.evaluate(async ([frames, holdMs]) => {
+        const c = document.querySelector('#graphics');
+        const mk = (pts) => pts.map(([x, y], i) =>
+            new Touch({ identifier: i, target: c, clientX: x, clientY: y }));
+        const fire = (type, pts) => c.dispatchEvent(new TouchEvent(type, {
+            bubbles: true, cancelable: true,
+            touches: type === 'touchend' ? [] : mk(pts),
+            targetTouches: type === 'touchend' ? [] : mk(pts),
+            changedTouches: mk(pts),
+        }));
+        fire('touchstart', frames[0]);
+        if (holdMs) await new Promise((r) => setTimeout(r, holdMs));
+        for (let i = 1; i < frames.length; i++) {
+            await new Promise((r) => setTimeout(r, 40));
+            fire('touchmove', frames[i]);
+        }
+        await new Promise((r) => setTimeout(r, 40));
+        fire('touchend', frames[frames.length - 1]);
+    }, [frames, holdMs]);
+}
+
+test('boots responsive: full-viewport canvas, no nudge/rotate buttons', async ({ page }) => {
+    await page.goto('/web/cards.html');
+    await expect(page.locator('#new-game')).toBeVisible({ timeout: 30000 });
+    await expect(page.locator('html')).toHaveClass(/touch-mode/);
+    const fit = await page.evaluate(() => {
+        const c = document.querySelector('#graphics');
+        const fake = c.getBoundingClientRect();
+        return {
+            attrW: c.width, attrH: c.height,
+            cssW: parseFloat(c.style.width), innerW: innerWidth, innerH: innerHeight,
+            fakeW: fake.width, fakeH: fake.height, fakeTop: fake.top,
+            clusters: !!document.querySelector('#touch-up, #touch-rl, #touch-ok'),
+        };
+    });
+    expect(fit.attrW).toBe(fit.innerW);            // canvas is device-sized
+    expect(fit.attrH).toBe(fit.innerH - TOPBAR);
+    expect(fit.cssW).toBe(fit.attrW);              // 1:1 css px, no scaling blur
+    expect(fit.fakeW).toBe(fit.attrW);             // engine sees the same rect
+    expect(fit.fakeTop).toBe(TOPBAR);
+    expect(fit.clusters).toBe(false);              // v1 button clusters are gone
+});
+
+test('tap places a block at the tapped world point', async ({ page }) => {
+    await enterLevel11(page);
+    const base = await remainingDynamic(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
+    await tapPlace(page, p.x, p.y);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+    const cards = await probeCards(page);
+    expect(cards.length).toBe(1);
+    expect(cards[0].x).toBeCloseTo(2.5, 1);
+    expect(cards[0].y).toBeCloseTo(1.5, 1);
+});
+
+test('double tap zooms into precision mode with grid; drag is sub-pixel; tap places; zooms back', async ({ page }) => {
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.8);
+    await doubleTap(page, p.x, p.y);
+    const inPrecision = await page.evaluate(() => ({
+        grid: document.querySelector('#touch-grid').classList.contains('on'),
+        transform: document.querySelector('#graphics').style.transform,
+        ghost: { ...window.__touch.state.ghost },
+    }));
+    expect(inPrecision.grid).toBe(true);
+    expect(inPrecision.transform).toContain('scale(3)');
+
+    // drag 30px right, 15px down on screen => ghost moves exactly 10, 5
+    const mid = { x: p.x, y: p.y };
+    const frames = [];
+    for (let i = 0; i <= 6; i++) frames.push([[mid.x + i * 5, mid.y + i * 2.5]]);
+    await fingerDrag(page, frames);
+    const ghost = await page.evaluate(() => ({ ...window.__touch.state.ghost }));
+    expect(ghost.x - inPrecision.ghost.x).toBeCloseTo(30 / PZOOM, 3);
+    expect(ghost.y - inPrecision.ghost.y).toBeCloseTo(15 / PZOOM, 3);
+
+    // tap places at the fine-tuned ghost position and leaves precision
+    const base = await remainingDynamic(page);
+    await tapPlace(page, p.x + 100, p.y - 80);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+    const out = await page.evaluate(() => ({
+        grid: document.querySelector('#touch-grid').classList.contains('on'),
+        transform: document.querySelector('#graphics').style.transform,
+    }));
+    expect(out.grid).toBe(false);
+    expect(out.transform).toBe('');
+    // the placed card sits where the ghost was (screen px == engine px)
+    const cards = await probeCards(page);
+    expect(cards.length).toBe(1);
+});
+
+test('two-finger gesture rotates the ghost along the dotted line', async ({ page }) => {
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 2.0);
+    // fingers around p at 30 degrees (screen y is inverted vs world)
+    const r = 90, ang = Math.PI / 6;
+    const f = (a) => [
+        [p.x - r * Math.cos(a), p.y + r * Math.sin(a)],
+        [p.x + r * Math.cos(a), p.y - r * Math.sin(a)],
+    ];
+    // start horizontal, rotate to 30 degrees, hold for the key-driven
+    // rotation to finish
+    const seq = [];
+    for (let i = 0; i <= 8; i++) seq.push(f(ang * i / 8));
+    for (let i = 0; i < 14; i++) seq.push(f(ang));   // hold ~0.6s
+    const lineVisible = page.waitForFunction(() =>
+        document.querySelector('#touch-rotline').classList.contains('on'));
+    const gesture = fingerDrag(page, seq);
+    await lineVisible;
+    await gesture;
+    await page.waitForFunction(() =>
+        !document.querySelector('#touch-rotline').classList.contains('on'));
+    await page.waitForTimeout(500);
+    // place and verify the angle snapped to the nearest 2.5-degree step
+    await tapPlace(page, p.x, p.y);
+    const cards = await probeCards(page);
+    expect(cards.length).toBe(1);
+    expect(cards[0].a).toBeCloseTo(Math.round(ang / (Math.PI / 72)) * Math.PI / 72, 2);
+});
+
+test('one-finger drag pans the camera', async ({ page }) => {
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 2.2);
+    await tapPlace(page, p.x, p.y);
+    const before = await probeCards(page);
+    expect(before.length).toBe(1);
+
+    // drag 160px left => the world under a fixed screen point shifts right
+    const frames = [];
+    for (let i = 0; i <= 8; i++) frames.push([[p.x - i * 20, p.y - 120]]);
+    await fingerDrag(page, frames);
+    await page.waitForTimeout(1500);          // camera glide settles
+
+    // place at a vertically offset screen point so even a partial pan
+    // can't overlap the first card
+    await tapPlace(page, p.x, p.y - 30);
+    const after = await probeCards(page);
+    expect(after.length).toBe(2);
+    const xs = after.map((c) => c.x).sort((a, b) => a - b);
+    expect(Math.abs(xs[1] - xs[0])).toBeGreaterThan(60 / NSCALE);  // > 3/8 of the pan
+});
+
+test('rejected placement shows toast + red flash, counters unchanged', async ({ page }) => {
+    await enterLevel11(page);
+    const base = await remainingDynamic(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
+    await tapPlace(page, p.x, p.y);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+    await page.waitForTimeout(400);           // slide out of double-tap window
+    await tapPlace(page, p.x, p.y);           // same spot: overlap, rejected
+    await expect(page.locator('#touch-toast')).toHaveClass(/on/);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+});
+
+test('long-press on a placed card offers trash; trash deletes it', async ({ page }) => {
+    await enterLevel11(page);
+    const base = await remainingDynamic(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
+    await tapPlace(page, p.x, p.y);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+    await fingerDrag(page, [[[p.x, p.y]]], 800);   // long hold, no movement
+    await expect(page.locator('#touch-trash')).toBeVisible();
+    await page.locator('#touch-trash').tap();
+    await page.waitForTimeout(500);
+    await expect(page.locator('#touch-trash')).toBeHidden();
+    expect(await remainingDynamic(page)).toBe(base);   // card back in the pool
+});
+
+test('scroll lists respond to touch drag (scrollbar.js native path)', async ({ page }) => {
+    await enterLevel11(page);
+    await page.evaluate(() => {
+        window.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 27, which: 27, bubbles: true }));
+    });
+    await page.waitForTimeout(300);
+    await page.evaluate(() => {
+        window.dispatchEvent(new KeyboardEvent('keyup', { keyCode: 27, which: 27, bubbles: true }));
+    });
+    await expect(page.locator('#rating-box')).toBeVisible();
+    await page.waitForTimeout(400);
+    const overflow = await page.evaluate(() => ({
+        es: document.querySelector('#tape-es').offsetWidth,
+        vs: document.querySelector('#tape-vs').offsetWidth,
+        left: document.querySelector('#tape-es').style.left || '0px',
+    }));
+    expect(overflow.es).toBeGreaterThan(overflow.vs);
+    const box = await page.locator('#tape-vs').boundingBox();
+    await page.evaluate(async ([x, y]) => {
+        const lyr = document.querySelector('#tape-es');
+        const mk = (xx) => [new Touch({ identifier: 0, target: lyr, clientX: xx, clientY: y })];
+        const fire = (type, xx) => lyr.dispatchEvent(new TouchEvent(type, {
+            bubbles: true, cancelable: true,
+            touches: type === 'touchend' ? [] : mk(xx),
+            targetTouches: type === 'touchend' ? [] : mk(xx),
+            changedTouches: mk(xx),
+        }));
+        fire('touchstart', x);
+        for (let i = 1; i <= 6; i++) {
+            await new Promise((r) => setTimeout(r, 30));
+            fire('touchmove', x - i * 20);
+        }
+        fire('touchend', x - 120);
+    }, [box.x + box.width / 2, box.y + box.height / 2]);
+    const after = await page.evaluate(() =>
+        document.querySelector('#tape-es').style.left || '0px');
+    expect(after).not.toBe(overflow.left);
+    await page.locator('#resume-game').tap();
+});
+
+test.describe('landscape', () => {
+    test.use({ viewport: { width: 915, height: 412 } });
+
+    test('responsive canvas, tap-place, and dialogs fit in landscape', async ({ page }) => {
+        await enterLevel11(page);
+        const fit = await page.evaluate(() => {
+            const c = document.querySelector('#graphics');
+            return { attrW: c.width, attrH: c.height, innerW: innerWidth, innerH: innerHeight };
+        });
+        expect(fit.attrW).toBe(fit.innerW);
+        expect(fit.attrH).toBe(fit.innerH - TOPBAR);
+        const base = await remainingDynamic(page);
+        const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
+        await tapPlace(page, p.x, p.y);
+        expect(await remainingDynamic(page)).toBe(base - 1);
+        // pause dialog fits the viewport
+        await page.evaluate(() => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 27, which: 27, bubbles: true }));
+        });
+        await page.waitForTimeout(300);
+        await page.evaluate(() => {
+            window.dispatchEvent(new KeyboardEvent('keyup', { keyCode: 27, which: 27, bubbles: true }));
+        });
+        await expect(page.locator('#rating-box')).toBeVisible();
+        const bb = await page.locator('.rating-inner-layout').boundingBox();
+        expect(bb.x).toBeGreaterThanOrEqual(-1);
+        expect(bb.x + bb.width).toBeLessThanOrEqual(916);
+        await page.locator('#resume-game').tap();
+    });
+});
+
+test('wins level 1-1 with 3 stars via double-tap precision placement', async ({ page }) => {
+    test.setTimeout(180000);
+    await enterLevel11(page);
+    await page.evaluate(() => {
+        const orig = Features.onLevelFinish;
+        window.__finish = null;
+        Features.onLevelFinish = function (chapter, level, result) {
+            window.__finish = { chapter, level, stars: result };
+            return orig.apply(Features, arguments);
+        };
+    });
+    // Known 3-star solution (AGENT_PLAYBOOK.md §8): one dynamic card at
+    // x=1.6765 y=1.0647 angle=0. Double-tap near it, then use the
+    // precision grid to drag the ghost pixel-perfect onto it.
+    const p = await screenForWorld(page, 1, 1, 1.6765, 1.0647);
+    await doubleTap(page, Math.round(p.x), Math.round(p.y) - 20);
+    const g0 = await page.evaluate(() => ({ ...window.__touch.state.ghost }));
+    expect(g0).not.toBeNull();
+    // layout coords = screen coords minus the canvas origin (0, TOPBAR)
+    const targetLayout = { x: p.x, y: p.y - TOPBAR };
+    // drag so the ghost lands exactly on the target layout point
+    const dx = (targetLayout.x - g0.x) * PZOOM;
+    const dy = (targetLayout.y - g0.y) * PZOOM;
+    const start = { x: 200, y: 400 };
+    const frames = [[[start.x, start.y]]];
+    for (let i = 1; i <= 10; i++) {
+        frames.push([[start.x + dx * i / 10, start.y + dy * i / 10]]);
+    }
+    await fingerDrag(page, frames);
+    const ghost = await page.evaluate(() => ({ ...window.__touch.state.ghost }));
+    expect(ghost.x).toBeCloseTo(targetLayout.x, 1);
+    expect(ghost.y).toBeCloseTo(targetLayout.y, 1);
+    await tapPlace(page, 100, 700);        // tap = place at ghost, exit zoom
+    const rem = await remainingDynamic(page);
+    expect(rem).toBe(2);                   // 1-1 has 3 dynamic blocks
+    await page.locator('#touch-apply').tap();
+    await page.waitForFunction(() => window.__finish, null, { timeout: 120000 });
+    const fin = await page.evaluate(() => window.__finish);
+    expect(fin.chapter).toBe(1);
+    expect(fin.level).toBe(1);
+    expect(fin.stars).toBe(3);
+    // full flow continues: win dialog -> next level
+    await expect(page.locator('#rating-box')).toBeVisible();
+    await page.locator('#next-level').tap();
+    await page.waitForFunction(
+        () => JSON.parse(localStorage.getItem('last')).level === 2,
+        null, { timeout: 30000 });
+});

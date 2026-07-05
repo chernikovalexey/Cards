@@ -4,6 +4,8 @@
   "description": "Two Cubes – the web puzzle game",
   "scripts": {
     "test": "playwright test",
+    "cli": "node tools/cli.js",
+    "test:cli": "node --test tools/tests/*.test.js",
     "test:prod": "BASE_URL=https://twocubes.io playwright test",
     "deploy": "rm -rf dist && mkdir dist && cp -r web packages dist/ && cp index.html cubes.png dist/ && wrangler pages deploy dist --project-name twocubes --branch master"
   },
