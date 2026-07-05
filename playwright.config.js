@@ -21,8 +21,20 @@ module.exports = defineConfig({
     // loads (NS_ERROR_NET_HTTP3_PROTOCOL_ERROR), which broke the chapter
     // screen. Run the suite in both engines.
     projects: [
-        { name: 'chromium', use: { browserName: 'chromium' } },
-        { name: 'firefox', use: { browserName: 'firefox' } },
+        { name: 'chromium', use: { browserName: 'chromium' }, testIgnore: '**/mobile.spec.js' },
+        { name: 'firefox', use: { browserName: 'firefox' }, testIgnore: '**/mobile.spec.js' },
+        // Touch support (web/external/touch.js): phone viewport + touch.
+        {
+            name: 'mobile',
+            testMatch: '**/mobile.spec.js',
+            use: {
+                browserName: 'chromium',
+                viewport: { width: 412, height: 915 },
+                hasTouch: true,
+                isMobile: true,
+                deviceScaleFactor: 2.625,
+            },
+        },
     ],
     webServer: isLocal ? {
         command: 'python3 -m http.server 8080 --bind 127.0.0.1',

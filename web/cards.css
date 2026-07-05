@@ -2267,3 +2267,195 @@ div.active-step {
         background-repeat: no-repeat !important;
     }
 }
+
+/* ------------------------------------------------------------------ */
+/* Touch mode (phones/tablets), v2. Gated on .touch-mode set by        */
+/* touch.js, never on bare media queries, so desktop browsers can't    */
+/* match it. The #graphics canvas is resized to the device viewport by */
+/* touch.js (the engine adapts); dialogs scale via --dlg-scale.        */
+
+.touch-mode .game-box {
+    left: 0;
+    margin-left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+}
+
+.touch-mode .canvas-layout {
+    width: auto;
+    overflow: visible;
+}
+
+.touch-mode .loading-overlay {
+    width: 100vw;
+    left: 0;
+    margin-left: 0;
+}
+
+.touch-mode .share-offer {
+    display: none;
+}
+
+/* Desktop control bars are replaced by the touch chrome; nodes must
+   stay in the DOM (the compiled Dart writes into them at boot). */
+.touch-mode .buttons,
+.touch-mode .selectors {
+    visibility: hidden !important;
+    pointer-events: none;
+    position: absolute;
+    top: 0 !important;
+}
+
+.touch-mode #graphics {
+    touch-action: none;
+    z-index: 1;
+}
+
+.touch-mode .level-name {
+    top: 60px;
+    width: 100vw;
+    z-index: 30;
+    pointer-events: none;
+}
+
+/* Dialogs keep their internal 800x600 layout and are scaled to fit the
+   viewport as fixed, centered overlays. */
+.touch-mode .light-box {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin: 0 !important;
+    transform: translate(-50%, -50%) scale(var(--dlg-scale, 1));
+    z-index: 20;
+}
+
+.touch-mode .paused .light-box {
+    margin-top: 0;
+}
+
+/* bs-screens (how-to / purchases / friends) are body-level 800px
+   panels; scale them likewise and keep the closed ones (top:800px,
+   still inside a tall phone viewport) out of hit-testing. touch.js
+   tags open ones with .bs-open. */
+.touch-mode .bs-screen {
+    visibility: hidden;
+    left: 50%;
+    margin-left: 0;
+    transform-origin: 50% 0;
+    transform: translateX(-50%) scale(var(--dlg-scale, 1));
+    z-index: 25;
+}
+
+.touch-mode .bs-screen.bs-open {
+    visibility: visible;
+}
+
+/* --- touch chrome ------------------------------------------------- */
+
+.touch-btn {
+    min-width: 48px;
+    min-height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(36, 48, 64, 0.9);
+    color: #cfd8e3;
+    font-size: 16px;
+    padding: 0 12px;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
+}
+
+.touch-btn:active {
+    background: rgba(57, 70, 90, 0.95);
+}
+
+#touch-top {
+    display: none;
+    position: fixed;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 8px;
+    z-index: 40;
+}
+
+#touch-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%);
+    background: rgba(143, 61, 61, 0.95);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 60;
+    white-space: nowrap;
+}
+
+#touch-toast.on { opacity: 1; }
+
+#touch-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(200, 30, 30, 0.25);
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+    z-index: 50;
+}
+
+#touch-flash.on { opacity: 1; }
+
+#touch-trash {
+    position: fixed;
+    z-index: 45;
+    display: none;
+    font-size: 26px;
+    min-width: 56px;
+    min-height: 56px;
+}
+
+/* precision-mode world-pixel grid, painted by touch.js */
+#touch-grid {
+    position: fixed;
+    display: none;
+    pointer-events: none;
+    z-index: 5;
+}
+
+#touch-grid.on { display: block; }
+
+/* two-finger rotation: animated dotted line between the fingers */
+#touch-rotline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    pointer-events: none;
+    z-index: 55;
+}
+
+#touch-rotline.on { display: block; }
+
+#touch-rotline line {
+    stroke: rgba(255, 255, 255, 0.85);
+    stroke-width: 3;
+    stroke-linecap: round;
+    animation: touch-march 0.5s linear infinite;
+}
+
+@keyframes touch-march {
+    to { stroke-dashoffset: -18; }
+}
