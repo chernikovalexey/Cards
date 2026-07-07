@@ -16,10 +16,20 @@ class ChapterShower {
             querySelector(".go-to-menu-button").click();
         });
 
+        // SDK 1.24's default sanitizer strips data-* attributes (the click
+        // handler below reads data-id), so inject with an explicit validator
+        // — same approach as the level tape in RatingShower.
+        final NodeValidatorBuilder validator = new NodeValidatorBuilder.common()
+            ..allowElement('div', attributes: ['data-id', 'data-lid', 'title'])
+            ..allowElement('span', attributes: ['data-lid'])
+            ..allowInlineStyles();
+
+        String items = "";
         int id = 0;
         for (Map chapter in chapters) {
-            querySelector("#chapter-es").appendHtml(chapterItem(chapter, ++id));
+            items += chapterItem(chapter, ++id);
         }
+        (querySelector("#chapter-es") as DivElement).setInnerHtml(items, validator: validator);
 
         var bar = Scroll.setup('chapter-vs', 'chapter-es', 'chapter-scrollbar');
         context['dw_Scrollbar_Co'].callMethod('addEvent', [bar, 'on_scroll', (var x, var y) {

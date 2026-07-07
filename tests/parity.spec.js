@@ -59,17 +59,21 @@ test.describe('boot', () => {
 });
 
 test.describe('api contract', () => {
-    test('chapters: three chapters, first one unlocked', async ({ page }) => {
+    // Production still ships three chapters; chapter 4 ("Head Over Heels",
+    // the gravity-vector chapter, 2026-07-06) diverges until the next deploy.
+    test('chapters: four chapters, first one unlocked', async ({ page }) => {
         await bootGame(page);
 
         const r = await apiCall(page, 'chapters', {});
-        expect(r.chapters).toHaveLength(3);
+        expect(r.chapters).toHaveLength(4);
         expect(r.chapters.map(c => c.name)).toEqual([
-            'Adventures of Po', 'Loopy Loop', 'Deutsche Welle',
+            'Adventures of Po', 'Loopy Loop', 'Deutsche Welle', 'Head Over Heels',
         ]);
-        expect(r.chapters.map(c => c.unlock_stars)).toEqual([0, 30, 60]);
-        expect(r.chapters.map(c => c.levels)).toEqual([12, 12, 12]);
+        expect(r.chapters.map(c => c.unlock_stars)).toEqual([0, 30, 60, 0]);
+        expect(r.chapters.map(c => c.levels)).toEqual([12, 12, 12, 6]);
         expect(r.chapters[0].unlocked).toBe(true);
+        // The gravity chapter is open from the start.
+        expect(r.chapters[3].unlocked).toBe(true);
     });
 
     test('getUser matches the production response shape', async ({ page }) => {
@@ -114,7 +118,7 @@ test.describe('gameplay flow', () => {
             .toHaveText('Choose chapter');
 
         const chapters = page.locator('#chapter-es .chapter');
-        await expect(chapters).toHaveCount(3);
+        await expect(chapters).toHaveCount(4);
         await expect(page.locator('#chapter-es .chapter-title').first())
             .toHaveText('Adventures of Po');
         // Chapter 1 is playable on a fresh profile.

@@ -4,3 +4,7 @@ playwright-report/
 dist/
 proofs/
 solutions/.lock
+.packages
+web/cards.dart.js.deps
+web/cards.dart.js.map
+.superpowers/

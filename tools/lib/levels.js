@@ -96,11 +96,14 @@ function searchProfile(chapter, level) {
         last: JSON.stringify({ chapter, level }),
     };
     if (starsNeeded > 0) {
-        profile.stars = JSON.stringify({
-            total: starsNeeded,
-            chapters: [{ id: 1, s: Math.min(36, starsNeeded) },
-                       { id: 2, s: Math.max(0, starsNeeded - 36) }],
-        });
+        const perChapter = [];
+        let rest = starsNeeded;
+        for (let id = 1; rest > 0; id++) {
+            const s = Math.min(36, rest);
+            perChapter.push({ id, s });
+            rest -= s;
+        }
+        profile.stars = JSON.stringify({ total: starsNeeded, chapters: perChapter });
     }
     return profile;
 }

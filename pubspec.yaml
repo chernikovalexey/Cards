@@ -2,9 +2,15 @@ name: Cards
 version: 0.1.0
 author: Twopeople
 description: Cards Game.
+environment:
+  sdk: ">=1.21.0 <2.0.0"
 dependencies:
-  animation: any
-  box2d: any
-  browser: any
-  sprintf: any
-  vector_math: any
+  # Era-correct versions the shipped artifact was built against; the APIs of
+  # newer lines (box2d 0.4, vector_math 2.x) do not match these sources.
+  # box2d additionally needs the one-line World.setGravity patch that
+  # tools/build-dart.sh applies after fetching.
+  animation: 0.5.24
+  box2d: 0.1.7
+  browser: 0.10.0+3
+  sprintf: 4.0.2
+  vector_math: 1.4.7

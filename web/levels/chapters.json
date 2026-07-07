@@ -14,6 +14,11 @@
       "name": "Deutsche Welle",
       "unlock_stars": 60,
       "levels": 12
+    },
+    {
+      "name": "Head Over Heels",
+      "unlock_stars": 0,
+      "levels": 6
     }
   ]
 }

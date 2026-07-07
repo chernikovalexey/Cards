@@ -42,9 +42,12 @@ class BoundedCard {
         double delta = Math.PI / 24;
         double prev_angle = angle;
 
-        if (Input.keys['q'].clicked) {
+        // Q/E repeat every frame while held (shipped behavior — touch.js's
+        // rotation gesture counts on exactly N steps for N held frames);
+        // C/V stay one-shot.
+        if (Input.keys['q'].down) {
             angle += delta / 3;
-        } else if (Input.keys['e'].clicked) {
+        } else if (Input.keys['e'].down) {
             angle -= delta / 3;
         } else if (Input.keys['c'].clicked) {
             angle = 0.0;

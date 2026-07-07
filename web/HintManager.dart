@@ -102,7 +102,10 @@ class HintManager {
             col = new Color4.fromRGBA(235, 235, 215, 0.25);
         }
         Body b = engine.addCard(x, y, angle, _static, null, col, true);
-        b.setType(BodyType.STATIC);
+        // b.setType(...) — that method never existed in this box2d; the call
+        // threw, leaked the half-added hint card into engine.cards (skewing
+        // the star rating) and skipped the auto-clear timer.
+        b.type = BodyType.STATIC;
         (b.userData as EnergySprite).energy = energy;
     }
 

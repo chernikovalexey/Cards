@@ -52,18 +52,21 @@ class Input {
         mouseMoved = true;
     }
 
+    // MouseEvent.button, not .which: in SDK 1.24's dart:html `which` only
+    // exists on KeyboardEvent (the 2015 SDK of the shipped build had it on
+    // Event), so reading it off a mouse event dies with a noSuchMethod.
     static void onMouseDown(MouseEvent event) {
-        isMouseLeftClicked = event.which == 1;
+        isMouseLeftClicked = event.button == 0;
         isMouseLeftDown = isMouseLeftClicked;
-        isMouseRightClicked = event.which == 3;
+        isMouseRightClicked = event.button == 2;
         isMouseRightDown = isMouseRightClicked;
     }
 
     static void onMouseUp(MouseEvent event) {
-        if (event.which == 1) {
+        if (event.button == 0) {
             isMouseLeftClicked = false;
             isMouseLeftDown = false;
-        } else if (event.which == 3) {
+        } else if (event.button == 2) {
             isMouseRightDown = false;
             isMouseRightClicked = false;
             event.preventDefault();

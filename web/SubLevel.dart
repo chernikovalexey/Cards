@@ -34,6 +34,12 @@ class SubLevel {
     double x, y, w, h;
     double gravity = GameEngine.GRAVITY;
 
+    // Optional full gravity vector ("gravity_vector": [gx, gy] in the level
+    // JSON, world units, y up). When present it wins over the vertical
+    // scalar; the scalar is kept in sync so GameEngine's custom-gravity
+    // sleep gate (gravity.abs() > 0.1) still engages.
+    Vector2 gravityVector;
+
     // Unique for each level
     int currentSpriteId = 0;
     int rating = 0;
@@ -90,15 +96,18 @@ class SubLevel {
 
         if (l["gravity"] != null && l['gravity'] != 0.0) {
             this.gravity = l["gravity"].toDouble();
+        }
 
-            if (!further) {
-                e.world.setGravity(new Vector2(0.0, gravity));
-                if (gravity > 0.0) {
-                    parallax.modifier = ParallaxManager.UP;
-                } else {
-                    parallax.modifier = ParallaxManager.DOWN;
-                }
-            }
+        if (l["gravity_vector"] != null) {
+            gravityVector = new Vector2(l["gravity_vector"][0].toDouble(), l["gravity_vector"][1].toDouble());
+            this.gravity = gravityVector.length * (gravityVector.y > 0.0 ? 1.0 : -1.0);
+        }
+
+        if (!further) {
+            // Unconditional on purpose: only setting it for custom levels
+            // leaked the previous level's gravity into gravity-less ones.
+            e.world.setGravity(effectiveGravity());
+            applyParallaxModifier();
         }
 
         for (var obstacle in l["obstacles"]) {
@@ -139,6 +148,22 @@ class SubLevel {
         }
     }
 
+
+    Vector2 effectiveGravity() {
+        if (gravityVector != null) {
+            return new Vector2(gravityVector.x, gravityVector.y);
+        }
+        return new Vector2(0.0, gravity);
+    }
+
+    void applyParallaxModifier() {
+        double vertical = gravityVector != null ? gravityVector.y : gravity;
+        if (vertical > 0.0) {
+            parallax.modifier = ParallaxManager.UP;
+        } else {
+            parallax.modifier = ParallaxManager.DOWN;
+        }
+    }
 
     int getRating() {
         if (stars[0] >= e.cards.length) rating = 3; else if (stars[1] >= e.cards.length) rating = 2; else rating = 1;
@@ -211,12 +236,8 @@ class SubLevel {
 
             completed = false;
 
-            e.world.setGravity(new Vector2(0.0, gravity));
-            if (gravity > 0.0) {
-                parallax.modifier = ParallaxManager.UP;
-            } else {
-                parallax.modifier = ParallaxManager.DOWN;
-            }
+            e.world.setGravity(effectiveGravity());
+            applyParallaxModifier();
 
             e.obstaclesBobbin.list = obstaclesFrames;
 

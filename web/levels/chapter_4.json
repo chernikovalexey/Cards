@@ -1,83 +1,191 @@
 {
-    "levels": [
+  "levels": [
+    {
+      "name": "Old Habits",
+      "x": 0,
+      "y": -150,
+      "width": 1000,
+      "height": 800,
+      "blocks": [
+        0,
+        3
+      ],
+      "stars": [
+        1,
+        2
+      ],
+      "from": {
+        "x": 100,
+        "y": 50
+      },
+      "to": {
+        "x": 160,
+        "y": 50
+      },
+      "obstacles": [
         {
-            "gravity": 1.125,
-            "name": "The New Heights",
-            "x": 0,
-            "y": 0,
-            "from": {
-                "x": 49,
-                "y": 121
-            },
-            "to": {
-                "x": 138,
-                "y": 122
-            },
-            "width": 1000,
-            "height": 1000,
-            "blocks": [
-                10,
-                10
-            ],
-            "stars": [
-                5,
-                5
-            ],
-            "obstacles": [
-                {
-                    "type": 1,
-                    "x": 0,
-                    "y": 50,
-                    "width": 1000,
-                    "height": 8
-                },
-                {
-                    "type": 5,
-                    "gravity": -0.015,
-                    "x": 92,
-                    "y": 197,
-                    "width": 45,
-                    "height": 8
-                }
-            ]
-        },
-        {
-            "gravity": 0.0,
-            "name": "Counterreaction",
-            "x": 0,
-            "y": 0,
-            "to": {
-                "x": 340,
-                "y": 147
-            },
-            "width": 1000,
-            "height": 1000,
-            "blocks": [
-                9,
-                152
-            ],
-            "stars": [
-                4,
-                3
-            ],
-            "obstacles": [
-                {
-                    "type": 5,
-                    "gravity": 0.0,
-                    "x": 230,
-                    "y": 141,
-                    "width": 8,
-                    "height": 57
-                },
-                {
-                    "type": 5,
-                    "gravity": 0.0,
-                    "x": 238,
-                    "y": 141,
-                    "width": 26,
-                    "height": 33
-                }
-            ]
+          "type": 1,
+          "x": 0,
+          "y": -58,
+          "width": 560,
+          "height": 8
         }
-    ]
+      ]
+    },
+    {
+      "name": "The Other Way Up",
+      "gravity": 10.0,
+      "x": 0,
+      "y": -150,
+      "width": 1000,
+      "height": 800,
+      "blocks": [
+        0,
+        3
+      ],
+      "stars": [
+        1,
+        2
+      ],
+      "to": {
+        "x": 220,
+        "y": 50
+      },
+      "obstacles": [
+        {
+          "type": 1,
+          "x": 0,
+          "y": 250,
+          "width": 1000,
+          "height": 8
+        }
+      ]
+    },
+    {
+      "name": "Go West",
+      "gravity": -10.0,
+      "gravity_vector": [
+        -10,
+        0
+      ],
+      "x": 0,
+      "y": -150,
+      "width": 1000,
+      "height": 800,
+      "blocks": [
+        0,
+        4
+      ],
+      "stars": [
+        2,
+        3
+      ],
+      "to": {
+        "x": 222.5,
+        "y": 111
+      },
+      "obstacles": [
+        {
+          "type": 1,
+          "x": 249,
+          "y": 88,
+          "width": 6,
+          "height": 12
+        }
+      ]
+    },
+    {
+      "name": "Slippery Slope",
+      "gravity": -10.0,
+      "gravity_vector": [
+        7.071,
+        -7.071
+      ],
+      "x": 0,
+      "y": -150,
+      "width": 1000,
+      "height": 800,
+      "blocks": [
+        0,
+        5
+      ],
+      "stars": [
+        3,
+        4
+      ],
+      "to": {
+        "x": 267.4,
+        "y": 151.2
+      },
+      "obstacles": [
+        {
+          "type": 2,
+          "points": [
+            {
+              "x": 252,
+              "y": 100.7
+            },
+            {
+              "x": 391,
+              "y": 100.7
+            },
+            {
+              "x": 391,
+              "y": 239.7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Landslide",
+      "gravity": -10.0,
+      "gravity_vector": [
+        3.5,
+        -9.4
+      ],
+      "x": 0,
+      "y": -150,
+      "width": 1000,
+      "height": 800,
+      "blocks": [
+        0,
+        4
+      ],
+      "stars": [
+        1,
+        2
+      ],
+      "to": {
+        "x": 331.5,
+        "y": 180.2
+      },
+      "obstacles": []
+    },
+    {
+      "name": "Head Over Heels",
+      "gravity": 10.0,
+      "gravity_vector": [
+        7.071,
+        7.071
+      ],
+      "x": 0,
+      "y": -150,
+      "width": 1000,
+      "height": 800,
+      "blocks": [
+        0,
+        4
+      ],
+      "stars": [
+        1,
+        2
+      ],
+      "to": {
+        "x": 292.2,
+        "y": 215
+      },
+      "obstacles": []
+    }
+  ]
 }

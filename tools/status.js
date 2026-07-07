@@ -7,11 +7,12 @@ const path = require('path');
 const solutions = require('./lib/solutions');
 const levels = require('./lib/levels');
 
-const UNLOCK = { 1: 0, 2: 30, 3: 60 };
+const CHAPTERS = JSON.parse(fs.readFileSync(
+    path.join(__dirname, '..', 'web', 'levels', 'chapters.json'), 'utf8')).chapters;
 
 function main() {
     const summary = { chapters: [], totalStars: 0 };
-    for (let c = 1; c <= 3; c++) {
+    for (let c = 1; c <= CHAPTERS.length; c++) {
         const doc = solutions.load(c);
         const byLevel = new Map(doc.levels.map((l) => [l.level, l]));
         const n = levels.loadChapter(c).levels.length;
@@ -30,11 +31,21 @@ function main() {
             });
             stars += cur ? cur.stars : 0;
         }
-        summary.chapters.push({ chapter: c, stars, maxStars: n * 3, unlockNeeds: UNLOCK[c], levels: rows });
+        summary.chapters.push({
+            chapter: c, stars, maxStars: n * 3,
+            unlockNeeds: CHAPTERS[c - 1].unlock_stars, levels: rows,
+        });
         summary.totalStars += stars;
     }
-    summary.chapter2Unlocked = summary.chapters[0].stars >= UNLOCK[2] ? true : `need ${UNLOCK[2]} stars in ch1 (have ${summary.chapters[0].stars})`;
-    summary.chapter3Unlocked = (summary.chapters[0].stars + summary.chapters[1].stars) >= UNLOCK[3] ? true : `need ${UNLOCK[3]} total (have ${summary.chapters[0].stars + summary.chapters[1].stars})`;
+    // Unlocks are computed from the total star count, like webapi.js does.
+    summary.unlocks = {};
+    let running = 0;
+    for (let c = 1; c <= CHAPTERS.length; c++) {
+        const need = CHAPTERS[c - 1].unlock_stars;
+        summary.unlocks[`chapter${c}`] = running >= need
+            ? true : `need ${need} total (have ${running})`;
+        running += summary.chapters[c - 1].stars;
+    }
 
     if (process.argv.includes('--json')) {
         process.stdout.write(JSON.stringify(summary, null, 2) + '\n');
@@ -44,7 +55,10 @@ function main() {
         const cells = ch.levels.map((r) => `${String(r.level).padStart(2)}:${r.solved ? r.stars + '*' : '--'}${r.video ? 'v' : ' '}`);
         process.stdout.write(`chapter ${ch.chapter}  [${cells.join(' ')}]  ${ch.stars}/${ch.maxStars} stars\n`);
     }
-    process.stdout.write(`total ${summary.totalStars} | ch2 unlock: ${summary.chapter2Unlocked === true ? 'OK' : summary.chapter2Unlocked} | ch3 unlock: ${summary.chapter3Unlocked === true ? 'OK' : summary.chapter3Unlocked}\n`);
+    const locks = Object.entries(summary.unlocks)
+        .filter(([, v]) => v !== true)
+        .map(([k, v]) => `${k} locked: ${v}`);
+    process.stdout.write(`total ${summary.totalStars}${locks.length ? ' | ' + locks.join(' | ') : ''}\n`);
 }
 
 main();

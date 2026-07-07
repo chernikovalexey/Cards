@@ -32,6 +32,7 @@ var SHELL = [
     '/web/levels/chapter_1.json',
     '/web/levels/chapter_2.json',
     '/web/levels/chapter_3.json',
+    '/web/levels/chapter_4.json',
     '/packages/browser/dart.js',
 ];
 
