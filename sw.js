@@ -39,7 +39,11 @@ var SHELL = [
 self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open(VERSION).then(function (cache) {
-            return cache.addAll(SHELL);
+            // no-cache: precache from the server, not from whatever the
+            // browser HTTP cache still holds under the CDN's max-age.
+            return cache.addAll(SHELL.map(function (url) {
+                return new Request(url, { cache: 'no-cache' });
+            }));
         }).then(function () {
             return self.skipWaiting();
         })
@@ -81,8 +85,17 @@ self.addEventListener('fetch', function (event) {
     var url = new URL(req.url);
     if (url.origin !== self.location.origin) return;
 
+    // Bypass the browser HTTP cache: Cloudflare Pages serves assets with
+    // max-age=14400, and a default-mode fetch() is answered by that cache
+    // for 4 hours — "network-first" would never see a fresh deploy.
+    // 'no-cache' still sends conditional requests (unchanged files cost a
+    // 304). Navigation Requests can't be rebuilt (the Request constructor
+    // throws on mode 'navigate'); HTML stays fresh via the _headers file
+    // deployed alongside the site.
+    var net = req.mode === 'navigate' ? req : new Request(req, { cache: 'no-cache' });
+
     event.respondWith(
-        fetch(req).then(function (res) {
+        fetch(net).then(function (res) {
             if (res && res.ok) {
                 var copy = res.clone();
                 caches.open(VERSION).then(function (cache) {

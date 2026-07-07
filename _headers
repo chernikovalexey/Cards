@@ -1,0 +1,10 @@
+# Cloudflare Pages header overrides (staged into dist/ by `npm run deploy`).
+#
+# Pages' default is Cache-Control: max-age=14400 — browsers then serve
+# every asset from their HTTP cache for 4 hours, so a fresh deploy doesn't
+# reach returning players (and even the service worker's network-first
+# fetches were answered stale before sw.js switched to cache: 'no-cache').
+# Force revalidation instead: files are still cached, but each request
+# checks the ETag and unchanged files cost a 304.
+/*
+  Cache-Control: public, max-age=0, must-revalidate
