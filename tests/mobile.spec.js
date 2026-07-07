@@ -1,7 +1,9 @@
-// Mobile touch suite, v2 gesture UX. Runs only in the 'mobile' Playwright
+// Mobile touch suite, v3 gesture UX. Runs only in the 'mobile' Playwright
 // project (chromium, phone viewport, hasTouch) — see playwright.config.js.
-// tap = place, double-tap = precision zoom + grid, 1-finger drag = pan,
-// 2 fingers = rotate (dotted line), long-press = delete.
+// tap = place (immediate, no double-tap window), 1-finger drag = pan,
+// 2 fingers = rotate (dotted line) and the block is placed when the
+// fingers lift, long-press near a block = pick it up (fat hit bounds) to
+// drag-move or trash it.
 // Touch design: docs/superpowers/specs/2026-07-05-touch-support-design.md
 'use strict';
 const { test, expect } = require('@playwright/test');
@@ -9,7 +11,6 @@ const levels = require('../tools/lib/levels');
 
 const NSCALE = 85;
 const TOPBAR = 56;
-const PZOOM = 3;
 
 // With the responsive canvas, screen px == canvas px == engine px.
 // Returns the screen point for a world point, using the live camera
@@ -83,17 +84,10 @@ async function remainingDynamic(page) {
     return m ? parseInt(m[0], 10) : null;
 }
 
-// tap that waits out the double-tap window so the single-tap action fires
+// tap and wait for the immediate placement's frame chain to finish
 async function tapPlace(page, x, y) {
     await page.touchscreen.tap(x, y);
-    await page.waitForTimeout(700);   // 350ms double-tap window + frames
-}
-
-async function doubleTap(page, x, y) {
-    await page.touchscreen.tap(x, y);
-    await page.waitForTimeout(80);
-    await page.touchscreen.tap(x, y);
-    await page.waitForTimeout(400);   // precision zoom transition
+    await page.waitForTimeout(500);
 }
 
 // In-page touch dispatch for gestures Playwright's touchscreen can't do
@@ -154,44 +148,28 @@ test('tap places a block at the tapped world point', async ({ page }) => {
     expect(cards[0].y).toBeCloseTo(1.5, 1);
 });
 
-test('double tap zooms into precision mode with grid; drag is sub-pixel; tap places; zooms back', async ({ page }) => {
+test('double tap does not zoom: two immediate placements, no canvas transform', async ({ page }) => {
     await enterLevel11(page);
-    const p = await screenForWorld(page, 1, 1, 2.5, 1.8);
-    await doubleTap(page, p.x, p.y);
-    const inPrecision = await page.evaluate(() => ({
-        grid: document.querySelector('#touch-grid').classList.contains('on'),
-        transform: document.querySelector('#graphics').style.transform,
-        ghost: { ...window.__touch.state.ghost },
-    }));
-    expect(inPrecision.grid).toBe(true);
-    expect(inPrecision.transform).toContain('scale(3)');
-
-    // drag 30px right, 15px down on screen => ghost moves exactly 10, 5
-    const mid = { x: p.x, y: p.y };
-    const frames = [];
-    for (let i = 0; i <= 6; i++) frames.push([[mid.x + i * 5, mid.y + i * 2.5]]);
-    await fingerDrag(page, frames);
-    const ghost = await page.evaluate(() => ({ ...window.__touch.state.ghost }));
-    expect(ghost.x - inPrecision.ghost.x).toBeCloseTo(30 / PZOOM, 3);
-    expect(ghost.y - inPrecision.ghost.y).toBeCloseTo(15 / PZOOM, 3);
-
-    // tap places at the fine-tuned ghost position and leaves precision
     const base = await remainingDynamic(page);
-    await tapPlace(page, p.x + 100, p.y - 80);
-    expect(await remainingDynamic(page)).toBe(base - 1);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.8);
+    await page.touchscreen.tap(p.x, p.y);
+    await page.waitForTimeout(150);
+    await page.touchscreen.tap(p.x, p.y);       // overlaps the first: rejected
+    await page.waitForTimeout(500);
     const out = await page.evaluate(() => ({
-        grid: document.querySelector('#touch-grid').classList.contains('on'),
+        grid: !!document.querySelector('#touch-grid'),
         transform: document.querySelector('#graphics').style.transform,
     }));
-    expect(out.grid).toBe(false);
-    expect(out.transform).toBe('');
-    // the placed card sits where the ghost was (screen px == engine px)
+    expect(out.grid).toBe(false);                // precision grid is gone
+    expect(out.transform).toBe('');              // no CSS zoom ever applied
+    expect(await remainingDynamic(page)).toBe(base - 1);
     const cards = await probeCards(page);
     expect(cards.length).toBe(1);
 });
 
-test('two-finger gesture rotates the ghost along the dotted line', async ({ page }) => {
+test('two-finger rotate places the block when the fingers lift', async ({ page }) => {
     await enterLevel11(page);
+    const base = await remainingDynamic(page);
     const p = await screenForWorld(page, 1, 1, 2.5, 2.0);
     // fingers around p at 30 degrees (screen y is inverted vs world)
     const r = 90, ang = Math.PI / 6;
@@ -211,11 +189,13 @@ test('two-finger gesture rotates the ghost along the dotted line', async ({ page
     await gesture;
     await page.waitForFunction(() =>
         !document.querySelector('#touch-rotline').classList.contains('on'));
-    await page.waitForTimeout(500);
-    // place and verify the angle snapped to the nearest 2.5-degree step
-    await tapPlace(page, p.x, p.y);
+    // no extra tap: the lift itself placed the block at the line midpoint
+    await page.waitForTimeout(1200);
+    expect(await remainingDynamic(page)).toBe(base - 1);
     const cards = await probeCards(page);
     expect(cards.length).toBe(1);
+    expect(cards[0].x).toBeCloseTo(2.5, 1);
+    expect(cards[0].y).toBeCloseTo(2.0, 1);
     expect(cards[0].a).toBeCloseTo(Math.round(ang / (Math.PI / 72)) * Math.PI / 72, 2);
 });
 
@@ -253,18 +233,56 @@ test('rejected placement shows toast + red flash, counters unchanged', async ({ 
     expect(await remainingDynamic(page)).toBe(base - 1);
 });
 
-test('long-press on a placed card offers trash; trash deletes it', async ({ page }) => {
+// The card is 45x2.5 px; pressing 14px above its center is well outside the
+// brick itself but inside the fat selection bounds for big fingers.
+test('long-press near a card picks it up; dragging moves it; release re-places it', async ({ page }) => {
     await enterLevel11(page);
     const base = await remainingDynamic(page);
     const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
     await tapPlace(page, p.x, p.y);
     expect(await remainingDynamic(page)).toBe(base - 1);
-    await fingerDrag(page, [[[p.x, p.y]]], 800);   // long hold, no movement
+    // long hold above the card, then drag 64px right and release
+    const s = { x: p.x + 10, y: p.y - 14 };
+    const frames = [[[s.x, s.y]]];
+    for (let i = 1; i <= 8; i++) frames.push([[s.x + i * 8, s.y]]);
+    await fingerDrag(page, frames, 800);
+    await page.waitForTimeout(800);
+    expect(await remainingDynamic(page)).toBe(base - 1);   // still one on board
+    const cards = await probeCards(page);
+    expect(cards.length).toBe(1);
+    expect(cards[0].x).toBeCloseTo(2.5 + 64 / NSCALE, 1);  // moved with the drag
+    expect(cards[0].y).toBeCloseTo(1.5, 1);
+    expect(cards[0].a).toBeCloseTo(0, 2);                  // angle preserved
+});
+
+test('long-press near a card then trash deletes it (fat bounds, single card)', async ({ page }) => {
+    await enterLevel11(page);
+    const base = await remainingDynamic(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
+    await tapPlace(page, p.x, p.y);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+    // long hold 14px above the brick (outside it, inside the fat bounds)
+    await fingerDrag(page, [[[p.x, p.y - 14]]], 800);
     await expect(page.locator('#touch-trash')).toBeVisible();
+    await page.waitForTimeout(500);                 // release re-places the card
     await page.locator('#touch-trash').tap();
     await page.waitForTimeout(500);
     await expect(page.locator('#touch-trash')).toBeHidden();
     expect(await remainingDynamic(page)).toBe(base);   // card back in the pool
+    const cards = await probeCards(page);
+    expect(cards.length).toBe(0);
+});
+
+test('long-press on empty space offers nothing', async ({ page }) => {
+    await enterLevel11(page);
+    const base = await remainingDynamic(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 2.5);
+    await fingerDrag(page, [[[p.x, p.y]]], 800);    // long hold, nothing there
+    await page.waitForTimeout(500);
+    await expect(page.locator('#touch-trash')).toBeHidden();
+    expect(await remainingDynamic(page)).toBe(base);   // and nothing was placed
+    const cards = await probeCards(page);
+    expect(cards.length).toBe(0);
 });
 
 test('scroll lists respond to touch drag (scrollbar.js native path)', async ({ page }) => {
@@ -338,7 +356,7 @@ test.describe('landscape', () => {
     });
 });
 
-test('wins level 1-1 with 3 stars via double-tap precision placement', async ({ page }) => {
+test('wins level 1-1 with 3 stars via an exact tap placement', async ({ page }) => {
     test.setTimeout(180000);
     await enterLevel11(page);
     await page.evaluate(() => {
@@ -350,27 +368,11 @@ test('wins level 1-1 with 3 stars via double-tap precision placement', async ({ 
         };
     });
     // Known 3-star solution (AGENT_PLAYBOOK.md §8): one dynamic card at
-    // x=1.6765 y=1.0647 angle=0. Double-tap near it, then use the
-    // precision grid to drag the ghost pixel-perfect onto it.
+    // x=1.6765 y=1.0647 angle=0. Synthetic touches carry float coordinates,
+    // so a plain tap at the exact point is pixel-perfect (screen == engine px).
     const p = await screenForWorld(page, 1, 1, 1.6765, 1.0647);
-    await doubleTap(page, Math.round(p.x), Math.round(p.y) - 20);
-    const g0 = await page.evaluate(() => ({ ...window.__touch.state.ghost }));
-    expect(g0).not.toBeNull();
-    // layout coords = screen coords minus the canvas origin (0, TOPBAR)
-    const targetLayout = { x: p.x, y: p.y - TOPBAR };
-    // drag so the ghost lands exactly on the target layout point
-    const dx = (targetLayout.x - g0.x) * PZOOM;
-    const dy = (targetLayout.y - g0.y) * PZOOM;
-    const start = { x: 200, y: 400 };
-    const frames = [[[start.x, start.y]]];
-    for (let i = 1; i <= 10; i++) {
-        frames.push([[start.x + dx * i / 10, start.y + dy * i / 10]]);
-    }
-    await fingerDrag(page, frames);
-    const ghost = await page.evaluate(() => ({ ...window.__touch.state.ghost }));
-    expect(ghost.x).toBeCloseTo(targetLayout.x, 1);
-    expect(ghost.y).toBeCloseTo(targetLayout.y, 1);
-    await tapPlace(page, 100, 700);        // tap = place at ghost, exit zoom
+    await fingerDrag(page, [[[p.x, p.y]]], 60);   // exact-coordinate tap
+    await page.waitForTimeout(800);
     const rem = await remainingDynamic(page);
     expect(rem).toBe(2);                   // 1-1 has 3 dynamic blocks
     await page.locator('#touch-apply').tap();

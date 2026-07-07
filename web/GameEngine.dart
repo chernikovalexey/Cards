@@ -370,10 +370,10 @@ class GameEngine extends State {
             Tooltip.closeAll();
 
             // Close controls viewer first
-            if (!querySelector("#wizard-controls").classes.contains("hidden")) {
-                querySelector(".wizard-try").click();
+            if (!Html.querySelector("#wizard-controls").classes.contains("hidden")) {
+                Html.querySelector(".wizard-try").click();
             } else if (hints.purchasesOpened) {
-                querySelector(".close-purchases").click();
+                Html.querySelector(".close-purchases").click();
             } else {
                 RatingShower.pause(this);
             }
@@ -502,7 +502,7 @@ class GameEngine extends State {
             updateBlockButtons(this);
         }
         if (Input.applied()) {
-            querySelector('#toggle-physics').click();
+            Html.querySelector('#toggle-physics').click();
         }
 
         if (contactListener.contactingBodies.isNotEmpty && (Input.isMouseRightClicked || Input.keys['delete'].clicked) && !isRewinding) {
@@ -527,7 +527,7 @@ class GameEngine extends State {
                 }
             } else {
                 // If Ctrl+Z is pressed whereas physics are applied, it's necessary to rewind
-                querySelector('#toggle-physics').click();
+                Html.querySelector('#toggle-physics').click();
             }
         }
 
@@ -596,8 +596,8 @@ class GameEngine extends State {
             String id = 'level_' + level.chapter.toString() + '_' + level.current.index.toString();
 
             // No sense to save empty states, indeed
-            if (ready && (window.localStorage.containsKey(id) || !cards.isEmpty)) {
-                window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list, level.current.obstacles, obstaclesBobbin.list, level.current.completed);
+            if (ready && (Html.window.localStorage.containsKey(id) || !cards.isEmpty)) {
+                Html.window.localStorage[id] = LevelSerializer.toJSON(cards, bobbin.list, level.current.obstacles, obstaclesBobbin.list, level.current.completed);
             }
         }
     }
@@ -648,7 +648,88 @@ class GameEngine extends State {
                 b = b.next;
             }
             (bcard.b.userData as Sprite).render(debugDraw, bcard.b);
+
+            renderGravityIndicator();
         }
+    }
+
+    static const double INDICATOR_PERIOD_MS = 12000.0;
+    static const double INDICATOR_PEAK_ALPHA = 0.18;
+
+    // Whenever the level's gravity differs from the default (0, GRAVITY),
+    // drift three huge translucent arrows across the viewport along the
+    // gravity vector. Game behavior, not level data: any level with custom
+    // gravity gets the cue automatically.
+    void renderGravityIndicator() {
+        if (level == null || level.current == null) return;
+
+        Vector2 gv = level.current.effectiveGravity();
+        if (gv.x.abs() < 0.001 && (gv.y - GRAVITY).abs() < 0.001) return;
+
+        double len = gv.length;
+        if (len < 0.001) return;
+
+        // Screen-space direction: world y points up, canvas y points down.
+        double dx = gv.x / len;
+        double dy = -gv.y / len;
+
+        double w = Input.canvasWidth.toDouble();
+        double h = Input.canvasHeight.toDouble();
+
+        double size = Math.min(w, h) * 0.34;
+        // Travel covers the viewport's extent along the gravity direction;
+        // the three arrows ride staggered lanes across it.
+        double span = w * dx.abs() + h * dy.abs() + size * 2;
+        double lanes = w * dy.abs() + h * dx.abs();
+
+        num t = Html.window.performance.now();
+
+        g.save();
+        g.translate(w / 2, h / 2);
+        g.rotate(Math.atan2(dy, dx));
+
+        for (int i = 0; i < 3; ++i) {
+            double pos = (t / INDICATOR_PERIOD_MS) + i / 3;
+            double phase = pos % 1.0;
+            double along = -span / 2 + span * phase;
+            double lane = (i - 1) * lanes * 0.3;
+
+            // Deterministic per-pass jitter (hash of arrow index + travel
+            // cycle) so each arrow crosses at a slightly different size
+            // without flickering frame to frame.
+            double seed = (pos.floor() * 3 + i + 1).toDouble();
+            double jitter = (Math.sin(seed * 12.9898) * 43758.5453).abs() % 1.0;
+
+            g.globalAlpha = Math.sin(Math.PI * phase) * INDICATOR_PEAK_ALPHA;
+            drawGravityArrow(along, lane, size * (0.75 + 0.5 * jitter));
+        }
+
+        g.restore();
+    }
+
+    // A fat arrow pointing along +x in the current (rotated) frame,
+    // centered at (x, y).
+    void drawGravityArrow(double x, double y, double size) {
+        double l = size;
+        double hw = size * 0.30;
+        double sw = size * 0.13;
+        double hl = size * 0.42;
+
+        g.beginPath();
+        g.moveTo(x - l / 2, y - sw);
+        g.lineTo(x + l / 2 - hl, y - sw);
+        g.lineTo(x + l / 2 - hl, y - hw);
+        g.lineTo(x + l / 2, y);
+        g.lineTo(x + l / 2 - hl, y + hw);
+        g.lineTo(x + l / 2 - hl, y + sw);
+        g.lineTo(x - l / 2, y + sw);
+        g.closePath();
+
+        g.fillStyle = "#ffffff";
+        g.fill();
+        g.lineWidth = 3;
+        g.strokeStyle = "rgba(30, 40, 70, 0.9)";
+        g.stroke();
     }
 
     void restart(double d, double f, double r) {
@@ -702,6 +783,59 @@ class GameEngine extends State {
         }
     }
 
+    // Touch UX (2026-07): pick up the placed card nearest to the canvas point
+    // (qx, qy) — layout px, same frame as mouse events — allowing a `tol` px
+    // pad around the card's own bounds so fat fingers can select a 2.5px-thin
+    // brick. The card is removed (returns to its pool, undo-able like a
+    // desktop right-click delete) and the ghost takes its exact place and
+    // angle. Returns {x, y, angle, isStatic} in layout px, or null.
+    JsObject grabCardAt(num qx, num qy, num tol) {
+        if (!ready || physicsEnabled || isRewinding || level == null || level.current == null || bcard == null) return null;
+
+        double wx = qx / scale + camera.pxOffsetX / scale;
+        double wy = -qy / scale - camera.pxOffsetY / scale;
+        double pad = tol / scale;
+
+        Body best = null;
+        double bestScore = 0.0;
+        for (Body c in cards) {
+            if ((c.userData as EnergySprite).isHint) continue;
+            double dx = wx - c.position.x;
+            double dy = wy - c.position.y;
+            double ca = Math.cos(c.angle), sa = Math.sin(c.angle);
+            double lx = dx * ca + dy * sa;      // point in the card's frame
+            double ly = -dx * sa + dy * ca;
+            double ex = lx.abs() - (CARD_WIDTH / 2 * currentZoom + pad);
+            double ey = ly.abs() - (CARD_HEIGHT / 2 * currentZoom + pad);
+            double score = Math.max(ex, ey);    // deeper inside = smaller
+            if (ex <= 0.0 && ey <= 0.0 && (best == null || score < bestScore)) {
+                best = c;
+                bestScore = score;
+            }
+        }
+        if (best == null) return null;
+
+        double bx = best.position.x, by = best.position.y, ba = best.angle;
+        bool isStatic = (best.userData as EnergySprite).isStatic;
+
+        // Mirror the right-click delete path: forget any ghost contacts with
+        // the removed body, return the card to its pool, record undo history.
+        while (contactListener.contactingBodies.remove(best)) {}
+        removeCard(best);
+        addHistoryState(best, true);
+
+        // The ghost takes the card's place, with its exact angle.
+        bcard.pos = new Vector2(bx, by);
+        bcard.b.setTransform(bcard.pos, ba);
+
+        return new JsObject.jsify({
+            'x': bx * scale - camera.pxOffsetX,
+            'y': -(by * scale) - camera.pxOffsetY,
+            'angle': ba,
+            'isStatic': isStatic,
+        });
+    }
+
     void centerBetweenCubes(double newZoom) {
         camera.mTargetX = from.position.x + (to.position.x - from.position.x) / 2 - WIDTH / 2;
         camera.mTargetY = from.position.y + (to.position.y - from.position.y) / 2 - HEIGHT / 2;
@@ -735,7 +869,7 @@ class GameEngine extends State {
 
     void clear([bool noLocalStorageClear = false]) {
         if (!noLocalStorageClear) {
-            window.localStorage.remove("level_" + level.chapter.toString() + "_" + (level.current.index + 1).toString());
+            Html.window.localStorage.remove("level_" + level.chapter.toString() + "_" + (level.current.index + 1).toString());
         }
 
         applyPhysicsLabelToButton(() {

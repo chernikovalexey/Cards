@@ -265,3 +265,63 @@ angle snapped to 2.5° steps), one-finger pan (world shift between two
 placements at the same screen point), rejection toast, long-press delete,
 tape touch-scroll, landscape variant, and a 3-star touch-only win of level
 1-1 placed through precision mode.
+
+# v3 (2026-07-07) — one-gesture placement, engine-assisted selection
+
+Three UX changes over v2, driven by phone playtesting: the rotate gesture
+needed a follow-up tap, precision zoom confused more than it helped, and
+deleting required pressing exactly on a 2.5px-thin brick.
+
+## Gestures (replace the v2 table)
+
+| Gesture | Behavior |
+|---|---|
+| tap | place a block at the tapped point, **immediately** — the double-tap gesture is gone, so there is no 350ms tap-latency window anymore |
+| 1-finger drag | camera pan (unchanged from v2) |
+| 2 fingers | rotate along the animated dashed line (unchanged mechanics) — and **lifting the fingers places the block at the line midpoint**. `endRotate(place)` funnels through `placeAt`, which is `whenKeysIdle`-gated, so the queued Q/E rotation frames settle before the click lands |
+| long press (550ms) | **pick up the placed block near the finger.** The block leaves the board and becomes the ghost at its exact spot and angle; keep dragging to move it (10px threshold), release to drop it (`placeAt`), or lift without moving and it is re-placed in place with the 🗑 trash button armed on it — tapping the trash removes it (back to its pool). Long-press on empty space does nothing |
+
+## Engine bridge (new)
+
+Selection with finger-friendly bounds can't be done in JS — placed-card
+geometry lives inside the compiled engine. `cards.dart` exposes
+`window.TouchBridge.grabCardAt(qx, qy, tolPx)` → `GameEngine.grabCardAt`:
+
+- input is canvas-layout px (same frame as synthetic mouse events); world
+  point derived with the `Input.onMouseMove` formulas (camera offsets).
+- hit test = point-in-rotated-box with a `tolPx` pad (touch.js passes
+  `GRAB_PX = 30`) around each placed card's own half-extents; nearest
+  (deepest) match wins; hint cards skipped.
+- on hit it mirrors the desktop right-click delete path — scrubs the body
+  from `contactingBodies` (endContact is unreliable on destroy), calls
+  `removeCard` (pool counter back up) + `addHistoryState(_, true)` (Ctrl+Z
+  parity) — then parks the **ghost at the card's exact position and angle**
+  (`bcard.b.setTransform`) and returns `{x, y, angle, isStatic}` in layout
+  px. Returns null when nothing is close enough, or when physics is on /
+  rewinding / not ready.
+- touch.js matches the block-type selector to `isStatic` (DOM click) so the
+  re-placement draws from the right pool, and re-syncs its tracked
+  `state.angleSteps` (rotation gestures still C-snap first, so exact angles
+  survive a move untouched).
+
+The trash button also deletes through `grabCardAt` (+ park) — single
+precise card with fat bounds, instead of the old right-click that removed
+every card overlapping the ghost.
+
+Precision mode (CSS zoom + grid + 1/3-speed drag) is fully removed:
+`#touch-grid` element/CSS, `state.precision`, `PZOOM`, and the double-tap
+recognizer. Sub-pixel placement remains possible programmatically (touch
+events carry float coordinates), which is how the 3-star win test places
+exactly.
+
+## Tests (replace the v2 list)
+
+`tests/mobile.spec.js` v3: responsive boot, immediate tap-place, double-tap
+does-not-zoom (two placements, no transform, no grid element), two-finger
+rotate placing on lift (position + 2.5°-snapped angle asserted, no extra
+tap), one-finger pan, rejection toast, long-press pickup 14px above the
+brick (outside the brick, inside the pad) → drag-move (position moved,
+angle preserved, count unchanged), long-press → trash delete (single card,
+pool restored), long-press on empty space (no trash, nothing placed), tape
+touch-scroll, landscape variant, 3-star win of 1-1 via one exact-coordinate
+tap.

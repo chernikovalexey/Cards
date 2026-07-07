@@ -2425,16 +2425,6 @@ div.active-step {
     min-height: 56px;
 }
 
-/* precision-mode world-pixel grid, painted by touch.js */
-#touch-grid {
-    position: fixed;
-    display: none;
-    pointer-events: none;
-    z-index: 5;
-}
-
-#touch-grid.on { display: block; }
-
 /* two-finger rotation: animated dotted line between the fingers */
 #touch-rotline {
     position: fixed;

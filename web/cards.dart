@@ -59,6 +59,11 @@ void main() {
     engine = new GameEngine(g);
     manager.addState(parallax = new ParallaxManager(engine, g, 24, 200));
 
+    // JS bridge for the touch layer (web/external/touch.js): long-press
+    // selection of placed cards with finger-friendly padded bounds.
+    context['TouchBridge'] = new JsObject.jsify({});
+    context['TouchBridge']['grabCardAt'] = (num qx, num qy, num tol) => engine.grabCardAt(qx, qy, tol);
+
     canvas.onMouseMove.listen(Input.onMouseMove);
     canvas.onMouseDown.listen(Input.onMouseDown);
 
@@ -411,12 +416,10 @@ bool anyWindowsOpened() {
     return opened;
 }
 
+// The VK platform (and its iframe resize dance around the friends bar) was
+// removed in 2026-07; the shipped cards.dart.js never contained these calls.
 void showFriendsBar() {
-    context['VK'].callMethod('callMethod', ['resizeWindow', 800, 600 + 91]);
-    querySelector("#finished-vs").style.display = "block";
 }
 
 void collapseFriendsBar() {
-    context['VK'].callMethod('callMethod', ['resizeWindow', 800, 600]);
-    querySelector("#finished-vs").style.display = "none";
 }

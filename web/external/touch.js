@@ -1,16 +1,18 @@
-// Touch support for phones/tablets, v2 — gesture-first UX.
+// Touch support for phones/tablets, v3 — gesture-first UX.
 //
 // The game becomes truly responsive: the #graphics canvas is resized to the
 // real device viewport (1:1 CSS pixels; the engine derives all world math
 // from Input.canvasWidth/Height, so it adapts), dialogs are scaled
 // independently, and placement is pure gestures:
-//   tap           place a block at the tapped point
-//   double tap    precision mode: zoom into the point, show a grid, drag to
-//                 fine-tune sub-pixel, tap to place, zoom back
+//   tap           place a block at the tapped point (immediately — there is
+//                 no double-tap gesture anymore)
 //   1-finger drag pan the camera (engine Space+left-drag)
 //   2 fingers     rotate the ghost: an animated dotted line is drawn between
-//                 the fingers and the block aligns to it (2.5-degree steps)
-//   long press    offer deleting the touched block (trash button)
+//                 the fingers and the block aligns to it (2.5-degree steps);
+//                 lifting the fingers places the block at the line midpoint
+//   long press    pick up the placed block near the finger (fat hit bounds,
+//                 via the compiled engine's TouchBridge) — keep dragging to
+//                 move it, release to drop, or tap the trash button
 //
 // Synthetic events target the same listeners the compiled Dart engine
 // (cards.dart.js) wires at boot. Loaded right before cards.dart.js so the
@@ -29,23 +31,21 @@
     document.documentElement.classList.add('touch-mode');
 
     var TOPBAR = 56;          // px reserved for the chrome bar
-    var PZOOM = 3;            // precision-mode magnification
     var STEP = Math.PI / 72;  // 2.5 degrees, the engine's Q/E step
+    var GRAB_PX = 30;         // selection pad around a block's own bounds
 
     var state = {
         layout: { left: 0, top: TOPBAR, w: 800, h: 600 },  // canvas layout rect
         ghost: null,          // last ghost position in layout px {x, y}
         angleSteps: 0,        // tracked ghost angle in 2.5-degree steps
-        precision: null,      // {tx, ty} canvas CSS transform while zoomed
         mode: null,           // null | 'pan' | 'rotate'
     };
 
     function canvasEl() { return document.getElementById('graphics'); }
 
     // The engine reads BOTH pointer mapping and world dimensions from this
-    // rect. It must always describe the *layout* box of the canvas —
-    // never the precision-mode CSS transform — and must be a real DOMRect
-    // (dart2js interceptors reject plain objects).
+    // rect. It must always describe the *layout* box of the canvas and
+    // must be a real DOMRect (dart2js interceptors reject plain objects).
     canvasEl().getBoundingClientRect = function () {
         var L = state.layout;
         return new DOMRect(L.left, L.top, L.w, L.h);
@@ -66,7 +66,6 @@
         c.style.position = 'fixed';
         c.style.left = '0';
         c.style.top = TOPBAR + 'px';
-        exitPrecision(true);
         document.documentElement.style.setProperty(
             '--dlg-scale', Math.min(vw / 800, vh / 600));
         // The engine re-reads the canvas rect on window resize
@@ -84,14 +83,11 @@
     refit();
 
     // ------------------------------------------------------------------
-    // Coordinate mapping. Outside precision mode screen px == canvas
-    // layout px == engine px (that is the point of the responsive canvas).
-    // In precision mode the canvas carries transform
-    // translate(tx,ty) scale(PZOOM) with origin 0 0.
+    // Coordinate mapping. Screen px == canvas layout px == engine px
+    // (that is the point of the responsive canvas).
     function toLayout(sx, sy) {
-        var L = state.layout, p = state.precision;
-        if (!p) return { x: sx - L.left, y: sy - L.top };
-        return { x: (sx - L.left - p.tx) / PZOOM, y: (sy - L.top - p.ty) / PZOOM };
+        var L = state.layout;
+        return { x: sx - L.left, y: sy - L.top };
     }
 
     // ------------------------------------------------------------------
@@ -202,8 +198,8 @@
         return !!cur && cur.classList.contains('static');
     }
 
-    // q: layout point to place at, or null to place at the current ghost
-    // position (precision mode). onDone(placed:boolean).
+    // q: layout point to place at. onDone(placed:boolean). Queued behind any
+    // pending rotation key frames, so a rotate gesture settles first.
     function placeAt(q, onDone) {
         if (physicsOn()) {
             rejectFeedback('Rewind first');
@@ -218,13 +214,12 @@
             return;
         }
         whenKeysIdle(function () {
-            if (q) moveGhost(q);
+            moveGhost(q);
             raf2(function () {              // box2d refreshes ghost contacts
                 var before = remaining();
-                var at = state.ghost || q;
-                mouse('mousedown', at, 0);
+                mouse('mousedown', q, 0);
                 raf2(function () {
-                    mouse('mouseup', at, 0);
+                    mouse('mouseup', q, 0);
                     raf2(function () {
                         var after = remaining();
                         var placed =
@@ -262,7 +257,6 @@
 
     var toast = el('div', 'touch-toast');
     var flash = el('div', 'touch-flash');
-    var grid = el('div', 'touch-grid');
     var trash = el('button', 'touch-trash', 'touch-btn', '🗑');
     trash.style.display = 'none';
 
@@ -274,7 +268,6 @@
 
     function mountChrome() {
         document.body.appendChild(top);
-        document.body.appendChild(grid);
         document.body.appendChild(toast);
         document.body.appendChild(flash);
         document.body.appendChild(trash);
@@ -315,52 +308,6 @@
     }
 
     // ------------------------------------------------------------------
-    // Precision mode: CSS-zoom the canvas around the tapped point (the
-    // engine keeps seeing the untransformed layout rect through the
-    // override above), show a world-pixel grid, let drags move the ghost
-    // at 1/PZOOM speed, tap to place, then zoom back to where it was.
-    function enterPrecision(q) {
-        var L = state.layout;
-        var tx = L.w / 2 - q.x * PZOOM;
-        var ty = L.h / 2 - q.y * PZOOM;
-        state.precision = { tx: tx, ty: ty };
-        var c = canvasEl();
-        c.style.transformOrigin = '0 0';
-        c.style.transition = 'transform 0.25s ease-out';
-        c.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + PZOOM + ')';
-        paintGrid();
-        grid.classList.add('on');
-        moveGhost(q);
-    }
-    function exitPrecision(silent) {
-        if (!state.precision) return;
-        state.precision = null;
-        var c = canvasEl();
-        if (c) {
-            c.style.transition = silent ? '' : 'transform 0.25s ease-out';
-            c.style.transform = '';
-        }
-        grid.classList.remove('on');
-    }
-    function paintGrid() {
-        var p = state.precision;
-        if (!p) return;
-        var L = state.layout;
-        var minor = 5 * PZOOM, major = 25 * PZOOM;
-        grid.style.left = L.left + 'px';
-        grid.style.top = L.top + 'px';
-        grid.style.width = L.w + 'px';
-        grid.style.height = L.h + 'px';
-        grid.style.backgroundImage =
-            'repeating-linear-gradient(to right, rgba(255,255,255,0.28) 0 1px, transparent 1px ' + major + 'px),' +
-            'repeating-linear-gradient(to bottom, rgba(255,255,255,0.28) 0 1px, transparent 1px ' + major + 'px),' +
-            'repeating-linear-gradient(to right, rgba(255,255,255,0.10) 0 1px, transparent 1px ' + minor + 'px),' +
-            'repeating-linear-gradient(to bottom, rgba(255,255,255,0.10) 0 1px, transparent 1px ' + minor + 'px)';
-        grid.style.backgroundPosition =
-            p.tx + 'px 0, 0 ' + p.ty + 'px, ' + p.tx + 'px 0, 0 ' + p.ty + 'px';
-    }
-
-    // ------------------------------------------------------------------
     // Camera pan = engine Space + left-drag. The camera consumes mousemove
     // deltas, so the anchor mousemove must land one frame before the left
     // mousedown or the jump from the previous ghost position pans wildly.
@@ -392,7 +339,8 @@
     }
 
     // ------------------------------------------------------------------
-    // Two-finger rotation with the animated dotted line.
+    // Two-finger rotation with the animated dotted line. Lifting the
+    // fingers places the block right there — no extra tap needed.
     var rot = null;   // {midQ}
     function rotAngleSteps(t0, t1) {
         // screen y grows downward; world angle grows counter-clockwise
@@ -415,27 +363,68 @@
         rotLine.setAttribute('x2', t1.clientX);
         rotLine.setAttribute('y2', t1.clientY);
         driveAngle(rotAngleSteps(t0, t1));
-        if (!state.precision) {
-            // the block rides the line: keep it at the midpoint
-            var mid = toLayout(
-                (t0.clientX + t1.clientX) / 2, (t0.clientY + t1.clientY) / 2);
-            moveGhost(mid);
-            rot.midQ = mid;
-        }
+        // the block rides the line: keep it at the midpoint
+        var mid = toLayout(
+            (t0.clientX + t1.clientX) / 2, (t0.clientY + t1.clientY) / 2);
+        moveGhost(mid);
+        rot.midQ = mid;
     }
-    function endRotate() {
+    // place=true (fingers lifted): put the block at the line midpoint, after
+    // the queued rotation key frames settle (placeAt is whenKeysIdle-gated).
+    function endRotate(place) {
+        var q = rot && rot.midQ;
         rot = null;
         state.mode = null;
         rotSvg.classList.remove('on');
+        if (place && q) placeAt(q, null);
+    }
+
+    // ------------------------------------------------------------------
+    // Long-press pickup: grab the placed block near the finger through the
+    // engine bridge (fat, finger-friendly bounds). The block leaves the
+    // board and becomes the ghost at its exact spot and angle; dragging
+    // moves it, releasing drops it, the trash button deletes it.
+    var grab = null;   // {home:{x,y}, fx, fy, moved}
+    function grabAt(sx, sy) {
+        if (physicsOn() || !window.TouchBridge) return false;
+        var q = toLayout(sx, sy);
+        var res = TouchBridge.grabCardAt(q.x, q.y, GRAB_PX);
+        if (!res) return false;
+        // match the selector to the grabbed block so the re-placement
+        // draws from (and returns to) the right pool
+        var sel = document.querySelector(
+            res.isStatic ? '.selector.static' : '.selector.dynamic');
+        if (sel && !sel.classList.contains('current')) sel.click();
+        // keep the tracked rotation steps roughly in sync (rotation
+        // gestures snap to 0 first, so this only aids consistency)
+        var steps = ((Math.round(res.angle / STEP) % 72) + 72) % 72;
+        state.angleSteps = steps >= 36 ? steps - 72 : steps;
+        moveGhost({ x: res.x, y: res.y });
+        grab = { home: { x: res.x, y: res.y }, fx: sx, fy: sy, moved: false };
+        var L = state.layout;
+        showTrash(L.left + res.x, L.top + res.y);
+        if (navigator.vibrate) navigator.vibrate(30);
+        return true;
+    }
+    function endGrab(drop) {
+        if (!grab) return;
+        var g = grab;
+        grab = null;
+        if (drop && g.moved) {
+            hideTrash();
+            placeAt({ x: state.ghost.x, y: state.ghost.y }, null);
+        } else {
+            // not moved (or cancelled): put the block back where it was;
+            // the trash button stays armed on that spot for deleting
+            placeAt(g.home, null);
+        }
     }
 
     // ------------------------------------------------------------------
     // Gesture recognition on the canvas.
     var touch0 = null;        // {x, y, t, moved} current single touch
-    var lastTap = null;       // {x, y, t} for double-tap detection
-    var pendingTap = null;    // timer for delayed single-tap action
-    var longPress = null;     // timer for delete affordance
-    var TAP_MS = 300, DTAP_MS = 350, DTAP_PX = 60, DRAG_PX = 10, LONG_MS = 550;
+    var longPress = null;     // timer for the pickup gesture
+    var TAP_MS = 300, DRAG_PX = 10, LONG_MS = 550;
 
     function cancelTapTracking() {
         clearTimeout(longPress);
@@ -443,39 +432,19 @@
         touch0 = null;
     }
 
-    function singleTapAction(sx, sy) {
-        if (state.precision) {
-            // place exactly where the ghost was fine-tuned
-            placeAt(null, function (placed) {
-                if (placed) exitPrecision();
-            });
-        } else {
-            placeAt(toLayout(sx, sy), null);
-        }
-    }
-    function doubleTapAction(sx, sy) {
-        if (state.precision) {
-            exitPrecision();
-        } else {
-            if (physicsOn()) {
-                rejectFeedback('Rewind first');
-                return;
-            }
-            enterPrecision(toLayout(sx, sy));
-        }
-    }
-
     canvasEl().addEventListener('touchstart', function (e) {
         e.preventDefault();
+        if (grab) return;         // one block in hand: ignore extra fingers
         hideTrash();
         if (e.touches.length === 1) {
             var t = e.touches[0];
             touch0 = { x: t.clientX, y: t.clientY, t: Date.now(), moved: false };
             clearTimeout(longPress);
             longPress = setTimeout(function () {
-                if (touch0 && !touch0.moved && !state.precision) {
-                    showTrash(touch0.x, touch0.y);
+                if (touch0 && !touch0.moved) {
+                    var sx = touch0.x, sy = touch0.y;
                     touch0 = null;      // consume: no tap on release
+                    grabAt(sx, sy);
                 }
             }, LONG_MS);
         } else if (e.touches.length === 2) {
@@ -485,6 +454,21 @@
 
     canvasEl().addEventListener('touchmove', function (e) {
         e.preventDefault();
+        if (grab && e.touches.length === 1) {
+            var f = e.touches[0];
+            if (!grab.moved &&
+                Math.hypot(f.clientX - grab.fx, f.clientY - grab.fy) > DRAG_PX) {
+                grab.moved = true;
+                hideTrash();
+            }
+            if (grab.moved) {
+                moveGhost({
+                    x: grab.home.x + (f.clientX - grab.fx),
+                    y: grab.home.y + (f.clientY - grab.fy),
+                });
+            }
+            return;
+        }
         if (rot && e.touches.length >= 2) {
             updateRotate(e.touches[0], e.touches[1]);
             return;
@@ -495,30 +479,22 @@
             Math.hypot(t.clientX - touch0.x, t.clientY - touch0.y) > DRAG_PX) {
             touch0.moved = true;
             clearTimeout(longPress);
-            if (state.precision) {
-                // anchor at the touchstart point so no movement is lost
-                touch0.dragBase = { g: { x: state.ghost.x, y: state.ghost.y },
-                                    x: touch0.x, y: touch0.y };
-            } else {
-                startPan(toLayout(t.clientX, t.clientY));
-            }
+            startPan(toLayout(t.clientX, t.clientY));
         }
         if (!touch0 || !touch0.moved) return;
-        if (state.precision && touch0.dragBase) {
-            var b = touch0.dragBase;
-            moveGhost({
-                x: b.g.x + (t.clientX - b.x) / PZOOM,
-                y: b.g.y + (t.clientY - b.y) / PZOOM,
-            });
-        } else if (pan) {
+        if (pan) {
             movePan(toLayout(t.clientX, t.clientY));
         }
     }, { passive: false });
 
     canvasEl().addEventListener('touchend', function (e) {
         e.preventDefault();
+        if (grab && e.touches.length === 0) {
+            endGrab(true);
+            return;
+        }
         if (rot && e.touches.length < 2) {
-            endRotate();
+            endRotate(true);
             return;
         }
         if (pan && e.touches.length === 0) {
@@ -537,35 +513,21 @@
         canvasEl().dispatchEvent(new MouseEvent('click', {
             bubbles: true, clientX: sx, clientY: sy,
         }));
-        var now = Date.now();
-        if (lastTap && now - lastTap.t < DTAP_MS &&
-            Math.hypot(sx - lastTap.x, sy - lastTap.y) < DTAP_PX) {
-            clearTimeout(pendingTap);
-            pendingTap = null;
-            lastTap = null;
-            doubleTapAction(sx, sy);
-            return;
-        }
-        lastTap = { x: sx, y: sy, t: now };
-        clearTimeout(pendingTap);
-        pendingTap = setTimeout(function () {
-            pendingTap = null;
-            singleTapAction(sx, sy);
-        }, DTAP_MS);
+        placeAt(toLayout(sx, sy), null);   // tap places immediately
     }, { passive: false });
 
     canvasEl().addEventListener('touchcancel', function () {
         touch0 = null;
         clearTimeout(longPress);
+        if (grab) endGrab(false);   // put the block back where it was
         if (pan) endPan();
-        if (rot) endRotate();
+        if (rot) endRotate(false);
     });
 
     // ------------------------------------------------------------------
-    // Delete: long-press shows the trash button; pressing it parks the
-    // ghost on the pressed point (a frame refreshes box2d sensor
-    // contacts) and right-clicks — the engine removes every placed card
-    // overlapping the ghost, exactly like desktop.
+    // Delete: the trash button appears next to a picked-up block; tapping
+    // it grabs the block back off the board (fat bounds, single block)
+    // and parks the ghost — the block returns to its pool.
     var trashPoint = null;
     function showTrash(sx, sy) {
         trashPoint = { x: sx, y: sy };
@@ -581,18 +543,9 @@
     trash.addEventListener('touchstart', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (!trashPoint) return;
+        if (!trashPoint || !window.TouchBridge) return;
         var q = toLayout(trashPoint.x, trashPoint.y);
-        moveGhost(q);
-        raf2(function () {
-            raf2(function () {
-                mouse('mousedown', q, 2);
-                raf2(function () {
-                    mouse('mouseup', q, 2);
-                    parkGhost();
-                });
-            });
-        });
+        if (TouchBridge.grabCardAt(q.x, q.y, GRAB_PX)) parkGhost();
         hideTrash();
     }, { passive: false });
 
@@ -635,7 +588,6 @@
             : ('▦ ' + (rem.d === null ? '' : rem.d));
         if (!inLevel || dlg) {
             hideTrash();
-            if (state.precision) exitPrecision(true);
         }
         if (inLevel && !wasInLevel) {
             state.angleSteps = 0;   // fresh level: ghost angle is 0
@@ -645,8 +597,7 @@
     }, 200);
 
     window.__touch = {
-        TOPBAR: TOPBAR, PZOOM: PZOOM, state: state,
+        TOPBAR: TOPBAR, GRAB_PX: GRAB_PX, state: state,
         toLayout: toLayout, moveGhost: moveGhost, placeAt: placeAt,
-        enterPrecision: enterPrecision, exitPrecision: exitPrecision,
     };
 })();
