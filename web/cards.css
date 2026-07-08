@@ -2269,10 +2269,29 @@ div.active-step {
 }
 
 /* ------------------------------------------------------------------ */
-/* Touch mode (phones/tablets), v2. Gated on .touch-mode set by        */
-/* touch.js, never on bare media queries, so desktop browsers can't    */
-/* match it. The #graphics canvas is resized to the device viewport by */
-/* touch.js (the engine adapts); dialogs scale via --dlg-scale.        */
+/* Touch mode (phones/tablets), v3 — native-feeling screens. Gated on  */
+/* .touch-mode set by touch.js, never on bare media queries, so        */
+/* desktop browsers can't match it. The #graphics canvas is resized to */
+/* the device viewport by touch.js (the engine adapts). The main menu, */
+/* chapter list and win/pause screens reflow to the real viewport      */
+/* (portrait and landscape); only rarely-reached legacy dialogs keep   */
+/* the old scale-to-fit via --dlg-scale. touch.js maintains the vars:  */
+/* --topbar, --safe-top, --dlg-scale, --chapter-zoom.                  */
+
+/* The document must never scroll: parked .bs-screen panels (top:800px)
+   would otherwise extend it past the viewport, and Android pull-to-
+   refresh would tear the game down mid-level. */
+html.touch-mode {
+    overflow: hidden;
+    height: 100%;
+    overscroll-behavior: none;
+}
+
+.touch-mode body {
+    overflow: hidden;
+    height: 100%;
+    overscroll-behavior: none;
+}
 
 .touch-mode .game-box {
     left: 0;
@@ -2313,14 +2332,17 @@ div.active-step {
 }
 
 .touch-mode .level-name {
-    top: 60px;
+    top: calc(var(--topbar, 56px) + 6px);
     width: 100vw;
     z-index: 30;
     pointer-events: none;
+    font-size: 13px;
 }
 
-/* Dialogs keep their internal 800x600 layout and are scaled to fit the
-   viewport as fixed, centered overlays. */
+/* Rarely-reached legacy dialogs (tutorial wizard) keep their internal
+   800x600 layout, scaled to fit the viewport as fixed, centered
+   overlays. The menu / chapters / rating screens are unscaled and
+   reflowed below. */
 .touch-mode .light-box {
     position: fixed;
     left: 50%;
@@ -2332,6 +2354,227 @@ div.active-step {
 
 .touch-mode .paused .light-box {
     margin-top: 0;
+}
+
+/* --- main menu: full-viewport, thumb-sized buttons ---------------- */
+
+.touch-mode #menu-box {
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+             env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+
+/* the compiled engine animates inline margins here (slideMenuTop, a
+   share-offer-era effect) — !important keeps the flex layout intact */
+.touch-mode #menu-box .logo {
+    width: min(64vw, 304px);
+    height: auto;
+    aspect-ratio: 304 / 97;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center;
+    margin: 0 auto 14px auto !important;
+}
+
+.touch-mode #menu-box .instructions {
+    font-size: 14px;
+    padding: 0 24px;
+    margin-bottom: clamp(24px, 6vh, 56px) !important;
+}
+
+.touch-mode .menu-item {
+    display: block;
+    width: min(78vw, 340px);
+    box-sizing: border-box;
+    margin: 7px auto;
+    padding: 16px;
+    font-size: 18px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+}
+
+.touch-mode .menu-item:active {
+    background: rgba(61, 95, 150, 0.45);
+}
+
+/* --- chapter selection: full-viewport list, big cards -------------- */
+
+.touch-mode #chapter-selection {
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    transform: none;
+}
+
+/* the html2canvas blur bar is a fixed 800px desktop trick */
+.touch-mode .chapter-blurry-bar {
+    display: none;
+}
+
+.touch-mode .go-to-menu-button {
+    margin: 0;
+    left: 8px;
+    top: calc(var(--safe-top, 0px) + 8px);
+    padding: 15px 20px;
+    line-height: 1.2;
+    font-size: 15px;
+    opacity: 0.9;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+}
+
+.touch-mode .chapter-headline {
+    width: auto;
+    font-size: 20px;
+    padding: calc(var(--safe-top, 0px) + 20px) 90px 14px 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.touch-mode #chapter-vs {
+    width: 100vw;
+    height: calc(100vh - var(--safe-top, 0px) - 64px);
+    height: calc(100dvh - var(--safe-top, 0px) - 64px);
+}
+
+.touch-mode #chapter-es {
+    width: 100vw;
+    box-sizing: border-box;
+    padding: 8px 0 48px 0;
+    text-align: center;
+}
+
+/* Cards keep their internal 240px design (the engine writes inline px
+   into the progress bar); zoom scales the whole card to finger size.
+   --chapter-zoom is set by touch.js on every refit. */
+.touch-mode .chapter {
+    zoom: var(--chapter-zoom, 1.4);
+    margin: 0 10px 26px 10px;
+}
+
+.touch-mode #chapter-scrollbar {
+    display: none;
+}
+
+/* --- win / pause screen: full-viewport column ---------------------- */
+
+.touch-mode #rating-box {
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding-top: var(--safe-top, 0px);
+    /* Short viewports (landscape phones) can't fit stars + buttons + tape;
+       default flex-start packing + scroll keeps everything reachable, while
+       the auto margins below still centre it when there is room. */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.touch-mode #rating-box .tutorial-layout,
+.touch-mode #rating-box .attempts-layout,
+.touch-mode #rating-box .unlimited-attempts-layout {
+    position: static;
+    width: auto;
+    max-width: 92vw;
+    margin: 8px auto 0 auto;
+}
+
+.touch-mode #rating-box .attempts-left {
+    padding-top: 8px;
+}
+
+.touch-mode #rating-box .rating-inner-layout {
+    position: static;
+    top: auto;
+    margin: auto 0;
+    max-width: 100vw;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.touch-mode #rating-box .chapter-rating-wrap {
+    top: 0;
+}
+
+.touch-mode #rating-box .s-level-name,
+.touch-mode #rating-box .current-chapter-name {
+    font-size: clamp(22px, 6.5vw, 36px);
+}
+
+.touch-mode #rating-box .controls {
+    width: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 12px;
+}
+
+.touch-mode #rating-box .controls button {
+    min-height: 48px;
+    font-size: 16px;
+    min-width: 132px;
+    border-radius: 16px;
+}
+
+.touch-mode #rating-box .tape {
+    position: static;
+    top: auto;
+    margin-top: auto;
+    width: 100vw;
+    box-sizing: border-box;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.touch-mode #tape-vs,
+.touch-mode #tape-scrollbar,
+.touch-mode #tape-scrollbar .track {
+    width: 100vw;
+}
+
+/* prompt windows (unlock confirmations etc.) on narrow screens */
+.touch-mode .prompt-window {
+    width: min(350px, 92vw);
+    left: 50%;
+    margin-left: 0;
+    transform: translateX(-50%);
+    top: max(120px, 24vh);
+}
+
+.touch-mode .prompt-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.touch-mode .prompt-button {
+    width: auto;
+    flex: 1;
+    margin: 0;
+    min-height: 44px;
 }
 
 /* bs-screens (how-to / purchases / friends) are body-level 800px
@@ -2355,42 +2598,58 @@ div.active-step {
 
 .touch-btn {
     min-width: 48px;
-    min-height: 44px;
-    border: none;
-    border-radius: 10px;
-    background: rgba(36, 48, 64, 0.9);
-    color: #cfd8e3;
-    font-size: 16px;
-    padding: 0 12px;
+    min-height: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    background: rgba(22, 30, 42, 0.82);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #e8eef7;
+    font-size: 17px;
+    padding: 0 13px;
     white-space: nowrap;
     -webkit-user-select: none;
     user-select: none;
     touch-action: none;
+    transition: background 120ms ease-out;
 }
 
 .touch-btn:active {
-    background: rgba(57, 70, 90, 0.95);
+    background: rgba(61, 95, 150, 0.6);
+}
+
+.touch-btn-primary {
+    background: rgba(47, 84, 150, 0.88);
+    border-color: rgba(130, 170, 230, 0.45);
+    font-weight: 700;
+}
+
+.touch-btn-primary:active {
+    background: rgba(70, 115, 190, 0.95);
 }
 
 #touch-top {
     display: none;
     position: fixed;
-    top: 5px;
+    top: calc(var(--safe-top, 0px) + 5px);
     left: 50%;
     transform: translateX(-50%);
-    gap: 8px;
+    gap: 7px;
     z-index: 40;
+    max-width: 100vw;
+    box-sizing: border-box;
+    padding: 0 6px;
 }
 
 #touch-toast {
     position: fixed;
     left: 50%;
-    bottom: 40px;
+    bottom: calc(40px + env(safe-area-inset-bottom, 0px));
     transform: translateX(-50%);
     background: rgba(143, 61, 61, 0.95);
     color: #fff;
-    padding: 10px 16px;
-    border-radius: 8px;
+    padding: 12px 18px;
+    border-radius: 14px;
     font-size: 15px;
     opacity: 0;
     transition: opacity 0.2s;
@@ -2423,6 +2682,9 @@ div.active-step {
     font-size: 26px;
     min-width: 56px;
     min-height: 56px;
+    border-radius: 18px;
+    background: rgba(120, 40, 40, 0.88);
+    border-color: rgba(255, 140, 140, 0.4);
 }
 
 /* two-finger rotation: animated dotted line between the fingers */

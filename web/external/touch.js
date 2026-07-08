@@ -30,9 +30,21 @@
 
     document.documentElement.classList.add('touch-mode');
 
-    var TOPBAR = 56;          // px reserved for the chrome bar
+    var TOPBAR = 56;          // px reserved for the chrome bar (56 + notch)
     var STEP = Math.PI / 72;  // 2.5 degrees, the engine's Q/E step
     var GRAB_PX = 30;         // selection pad around a block's own bounds
+
+    // Notched phones: measure env(safe-area-inset-top) through a probe so
+    // the chrome bar and the canvas both start below the cutout.
+    var safeProbe = document.createElement('div');
+    safeProbe.style.cssText = 'position:fixed;left:0;width:0;height:0;' +
+        'visibility:hidden;pointer-events:none;' +
+        'top:env(safe-area-inset-top,0px)';
+    document.documentElement.appendChild(safeProbe);
+    function safeTop() {
+        var t = safeProbe.getBoundingClientRect().top;
+        return t > 0 ? Math.round(t) : 0;
+    }
 
     var state = {
         layout: { left: 0, top: TOPBAR, w: 800, h: 600 },  // canvas layout rect
@@ -56,6 +68,8 @@
     // scaled to fit independently (they keep their internal 800x600).
     function refit() {
         var vw = window.innerWidth, vh = window.innerHeight;
+        var st = safeTop();
+        TOPBAR = 56 + st;
         var c = canvasEl();
         var w = vw, h = Math.max(200, vh - TOPBAR);
         state.layout = { left: 0, top: TOPBAR, w: w, h: h };
@@ -66,8 +80,19 @@
         c.style.position = 'fixed';
         c.style.left = '0';
         c.style.top = TOPBAR + 'px';
-        document.documentElement.style.setProperty(
-            '--dlg-scale', Math.min(vw / 800, vh / 600));
+        var root = document.documentElement.style;
+        root.setProperty('--dlg-scale', Math.min(vw / 800, vh / 600));
+        root.setProperty('--topbar', TOPBAR + 'px');
+        root.setProperty('--safe-top', st + 'px');
+        // Chapter cards keep their internal 240px design and are zoomed to
+        // a comfortable finger size (cards.css: .touch-mode .chapter).
+        root.setProperty('--chapter-zoom',
+            Math.min(1.6, (Math.min(vw, 460) - 32) / 240));
+        // Open scroll lists (chapters, level tape) re-measure after the
+        // viewport changes, e.g. an orientation flip.
+        if (window.dw_scrollObj && dw_scrollObj.refreshAll) {
+            try { dw_scrollObj.refreshAll(); } catch (err) { /* not built yet */ }
+        }
         // The engine re-reads the canvas rect on window resize
         // (updateCanvasPositionAndDimension); flag ours to avoid loops.
         var ev = new Event('resize');
@@ -246,14 +271,16 @@
     }
 
     var top = el('div', 'touch-top');
-    var applyBtn = el('button', 'touch-apply', 'touch-btn', '⚡ Apply');
+    var pauseBtn = el('button', 'touch-pause', 'touch-btn', '⏸');
     var restartBtn = el('button', 'touch-restart', 'touch-btn', '↺');
     var blocksBtn = el('button', 'touch-blocks', 'touch-btn', '▦');
     var hintBtn = el('button', 'touch-hint', 'touch-btn', '💡');
-    top.appendChild(applyBtn);
+    var applyBtn = el('button', 'touch-apply', 'touch-btn touch-btn-primary', '⚡ Apply');
+    top.appendChild(pauseBtn);
     top.appendChild(restartBtn);
     top.appendChild(blocksBtn);
     top.appendChild(hintBtn);
+    top.appendChild(applyBtn);
 
     var toast = el('div', 'touch-toast');
     var flash = el('div', 'touch-flash');
@@ -287,6 +314,13 @@
     proxy(applyBtn, '#toggle-physics');
     proxy(restartBtn, '#restart');
     proxy(hintBtn, '#hint');
+    // Pause = the engine's Esc. Opens the pause dialog (Resume / Restart /
+    // Menu) — the only way off a level on a phone.
+    pauseBtn.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        enqueueKey(27, 3);
+    }, { passive: false });
     blocksBtn.addEventListener('touchstart', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -567,6 +601,33 @@
         }
         return false;
     }
+    // Engine tooltips (GameWizard) anchor to the hidden desktop buttons.
+    // Park those buttons under their touch counterparts so the tooltips
+    // point at real chrome. visibility:hidden inherits from .buttons, so
+    // the desktop nodes stay invisible; only their geometry moves.
+    function mirrorButtons() {
+        var map = [
+            ['#toggle-physics', applyBtn],
+            ['#restart', restartBtn],
+            ['#hint', hintBtn],
+            ['.selector.dynamic', blocksBtn],
+            ['.selector.static', blocksBtn],
+        ];
+        for (var i = 0; i < map.length; i++) {
+            var d = document.querySelector(map[i][0]);
+            if (!d) continue;
+            var r = map[i][1].getBoundingClientRect();
+            if (!r.width) continue;
+            d.style.position = 'fixed';
+            d.style.left = r.left + 'px';
+            d.style.top = r.top + 'px';
+            d.style.width = r.width + 'px';
+            d.style.height = r.height + 'px';
+            d.style.margin = '0';
+            d.style.boxSizing = 'border-box';
+        }
+    }
+
     var wasInLevel = false;
     setInterval(function () {
         // Closed bs-screens park at top:800px — inside a phone viewport,
@@ -581,6 +642,7 @@
         var inLevel = !!buttons && !buttons.classList.contains('hidden');
         var dlg = dialogUp();
         top.style.display = inLevel && !dlg ? 'flex' : 'none';
+        if (inLevel && !dlg) mirrorButtons();
         applyBtn.innerHTML = physicsOn() ? '⏪ Rewind' : '⚡ Apply';
         var rem = remaining();
         blocksBtn.innerHTML = selectedStatic()
@@ -595,6 +657,21 @@
         }
         wasInLevel = inLevel;
     }, 200);
+
+    // ------------------------------------------------------------------
+    // The in-game hints read window.locale at show time; reword the
+    // mouse/keyboard ones for fingers. The locale file loads async
+    // (features.js $.getScript), so poll until it lands.
+    var localeTimer = setInterval(function () {
+        var loc = window.locale;
+        if (!loc || !loc.wizard_place) return;
+        clearInterval(localeTimer);
+        loc.wizard_place = 'Tap to place a block';
+        loc.wizard_rotate = '<b>To rotate the block,</b> touch and turn with two fingers';
+        loc.wizard_remove = '<b>Press and hold a block</b> to pick it up — drag to move it, or tap the trash to remove it';
+        loc.wizard_zoom = '<b>Drag with one finger</b> to move the camera';
+        loc.click_to_unlock = 'Tap to unlock';
+    }, 100);
 
     window.__touch = {
         TOPBAR: TOPBAR, GRAB_PX: GRAB_PX, state: state,

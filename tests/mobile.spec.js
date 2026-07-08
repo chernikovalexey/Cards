@@ -325,8 +325,113 @@ test('scroll lists respond to touch drag (scrollbar.js native path)', async ({ p
     await page.locator('#resume-game').tap();
 });
 
+// --- native touch chrome (v3): the menu, chapter list, in-game top bar
+// and pause/rating screens reflow to the real viewport instead of the old
+// scale-to-fit. Every interactive control must be a finger-sized target
+// (>= 44px) and sit inside the viewport.
+const MIN_TAP = 44;
+
+async function bootMenu(page) {
+    await page.addInitScript(() => localStorage.setItem('seen_howto', 'true'));
+    await page.goto('/web/cards.html');
+    await expect(page.locator('#new-game')).toBeVisible({ timeout: 30000 });
+}
+
+test('main menu: full-width thumb-sized buttons inside the viewport', async ({ page }) => {
+    await bootMenu(page);
+    const box = await page.locator('#menu-box').boundingBox();
+    // the box fills the viewport, it is not a small centered 800x600 card
+    expect(box.width).toBeGreaterThan(page.viewportSize().width - 2);
+    for (const id of ['#new-game', '#continue']) {
+        const b = await page.locator(id).boundingBox();
+        expect(b.height).toBeGreaterThanOrEqual(MIN_TAP);
+        expect(b.width).toBeGreaterThan(page.viewportSize().width * 0.5);
+        expect(b.x).toBeGreaterThanOrEqual(-1);
+        expect(b.x + b.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
+        expect(b.y + b.height).toBeLessThanOrEqual(page.viewportSize().height + 1);
+    }
+});
+
+test('chapter list: big Menu pill, zoomed cards, no desktop blur bar', async ({ page }) => {
+    await bootMenu(page);
+    await page.locator('#new-game').tap();
+    await expect(page.locator('#chapter-selection')).toBeVisible();
+    await page.waitForTimeout(400);
+    const menuBtn = await page.locator('.go-to-menu-button').boundingBox();
+    expect(menuBtn.height).toBeGreaterThanOrEqual(MIN_TAP);
+    // the html2canvas desktop blur bar is hidden in touch mode
+    const blurShown = await page.evaluate(() =>
+        getComputedStyle(document.querySelector('.chapter-blurry-bar')).display !== 'none');
+    expect(blurShown).toBe(false);
+    // cards are zoomed for fingers (zoom var applied)
+    const zoom = await page.evaluate(() =>
+        getComputedStyle(document.querySelector('.chapter')).zoom);
+    expect(parseFloat(zoom)).toBeGreaterThan(1);
+    // the whole list fits the width — first card is not clipped off-screen
+    const card = await page.locator('.chapter[data-id="1"]').boundingBox();
+    expect(card.x).toBeGreaterThanOrEqual(-1);
+    expect(card.x + card.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
+});
+
+test('in-game top bar: pause button present, all targets finger-sized', async ({ page }) => {
+    await enterLevel11(page);
+    for (const id of ['#touch-pause', '#touch-restart', '#touch-blocks',
+                      '#touch-hint', '#touch-apply']) {
+        await expect(page.locator(id)).toBeVisible();
+        const b = await page.locator(id).boundingBox();
+        expect(b.height).toBeGreaterThanOrEqual(MIN_TAP);
+        expect(b.width).toBeGreaterThanOrEqual(MIN_TAP);
+    }
+    // the whole bar fits the viewport width
+    const bar = await page.locator('#touch-top').boundingBox();
+    expect(bar.x).toBeGreaterThanOrEqual(-1);
+    expect(bar.x + bar.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
+});
+
+test('pause button opens the pause dialog (resume returns to the level)', async ({ page }) => {
+    await enterLevel11(page);
+    await page.locator('#touch-pause').tap();
+    await expect(page.locator('#rating-box')).toBeVisible();
+    await expect(page.locator('.pause-controls')).toBeVisible();
+    // the pause dialog buttons are finger-sized and on-screen
+    for (const id of ['#resume-game', '#clear-level', '#pm-menu']) {
+        const b = await page.locator(id).boundingBox();
+        expect(b.height).toBeGreaterThanOrEqual(MIN_TAP);
+        expect(b.x).toBeGreaterThanOrEqual(-1);
+        expect(b.x + b.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
+    }
+    await page.locator('#resume-game').tap();
+    await expect(page.locator('#rating-box')).toBeHidden();
+    await expect(page.locator('#touch-apply')).toBeVisible();
+});
+
+test('in-game hints are reworded for touch (no mouse/click wording)', async ({ page }) => {
+    await enterLevel11(page);
+    const loc = await page.evaluate(() => ({
+        place: window.locale.wizard_place,
+        remove: window.locale.wizard_remove,
+    }));
+    expect(loc.place.toLowerCase()).toContain('tap');
+    expect(loc.place.toLowerCase()).not.toContain('click');
+    expect(loc.remove.toLowerCase()).not.toContain('mouse');
+});
+
 test.describe('landscape', () => {
     test.use({ viewport: { width: 915, height: 412 } });
+
+    test('menu and chapter list fit the landscape viewport', async ({ page }) => {
+        await bootMenu(page);
+        for (const id of ['#new-game', '#continue']) {
+            const b = await page.locator(id).boundingBox();
+            expect(b.y + b.height).toBeLessThanOrEqual(page.viewportSize().height + 1);
+            expect(b.height).toBeGreaterThanOrEqual(MIN_TAP);
+        }
+        await page.locator('#new-game').tap();
+        await expect(page.locator('#chapter-selection')).toBeVisible();
+        const menuBtn = await page.locator('.go-to-menu-button').boundingBox();
+        expect(menuBtn.height).toBeGreaterThanOrEqual(MIN_TAP);
+        expect(menuBtn.y).toBeGreaterThanOrEqual(-1);
+    });
 
     test('responsive canvas, tap-place, and dialogs fit in landscape', async ({ page }) => {
         await enterLevel11(page);
