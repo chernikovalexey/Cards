@@ -282,6 +282,16 @@
     top.appendChild(hintBtn);
     top.appendChild(applyBtn);
 
+    // Camera zoom lives in its own vertical +/- control docked on the right
+    // edge (map-app style): the two-finger gesture is taken by rotation, so
+    // pinch-zoom is unavailable, and the top action bar has no room for two
+    // more buttons on a narrow phone.
+    var zoomWrap = el('div', 'touch-zoom');
+    var zoomInBtn = el('button', 'touch-zoom-in', 'touch-btn', '+');
+    var zoomOutBtn = el('button', 'touch-zoom-out', 'touch-btn', '−');
+    zoomWrap.appendChild(zoomInBtn);
+    zoomWrap.appendChild(zoomOutBtn);
+
     var toast = el('div', 'touch-toast');
     var flash = el('div', 'touch-flash');
     var trash = el('button', 'touch-trash', 'touch-btn', '🗑');
@@ -295,6 +305,7 @@
 
     function mountChrome() {
         document.body.appendChild(top);
+        document.body.appendChild(zoomWrap);
         document.body.appendChild(toast);
         document.body.appendChild(flash);
         document.body.appendChild(trash);
@@ -314,6 +325,8 @@
     proxy(applyBtn, '#toggle-physics');
     proxy(restartBtn, '#restart');
     proxy(hintBtn, '#hint');
+    proxy(zoomInBtn, '#zoom-in');
+    proxy(zoomOutBtn, '#zoom-out');
     // Pause = the engine's Esc. Opens the pause dialog (Resume / Restart /
     // Menu) — the only way off a level on a phone.
     pauseBtn.addEventListener('touchstart', function (e) {
@@ -610,6 +623,8 @@
             ['#toggle-physics', applyBtn],
             ['#restart', restartBtn],
             ['#hint', hintBtn],
+            ['#zoom-in', zoomInBtn],
+            ['#zoom-out', zoomOutBtn],
             ['.selector.dynamic', blocksBtn],
             ['.selector.static', blocksBtn],
         ];
@@ -641,8 +656,10 @@
         var buttons = document.querySelector('.buttons');
         var inLevel = !!buttons && !buttons.classList.contains('hidden');
         var dlg = dialogUp();
-        top.style.display = inLevel && !dlg ? 'flex' : 'none';
-        if (inLevel && !dlg) mirrorButtons();
+        var showChrome = inLevel && !dlg;
+        top.style.display = showChrome ? 'flex' : 'none';
+        zoomWrap.style.display = showChrome ? 'flex' : 'none';
+        if (showChrome) mirrorButtons();
         applyBtn.innerHTML = physicsOn() ? '⏪ Rewind' : '⚡ Apply';
         var rem = remaining();
         blocksBtn.innerHTML = selectedStatic()

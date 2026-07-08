@@ -388,6 +388,36 @@ test('in-game top bar: pause button present, all targets finger-sized', async ({
     expect(bar.x + bar.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
 });
 
+test('zoom control: finger-sized +/- on the right edge, drives engine zoom', async ({ page }) => {
+    await enterLevel11(page);
+    // two-finger is taken by rotate, so a dedicated zoom control must exist
+    for (const id of ['#touch-zoom-in', '#touch-zoom-out']) {
+        await expect(page.locator(id)).toBeVisible();
+        const b = await page.locator(id).boundingBox();
+        expect(b.height).toBeGreaterThanOrEqual(MIN_TAP);
+        expect(b.width).toBeGreaterThanOrEqual(MIN_TAP);
+        // docked on the right edge, inside the viewport
+        expect(b.x + b.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
+        expect(b.x).toBeGreaterThan(page.viewportSize().width / 2);
+    }
+    // taps reach the engine's zoom handlers (#zoom-in / #zoom-out)
+    const counts = await page.evaluate(() => {
+        const c = { in: 0, out: 0 };
+        document.querySelector('#zoom-in').addEventListener('click', () => c.in++);
+        document.querySelector('#zoom-out').addEventListener('click', () => c.out++);
+        window.__zoomCounts = c;
+        return true;
+    });
+    expect(counts).toBe(true);
+    await page.locator('#touch-zoom-in').tap();
+    await page.locator('#touch-zoom-in').tap();
+    await page.locator('#touch-zoom-out').tap();
+    await page.waitForTimeout(200);
+    const c = await page.evaluate(() => window.__zoomCounts);
+    expect(c.in).toBe(2);
+    expect(c.out).toBe(1);
+});
+
 test('pause button opens the pause dialog (resume returns to the level)', async ({ page }) => {
     await enterLevel11(page);
     await page.locator('#touch-pause').tap();
