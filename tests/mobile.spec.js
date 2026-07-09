@@ -199,6 +199,46 @@ test('two-finger rotate places the block when the fingers lift', async ({ page }
     expect(cards[0].a).toBeCloseTo(Math.round(ang / (Math.PI / 72)) * Math.PI / 72, 2);
 });
 
+test('two-finger rotation is softly magnetic at 15-degree angles', async ({ page }) => {
+    await page.goto('/web/cards.html');
+    await expect(page.locator('#new-game')).toBeVisible({ timeout: 30000 });
+    const steps = await page.evaluate(() => {
+        const at = (degrees) =>
+            window.__touch.magneticAngleSteps(degrees * Math.PI / 180);
+        return {
+            below: at(12.5),
+            exact: at(15),
+            above: at(17.5),
+            freeBelow: at(10),
+            freeAbove: at(20),
+            negative: at(-12.5),
+        };
+    });
+    expect(steps).toEqual({
+        below: 6,
+        exact: 6,
+        above: 6,
+        freeBelow: 4,
+        freeAbove: 8,
+        negative: -6,
+    });
+});
+
+test('touch placement softly joins nearby block ends', async ({ page }) => {
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 2.0);
+    await tapPlace(page, p.x, p.y);
+
+    // A horizontal card is 45 screen pixels long. Aim 55px from the first
+    // center: its ends are 10px apart, inside the 18px attraction radius.
+    // The magnet should leave the configured 4px collision-safe gap.
+    await tapPlace(page, p.x + 55, p.y);
+
+    const cards = (await probeCards(page)).sort((a, b) => a.x - b.x);
+    expect(cards.length).toBe(2);
+    expect((cards[1].x - cards[0].x) * NSCALE).toBeCloseTo(49, 0);
+});
+
 test('one-finger drag pans the camera', async ({ page }) => {
     await enterLevel11(page);
     const p = await screenForWorld(page, 1, 1, 2.5, 2.2);
@@ -375,7 +415,7 @@ test('chapter list: big Menu pill, zoomed cards, no desktop blur bar', async ({ 
 
 test('in-game top bar: pause button present, all targets finger-sized', async ({ page }) => {
     await enterLevel11(page);
-    for (const id of ['#touch-pause', '#touch-restart', '#touch-blocks',
+    for (const id of ['#touch-pause', '#touch-restart',
                       '#touch-hint', '#touch-apply']) {
         await expect(page.locator(id)).toBeVisible();
         const b = await page.locator(id).boundingBox();
@@ -386,6 +426,22 @@ test('in-game top bar: pause button present, all targets finger-sized', async ({
     const bar = await page.locator('#touch-top').boundingBox();
     expect(bar.x).toBeGreaterThanOrEqual(-1);
     expect(bar.x + bar.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
+});
+
+test('block and wall selectors are both visible on touch', async ({ page }) => {
+    await enterLevel11(page);
+    const dynamic = page.locator('#touch-block-dynamic');
+    const statik = page.locator('#touch-block-static');
+    await expect(dynamic).toBeVisible();
+    await expect(statik).toBeVisible();
+    await expect(dynamic).toContainText('Block');
+    await expect(statik).toContainText('Wall');
+    await expect(dynamic).toHaveClass(/selected/);
+    for (const button of [dynamic, statik]) {
+        const b = await button.boundingBox();
+        expect(b.height).toBeGreaterThanOrEqual(MIN_TAP);
+        expect(b.width).toBeGreaterThanOrEqual(MIN_TAP);
+    }
 });
 
 test('zoom control: finger-sized +/- on the right edge, drives engine zoom', async ({ page }) => {

@@ -63,6 +63,8 @@ void main() {
     // selection of placed cards with finger-friendly padded bounds.
     context['TouchBridge'] = new JsObject.jsify({});
     context['TouchBridge']['grabCardAt'] = (num qx, num qy, num tol) => engine.grabCardAt(qx, qy, tol);
+    context['TouchBridge']['snapCardAt'] = (num qx, num qy, num angle, num tol, num gap) =>
+        engine.snapCardAt(qx, qy, angle, tol, gap);
 
     canvas.onMouseMove.listen(Input.onMouseMove);
     canvas.onMouseDown.listen(Input.onMouseDown);

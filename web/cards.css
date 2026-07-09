@@ -2641,6 +2641,29 @@ html.touch-mode {
     padding: 0 6px;
 }
 
+/* Both block types stay explicit and visible on touch. */
+#touch-blocks {
+    display: none;
+    position: fixed;
+    left: 50%;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    gap: 8px;
+    z-index: 40;
+}
+
+#touch-blocks .touch-btn {
+    min-width: 112px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+#touch-blocks .touch-btn.selected {
+    background: rgba(61, 95, 150, 0.9);
+    border-color: rgba(160, 195, 245, 0.8);
+    box-shadow: 0 0 0 2px rgba(100, 150, 225, 0.3);
+}
+
 /* Vertical zoom control docked on the right edge. Two-finger is taken by
    rotate, so pinch-zoom is unavailable — these drive engine.zoom(). */
 #touch-zoom {

@@ -32,6 +32,10 @@
 
     var TOPBAR = 56;          // px reserved for the chrome bar (56 + notch)
     var STEP = Math.PI / 72;  // 2.5 degrees, the engine's Q/E step
+    var MAGNET_STEPS = 6;     // preferred angles are 15 degrees apart
+    var MAGNET_RADIUS = 1;    // attract only the adjacent 2.5-degree step
+    var POSITION_MAGNET_PX = 18;
+    var POSITION_GAP_PX = 4;
     var GRAB_PX = 30;         // selection pad around a block's own bounds
 
     // Notched phones: measure env(safe-area-inset-top) through a probe so
@@ -222,6 +226,13 @@
         var cur = document.querySelector('.selector.current');
         return !!cur && cur.classList.contains('static');
     }
+    function magneticPosition(q) {
+        if (!window.TouchBridge || !TouchBridge.snapCardAt) return q;
+        var snapped = TouchBridge.snapCardAt(
+            q.x, q.y, state.angleSteps * STEP,
+            POSITION_MAGNET_PX, POSITION_GAP_PX);
+        return snapped ? { x: snapped.x, y: snapped.y } : q;
+    }
 
     // q: layout point to place at. onDone(placed:boolean). Queued behind any
     // pending rotation key frames, so a rotate gesture settles first.
@@ -239,6 +250,7 @@
             return;
         }
         whenKeysIdle(function () {
+            q = magneticPosition(q);
             moveGhost(q);
             raf2(function () {              // box2d refreshes ghost contacts
                 var before = remaining();
@@ -273,12 +285,15 @@
     var top = el('div', 'touch-top');
     var pauseBtn = el('button', 'touch-pause', 'touch-btn', '⏸');
     var restartBtn = el('button', 'touch-restart', 'touch-btn', '↺');
-    var blocksBtn = el('button', 'touch-blocks', 'touch-btn', '▦');
     var hintBtn = el('button', 'touch-hint', 'touch-btn', '💡');
     var applyBtn = el('button', 'touch-apply', 'touch-btn touch-btn-primary', '⚡ Apply');
+    var blocksWrap = el('div', 'touch-blocks');
+    var dynamicBtn = el('button', 'touch-block-dynamic', 'touch-btn', '▦ Block');
+    var staticBtn = el('button', 'touch-block-static', 'touch-btn', '▤ Wall');
+    blocksWrap.appendChild(dynamicBtn);
+    blocksWrap.appendChild(staticBtn);
     top.appendChild(pauseBtn);
     top.appendChild(restartBtn);
-    top.appendChild(blocksBtn);
     top.appendChild(hintBtn);
     top.appendChild(applyBtn);
 
@@ -305,6 +320,7 @@
 
     function mountChrome() {
         document.body.appendChild(top);
+        document.body.appendChild(blocksWrap);
         document.body.appendChild(zoomWrap);
         document.body.appendChild(toast);
         document.body.appendChild(flash);
@@ -334,14 +350,16 @@
         e.stopPropagation();
         enqueueKey(27, 3);
     }, { passive: false });
-    blocksBtn.addEventListener('touchstart', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var other = selectedStatic()
-            ? document.querySelector('.selector.dynamic')
-            : document.querySelector('.selector.static');
-        if (other && !other.hidden) other.click();
-    }, { passive: false });
+    function selectBlock(btn, selector) {
+        btn.addEventListener('touchstart', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var target = document.querySelector(selector);
+            if (target && !target.hidden) target.click();
+        }, { passive: false });
+    }
+    selectBlock(dynamicBtn, '.selector.dynamic');
+    selectBlock(staticBtn, '.selector.static');
 
     var toastTimer = null;
     function rejectFeedback(msg) {
@@ -389,10 +407,17 @@
     // Two-finger rotation with the animated dotted line. Lifting the
     // fingers places the block right there — no extra tap needed.
     var rot = null;   // {midQ}
+    function magneticAngleSteps(angle) {
+        var raw = Math.round(angle / STEP);
+        var preferred = Math.round(raw / MAGNET_STEPS) * MAGNET_STEPS;
+        // Keep every 2.5-degree angle available. Only the immediately
+        // adjacent steps are pulled onto a preferred 15-degree angle.
+        return Math.abs(raw - preferred) <= MAGNET_RADIUS ? preferred : raw;
+    }
     function rotAngleSteps(t0, t1) {
         // screen y grows downward; world angle grows counter-clockwise
         var a = Math.atan2(-(t1.clientY - t0.clientY), t1.clientX - t0.clientX);
-        return Math.round(a / STEP);
+        return magneticAngleSteps(a);
     }
     function startRotate(t0, t1) {
         cancelTapTracking();
@@ -625,8 +650,8 @@
             ['#hint', hintBtn],
             ['#zoom-in', zoomInBtn],
             ['#zoom-out', zoomOutBtn],
-            ['.selector.dynamic', blocksBtn],
-            ['.selector.static', blocksBtn],
+            ['.selector.dynamic', dynamicBtn],
+            ['.selector.static', staticBtn],
         ];
         for (var i = 0; i < map.length; i++) {
             var d = document.querySelector(map[i][0]);
@@ -658,13 +683,15 @@
         var dlg = dialogUp();
         var showChrome = inLevel && !dlg;
         top.style.display = showChrome ? 'flex' : 'none';
+        blocksWrap.style.display = showChrome ? 'flex' : 'none';
         zoomWrap.style.display = showChrome ? 'flex' : 'none';
         if (showChrome) mirrorButtons();
         applyBtn.innerHTML = physicsOn() ? '⏪ Rewind' : '⚡ Apply';
         var rem = remaining();
-        blocksBtn.innerHTML = selectedStatic()
-            ? ('▤ ' + (rem.s === null ? '' : rem.s))
-            : ('▦ ' + (rem.d === null ? '' : rem.d));
+        dynamicBtn.innerHTML = '▦ Block ' + (rem.d === null ? '' : rem.d);
+        staticBtn.innerHTML = '▤ Wall ' + (rem.s === null ? '' : rem.s);
+        dynamicBtn.classList.toggle('selected', !selectedStatic());
+        staticBtn.classList.toggle('selected', selectedStatic());
         if (!inLevel || dlg) {
             hideTrash();
         }
@@ -693,5 +720,6 @@
     window.__touch = {
         TOPBAR: TOPBAR, GRAB_PX: GRAB_PX, state: state,
         toLayout: toLayout, moveGhost: moveGhost, placeAt: placeAt,
+        magneticAngleSteps: magneticAngleSteps, magneticPosition: magneticPosition,
     };
 })();

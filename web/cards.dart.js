@@ -2224,7 +2224,7 @@
         case "error":
           throw H.wrapException(t1.$index(msg, "msg"));
       }
-    }, null, null, 4, 0, null, 19, 2],
+    }, null, null, 4, 0, null, 22, 2],
     IsolateNatives__log: function(msg) {
       var trace, t1, t2, exception;
       if (init.globalState.isWorker === true) {
@@ -3558,7 +3558,7 @@
           return H._callInIsolate(isolate, new H.invokeClosure_closure3(closure, arg1, arg2, arg3, arg4));
       }
       throw H.wrapException(P.Exception_Exception("Unsupported number of arguments for wrapped closure"));
-    }, null, null, 14, 0, null, 20, 21, 26, 22, 23, 34, 36],
+    }, null, null, 14, 0, null, 23, 24, 30, 25, 26, 38, 40],
     convertDartClosureToJS: function(closure, arity) {
       var $function;
       if (closure == null)
@@ -4890,7 +4890,7 @@
       "^": "Closure:1;$this",
       call$1: [function(each) {
         return this.$this.$index(0, each);
-      }, null, null, 2, 0, null, 38, "call"]
+      }, null, null, 2, 0, null, 41, "call"]
     },
     LinkedHashMapCell: {
       "^": "Object;hashMapCellKey<,hashMapCellValue@,_next<,_previous<"
@@ -4943,7 +4943,7 @@
       }
     },
     initHooks_closure0: {
-      "^": "Closure:43;getUnknownTag",
+      "^": "Closure:30;getUnknownTag",
       call$2: function(o, tag) {
         return this.getUnknownTag(o, tag);
       }
@@ -5582,7 +5582,7 @@
       }
     },
     _nullDataHandler: [function(value) {
-    }, "call$1", "async___nullDataHandler$closure", 2, 0, 47, 5],
+    }, "call$1", "async___nullDataHandler$closure", 2, 0, 48, 4],
     _nullErrorHandler: [function(error, stackTrace) {
       var t1 = $.Zone__current;
       t1.toString;
@@ -5728,10 +5728,10 @@
         f = t1.storedCallback;
         t1.storedCallback = null;
         f.call$0();
-      }, null, null, 2, 0, null, 4, "call"]
+      }, null, null, 2, 0, null, 5, "call"]
     },
     _AsyncRun__initializeScheduleImmediate_closure: {
-      "^": "Closure:35;_box_0,div,span",
+      "^": "Closure:37;_box_0,div,span",
       call$1: function(callback) {
         var t1, t2;
         ++init.globalState.topEventLoop._activeJsAsyncCount;
@@ -6403,10 +6403,10 @@
         var t1 = this.target;
         t1._clearPendingComplete$0();
         t1._complete$1(value);
-      }, null, null, 2, 0, null, 5, "call"]
+      }, null, null, 2, 0, null, 4, "call"]
     },
     _Future__chainForeignFuture_closure0: {
-      "^": "Closure:57;target",
+      "^": "Closure:27;target",
       call$2: [function(error, stackTrace) {
         this.target._completeError$2(error, stackTrace);
       }, function(error) {
@@ -6487,7 +6487,7 @@
       "^": "Closure:1;originalSource",
       call$1: [function(_) {
         return this.originalSource;
-      }, null, null, 2, 0, null, 4, "call"]
+      }, null, null, 2, 0, null, 5, "call"]
     },
     _Future__propagateToListeners_handleValueCallback: {
       "^": "Closure:2;_box_0,listener,sourceResult",
@@ -6620,7 +6620,7 @@
       "^": "Closure:1;_box_0",
       call$1: [function(_) {
         ++this._box_0.count;
-      }, null, null, 2, 0, null, 4, "call"]
+      }, null, null, 2, 0, null, 5, "call"]
     },
     Stream_length_closure0: {
       "^": "Closure:0;_box_0,future",
@@ -6632,7 +6632,7 @@
       "^": "Closure:1;_box_0,future",
       call$1: [function(_) {
         P._cancelAndValue(this._box_0.subscription, this.future, false);
-      }, null, null, 2, 0, null, 4, "call"]
+      }, null, null, 2, 0, null, 5, "call"]
     },
     Stream_isEmpty_closure0: {
       "^": "Closure:0;future",
@@ -7205,7 +7205,7 @@
       }
     },
     _cancelAndErrorClosure_closure: {
-      "^": "Closure:30;subscription,future",
+      "^": "Closure:31;subscription,future",
       call$2: function(error, stackTrace) {
         P._cancelAndError(this.subscription, this.future, error, stackTrace);
       }
@@ -7278,7 +7278,7 @@
       }, 8],
       _handleError$2: [function(error, stackTrace) {
         this._stream._handleError$3(error, stackTrace, this);
-      }, "call$2", "get$_handleError", 4, 0, 34, 6, 7],
+      }, "call$2", "get$_handleError", 4, 0, 36, 6, 7],
       _handleDone$0: [function() {
         this._async$_close$0();
       }, "call$0", "get$_handleDone", 0, 0, 2],
@@ -7510,7 +7510,7 @@
       "^": "Closure:1;$this,f",
       call$1: [function(arg) {
         return this.$this.runUnaryGuarded$2(this.f, arg);
-      }, null, null, 2, 0, null, 24, "call"]
+      }, null, null, 2, 0, null, 27, "call"]
     }
   }], ["dart.collection", "dart:collection",, P, {
     "^": "",
@@ -8787,7 +8787,7 @@
         if (this._processed != null && !this.containsKey$1(0, key))
           return;
         return this._upgrade$0().remove$1(0, key);
-      }, "call$1", "get$remove", 2, 0, 36],
+      }, "call$1", "get$remove", 2, 0, 39],
       forEach$1: function(_, f) {
         var keys, i, key, value;
         if (this._processed == null)
@@ -9173,7 +9173,7 @@
     "^": "",
     Comparable_compare: [function(a, b) {
       return J.compareTo$1$ns(a, b);
-    }, "call$2", "core_Comparable_compare$closure", 4, 0, 48, 25, 44],
+    }, "call$2", "core_Comparable_compare$closure", 4, 0, 49, 28, 29],
     Error_safeToString: function(object) {
       if (typeof object === "number" || typeof object === "boolean" || null == object)
         return J.toString$0$(object);
@@ -9196,7 +9196,7 @@
       return P.int_parse(source, null, null);
     }, function(source, onError) {
       return P.int_parse(source, onError, null);
-    }, "call$3$onError$radix", "call$1", "call$2$onError", "core_int_parse$closure", 2, 5, 49, 1, 1],
+    }, "call$3$onError$radix", "call$1", "call$2$onError", "core_int_parse$closure", 2, 5, 50, 1, 1],
     List_List$from: function(elements, growable, $E) {
       var list, t1;
       list = H.setRuntimeTypeInfo([], [$E]);
@@ -9226,7 +9226,7 @@
       return new H.JSSyntaxRegExp(source, H.JSSyntaxRegExp_makeNative(source, false, caseSensitive, false), null, null);
     },
     NoSuchMethodError_toString_closure: {
-      "^": "Closure:39;_box_0,sb",
+      "^": "Closure:43;_box_0,sb",
       call$2: function(key, value) {
         var t1, t2, t3;
         t1 = this.sb;
@@ -10029,7 +10029,7 @@
     },
     Element__determineMouseWheelEventType: [function(e) {
       return "wheel";
-    }, "call$1", "html_Element__determineMouseWheelEventType$closure", 2, 0, 50, 2],
+    }, "call$1", "html_Element__determineMouseWheelEventType$closure", 2, 0, 51, 2],
     Element__safeTagName: function(element) {
       var result, t1, t2, exception;
       result = "element tag unavailable";
@@ -10417,7 +10417,7 @@
       },
       remove$1: [function(receiver, tokens) {
         return receiver.remove(tokens);
-      }, "call$1", "get$remove", 2, 0, 31],
+      }, "call$1", "get$remove", 2, 0, 34],
       "%": "DOMTokenList"
     },
     _ChildrenElementList: {
@@ -10825,7 +10825,7 @@
       "%": "XMLHttpRequest"
     },
     HttpRequest_getString_closure: {
-      "^": "Closure:27;",
+      "^": "Closure:35;",
       call$1: function(xhr) {
         return J.get$responseText$x(xhr);
       }
@@ -11200,7 +11200,7 @@
         var value = receiver.getItem(key);
         receiver.removeItem(key);
         return value;
-      }, "call$1", "get$remove", 2, 0, 13],
+      }, "call$1", "get$remove", 2, 0, 11],
       forEach$1: function(receiver, f) {
         var i, key;
         for (i = 0; true; ++i) {
@@ -11615,7 +11615,7 @@
         value = t1.getAttribute(key);
         t1.removeAttribute(key);
         return value;
-      }, "call$1", "get$remove", 2, 0, 13],
+      }, "call$1", "get$remove", 2, 0, 11],
       get$length: function(_) {
         return this.get$keys(this).length;
       }
@@ -11638,7 +11638,7 @@
         value = t2.getAttribute(t1);
         t2.removeAttribute(t1);
         return value;
-      }, "call$1", "get$remove", 2, 0, 13],
+      }, "call$1", "get$remove", 2, 0, 11],
       forEach$1: function(_, f) {
         this._attributes.forEach$1(0, new W._DataAttributeMap_forEach_closure(this, f));
       },
@@ -11753,7 +11753,7 @@
       }
     },
     _MultiElementCssClassSet_remove_closure: {
-      "^": "Closure:46;value",
+      "^": "Closure:47;value",
       call$2: function(changed, e) {
         return J.remove$1$ax(e, this.value) === true || changed === true;
       }
@@ -11959,10 +11959,10 @@
         },
         _Html5NodeValidator__standardAttributeValidator: [function(element, attributeName, value, context) {
           return true;
-        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 26, 9, 15, 5, 16],
+        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 26, 9, 12, 4, 15],
         _Html5NodeValidator__uriAttributeValidator: [function(element, attributeName, value, context) {
           return context.get$uriPolicy().allowsUri$1(value);
-        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 26, 9, 15, 5, 16]
+        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 26, 9, 12, 4, 15]
       }
     },
     ImmutableListMixin: {
@@ -12011,7 +12011,7 @@
       "^": "Closure:1;tagNameUpper",
       call$1: [function($name) {
         return this.tagNameUpper + "::" + J.toLowerCase$0$s($name);
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 31, "call"]
     },
     NodeValidatorBuilder_allowsElement_closure: {
       "^": "Closure:1;element",
@@ -12130,7 +12130,7 @@
       "^": "Closure:1;",
       call$1: [function(attr) {
         return "TEMPLATE::" + H.S(attr);
-      }, null, null, 2, 0, null, 28, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     _SvgNodeValidator: {
       "^": "Object;",
@@ -12368,7 +12368,7 @@
       }
     },
     _ValidatingTreeSanitizer_sanitizeTree_walk: {
-      "^": "Closure:51;$this",
+      "^": "Closure:52;$this",
       call$2: function(node, $parent) {
         var child, nextChild, t1, exception, t2, t3;
         t1 = this.$this;
@@ -12593,7 +12593,7 @@
       "^": "Closure:1;",
       call$1: [function(n) {
         return H.interceptedTypeCast(n, "$isElement");
-      }, null, null, 2, 0, null, 29, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     FilteredElementList_removeRange_closure: {
       "^": "Closure:1;",
@@ -12620,7 +12620,7 @@
       dartArgs = P.List_List$from(J.map$1$ax($arguments, P.js___convertToDart$closure()), true, null);
       t1 = H.Primitives_applyFunctionWithPositionalArguments(callback, dartArgs);
       return P._convertToJS(t1);
-    }, null, null, 8, 0, null, 30, 37, 32, 33],
+    }, null, null, 8, 0, null, 34, 35, 46, 37],
     _defineProperty: function(o, $name, value) {
       var exception;
       try {
@@ -12683,7 +12683,7 @@
         else
           return P._wrapToDart(o);
       }
-    }, "call$1", "js___convertToDart$closure", 2, 0, 52, 10],
+    }, "call$1", "js___convertToDart$closure", 2, 0, 53, 10],
     _wrapToDart: function(o) {
       if (typeof o == "function")
         return P._getDartProxy(o, $.$get$DART_CLOSURE_PROPERTY_NAME(), new P._wrapToDart_closure());
@@ -13828,7 +13828,7 @@
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(null);
         }
-      }, "call$1", "get$_advance", 2, 0, 54, 35],
+      }, "call$1", "get$_advance", 2, 0, 55, 39],
       _doesPropertyNeedUnit$1: function(propertyName) {
         var el, t1;
         el = document.createElement("div");
@@ -17273,7 +17273,7 @@
           t2.set$prev(c.get$edge2());
         bodyB.contactList = c.get$edge2();
         ++this.contactCount;
-      }, "call$2", "get$_addPair", 4, 0, 56],
+      }, "call$2", "get$_addPair", 4, 0, 57],
       destroy$1: function(c) {
         var fixtureA, fixtureB, bodyA, bodyB, t1, type1, type2;
         fixtureA = c.get$fixtureA();
@@ -20586,6 +20586,8 @@
           t1[3] = t1[3] * arg;
           return t2;
         }
+        if (arg instanceof T.Vector2)
+          return this.transformed$1(arg);
         arg.get$dimension();
         throw H.wrapException(P.ArgumentError$(arg));
       },
@@ -20681,6 +20683,9 @@
         argStorage[0] = t2 * t3 + t4 * t5;
         argStorage[1] = t6 * t3 + t1 * t5;
         return out;
+      },
+      transformed$1: function(arg) {
+        return this.transformed$2(arg, null);
       }
     },
     Vector2: {
@@ -21258,7 +21263,7 @@
         t2 = this.ready;
         if (t2 != null)
           t2.call$1(t1);
-      }, null, null, 4, 0, null, 11, 17, "call"]
+      }, null, null, 4, 0, null, 11, 16, "call"]
     }
   }], ["", "ChapterShower.dart",, O, {
     "^": "",
@@ -21318,7 +21323,7 @@
       t2 = new W._FrozenElementList(t1.querySelectorAll(".chapter"), [null]);
       t2.forEach$1(t2, new O.ChapterShower_show_closure2());
       J._addEventListener$3$x(t1.querySelector(".go-to-menu-button"), "click", new O.ChapterShower_show_closure3(), false);
-    }, "call$1", "ChapterShower_ChapterShower_show$closure", 2, 0, 53],
+    }, "call$1", "ChapterShower_ChapterShower_show$closure", 2, 0, 54],
     ChapterShower_show_closure: {
       "^": "Closure:0;",
       call$0: function() {
@@ -21330,7 +21335,7 @@
       call$2: [function(x, y) {
         var t1 = document.querySelector("#chapter-blur-g").style;
         (t1 && C.CssStyleDeclaration_methods).setProperty$3(t1, "transform", C.JSString_methods.$add("translatey(", J.toString$0$(J.$add$ns(y, 76))) + "px)", "");
-      }, null, null, 4, 0, null, 3, 18, "call"]
+      }, null, null, 4, 0, null, 3, 17, "call"]
     },
     ChapterShower_show_closure1: {
       "^": "Closure:23;",
@@ -21343,10 +21348,10 @@
         t2 = J.getInterceptor$x(g);
         t2.set$fillStyle(g, "rgba(0, 0, 0, 0.5)");
         t2.fillRect$4(g, 0, 0, t1.get$width(canvas), t1.get$height(canvas));
-      }, null, null, 2, 0, null, 12, "call"]
+      }, null, null, 2, 0, null, 18, "call"]
     },
     ChapterShower_show_closure2: {
-      "^": "Closure:14;",
+      "^": "Closure:13;",
       call$1: function(e) {
         J.addEventListener$3$x(e, "click", new O.ChapterShower_show__closure0(e), false);
       }
@@ -22382,6 +22387,88 @@
           return H.iae(t1);
         return P.JsObject_JsObject$jsify(P.LinkedHashMap__makeLiteral(["x", bx * t2 - t3, "y", -(by * t2) - t1, "angle", ba, "isStatic", isStatic]));
       },
+      snapCardAt$5: function(qx, qy, angle, tol, gap) {
+        var t1, wx, wy, radius, clearance, half, ux, uy, bestDistance, t2, t3, t4, bestX, bestY, _i, c, t5, cux, cuy, _i0, oldSign, outwardX, outwardY, oldX, oldY, _i1, newSign, t6, newEndX, t7, newEndY, dx, dy, distance, t8;
+        if (this.ready)
+          if (!this.physicsEnabled)
+            if (!this.isRewinding) {
+              t1 = this.level;
+              t1 = t1 == null || t1.current == null || this.bcard == null;
+            } else
+              t1 = true;
+          else
+            t1 = true;
+        else
+          t1 = true;
+        if (t1)
+          return;
+        wx = J.$add$ns(J.$div$n(qx, $.GameEngine_scale), J.$div$n(this.camera.pxOffsetX, $.GameEngine_scale));
+        wy = J.$sub$n(J.$div$n(J.$negate$n(qy), $.GameEngine_scale), J.$div$n(this.camera.pxOffsetY, $.GameEngine_scale));
+        radius = J.$div$n(tol, $.GameEngine_scale);
+        clearance = J.$div$n(gap, $.GameEngine_scale);
+        t1 = $.GameEngine_scale;
+        if (typeof t1 !== "number")
+          return H.iae(t1);
+        half = 45 / t1 / 2 * this.currentZoom;
+        ux = Math.cos(H.checkNum(angle));
+        uy = Math.sin(H.checkNum(angle));
+        bestDistance = J.$add$ns(radius, 1);
+        for (t1 = this.cards, t2 = t1.length, t3 = J.getInterceptor$ns(wx), t4 = J.getInterceptor$ns(wy), bestX = null, bestY = null, _i = 0; _i < t1.length; t1.length === t2 || (0, H.throwConcurrentModificationError)(t1), ++_i) {
+          c = t1[_i];
+          if (H.interceptedTypeCast(c.get$userData(), "$isEnergySprite").isHint)
+            continue;
+          t5 = J.getInterceptor$x(c);
+          cux = Math.cos(H.checkNum(t5.get$angle(c)));
+          cuy = Math.sin(H.checkNum(t5.get$angle(c)));
+          for (_i0 = 0; _i0 < 2; ++_i0) {
+            oldSign = C.List_m1_1[_i0];
+            outwardX = oldSign * cux;
+            outwardY = oldSign * cuy;
+            oldX = J.get$x$x(t5.get$position(c)) + outwardX * half;
+            oldY = J.get$y$x(t5.get$position(c)) + outwardY * half;
+            for (_i1 = 0; _i1 < 2; ++_i1) {
+              newSign = C.List_m1_1[_i1];
+              t6 = newSign * ux * half;
+              newEndX = t3.$add(wx, t6);
+              t7 = newSign * uy * half;
+              newEndY = t4.$add(wy, t7);
+              dx = J.$sub$n(newEndX, oldX);
+              dy = J.$sub$n(newEndY, oldY);
+              distance = Math.sqrt(H.checkNum(J.$add$ns(J.$mul$ns(dx, dx), J.$mul$ns(dy, dy))));
+              if (typeof radius !== "number")
+                return H.iae(radius);
+              if (distance <= radius) {
+                if (typeof bestDistance !== "number")
+                  return H.iae(bestDistance);
+                t8 = distance < bestDistance;
+              } else
+                t8 = false;
+              if (t8) {
+                if (typeof clearance !== "number")
+                  return H.iae(clearance);
+                bestX = oldX + outwardX * clearance - t6;
+                bestY = oldY + outwardY * clearance - t7;
+                bestDistance = distance;
+              }
+            }
+          }
+        }
+        if (bestX == null)
+          return;
+        t1 = $.GameEngine_scale;
+        if (typeof t1 !== "number")
+          return H.iae(t1);
+        t2 = this.camera;
+        t3 = t2.pxOffsetX;
+        if (typeof t3 !== "number")
+          return H.iae(t3);
+        if (typeof bestY !== "number")
+          return bestY.$mul();
+        t2 = t2.pxOffsetY;
+        if (typeof t2 !== "number")
+          return H.iae(t2);
+        return P.JsObject_JsObject$jsify(P.LinkedHashMap__makeLiteral(["x", bestX * t1 - t3, "y", -(bestY * t1) - t2]));
+      },
       centerBetweenCubes$1: function(newZoom) {
         var t1, t2, t3, t4, t5, t6, t7;
         t1 = this.camera;
@@ -22695,7 +22782,7 @@
       }
     },
     GameWizard_showHowto_closure: {
-      "^": "Closure:15;",
+      "^": "Closure:14;",
       call$1: function(timer) {
         var t1 = $.$get$context();
         if (t1.callMethod$2("imageLoaded", [J.$index$asx(J.$index$asx(t1, "Features"), "tutorial_img")]) === true) {
@@ -22733,7 +22820,7 @@
       }
     },
     GameWizard_showHowto_closure2: {
-      "^": "Closure:15;change",
+      "^": "Closure:14;change",
       call$1: function(timer) {
         return this.change.call$0();
       }
@@ -22852,7 +22939,7 @@
       }
     },
     GameWizard_tryShowingHintsTooltip_closure: {
-      "^": "Closure:15;",
+      "^": "Closure:14;",
       call$1: function(timer) {
         var t1, t2, stream;
         if (C.JSArray_methods.contains$1($.manager.states, $.engine) && !$.engine.isPaused && T.anyWindowsOpened()) {
@@ -23041,7 +23128,7 @@
         J._addEventListener$3$x(t1.querySelector(".close-purchases"), "click", new X.HintManager_getMoreHints_closure(this), false);
       }, function() {
         return this.getMoreHints$1(null);
-      }, "getMoreHints$0", "call$1", "call$0", "get$getMoreHints", 0, 2, 11, 1, 0],
+      }, "getMoreHints$0", "call$1", "call$0", "get$getMoreHints", 0, 2, 15, 1, 0],
       addHintCard$5: function(x, y, angle, energy, _static) {
         var col, b;
         col = new A.Color4(235, 175, 130, 0.25);
@@ -23076,7 +23163,7 @@
       }
     },
     HintManager_onClick__closure: {
-      "^": "Closure:38;$this",
+      "^": "Closure:58;$this",
       call$1: [function(hints) {
         var t1, t2, card, t3;
         t1 = J.getInterceptor$asx(hints);
@@ -23090,7 +23177,7 @@
         }
         P.Timer_Timer(P.Duration$(0, 0, 0, 6500, 0, 0), new X.HintManager_onClick___closure(t2));
         R.PromptWindow_close();
-      }, null, null, 2, 0, null, 39, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     HintManager_onClick___closure: {
       "^": "Closure:0;$this",
@@ -23198,7 +23285,7 @@
       if (typeof t1 !== "number")
         return t1.$gt();
       $.Input_wheelDirection = t1 > 0 ? 1 : -1;
-    }, "call$1", "Input_Input_onMouseWheel$closure", 2, 0, 55],
+    }, "call$1", "Input_Input_onMouseWheel$closure", 2, 0, 56],
     Input_toggle: function($event, down) {
       $.$get$Input_keys().forEach$1(0, new A.Input_toggle_closure($event, down));
     },
@@ -23598,7 +23685,7 @@
           i = i0;
         }
         M.GameWizard_manage(t3, t1.current.index);
-      }, null, null, 2, 0, null, 17, "call"]
+      }, null, null, 2, 0, null, 16, "call"]
     },
     Level_toggleFinishedFriends_closure: {
       "^": "Closure:0;flevel",
@@ -24145,7 +24232,7 @@
       t1 = $.RatingShower_e;
       t1.isPaused = false;
       t1.restartLevel$0();
-    }, "call$1", "RatingShower_RatingShower_restartLevel$closure", 2, 0, 37, 0],
+    }, "call$1", "RatingShower_RatingShower_restartLevel$closure", 2, 0, 38, 0],
     RatingShower_tapeItem: function(l, chapter, index, current) {
       var el, tr, ti, i, t1, levelIndex;
       el = H.interceptedTypeCast(document.querySelector(".tape-item-template"), "$isDivElement");
@@ -24403,7 +24490,7 @@
         t1.frontRewindLevelComplete = Q.Level_Level_onFrontRewindLevelComplete$closure();
         t1.frontRewindLevelFailed = Q.Level_Level_onFrontRewindLevelFailed$closure();
       }
-    }, "call$1", "RatingShower_RatingShower_onTypeItemClick$closure", 2, 0, 8, 40],
+    }, "call$1", "RatingShower_RatingShower_onTypeItemClick$closure", 2, 0, 8, 43],
     RatingShower_hide: [function() {
       $.Input_keyDown = null;
       $.RatingShower_e.isPaused = false;
@@ -24726,7 +24813,7 @@
         t1 = window;
         C.Window_methods._ensureRequestAnimationFrame$0(t1);
         C.Window_methods._requestAnimationFrame$1(t1, W._wrapZone(this.get$step(this)));
-      }, "call$1", "get$step", 2, 0, 41, 41]
+      }, "call$1", "get$step", 2, 0, 41, 44]
     }
   }], ["", "SubLevel.dart",, Z, {
     "^": "",
@@ -25513,6 +25600,7 @@
       t3 = $.$get$context();
       J.$indexSet$ax(t3, "TouchBridge", P.JsObject_JsObject$jsify(P.LinkedHashMap__makeEmpty()));
       J.$indexSet$ax(J.$index$asx(t3, "TouchBridge"), "grabCardAt", new T.main_closure());
+      J.$indexSet$ax(J.$index$asx(t3, "TouchBridge"), "snapCardAt", new T.main_closure0());
       t4 = $.canvas;
       t4.toString;
       t5 = W.MouseEvent;
@@ -25533,23 +25621,23 @@
       t5 = W.Event;
       W._EventStreamSubscription$(window, "resize", T.cards__updateCanvasPositionAndDimension$closure(), false, t5);
       t1.updatedAttemptsUsed = false;
-      C._BeforeUnloadEventStreamProvider_beforeunload.forTarget$1(window).listen$1(new T.main_closure0(t1));
-      W._EventStreamSubscription$(window, "unload", new T.main_closure1(t1), false, t5);
+      C._BeforeUnloadEventStreamProvider_beforeunload.forTarget$1(window).listen$1(new T.main_closure1(t1));
+      W._EventStreamSubscription$(window, "unload", new T.main_closure2(t1), false, t5);
       shareOffer = t2.querySelector(".share-offer");
-      onLoadedCallback = new T.main_closure2(shareOffer, new T.main_closure3(shareOffer, t2.querySelector(".logo"), t2.querySelector(".instructions")));
+      onLoadedCallback = new T.main_closure3(shareOffer, new T.main_closure4(shareOffer, t2.querySelector(".logo"), t2.querySelector(".instructions")));
       if (J.$index$asx(J.$index$asx(t3, "Features"), "initialized") === true)
         onLoadedCallback.call$0();
       else
         J.$index$asx(t3, "Features").callMethod$2("setOnLoadedCallback", [onLoadedCallback]);
-      J._addEventListener$3$x(t2.querySelector(".friends-invite-more"), "click", new T.main_closure4(), true);
-      J._addEventListener$3$x(t2.querySelector(".close-friends"), "click", new T.main_closure5(), false);
-      J._addEventListener$3$x(t2.querySelector("#invite-friends"), "click", new T.main_closure6(), null);
-      J._addEventListener$3$x(t2.querySelector("#toggle-physics"), "click", new T.main_closure7(), false);
+      J._addEventListener$3$x(t2.querySelector(".friends-invite-more"), "click", new T.main_closure5(), true);
+      J._addEventListener$3$x(t2.querySelector(".close-friends"), "click", new T.main_closure6(), false);
+      J._addEventListener$3$x(t2.querySelector("#invite-friends"), "click", new T.main_closure7(), null);
+      J._addEventListener$3$x(t2.querySelector("#toggle-physics"), "click", new T.main_closure8(), false);
       J._addEventListener$3$x(t2.querySelector("#restart"), "click", T.cards__promptGameRestart$closure(), false);
-      J._addEventListener$3$x(t2.querySelector("#zoom-in"), "click", new T.main_closure8(), null);
-      J._addEventListener$3$x(t2.querySelector("#zoom-out"), "click", new T.main_closure9(), null);
+      J._addEventListener$3$x(t2.querySelector("#zoom-in"), "click", new T.main_closure9(), null);
+      J._addEventListener$3$x(t2.querySelector("#zoom-out"), "click", new T.main_closure10(), null);
       t1 = new W._FrozenElementList(t2.querySelectorAll(".selector"), [null]);
-      t1.forEach$1(t1, new T.main_closure10());
+      t1.forEach$1(t1, new T.main_closure11());
       $.hints = new X.HintManager($.engine, false, false);
       t2 = t2.querySelector("#hint");
       t1 = $.hints;
@@ -25574,7 +25662,7 @@
       R.PromptWindow_show(J.$index$asx(J.$index$asx(t1, "locale"), "restart_question"), J.$index$asx(J.$index$asx(t1, "locale"), "surely_want_restart"), "", "", new T.promptGameRestart_closure(), new T.promptGameRestart_closure0(), null, null);
     }, function() {
       return T.promptGameRestart(null);
-    }, "call$1", "call$0", "cards__promptGameRestart$closure", 0, 2, 11, 1, 0],
+    }, "call$1", "call$0", "cards__promptGameRestart$closure", 0, 2, 15, 1, 0],
     showLevelName: function($name) {
       var el, t1;
       if (!$.GameWizard_showing) {
@@ -25609,7 +25697,7 @@
       }
     }, function() {
       return T.updateCanvasPositionAndDimension(null);
-    }, "call$1", "call$0", "cards__updateCanvasPositionAndDimension$closure", 0, 2, 11, 1],
+    }, "call$1", "call$0", "cards__updateCanvasPositionAndDimension$closure", 0, 2, 15, 1],
     applyPhysicsLabelToButton: function(callback) {
       var btn, t1;
       btn = document.querySelector("#toggle-physics");
@@ -25699,9 +25787,15 @@
       "^": "Closure:44;",
       call$3: [function(qx, qy, tol) {
         return $.engine.grabCardAt$3(qx, qy, tol);
-      }, null, null, 6, 0, null, 42, 43, 31, "call"]
+      }, null, null, 6, 0, null, 19, 20, 21, "call"]
     },
     main_closure0: {
+      "^": "Closure:45;",
+      call$5: [function(qx, qy, angle, tol, gap) {
+        return $.engine.snapCardAt$5(qx, qy, angle, tol, gap);
+      }, null, null, 10, 0, null, 19, 20, 45, 21, 36, "call"]
+    },
+    main_closure1: {
       "^": "Closure:7;_box_0",
       call$1: [function($event) {
         var t1;
@@ -25713,7 +25807,7 @@
         }
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure1: {
+    main_closure2: {
       "^": "Closure:7;_box_0",
       call$1: function($event) {
         var t1 = $.engine.level;
@@ -25723,7 +25817,7 @@
         }
       }
     },
-    main_closure3: {
+    main_closure4: {
       "^": "Closure:0;shareOffer,logo,instructions",
       call$0: [function() {
         L.animate(this.shareOffer, 125, C.Easing_15, null, P.LinkedHashMap__makeLiteral(["top", -75]));
@@ -25731,7 +25825,7 @@
         L.animate(this.instructions, 225, C.Easing_15, null, P.LinkedHashMap__makeLiteral(["margin-bottom", 115]));
       }, null, null, 0, 0, null, "call"]
     },
-    main_closure2: {
+    main_closure3: {
       "^": "Closure:0;shareOffer,slideMenuTop",
       call$0: [function() {
         var storage, t1, t2, fp, in_game, after, before;
@@ -25773,7 +25867,7 @@
       }, null, null, 2, 0, null, 0, "call"]
     },
     main__closure3: {
-      "^": "Closure:45;slideMenuTop",
+      "^": "Closure:46;slideMenuTop",
       call$1: function(chapters) {
         var t1, t2;
         J.$index$asx($.$get$context(), "Features").callMethod$1("hideLoading");
@@ -25814,13 +25908,13 @@
         O.ChapterShower_show($.Chapter_chapters);
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure4: {
+    main_closure5: {
       "^": "Closure:1;",
       call$1: [function($event) {
         J.$index$asx($.$get$context(), "Features").callMethod$1("showInviteBox");
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure5: {
+    main_closure6: {
       "^": "Closure:1;",
       call$1: [function($event) {
         var t1 = document;
@@ -25828,7 +25922,7 @@
         L.animate(t1.querySelector(".friends"), 125, C.Easing_13, null, P.LinkedHashMap__makeLiteral(["top", 800, "opacity", 0]));
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure6: {
+    main_closure7: {
       "^": "Closure:1;",
       call$1: [function($event) {
         var t1 = document;
@@ -25867,7 +25961,7 @@
       call$2: [function(x, y) {
         var t1 = document.querySelector("#invitations-blur-g").style;
         (t1 && C.CssStyleDeclaration_methods).setProperty$3(t1, "transform", C.JSString_methods.$add("translatey(", J.toString$0$(J.$add$ns(y, 80))) + "px)", "");
-      }, null, null, 4, 0, null, 3, 18, "call"]
+      }, null, null, 4, 0, null, 3, 17, "call"]
     },
     main____closure0: {
       "^": "Closure:23;",
@@ -25880,9 +25974,9 @@
         t2 = J.getInterceptor$x(g);
         t2.set$fillStyle(g, "rgba(0, 0, 0, 0.5)");
         t2.fillRect$4(g, 0, 0, t1.get$width(canvas), t1.get$height(canvas));
-      }, null, null, 2, 0, null, 12, "call"]
+      }, null, null, 2, 0, null, 18, "call"]
     },
-    main_closure7: {
+    main_closure8: {
       "^": "Closure:1;",
       call$1: [function($event) {
         var t1, attempts, boughtAttempts;
@@ -25901,20 +25995,20 @@
           T.applyPhysicsLabelToButton(null);
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure8: {
+    main_closure9: {
       "^": "Closure:1;",
       call$1: [function($event) {
         return $.engine.zoom$1(0, true);
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure9: {
+    main_closure10: {
       "^": "Closure:1;",
       call$1: [function($event) {
         return $.engine.zoom$1(0, false);
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure10: {
-      "^": "Closure:14;",
+    main_closure11: {
+      "^": "Closure:13;",
       call$1: function(el) {
         J.addEventListener$3$x(el, "click", new T.main__closure(el), false);
       }
@@ -25952,7 +26046,7 @@
       }
     },
     updateBlockButtons_closure: {
-      "^": "Closure:14;",
+      "^": "Closure:13;",
       call$1: function(s) {
         J.get$classes$x(s).remove$1(0, "current");
       }
@@ -26641,6 +26735,7 @@
   C.List_2Zi = H.setRuntimeTypeInfo(Isolate.makeConstantList(["*::class", "*::dir", "*::draggable", "*::hidden", "*::id", "*::inert", "*::itemprop", "*::itemref", "*::itemscope", "*::lang", "*::spellcheck", "*::title", "*::translate", "A::accesskey", "A::coords", "A::hreflang", "A::name", "A::shape", "A::tabindex", "A::target", "A::type", "AREA::accesskey", "AREA::alt", "AREA::coords", "AREA::nohref", "AREA::shape", "AREA::tabindex", "AREA::target", "AUDIO::controls", "AUDIO::loop", "AUDIO::mediagroup", "AUDIO::muted", "AUDIO::preload", "BDO::dir", "BODY::alink", "BODY::bgcolor", "BODY::link", "BODY::text", "BODY::vlink", "BR::clear", "BUTTON::accesskey", "BUTTON::disabled", "BUTTON::name", "BUTTON::tabindex", "BUTTON::type", "BUTTON::value", "CANVAS::height", "CANVAS::width", "CAPTION::align", "COL::align", "COL::char", "COL::charoff", "COL::span", "COL::valign", "COL::width", "COLGROUP::align", "COLGROUP::char", "COLGROUP::charoff", "COLGROUP::span", "COLGROUP::valign", "COLGROUP::width", "COMMAND::checked", "COMMAND::command", "COMMAND::disabled", "COMMAND::label", "COMMAND::radiogroup", "COMMAND::type", "DATA::value", "DEL::datetime", "DETAILS::open", "DIR::compact", "DIV::align", "DL::compact", "FIELDSET::disabled", "FONT::color", "FONT::face", "FONT::size", "FORM::accept", "FORM::autocomplete", "FORM::enctype", "FORM::method", "FORM::name", "FORM::novalidate", "FORM::target", "FRAME::name", "H1::align", "H2::align", "H3::align", "H4::align", "H5::align", "H6::align", "HR::align", "HR::noshade", "HR::size", "HR::width", "HTML::version", "IFRAME::align", "IFRAME::frameborder", "IFRAME::height", "IFRAME::marginheight", "IFRAME::marginwidth", "IFRAME::width", "IMG::align", "IMG::alt", "IMG::border", "IMG::height", "IMG::hspace", "IMG::ismap", "IMG::name", "IMG::usemap", "IMG::vspace", "IMG::width", "INPUT::accept", "INPUT::accesskey", "INPUT::align", "INPUT::alt", "INPUT::autocomplete", "INPUT::autofocus", "INPUT::checked", "INPUT::disabled", "INPUT::inputmode", "INPUT::ismap", "INPUT::list", "INPUT::max", "INPUT::maxlength", "INPUT::min", "INPUT::multiple", "INPUT::name", "INPUT::placeholder", "INPUT::readonly", "INPUT::required", "INPUT::size", "INPUT::step", "INPUT::tabindex", "INPUT::type", "INPUT::usemap", "INPUT::value", "INS::datetime", "KEYGEN::disabled", "KEYGEN::keytype", "KEYGEN::name", "LABEL::accesskey", "LABEL::for", "LEGEND::accesskey", "LEGEND::align", "LI::type", "LI::value", "LINK::sizes", "MAP::name", "MENU::compact", "MENU::label", "MENU::type", "METER::high", "METER::low", "METER::max", "METER::min", "METER::value", "OBJECT::typemustmatch", "OL::compact", "OL::reversed", "OL::start", "OL::type", "OPTGROUP::disabled", "OPTGROUP::label", "OPTION::disabled", "OPTION::label", "OPTION::selected", "OPTION::value", "OUTPUT::for", "OUTPUT::name", "P::align", "PRE::width", "PROGRESS::max", "PROGRESS::min", "PROGRESS::value", "SELECT::autocomplete", "SELECT::disabled", "SELECT::multiple", "SELECT::name", "SELECT::required", "SELECT::size", "SELECT::tabindex", "SOURCE::type", "TABLE::align", "TABLE::bgcolor", "TABLE::border", "TABLE::cellpadding", "TABLE::cellspacing", "TABLE::frame", "TABLE::rules", "TABLE::summary", "TABLE::width", "TBODY::align", "TBODY::char", "TBODY::charoff", "TBODY::valign", "TD::abbr", "TD::align", "TD::axis", "TD::bgcolor", "TD::char", "TD::charoff", "TD::colspan", "TD::headers", "TD::height", "TD::nowrap", "TD::rowspan", "TD::scope", "TD::valign", "TD::width", "TEXTAREA::accesskey", "TEXTAREA::autocomplete", "TEXTAREA::cols", "TEXTAREA::disabled", "TEXTAREA::inputmode", "TEXTAREA::name", "TEXTAREA::placeholder", "TEXTAREA::readonly", "TEXTAREA::required", "TEXTAREA::rows", "TEXTAREA::tabindex", "TEXTAREA::wrap", "TFOOT::align", "TFOOT::char", "TFOOT::charoff", "TFOOT::valign", "TH::abbr", "TH::align", "TH::axis", "TH::bgcolor", "TH::char", "TH::charoff", "TH::colspan", "TH::headers", "TH::height", "TH::nowrap", "TH::rowspan", "TH::scope", "TH::valign", "TH::width", "THEAD::align", "THEAD::char", "THEAD::charoff", "THEAD::valign", "TR::align", "TR::bgcolor", "TR::char", "TR::charoff", "TR::valign", "TRACK::default", "TRACK::kind", "TRACK::label", "TRACK::srclang", "UL::compact", "UL::type", "VIDEO::controls", "VIDEO::height", "VIDEO::loop", "VIDEO::mediagroup", "VIDEO::muted", "VIDEO::preload", "VIDEO::width"]), [P.String]);
   C.List_ego = Isolate.makeConstantList(["HEAD", "AREA", "BASE", "BASEFONT", "BR", "COL", "COLGROUP", "EMBED", "FRAME", "FRAMESET", "HR", "IMAGE", "IMG", "INPUT", "ISINDEX", "LINK", "META", "PARAM", "SOURCE", "STYLE", "TITLE", "WBR"]);
   C.List_empty = Isolate.makeConstantList([]);
+  C.List_m1_1 = Isolate.makeConstantList([-1, 1]);
   C.List_scrollTop_scrollLeft = Isolate.makeConstantList(["scrollTop", "scrollLeft"]);
   C.List_wSV = H.setRuntimeTypeInfo(Isolate.makeConstantList(["bind", "if", "ref", "repeat", "syntax"]), [P.String]);
   C.List_yrN = H.setRuntimeTypeInfo(Isolate.makeConstantList(["A::href", "AREA::href", "BLOCKQUOTE::cite", "BODY::background", "COMMAND::icon", "DEL::cite", "FORM::action", "IMG::src", "INPUT::src", "INS::cite", "Q::cite", "VIDEO::poster"]), [P.String]);
@@ -26876,8 +26971,8 @@
   }, "Tooltip_opened"]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["event", null, "e", "x", "_", "value", "error", "stackTrace", "data", "element", "o", "obj", "canvas", "invocation", "object", "attributeName", "context", "str", "y", "sender", "closure", "isolate", "arg1", "arg2", "arg", "a", "numberOfArguments", "name", "attr", "n", "callback", "tol", "self", "arguments", "arg3", "highResTime", "arg4", "captureThis", "each", "hints", "evt", "time", "qx", "qy", "b"];
-  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, args: [,,]}, {func: 1, ret: P.bool, args: [P.Object]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [W.Element]}, {func: 1, args: [W.Event]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [W.MouseEvent]}, {func: 1, args: [P.String]}, {func: 1, v: true, opt: [W.Event]}, {func: 1, args: [P.bool]}, {func: 1, ret: P.String, args: [P.Object]}, {func: 1, args: [W.DivElement]}, {func: 1, args: [P.Timer]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, args: [P.String,,]}, {func: 1, ret: P.int, args: [P.String]}, {func: 1, ret: P.String, args: [P.int]}, {func: 1, args: [P.String, P.String]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [W.CanvasElement]}, {func: 1, args: [P.String, A.Key]}, {func: 1, args: [P.JsObject]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [W.HttpRequest]}, {func: 1, ret: P.String, args: [P.String,,]}, {func: 1, args: [, P.String]}, {func: 1, args: [, P.StackTrace]}, {func: 1, v: true, args: [P.String]}, {func: 1, ret: P.double}, {func: 1, opt: [P.bool]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [P.Object]}, {func: 1, v: true, args: [,]}, {func: 1, args: [P.Map]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, args: [W.KeyboardEvent]}, {func: 1, v: true, args: [P.num]}, {func: 1, args: [P.int]}, {func: 1, args: [, P.String]}, {func: 1, args: [P.num, P.num, P.num]}, {func: 1, args: [P.List]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.int, args: [P.String], named: {onError: {func: 1, ret: P.int, args: [P.String]}, radix: P.int}}, {func: 1, ret: P.String, args: [W.EventTarget]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, v: true, args: [P.List]}, {func: 1, args: [P.num]}, {func: 1, v: true, args: [W.WheelEvent]}, {func: 1, v: true, args: [V.Fixture, V.Fixture]}, {func: 1, args: [,], opt: [,]}];
+  init.metadata = ["event", null, "e", "x", "value", "_", "error", "stackTrace", "data", "element", "o", "obj", "attributeName", "invocation", "object", "context", "str", "y", "canvas", "qx", "qy", "tol", "sender", "closure", "isolate", "arg1", "arg2", "arg", "a", "b", "numberOfArguments", "name", "attr", "n", "callback", "captureThis", "gap", "arguments", "arg3", "highResTime", "arg4", "each", "hints", "evt", "time", "angle", "self"];
+  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, args: [,,]}, {func: 1, ret: P.bool, args: [P.Object]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [W.Element]}, {func: 1, args: [W.Event]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [W.MouseEvent]}, {func: 1, args: [P.String]}, {func: 1, ret: P.String, args: [P.Object]}, {func: 1, args: [P.bool]}, {func: 1, args: [W.DivElement]}, {func: 1, args: [P.Timer]}, {func: 1, v: true, opt: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, args: [P.String,,]}, {func: 1, ret: P.int, args: [P.String]}, {func: 1, ret: P.String, args: [P.int]}, {func: 1, args: [P.String, P.String]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [W.CanvasElement]}, {func: 1, args: [P.String, A.Key]}, {func: 1, args: [P.JsObject]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [,], opt: [,]}, {func: 1, ret: P.String, args: [P.String,,]}, {func: 1, args: [, P.String]}, {func: 1, args: [, P.String]}, {func: 1, args: [, P.StackTrace]}, {func: 1, ret: P.double}, {func: 1, opt: [P.bool]}, {func: 1, v: true, args: [P.String]}, {func: 1, args: [W.HttpRequest]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [,]}, {func: 1, args: [P.Object]}, {func: 1, args: [W.KeyboardEvent]}, {func: 1, v: true, args: [P.num]}, {func: 1, args: [P.int]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, args: [P.num, P.num, P.num]}, {func: 1, args: [P.num, P.num, P.num, P.num, P.num]}, {func: 1, args: [P.List]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.int, args: [P.String], named: {onError: {func: 1, ret: P.int, args: [P.String]}, radix: P.int}}, {func: 1, ret: P.String, args: [W.EventTarget]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, v: true, args: [P.List]}, {func: 1, args: [P.num]}, {func: 1, v: true, args: [W.WheelEvent]}, {func: 1, v: true, args: [V.Fixture, V.Fixture]}, {func: 1, args: [P.Map]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }

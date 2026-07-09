@@ -836,6 +836,50 @@ class GameEngine extends State {
         });
     }
 
+    // Soft touch placement aid: if either end of the ghost is close to an
+    // end of an existing card, return a center point that joins those ends.
+    // A small screen-space gap keeps Box2D from rejecting the placement.
+    JsObject snapCardAt(num qx, num qy, num angle, num tol, num gap) {
+        if (!ready || physicsEnabled || isRewinding || level == null ||
+            level.current == null || bcard == null) return null;
+
+        double wx = qx / scale + camera.pxOffsetX / scale;
+        double wy = -qy / scale - camera.pxOffsetY / scale;
+        double radius = tol / scale;
+        double clearance = gap / scale;
+        double half = CARD_WIDTH / 2 * currentZoom;
+        double ux = Math.cos(angle), uy = Math.sin(angle);
+
+        double bestDistance = radius + 1.0;
+        double bestX, bestY;
+        for (Body c in cards) {
+            if ((c.userData as EnergySprite).isHint) continue;
+            double cux = Math.cos(c.angle), cuy = Math.sin(c.angle);
+            for (int oldSign in const [-1, 1]) {
+                double outwardX = oldSign * cux;
+                double outwardY = oldSign * cuy;
+                double oldX = c.position.x + outwardX * half;
+                double oldY = c.position.y + outwardY * half;
+                for (int newSign in const [-1, 1]) {
+                    double newEndX = wx + newSign * ux * half;
+                    double newEndY = wy + newSign * uy * half;
+                    double dx = newEndX - oldX, dy = newEndY - oldY;
+                    double distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance <= radius && distance < bestDistance) {
+                        bestDistance = distance;
+                        bestX = oldX + outwardX * clearance - newSign * ux * half;
+                        bestY = oldY + outwardY * clearance - newSign * uy * half;
+                    }
+                }
+            }
+        }
+        if (bestX == null) return null;
+        return new JsObject.jsify({
+            'x': bestX * scale - camera.pxOffsetX,
+            'y': -(bestY * scale) - camera.pxOffsetY,
+        });
+    }
+
     void centerBetweenCubes(double newZoom) {
         camera.mTargetX = from.position.x + (to.position.x - from.position.x) / 2 - WIDTH / 2;
         camera.mTargetY = from.position.y + (to.position.y - from.position.y) / 2 - HEIGHT / 2;
