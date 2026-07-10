@@ -241,7 +241,9 @@ test('selected placement point becomes the rotation pivot', async ({ page }) => 
         center: window.__touch.state.placement.center,
         angleSteps: window.__touch.state.angleSteps,
     }));
-    expect(Math.abs(after.center.x - before.center.x)).toBeGreaterThan(10);
+    expect(Math.hypot(
+        after.center.x - before.center.x,
+        after.center.y - before.center.y)).toBeGreaterThan(10);
     expect(after.angleSteps).not.toBe(0);
 });
 
@@ -265,6 +267,31 @@ test('endpoint pivot rotation starts relative to the drag, not absolute pointer 
 
     const angleSteps = await page.evaluate(() => window.__touch.state.angleSteps);
     expect(Math.abs(angleSteps)).toBeLessThanOrEqual(3);
+});
+
+test('endpoint pivot stays visually fixed while rotating', async ({ page }) => {
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 2.0);
+    await page.touchscreen.tap(p.x, p.y);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+
+    const top = await page.locator('#touch-point-top').boundingBox();
+    await page.touchscreen.tap(top.x + top.width / 2, top.y + top.height / 2);
+    await expect(page.locator('#touch-point-top')).toHaveClass(/selected/);
+
+    const pivot = await page.locator('#touch-point-top').boundingBox();
+    const px = pivot.x + pivot.width / 2;
+    const py = pivot.y + pivot.height / 2;
+    await fingerDrag(page, [
+        [[px + 95, py - 95]],
+        [[px + 110, py - 82]],
+        [[px + 125, py - 62]],
+    ]);
+
+    const after = await page.locator('#touch-point-top').boundingBox();
+    const ax = after.x + after.width / 2;
+    const ay = after.y + after.height / 2;
+    expect(Math.hypot(ax - px, ay - py)).toBeLessThan(3);
 });
 
 test('single-finger placement can rotate before commit', async ({ page }) => {

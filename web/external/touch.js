@@ -406,7 +406,7 @@
     var PZOOM = 3;
     var HANDLE_HIT_PX = 32;
     var CARD_HANDLE_PX = 34;
-    var placeDrag = null; // {kind, point, selectedAtStart, pivot, startPointerAngle, startCardAngle}
+    var placeDrag = null; // {kind, point, selectedAtStart, pivot, pivotScreen, startPointerAngle, startCardAngle}
 
     function magneticAngleSteps(angle) {
         var raw = Math.round(angle / STEP);
@@ -481,8 +481,12 @@
         var L = state.layout;
         var targetX = window.innerWidth / 2;
         var targetY = TOPBAR + (window.innerHeight - TOPBAR) / 2;
-        p.tx = targetX - L.left - PZOOM * p.center.x;
-        p.ty = targetY - L.top - PZOOM * p.center.y;
+        var focus = p.focus || {
+            layout: p.center,
+            screen: { x: targetX, y: targetY },
+        };
+        p.tx = focus.screen.x - L.left - PZOOM * focus.layout.x;
+        p.ty = focus.screen.y - L.top - PZOOM * focus.layout.y;
         var c = canvasEl();
         c.style.transformOrigin = '0 0';
         c.style.transform = 'translate(' + p.tx + 'px,' + p.ty + 'px) scale(' + PZOOM + ')';
@@ -542,6 +546,10 @@
         var q = layoutFromTransformed(sx, sy);
         var o = handleOffset(p.selected);
         p.center = { x: q.x - o.x, y: q.y - o.y };
+        p.focus = {
+            layout: q,
+            screen: { x: sx, y: sy },
+        };
         updatePlaceOverlay();
     }
     function rotatePlacement(sx, sy) {
@@ -563,6 +571,15 @@
         driveAngle(magneticAngleSteps(angle));
         var o = handleOffset(selected);
         p.center = { x: pivot.x - o.x, y: pivot.y - o.y };
+        if (placeDrag && placeDrag.kind === 'rotate' &&
+            selected !== 'center' && placeDrag.pivotScreen) {
+            p.focus = {
+                layout: pivot,
+                screen: placeDrag.pivotScreen,
+            };
+        } else {
+            p.focus = null;
+        }
         updatePlaceOverlay();
     }
 
@@ -638,6 +655,7 @@
                     point: point,
                     selectedAtStart: state.placement.selected,
                     pivot: pivot,
+                    pivotScreen: handleScreen(point),
                     startPointerAngle: angleFrom(pivot, q),
                     startCardAngle: state.angleSteps * STEP,
                 };
@@ -742,6 +760,7 @@
                 if (hit === startedOn && !moved) commitPlacement();
                 else {
                     state.placement.selected = hit;
+                    state.placement.focus = null;
                     updatePlaceOverlay();
                 }
             } else if (!moved) {
