@@ -1,9 +1,7 @@
-// Mobile touch suite, v3 gesture UX. Runs only in the 'mobile' Playwright
+// Mobile touch suite, v4 gesture UX. Runs only in the 'mobile' Playwright
 // project (chromium, phone viewport, hasTouch) — see playwright.config.js.
-// tap = place (immediate, no double-tap window), 1-finger drag = pan,
-// 2 fingers = rotate (dotted line) and the block is placed when the
-// fingers lift, long-press near a block = pick it up (fat hit bounds) to
-// drag-move or trash it.
+// tap = open magnified single-finger placement, center point is selected,
+// tap selected point = place, drag away from points = rotate, pinch = zoom.
 // Touch design: docs/superpowers/specs/2026-07-05-touch-support-design.md
 'use strict';
 const { test, expect } = require('@playwright/test');
@@ -84,9 +82,13 @@ async function remainingDynamic(page) {
     return m ? parseInt(m[0], 10) : null;
 }
 
-// tap and wait for the immediate placement's frame chain to finish
+// tap to open precision placement, then tap the highlighted center point to
+// commit and wait for the placement frame chain to finish.
 async function tapPlace(page, x, y) {
     await page.touchscreen.tap(x, y);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+    const center = await page.locator('#touch-point-center').boundingBox();
+    await page.touchscreen.tap(center.x + center.width / 2, center.y + center.height / 2);
     await page.waitForTimeout(500);
 }
 
@@ -148,48 +150,67 @@ test('tap places a block at the tapped world point', async ({ page }) => {
     expect(cards[0].y).toBeCloseTo(1.5, 1);
 });
 
-test('double tap does not zoom: two immediate placements, no canvas transform', async ({ page }) => {
+test('single tap opens magnified placement with center point selected by default', async ({ page }) => {
     await enterLevel11(page);
     const base = await remainingDynamic(page);
     const p = await screenForWorld(page, 1, 1, 2.5, 1.8);
     await page.touchscreen.tap(p.x, p.y);
-    await page.waitForTimeout(150);
-    await page.touchscreen.tap(p.x, p.y);       // overlaps the first: rejected
-    await page.waitForTimeout(500);
     const out = await page.evaluate(() => ({
-        grid: !!document.querySelector('#touch-grid'),
+        place: document.querySelector('#touch-place').classList.contains('on'),
+        centerSelected: document.querySelector('#touch-point-center').classList.contains('selected'),
+        topSelected: document.querySelector('#touch-point-top').classList.contains('selected'),
+        bottomSelected: document.querySelector('#touch-point-bottom').classList.contains('selected'),
         transform: document.querySelector('#graphics').style.transform,
     }));
-    expect(out.grid).toBe(false);                // precision grid is gone
-    expect(out.transform).toBe('');              // no CSS zoom ever applied
+    expect(out.place).toBe(true);
+    expect(out.centerSelected).toBe(true);
+    expect(out.topSelected).toBe(false);
+    expect(out.bottomSelected).toBe(false);
+    expect(out.transform).toContain('scale(3)');
+    expect(await remainingDynamic(page)).toBe(base);
+    const center = await page.locator('#touch-point-center').boundingBox();
+    await page.touchscreen.tap(center.x + center.width / 2, center.y + center.height / 2);
+    await page.waitForTimeout(500);
     expect(await remainingDynamic(page)).toBe(base - 1);
     const cards = await probeCards(page);
     expect(cards.length).toBe(1);
 });
 
-test('two-finger rotate places the block when the fingers lift', async ({ page }) => {
+test('placement points can be reselected before commit', async ({ page }) => {
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.8);
+    await page.touchscreen.tap(p.x, p.y);
+    await expect(page.locator('#touch-point-center')).toHaveClass(/selected/);
+
+    const top = await page.locator('#touch-point-top').boundingBox();
+    await page.touchscreen.tap(top.x + top.width / 2, top.y + top.height / 2);
+    await expect(page.locator('#touch-point-top')).toHaveClass(/selected/);
+    await expect(page.locator('#touch-point-center')).not.toHaveClass(/selected/);
+
+    const center = await page.locator('#touch-point-center').boundingBox();
+    await page.touchscreen.tap(center.x + center.width / 2, center.y + center.height / 2);
+    await expect(page.locator('#touch-point-center')).toHaveClass(/selected/);
+});
+
+test('single-finger placement can rotate before commit', async ({ page }) => {
     await enterLevel11(page);
     const base = await remainingDynamic(page);
     const p = await screenForWorld(page, 1, 1, 2.5, 2.0);
-    // fingers around p at 30 degrees (screen y is inverted vs world)
-    const r = 90, ang = Math.PI / 6;
-    const f = (a) => [
-        [p.x - r * Math.cos(a), p.y + r * Math.sin(a)],
-        [p.x + r * Math.cos(a), p.y - r * Math.sin(a)],
-    ];
-    // start horizontal, rotate to 30 degrees, hold for the key-driven
-    // rotation to finish
-    const seq = [];
-    for (let i = 0; i <= 8; i++) seq.push(f(ang * i / 8));
-    for (let i = 0; i < 14; i++) seq.push(f(ang));   // hold ~0.6s
-    const lineVisible = page.waitForFunction(() =>
-        document.querySelector('#touch-rotline').classList.contains('on'));
-    const gesture = fingerDrag(page, seq);
-    await lineVisible;
-    await gesture;
-    await page.waitForFunction(() =>
-        !document.querySelector('#touch-rotline').classList.contains('on'));
-    // no extra tap: the lift itself placed the block at the line midpoint
+    await page.touchscreen.tap(p.x, p.y);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+    const center = await page.locator('#touch-point-center').boundingBox();
+    const cx = center.x + center.width / 2;
+    const cy = center.y + center.height / 2;
+    const ang = Math.PI / 6;
+    const r = 70;
+    const frames = [];
+    for (let i = 0; i <= 8; i++) {
+        const a = ang * i / 8;
+        frames.push([[cx + r * Math.cos(a), cy - r * Math.sin(a)]]);
+    }
+    for (let i = 0; i < 14; i++) frames.push([[cx + r * Math.cos(ang), cy - r * Math.sin(ang)]]);
+    await fingerDrag(page, frames);
+    await page.touchscreen.tap(cx, cy);
     await page.waitForTimeout(1200);
     expect(await remainingDynamic(page)).toBe(base - 1);
     const cards = await probeCards(page);
@@ -444,34 +465,33 @@ test('block and wall selectors are both visible on touch', async ({ page }) => {
     }
 });
 
-test('zoom control: finger-sized +/- on the right edge, drives engine zoom', async ({ page }) => {
+test('pinch zooms the camera without touch zoom buttons', async ({ page }) => {
     await enterLevel11(page);
-    // two-finger is taken by rotate, so a dedicated zoom control must exist
-    for (const id of ['#touch-zoom-in', '#touch-zoom-out']) {
-        await expect(page.locator(id)).toBeVisible();
-        const b = await page.locator(id).boundingBox();
-        expect(b.height).toBeGreaterThanOrEqual(MIN_TAP);
-        expect(b.width).toBeGreaterThanOrEqual(MIN_TAP);
-        // docked on the right edge, inside the viewport
-        expect(b.x + b.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
-        expect(b.x).toBeGreaterThan(page.viewportSize().width / 2);
-    }
-    // taps reach the engine's zoom handlers (#zoom-in / #zoom-out)
-    const counts = await page.evaluate(() => {
+    const setup = await page.evaluate(() => {
         const c = { in: 0, out: 0 };
         document.querySelector('#zoom-in').addEventListener('click', () => c.in++);
         document.querySelector('#zoom-out').addEventListener('click', () => c.out++);
         window.__zoomCounts = c;
-        return true;
+        return {
+            zoomInButton: !!document.querySelector('#touch-zoom-in'),
+            zoomOutButton: !!document.querySelector('#touch-zoom-out'),
+        };
     });
-    expect(counts).toBe(true);
-    await page.locator('#touch-zoom-in').tap();
-    await page.locator('#touch-zoom-in').tap();
-    await page.locator('#touch-zoom-out').tap();
+    expect(setup.zoomInButton).toBe(false);
+    expect(setup.zoomOutButton).toBe(false);
+    const box = await page.locator('#graphics').boundingBox();
+    const cx = box.x + box.width / 2;
+    const cy = box.y + box.height / 2;
+    await fingerDrag(page, [
+        [[cx - 40, cy], [cx + 40, cy]],
+        [[cx - 52, cy], [cx + 52, cy]],
+        [[cx - 70, cy], [cx + 70, cy]],
+        [[cx - 50, cy], [cx + 50, cy]],
+    ]);
     await page.waitForTimeout(200);
     const c = await page.evaluate(() => window.__zoomCounts);
-    expect(c.in).toBe(2);
-    expect(c.out).toBe(1);
+    expect(c.in).toBeGreaterThanOrEqual(1);
+    expect(c.out).toBeGreaterThanOrEqual(1);
 });
 
 test('pause button opens the pause dialog (resume returns to the level)', async ({ page }) => {
@@ -562,8 +582,7 @@ test('wins level 1-1 with 3 stars via an exact tap placement', async ({ page }) 
     // x=1.6765 y=1.0647 angle=0. Synthetic touches carry float coordinates,
     // so a plain tap at the exact point is pixel-perfect (screen == engine px).
     const p = await screenForWorld(page, 1, 1, 1.6765, 1.0647);
-    await fingerDrag(page, [[[p.x, p.y]]], 60);   // exact-coordinate tap
-    await page.waitForTimeout(800);
+    await tapPlace(page, p.x, p.y);
     const rem = await remainingDynamic(page);
     expect(rem).toBe(2);                   // 1-1 has 3 dynamic blocks
     await page.locator('#touch-apply').tap();

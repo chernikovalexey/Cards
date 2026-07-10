@@ -1,15 +1,16 @@
-// Touch support for phones/tablets, v3 — gesture-first UX.
+// Touch support for phones/tablets, v4 — single-finger precision placement.
 //
 // The game becomes truly responsive: the #graphics canvas is resized to the
 // real device viewport (1:1 CSS pixels; the engine derives all world math
 // from Input.canvasWidth/Height, so it adapts), dialogs are scaled
 // independently, and placement is pure gestures:
-//   tap           place a block at the tapped point (immediately — there is
-//                 no double-tap gesture anymore)
-//   1-finger drag pan the camera (engine Space+left-drag)
-//   2 fingers     rotate the ghost: an animated dotted line is drawn between
-//                 the fingers and the block aligns to it (2.5-degree steps);
-//                 lifting the fingers places the block at the line midpoint
+//   tap           opens a magnified placement preview at the tapped point
+//                 with top/center/bottom handles; center is selected by default
+//   drag handle   moves the ghost with that handle under the finger
+//   drag elsewhere rotates the ghost around its center (2.5-degree steps)
+//   tap selected handle commits the placement
+//   1-finger drag pan the camera when no placement preview is open
+//   2-finger pinch zooms the engine camera; no two-finger rotate mode
 //   long press    pick up the placed block near the finger (fat hit bounds,
 //                 via the compiled engine's TouchBridge) — keep dragging to
 //                 move it, release to drop, or tap the trash button
@@ -54,7 +55,8 @@
         layout: { left: 0, top: TOPBAR, w: 800, h: 600 },  // canvas layout rect
         ghost: null,          // last ghost position in layout px {x, y}
         angleSteps: 0,        // tracked ghost angle in 2.5-degree steps
-        mode: null,           // null | 'pan' | 'rotate'
+        mode: null,           // null | 'pan' | 'place' | 'pinch'
+        placement: null,      // active precision placement state
     };
 
     function canvasEl() { return document.getElementById('graphics'); }
@@ -235,7 +237,7 @@
     }
 
     // q: layout point to place at. onDone(placed:boolean). Queued behind any
-    // pending rotation key frames, so a rotate gesture settles first.
+    // pending rotation key frames, so a precision rotation settles first.
     function placeAt(q, onDone) {
         if (physicsOn()) {
             rejectFeedback('Rewind first');
@@ -297,35 +299,28 @@
     top.appendChild(hintBtn);
     top.appendChild(applyBtn);
 
-    // Camera zoom lives in its own vertical +/- control docked on the right
-    // edge (map-app style): the two-finger gesture is taken by rotation, so
-    // pinch-zoom is unavailable, and the top action bar has no room for two
-    // more buttons on a narrow phone.
-    var zoomWrap = el('div', 'touch-zoom');
-    var zoomInBtn = el('button', 'touch-zoom-in', 'touch-btn', '+');
-    var zoomOutBtn = el('button', 'touch-zoom-out', 'touch-btn', '−');
-    zoomWrap.appendChild(zoomInBtn);
-    zoomWrap.appendChild(zoomOutBtn);
-
     var toast = el('div', 'touch-toast');
     var flash = el('div', 'touch-flash');
     var trash = el('button', 'touch-trash', 'touch-btn', '🗑');
     trash.style.display = 'none';
 
-    var rotSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    rotSvg.id = 'touch-rotline';
-    var rotLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    rotLine.setAttribute('stroke-dasharray', '10 8');
-    rotSvg.appendChild(rotLine);
+    var placeOverlay = el('div', 'touch-place');
+    var placeHandles = {};
+    ['top', 'center', 'bottom'].forEach(function (name) {
+        var h = el('button', 'touch-point-' + name, 'touch-point');
+        h.setAttribute('aria-label', name);
+        h.dataset.point = name;
+        placeHandles[name] = h;
+        placeOverlay.appendChild(h);
+    });
 
     function mountChrome() {
         document.body.appendChild(top);
         document.body.appendChild(blocksWrap);
-        document.body.appendChild(zoomWrap);
         document.body.appendChild(toast);
         document.body.appendChild(flash);
         document.body.appendChild(trash);
-        document.body.appendChild(rotSvg);
+        document.body.appendChild(placeOverlay);
     }
     if (document.body) mountChrome();
     else document.addEventListener('DOMContentLoaded', mountChrome);
@@ -341,8 +336,6 @@
     proxy(applyBtn, '#toggle-physics');
     proxy(restartBtn, '#restart');
     proxy(hintBtn, '#hint');
-    proxy(zoomInBtn, '#zoom-in');
-    proxy(zoomOutBtn, '#zoom-out');
     // Pause = the engine's Esc. Opens the pause dialog (Resume / Restart /
     // Menu) — the only way off a level on a phone.
     pauseBtn.addEventListener('touchstart', function (e) {
@@ -404,9 +397,15 @@
     }
 
     // ------------------------------------------------------------------
-    // Two-finger rotation with the animated dotted line. Lifting the
-    // fingers places the block right there — no extra tap needed.
-    var rot = null;   // {midQ}
+    // Single-finger precision placement. A tap opens a magnified canvas
+    // around the ghost and shows three selectable handles on the block.
+    // Dragging the selected handle moves the block; dragging away from the
+    // handles rotates it. Tapping the selected handle commits placement.
+    var PZOOM = 3;
+    var HANDLE_HIT_PX = 32;
+    var CARD_HANDLE_PX = 34;
+    var placeDrag = null; // {kind, point, startAngle}
+
     function magneticAngleSteps(angle) {
         var raw = Math.round(angle / STEP);
         var preferred = Math.round(raw / MAGNET_STEPS) * MAGNET_STEPS;
@@ -414,41 +413,127 @@
         // adjacent steps are pulled onto a preferred 15-degree angle.
         return Math.abs(raw - preferred) <= MAGNET_RADIUS ? preferred : raw;
     }
-    function rotAngleSteps(t0, t1) {
-        // screen y grows downward; world angle grows counter-clockwise
-        var a = Math.atan2(-(t1.clientY - t0.clientY), t1.clientX - t0.clientX);
-        return magneticAngleSteps(a);
+    function handleOffset(point) {
+        if (point === 'center') return { x: 0, y: 0 };
+        // Top/bottom sit on the ghost's local normal. This gives the player a
+        // stable "finger attaches here" choice without changing card geometry.
+        var sign = point === 'top' ? -1 : 1;
+        var a = state.angleSteps * STEP;
+        return {
+            x: sign * -Math.sin(a) * CARD_HANDLE_PX,
+            y: sign * -Math.cos(a) * CARD_HANDLE_PX,
+        };
     }
-    function startRotate(t0, t1) {
-        cancelTapTracking();
+    function transformedScreen(q) {
+        var L = state.layout;
+        var p = state.placement;
+        if (!p) return { x: L.left + q.x, y: L.top + q.y };
+        return {
+            x: L.left + p.tx + PZOOM * q.x,
+            y: L.top + p.ty + PZOOM * q.y,
+        };
+    }
+    function handleScreen(point) {
+        var p = state.placement;
+        var o = handleOffset(point);
+        return transformedScreen({ x: p.center.x + o.x, y: p.center.y + o.y });
+    }
+    function pointNearHandle(sx, sy) {
+        if (!state.placement) return null;
+        var best = null;
+        var bestD = HANDLE_HIT_PX + 1;
+        ['top', 'center', 'bottom'].forEach(function (name) {
+            var h = handleScreen(name);
+            var d = Math.hypot(sx - h.x, sy - h.y);
+            if (d <= HANDLE_HIT_PX && d < bestD) {
+                best = name;
+                bestD = d;
+            }
+        });
+        return best;
+    }
+    function layoutFromTransformed(sx, sy) {
+        var L = state.layout;
+        var p = state.placement;
+        if (!p) return toLayout(sx, sy);
+        return {
+            x: (sx - L.left - p.tx) / PZOOM,
+            y: (sy - L.top - p.ty) / PZOOM,
+        };
+    }
+    function updateCanvasZoom() {
+        var p = state.placement;
+        if (!p) return;
+        var L = state.layout;
+        var targetX = window.innerWidth / 2;
+        var targetY = TOPBAR + (window.innerHeight - TOPBAR) / 2;
+        p.tx = targetX - L.left - PZOOM * p.center.x;
+        p.ty = targetY - L.top - PZOOM * p.center.y;
+        var c = canvasEl();
+        c.style.transformOrigin = '0 0';
+        c.style.transform = 'translate(' + p.tx + 'px,' + p.ty + 'px) scale(' + PZOOM + ')';
+    }
+    function updatePlaceOverlay() {
+        var p = state.placement;
+        if (!p) return;
+        updateCanvasZoom();
+        placeOverlay.classList.add('on');
+        placeOverlay.style.setProperty('--touch-angle', (-state.angleSteps * STEP) + 'rad');
+        ['top', 'center', 'bottom'].forEach(function (name) {
+            var s = handleScreen(name);
+            var h = placeHandles[name];
+            h.style.left = s.x + 'px';
+            h.style.top = s.y + 'px';
+            h.classList.toggle('selected', p.selected === name);
+        });
+        moveGhost(p.center);
+    }
+    function beginPlacement(q) {
+        if (physicsOn()) {
+            rejectFeedback('Rewind first');
+            return;
+        }
         if (pan) endPan();
-        state.mode = 'rotate';
-        rot = {};
-        snapAngle();
-        updateRotate(t0, t1);
-        rotSvg.classList.add('on');
+        hideTrash();
+        state.mode = 'place';
+        state.placement = {
+            center: { x: q.x, y: q.y },
+            selected: 'center',
+            tx: 0,
+            ty: 0,
+        };
+        moveGhost(q);
+        updatePlaceOverlay();
     }
-    function updateRotate(t0, t1) {
-        if (!rot) return;
-        rotLine.setAttribute('x1', t0.clientX);
-        rotLine.setAttribute('y1', t0.clientY);
-        rotLine.setAttribute('x2', t1.clientX);
-        rotLine.setAttribute('y2', t1.clientY);
-        driveAngle(rotAngleSteps(t0, t1));
-        // the block rides the line: keep it at the midpoint
-        var mid = toLayout(
-            (t0.clientX + t1.clientX) / 2, (t0.clientY + t1.clientY) / 2);
-        moveGhost(mid);
-        rot.midQ = mid;
-    }
-    // place=true (fingers lifted): put the block at the line midpoint, after
-    // the queued rotation key frames settle (placeAt is whenKeysIdle-gated).
-    function endRotate(place) {
-        var q = rot && rot.midQ;
-        rot = null;
+    function closePlacement() {
+        state.placement = null;
         state.mode = null;
-        rotSvg.classList.remove('on');
-        if (place && q) placeAt(q, null);
+        placeOverlay.classList.remove('on');
+        canvasEl().style.transform = '';
+        parkGhost();
+    }
+    function commitPlacement() {
+        var p = state.placement;
+        if (!p) return;
+        var q = { x: p.center.x, y: p.center.y };
+        closePlacement();
+        placeAt(q, null);
+    }
+    function movePlacementHandle(sx, sy) {
+        var p = state.placement;
+        if (!p) return;
+        var q = layoutFromTransformed(sx, sy);
+        var o = handleOffset(p.selected);
+        p.center = { x: q.x - o.x, y: q.y - o.y };
+        updatePlaceOverlay();
+    }
+    function rotatePlacement(sx, sy) {
+        var p = state.placement;
+        if (!p) return;
+        var q = layoutFromTransformed(sx, sy);
+        var angle = Math.atan2(-(q.y - p.center.y), q.x - p.center.x);
+        driveAngle(magneticAngleSteps(angle));
+        updatePlaceOverlay();
     }
 
     // ------------------------------------------------------------------
@@ -497,6 +582,7 @@
     var touch0 = null;        // {x, y, t, moved} current single touch
     var longPress = null;     // timer for the pickup gesture
     var TAP_MS = 300, DRAG_PX = 10, LONG_MS = 550;
+    var pinch = null;         // {distance, bucket}
 
     function cancelTapTracking() {
         clearTimeout(longPress);
@@ -512,15 +598,27 @@
             var t = e.touches[0];
             touch0 = { x: t.clientX, y: t.clientY, t: Date.now(), moved: false };
             clearTimeout(longPress);
-            longPress = setTimeout(function () {
-                if (touch0 && !touch0.moved) {
-                    var sx = touch0.x, sy = touch0.y;
-                    touch0 = null;      // consume: no tap on release
-                    grabAt(sx, sy);
-                }
-            }, LONG_MS);
+            if (state.placement) {
+                var hit = pointNearHandle(t.clientX, t.clientY);
+                placeDrag = {
+                    kind: hit ? 'handle' : 'rotate',
+                    point: hit || state.placement.selected,
+                };
+                updatePlaceOverlay();
+            } else {
+                longPress = setTimeout(function () {
+                    if (touch0 && !touch0.moved) {
+                        var sx = touch0.x, sy = touch0.y;
+                        touch0 = null;      // consume: no tap on release
+                        grabAt(sx, sy);
+                    }
+                }, LONG_MS);
+            }
         } else if (e.touches.length === 2) {
-            startRotate(e.touches[0], e.touches[1]);
+            cancelTapTracking();
+            if (pan) endPan();
+            closePlacement();
+            startPinch(e.touches[0], e.touches[1]);
         }
     }, { passive: false });
 
@@ -541,12 +639,27 @@
             }
             return;
         }
-        if (rot && e.touches.length >= 2) {
-            updateRotate(e.touches[0], e.touches[1]);
+        if (pinch && e.touches.length >= 2) {
+            updatePinch(e.touches[0], e.touches[1]);
             return;
         }
         if (e.touches.length !== 1) return;
         var t = e.touches[0];
+        if (state.placement) {
+            if (touch0 && !touch0.moved &&
+                Math.hypot(t.clientX - touch0.x, t.clientY - touch0.y) > DRAG_PX) {
+                touch0.moved = true;
+                clearTimeout(longPress);
+            }
+            if (!touch0 || !touch0.moved) return;
+            if (placeDrag && placeDrag.kind === 'handle') {
+                state.placement.selected = placeDrag.point;
+                movePlacementHandle(t.clientX, t.clientY);
+            } else {
+                rotatePlacement(t.clientX, t.clientY);
+            }
+            return;
+        }
         if (touch0 && !touch0.moved &&
             Math.hypot(t.clientX - touch0.x, t.clientY - touch0.y) > DRAG_PX) {
             touch0.moved = true;
@@ -565,8 +678,8 @@
             endGrab(true);
             return;
         }
-        if (rot && e.touches.length < 2) {
-            endRotate(true);
+        if (pinch && e.touches.length < 2) {
+            endPinch();
             return;
         }
         if (pan && e.touches.length === 0) {
@@ -574,27 +687,74 @@
             touch0 = null;
             return;
         }
-        if (!touch0 || touch0.moved || Date.now() - touch0.t >= TAP_MS) {
+        if (!touch0 || Date.now() - touch0.t >= TAP_MS) {
             touch0 = null;
+            placeDrag = null;
             return;
         }
         var sx = touch0.x, sy = touch0.y;
+        var moved = touch0.moved;
         touch0 = null;
         clearTimeout(longPress);
+        if (state.placement) {
+            var hit = pointNearHandle(sx, sy);
+            if (hit) {
+                if (hit === state.placement.selected && !moved) commitPlacement();
+                else {
+                    state.placement.selected = hit;
+                    updatePlaceOverlay();
+                }
+            } else if (!moved) {
+                rotatePlacement(sx, sy);
+            }
+            placeDrag = null;
+            return;
+        }
+        if (moved) return;
         // Tutorial tooltips/hint cards dismiss on a body click.
         canvasEl().dispatchEvent(new MouseEvent('click', {
             bubbles: true, clientX: sx, clientY: sy,
         }));
-        placeAt(toLayout(sx, sy), null);   // tap places immediately
+        beginPlacement(toLayout(sx, sy));
     }, { passive: false });
 
     canvasEl().addEventListener('touchcancel', function () {
         touch0 = null;
+        placeDrag = null;
         clearTimeout(longPress);
         if (grab) endGrab(false);   // put the block back where it was
         if (pan) endPan();
-        if (rot) endRotate(false);
+        if (pinch) endPinch();
     });
+
+    function pinchDistance(t0, t1) {
+        return Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
+    }
+    function startPinch(t0, t1) {
+        state.mode = 'pinch';
+        pinch = { distance: pinchDistance(t0, t1), bucket: 0 };
+    }
+    function updatePinch(t0, t1) {
+        if (!pinch) return;
+        var d = pinchDistance(t0, t1);
+        if (!d || !pinch.distance) return;
+        var bucket = Math.round(Math.log(d / pinch.distance) / Math.log(1.15));
+        while (pinch.bucket < bucket) {
+            var zi = document.getElementById('zoom-in');
+            if (zi) zi.click();
+            pinch.bucket++;
+        }
+        while (pinch.bucket > bucket) {
+            var zo = document.getElementById('zoom-out');
+            if (zo) zo.click();
+            pinch.bucket--;
+        }
+    }
+    function endPinch() {
+        pinch = null;
+        state.mode = null;
+        parkGhost();
+    }
 
     // ------------------------------------------------------------------
     // Delete: the trash button appears next to a picked-up block; tapping
@@ -648,8 +808,6 @@
             ['#toggle-physics', applyBtn],
             ['#restart', restartBtn],
             ['#hint', hintBtn],
-            ['#zoom-in', zoomInBtn],
-            ['#zoom-out', zoomOutBtn],
             ['.selector.dynamic', dynamicBtn],
             ['.selector.static', staticBtn],
         ];
@@ -684,7 +842,6 @@
         var showChrome = inLevel && !dlg;
         top.style.display = showChrome ? 'flex' : 'none';
         blocksWrap.style.display = showChrome ? 'flex' : 'none';
-        zoomWrap.style.display = showChrome ? 'flex' : 'none';
         if (showChrome) mirrorButtons();
         applyBtn.innerHTML = physicsOn() ? '⏪ Rewind' : '⚡ Apply';
         var rem = remaining();
@@ -710,10 +867,10 @@
         var loc = window.locale;
         if (!loc || !loc.wizard_place) return;
         clearInterval(localeTimer);
-        loc.wizard_place = 'Tap to place a block';
-        loc.wizard_rotate = '<b>To rotate the block,</b> touch and turn with two fingers';
+        loc.wizard_place = 'Tap to aim, then tap the highlighted point to place';
+        loc.wizard_rotate = '<b>To rotate the block,</b> drag away from its placement points';
         loc.wizard_remove = '<b>Press and hold a block</b> to pick it up — drag to move it, or tap the trash to remove it';
-        loc.wizard_zoom = '<b>Drag with one finger</b> to move the camera';
+        loc.wizard_zoom = '<b>Pinch with two fingers</b> to zoom the camera';
         loc.click_to_unlock = 'Tap to unlock';
     }, 100);
 
