@@ -192,6 +192,59 @@ test('placement points can be reselected before commit', async ({ page }) => {
     await expect(page.locator('#touch-point-center')).toHaveClass(/selected/);
 });
 
+test('placement points sit on the block axis', async ({ page }) => {
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.8);
+    await page.touchscreen.tap(p.x, p.y);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+
+    const pts = await page.evaluate(() => {
+        const centerOf = (id) => {
+            const r = document.querySelector(id).getBoundingClientRect();
+            return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        };
+        return {
+            top: centerOf('#touch-point-top'),
+            center: centerOf('#touch-point-center'),
+            bottom: centerOf('#touch-point-bottom'),
+        };
+    });
+    expect(Math.abs(pts.top.y - pts.center.y)).toBeLessThan(2);
+    expect(Math.abs(pts.bottom.y - pts.center.y)).toBeLessThan(2);
+    expect(Math.abs(pts.bottom.x - pts.top.x)).toBeGreaterThan(190);
+});
+
+test('selected placement point becomes the rotation pivot', async ({ page }) => {
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 2.0);
+    await page.touchscreen.tap(p.x, p.y);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+    const before = await page.evaluate(() => ({
+        center: window.__touch.state.placement.center,
+    }));
+
+    const top = await page.locator('#touch-point-top').boundingBox();
+    await page.touchscreen.tap(top.x + top.width / 2, top.y + top.height / 2);
+    await expect(page.locator('#touch-point-top')).toHaveClass(/selected/);
+
+    const pivot = await page.locator('#touch-point-top').boundingBox();
+    const px = pivot.x + pivot.width / 2;
+    const py = pivot.y + pivot.height / 2;
+    await fingerDrag(page, [
+        [[px + 60, py - 90]],
+        [[px + 82, py - 82]],
+        [[px + 104, py - 66]],
+        [[px + 125, py - 42]],
+    ]);
+
+    const after = await page.evaluate(() => ({
+        center: window.__touch.state.placement.center,
+        angleSteps: window.__touch.state.angleSteps,
+    }));
+    expect(Math.abs(after.center.x - before.center.x)).toBeGreaterThan(10);
+    expect(after.angleSteps).not.toBe(0);
+});
+
 test('single-finger placement can rotate before commit', async ({ page }) => {
     await enterLevel11(page);
     const base = await remainingDynamic(page);
@@ -202,10 +255,11 @@ test('single-finger placement can rotate before commit', async ({ page }) => {
     const cx = center.x + center.width / 2;
     const cy = center.y + center.height / 2;
     const ang = Math.PI / 6;
-    const r = 70;
+    const startAng = Math.PI / 3;
+    const r = 115;
     const frames = [];
     for (let i = 0; i <= 8; i++) {
-        const a = ang * i / 8;
+        const a = startAng + (ang - startAng) * i / 8;
         frames.push([[cx + r * Math.cos(a), cy - r * Math.sin(a)]]);
     }
     for (let i = 0; i < 14; i++) frames.push([[cx + r * Math.cos(ang), cy - r * Math.sin(ang)]]);

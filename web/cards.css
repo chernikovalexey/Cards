@@ -2724,11 +2724,8 @@ html.touch-mode {
 
 #touch-place.on { display: block; }
 
-#touch-place::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: calc(var(--topbar, 56px) + (100vh - var(--topbar, 56px)) / 2);
+#touch-card {
+    position: fixed;
     width: 130px;
     height: 28px;
     margin-left: -65px;

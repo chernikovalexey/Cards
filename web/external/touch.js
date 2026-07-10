@@ -7,7 +7,7 @@
 //   tap           opens a magnified placement preview at the tapped point
 //                 with top/center/bottom handles; center is selected by default
 //   drag handle   moves the ghost with that handle under the finger
-//   drag elsewhere rotates the ghost around its center (2.5-degree steps)
+//   drag elsewhere rotates the ghost around the selected handle
 //   tap selected handle commits the placement
 //   1-finger drag pan the camera when no placement preview is open
 //   2-finger pinch zooms the engine camera; no two-finger rotate mode
@@ -305,6 +305,8 @@
     trash.style.display = 'none';
 
     var placeOverlay = el('div', 'touch-place');
+    var placeCard = el('div', 'touch-card');
+    placeOverlay.appendChild(placeCard);
     var placeHandles = {};
     ['top', 'center', 'bottom'].forEach(function (name) {
         var h = el('button', 'touch-point-' + name, 'touch-point');
@@ -404,7 +406,7 @@
     var PZOOM = 3;
     var HANDLE_HIT_PX = 32;
     var CARD_HANDLE_PX = 34;
-    var placeDrag = null; // {kind, point, startAngle}
+    var placeDrag = null; // {kind, point, selectedAtStart}
 
     function magneticAngleSteps(angle) {
         var raw = Math.round(angle / STEP);
@@ -415,14 +417,19 @@
     }
     function handleOffset(point) {
         if (point === 'center') return { x: 0, y: 0 };
-        // Top/bottom sit on the ghost's local normal. This gives the player a
-        // stable "finger attaches here" choice without changing card geometry.
+        // Top/bottom sit on the card axis so the selectable pivot points stay
+        // visually attached to the block itself.
         var sign = point === 'top' ? -1 : 1;
         var a = state.angleSteps * STEP;
         return {
-            x: sign * -Math.sin(a) * CARD_HANDLE_PX,
-            y: sign * -Math.cos(a) * CARD_HANDLE_PX,
+            x: sign * Math.cos(a) * CARD_HANDLE_PX,
+            y: sign * -Math.sin(a) * CARD_HANDLE_PX,
         };
+    }
+    function layoutHandlePoint(point) {
+        var p = state.placement;
+        var o = handleOffset(point);
+        return { x: p.center.x + o.x, y: p.center.y + o.y };
     }
     function transformedScreen(q) {
         var L = state.layout;
@@ -434,9 +441,7 @@
         };
     }
     function handleScreen(point) {
-        var p = state.placement;
-        var o = handleOffset(point);
-        return transformedScreen({ x: p.center.x + o.x, y: p.center.y + o.y });
+        return transformedScreen(layoutHandlePoint(point));
     }
     function pointNearHandle(sx, sy) {
         if (!state.placement) return null;
@@ -479,6 +484,9 @@
         updateCanvasZoom();
         placeOverlay.classList.add('on');
         placeOverlay.style.setProperty('--touch-angle', (-state.angleSteps * STEP) + 'rad');
+        var cs = transformedScreen(p.center);
+        placeCard.style.left = cs.x + 'px';
+        placeCard.style.top = cs.y + 'px';
         ['top', 'center', 'bottom'].forEach(function (name) {
             var s = handleScreen(name);
             var h = placeHandles[name];
@@ -530,9 +538,14 @@
     function rotatePlacement(sx, sy) {
         var p = state.placement;
         if (!p) return;
+        var selected = p.selected;
+        var pivot = layoutHandlePoint(selected);
         var q = layoutFromTransformed(sx, sy);
-        var angle = Math.atan2(-(q.y - p.center.y), q.x - p.center.x);
+        var angle = Math.atan2(-(q.y - pivot.y), q.x - pivot.x);
+        if (selected === 'bottom') angle += Math.PI;
         driveAngle(magneticAngleSteps(angle));
+        var o = handleOffset(selected);
+        p.center = { x: pivot.x - o.x, y: pivot.y - o.y };
         updatePlaceOverlay();
     }
 
@@ -603,6 +616,7 @@
                 placeDrag = {
                     kind: hit ? 'handle' : 'rotate',
                     point: hit || state.placement.selected,
+                    selectedAtStart: state.placement.selected,
                 };
                 updatePlaceOverlay();
             } else {
@@ -697,9 +711,12 @@
         touch0 = null;
         clearTimeout(longPress);
         if (state.placement) {
-            var hit = pointNearHandle(sx, sy);
+            var hit = placeDrag && !moved && placeDrag.kind === 'handle' ?
+                placeDrag.point : pointNearHandle(sx, sy);
             if (hit) {
-                if (hit === state.placement.selected && !moved) commitPlacement();
+                var startedOn = placeDrag ?
+                    placeDrag.selectedAtStart : state.placement.selected;
+                if (hit === startedOn && !moved) commitPlacement();
                 else {
                     state.placement.selected = hit;
                     updatePlaceOverlay();
