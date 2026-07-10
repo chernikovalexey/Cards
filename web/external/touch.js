@@ -406,7 +406,7 @@
     var PZOOM = 3;
     var HANDLE_HIT_PX = 32;
     var CARD_HANDLE_PX = 34;
-    var placeDrag = null; // {kind, point, selectedAtStart}
+    var placeDrag = null; // {kind, point, selectedAtStart, pivot, startPointerAngle, startCardAngle}
 
     function magneticAngleSteps(angle) {
         var raw = Math.round(angle / STEP);
@@ -430,6 +430,15 @@
         var p = state.placement;
         var o = handleOffset(point);
         return { x: p.center.x + o.x, y: p.center.y + o.y };
+    }
+    function angleFrom(a, b) {
+        return Math.atan2(-(b.y - a.y), b.x - a.x);
+    }
+    function angleDelta(to, from) {
+        var d = to - from;
+        while (d <= -Math.PI) d += Math.PI * 2;
+        while (d > Math.PI) d -= Math.PI * 2;
+        return d;
     }
     function transformedScreen(q) {
         var L = state.layout;
@@ -539,10 +548,18 @@
         var p = state.placement;
         if (!p) return;
         var selected = p.selected;
-        var pivot = layoutHandlePoint(selected);
+        var pivot = placeDrag && placeDrag.kind === 'rotate' && placeDrag.pivot ?
+            placeDrag.pivot : layoutHandlePoint(selected);
         var q = layoutFromTransformed(sx, sy);
-        var angle = Math.atan2(-(q.y - pivot.y), q.x - pivot.x);
-        if (selected === 'bottom') angle += Math.PI;
+        var angle = angleFrom(pivot, q);
+        if (placeDrag && placeDrag.kind === 'rotate' &&
+            selected !== 'center' &&
+            typeof placeDrag.startPointerAngle === 'number') {
+            angle = placeDrag.startCardAngle +
+                angleDelta(angle, placeDrag.startPointerAngle);
+        } else if (selected === 'bottom') {
+            angle += Math.PI;
+        }
         driveAngle(magneticAngleSteps(angle));
         var o = handleOffset(selected);
         p.center = { x: pivot.x - o.x, y: pivot.y - o.y };
@@ -613,10 +630,16 @@
             clearTimeout(longPress);
             if (state.placement) {
                 var hit = pointNearHandle(t.clientX, t.clientY);
+                var point = hit || state.placement.selected;
+                var pivot = layoutHandlePoint(point);
+                var q = layoutFromTransformed(t.clientX, t.clientY);
                 placeDrag = {
                     kind: hit ? 'handle' : 'rotate',
-                    point: hit || state.placement.selected,
+                    point: point,
                     selectedAtStart: state.placement.selected,
+                    pivot: pivot,
+                    startPointerAngle: angleFrom(pivot, q),
+                    startCardAngle: state.angleSteps * STEP,
                 };
                 updatePlaceOverlay();
             } else {
