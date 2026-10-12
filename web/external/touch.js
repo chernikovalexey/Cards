@@ -1,14 +1,15 @@
-// Touch support for phones/tablets, v4 — single-finger precision placement.
+// Touch support for phones/tablets — single-finger precision placement.
 //
 // The game becomes truly responsive: the #graphics canvas is resized to the
 // real device viewport (1:1 CSS pixels; the engine derives all world math
 // from Input.canvasWidth/Height, so it adapts), dialogs are scaled
-// independently, and placement is pure gestures:
+// independently, and placement uses gestures with explicit confirmation:
 //   tap           opens a magnified placement preview at the tapped point
 //                 with top/center/bottom handles; center is selected by default
 //   drag handle   moves the ghost with that handle under the finger
 //   drag elsewhere rotates the ghost around the selected handle
-//   tap selected handle commits the placement
+//   Place block   commits the placement; Cancel closes the preview
+//   tap selected handle also commits the placement
 //   1-finger drag pan the camera when no placement preview is open
 //   2-finger pinch zooms the engine camera; no two-finger rotate mode
 //   long press    pick up the placed block near the finger (fat hit bounds,
@@ -73,6 +74,13 @@
     // Responsive layout: device-sized canvas below the top bar, dialogs
     // scaled to fit independently (they keep their internal 800x600).
     function refit() {
+        // Resizing changes both the canvas coordinates and the camera bounds.
+        // An unfinished ghost no longer points at the same world position, so
+        // ask for a fresh aim instead of leaving its handles off-screen.
+        if (state.placement) {
+            closePlacement();
+            showNotice('Screen changed — tap to aim again');
+        }
         var vw = window.innerWidth, vh = window.innerHeight;
         var st = safeTop();
         TOPBAR = 56 + st;
@@ -238,7 +246,7 @@
 
     // q: layout point to place at. onDone(placed:boolean). Queued behind any
     // pending rotation key frames, so a precision rotation settles first.
-    function placeAt(q, onDone) {
+    function placeAt(q, onDone, isActive, skipMagnet) {
         if (physicsOn()) {
             rejectFeedback('Rewind first');
             if (onDone) onDone(false);
@@ -252,9 +260,14 @@
             return;
         }
         whenKeysIdle(function () {
-            q = magneticPosition(q);
+            if (isActive && !isActive()) return;
+            if (!skipMagnet) q = magneticPosition(q);
             moveGhost(q);
             raf2(function () {              // box2d refreshes ghost contacts
+                if (isActive && !isActive()) {
+                    parkGhost();
+                    return;
+                }
                 var before = remaining();
                 mouse('mousedown', q, 0);
                 raf2(function () {
@@ -274,8 +287,8 @@
     }
 
     // ------------------------------------------------------------------
-    // Chrome: a single top bar (no placement buttons — placement is pure
-    // gestures) + feedback overlays. Built only in touch mode.
+    // Chrome: top bar, placement actions, and feedback overlays. Built only
+    // in touch mode.
     function el(tag, id, cls, html) {
         var e = document.createElement(tag);
         if (id) e.id = id;
@@ -289,6 +302,9 @@
     var restartBtn = el('button', 'touch-restart', 'touch-btn', '↺');
     var hintBtn = el('button', 'touch-hint', 'touch-btn', '💡');
     var applyBtn = el('button', 'touch-apply', 'touch-btn touch-btn-primary', '⚡ Apply');
+    pauseBtn.setAttribute('aria-label', 'Pause');
+    restartBtn.setAttribute('aria-label', 'Restart level');
+    hintBtn.setAttribute('aria-label', 'Show hint');
     var blocksWrap = el('div', 'touch-blocks');
     var dynamicBtn = el('button', 'touch-block-dynamic', 'touch-btn', '▦ Block');
     var staticBtn = el('button', 'touch-block-static', 'touch-btn', '▤ Wall');
@@ -302,11 +318,21 @@
     var toast = el('div', 'touch-toast');
     var flash = el('div', 'touch-flash');
     var trash = el('button', 'touch-trash', 'touch-btn', '🗑');
+    trash.setAttribute('aria-label', 'Delete selected block');
     trash.style.display = 'none';
 
     var placeOverlay = el('div', 'touch-place');
     var placeCard = el('div', 'touch-card');
     placeOverlay.appendChild(placeCard);
+    var placeActions = el('div', 'touch-place-actions');
+    var placeHelp = el('div', 'touch-place-help', null,
+        'Drag a dot to move · drag outside to rotate');
+    var placeCancel = el('button', 'touch-place-cancel', 'touch-btn', 'Cancel');
+    var placeConfirm = el('button', 'touch-place-confirm',
+        'touch-btn touch-btn-primary', 'Place block');
+    placeActions.appendChild(placeHelp);
+    placeActions.appendChild(placeCancel);
+    placeActions.appendChild(placeConfirm);
     var placeHandles = {};
     ['top', 'center', 'bottom'].forEach(function (name) {
         var h = el('button', 'touch-point-' + name, 'touch-point');
@@ -323,6 +349,7 @@
         document.body.appendChild(flash);
         document.body.appendChild(trash);
         document.body.appendChild(placeOverlay);
+        document.body.appendChild(placeActions);
     }
     if (document.body) mountChrome();
     else document.addEventListener('DOMContentLoaded', mountChrome);
@@ -331,6 +358,9 @@
         btn.addEventListener('touchstart', function (e) {
             e.preventDefault();
             e.stopPropagation();
+            if (grab || grabPending) return;
+            if (state.placement && state.placement.pending) return;
+            if (state.placement) closePlacement();
             var t = document.querySelector(targetSel);
             if (t) t.click();
         }, { passive: false });
@@ -343,12 +373,16 @@
     pauseBtn.addEventListener('touchstart', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        if (grab || grabPending) return;
+        if (state.placement && state.placement.pending) return;
+        if (state.placement) closePlacement();
         enqueueKey(27, 3);
     }, { passive: false });
     function selectBlock(btn, selector) {
         btn.addEventListener('touchstart', function (e) {
             e.preventDefault();
             e.stopPropagation();
+            if (grab || grabPending) return;
             var target = document.querySelector(selector);
             if (target && !target.hidden) target.click();
         }, { passive: false });
@@ -357,10 +391,19 @@
     selectBlock(staticBtn, '.selector.static');
 
     var toastTimer = null;
+    function showNotice(msg) {
+        toast.textContent = msg;
+        toast.classList.add('on', 'info');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+            toast.classList.remove('on', 'info');
+        }, 2200);
+    }
     function rejectFeedback(msg) {
         flash.classList.add('on');
         setTimeout(function () { flash.classList.remove('on'); }, 450);
         toast.textContent = msg;
+        toast.classList.remove('info');
         toast.classList.add('on');
         clearTimeout(toastTimer);
         toastTimer = setTimeout(function () { toast.classList.remove('on'); }, 2200);
@@ -496,6 +539,10 @@
         if (!p) return;
         updateCanvasZoom();
         placeOverlay.classList.add('on');
+        placeActions.classList.add('on');
+        document.documentElement.classList.add('placing');
+        placeConfirm.disabled = !!p.pending;
+        placeCancel.disabled = !!p.pending;
         placeOverlay.style.setProperty('--touch-angle', (-state.angleSteps * STEP) + 'rad');
         var cs = transformedScreen(p.center);
         placeCard.style.left = cs.x + 'px';
@@ -514,6 +561,11 @@
             rejectFeedback('Rewind first');
             return;
         }
+        var rem = remaining();
+        if ((selectedStatic() ? rem.s : rem.d) === 0) {
+            rejectFeedback('No blocks of this type left');
+            return;
+        }
         if (pan) endPan();
         hideTrash();
         state.mode = 'place';
@@ -529,17 +581,44 @@
     function closePlacement() {
         state.placement = null;
         state.mode = null;
+        placeDrag = null;
         placeOverlay.classList.remove('on');
+        placeActions.classList.remove('on');
+        document.documentElement.classList.remove('placing');
         canvasEl().style.transform = '';
         parkGhost();
     }
     function commitPlacement() {
         var p = state.placement;
-        if (!p) return;
+        if (!p || p.pending) return;
+        p.pending = true;
+        placeConfirm.disabled = true;
+        placeCancel.disabled = true;
         var q = { x: p.center.x, y: p.center.y };
-        closePlacement();
-        placeAt(q, null);
+        placeAt(q, function (placed) {
+            if (state.placement !== p) return;
+            p.pending = false;
+            if (placed) closePlacement();
+            else updatePlaceOverlay();
+        }, function () { return state.placement === p; });
     }
+    function actionTouch(fn) {
+        return function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            fn();
+        };
+    }
+    placeCancel.addEventListener('touchstart', actionTouch(function () {
+        if (state.placement && !state.placement.pending) closePlacement();
+    }), { passive: false });
+    placeConfirm.addEventListener('touchstart', actionTouch(commitPlacement),
+        { passive: false });
+    // The controls also work with keyboard and assistive-technology clicks.
+    placeCancel.addEventListener('click', function () {
+        if (state.placement && !state.placement.pending) closePlacement();
+    });
+    placeConfirm.addEventListener('click', commitPlacement);
     function movePlacementHandle(sx, sy) {
         var p = state.placement;
         if (!p) return;
@@ -589,6 +668,7 @@
     // board and becomes the ghost at its exact spot and angle; dragging
     // moves it, releasing drops it, the trash button deletes it.
     var grab = null;   // {home:{x,y}, fx, fy, moved}
+    var grabPending = false;
     function grabAt(sx, sy) {
         if (physicsOn() || !window.TouchBridge) return false;
         var q = toLayout(sx, sy);
@@ -614,13 +694,29 @@
         if (!grab) return;
         var g = grab;
         grab = null;
+        grabPending = true;
+        function restored(placed) {
+            grabPending = false;
+            if (!placed) rejectFeedback('Could not restore the block — try Undo');
+        }
         if (drop && g.moved) {
             hideTrash();
-            placeAt({ x: state.ghost.x, y: state.ghost.y }, null);
+            placeAt({ x: state.ghost.x, y: state.ghost.y }, function (placed) {
+                if (placed) {
+                    grabPending = false;
+                } else {
+                    // The bridge removes a card as soon as it is picked up.
+                    // A rejected drop must put it back at its valid origin.
+                    placeAt(g.home, function (back) {
+                        restored(back);
+                        if (back) showNotice('Block returned to its original spot');
+                    }, null, true);
+                }
+            });
         } else {
             // not moved (or cancelled): put the block back where it was;
             // the trash button stays armed on that spot for deleting
-            placeAt(g.home, null);
+            placeAt(g.home, restored, null, true);
         }
     }
 
@@ -639,6 +735,8 @@
 
     canvasEl().addEventListener('touchstart', function (e) {
         e.preventDefault();
+        if (grabPending) return;
+        if (state.placement && state.placement.pending) return;
         if (grab) return;         // one block in hand: ignore extra fingers
         hideTrash();
         if (e.touches.length === 1) {
@@ -672,13 +770,18 @@
         } else if (e.touches.length === 2) {
             cancelTapTracking();
             if (pan) endPan();
-            closePlacement();
+            if (state.placement) {
+                closePlacement();
+                showNotice('Placement cancelled to zoom');
+            }
             startPinch(e.touches[0], e.touches[1]);
         }
     }, { passive: false });
 
     canvasEl().addEventListener('touchmove', function (e) {
         e.preventDefault();
+        if (grabPending) return;
+        if (state.placement && state.placement.pending) return;
         if (grab && e.touches.length === 1) {
             var f = e.touches[0];
             if (!grab.moved &&
@@ -729,6 +832,8 @@
 
     canvasEl().addEventListener('touchend', function (e) {
         e.preventDefault();
+        if (grabPending) return;
+        if (state.placement && state.placement.pending) return;
         if (grab && e.touches.length === 0) {
             endGrab(true);
             return;
@@ -910,6 +1015,7 @@
         staticBtn.classList.toggle('selected', selectedStatic());
         if (!inLevel || dlg) {
             hideTrash();
+            if (state.placement && !state.placement.pending) closePlacement();
         }
         if (inLevel && !wasInLevel) {
             state.angleSteps = 0;   // fresh level: ghost angle is 0
@@ -926,7 +1032,7 @@
         var loc = window.locale;
         if (!loc || !loc.wizard_place) return;
         clearInterval(localeTimer);
-        loc.wizard_place = 'Tap to aim, then tap the highlighted point to place';
+        loc.wizard_place = 'Tap to aim, drag to adjust, then tap Place block';
         loc.wizard_rotate = '<b>To rotate the block,</b> drag away from its placement points';
         loc.wizard_remove = '<b>Press and hold a block</b> to pick it up — drag to move it, or tap the trash to remove it';
         loc.wizard_zoom = '<b>Pinch with two fingers</b> to zoom the camera';

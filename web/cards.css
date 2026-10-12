@@ -2678,10 +2678,15 @@ html.touch-mode {
     transition: opacity 0.2s;
     pointer-events: none;
     z-index: 60;
-    white-space: nowrap;
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
+    white-space: normal;
+    text-align: center;
 }
 
 #touch-toast.on { opacity: 1; }
+
+#touch-toast.info { background: rgba(35, 65, 105, 0.96); }
 
 #touch-flash {
     position: fixed;
@@ -2723,6 +2728,64 @@ html.touch-mode {
 }
 
 #touch-place.on { display: block; }
+
+/* Explicit confirmation and escape from the magnified placement view. */
+.touch-mode.placing #touch-blocks { display: none !important; }
+
+#touch-place-actions {
+    position: fixed;
+    left: 50%;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    z-index: 56;
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: min(390px, calc(100vw - 20px));
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 18px;
+    background: rgba(14, 23, 35, 0.92);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+#touch-place-actions.on { display: grid; }
+
+#touch-place-help {
+    grid-column: 1 / -1;
+    color: #dce7f6;
+    font-size: 13px;
+    line-height: 1.3;
+    text-align: center;
+}
+
+#touch-place-actions .touch-btn {
+    width: 100%;
+    min-height: 48px;
+    font-size: 15px;
+    padding: 0 8px;
+}
+
+#touch-place-actions .touch-btn:disabled {
+    opacity: 0.55;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    #touch-place-actions {
+        top: calc(var(--topbar, 56px) + 8px);
+        right: calc(8px + env(safe-area-inset-right, 0px));
+        bottom: auto;
+        left: auto;
+        transform: none;
+        grid-template-columns: 1fr;
+        width: 136px;
+        padding: 8px;
+    }
+
+    #touch-place-help { font-size: 11px; }
+}
 
 #touch-card {
     position: fixed;

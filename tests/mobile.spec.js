@@ -385,16 +385,76 @@ test('one-finger drag pans the camera', async ({ page }) => {
     expect(Math.abs(xs[1] - xs[0])).toBeGreaterThan(60 / NSCALE);  // > 3/8 of the pan
 });
 
-test('rejected placement shows toast + red flash, counters unchanged', async ({ page }) => {
+test('rejected placement stays editable and can be corrected', async ({ page }) => {
     await enterLevel11(page);
     const base = await remainingDynamic(page);
     const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
     await tapPlace(page, p.x, p.y);
     expect(await remainingDynamic(page)).toBe(base - 1);
-    await page.waitForTimeout(400);           // slide out of double-tap window
     await tapPlace(page, p.x, p.y);           // same spot: overlap, rejected
     await expect(page.locator('#touch-toast')).toHaveClass(/on/);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
     expect(await remainingDynamic(page)).toBe(base - 1);
+
+    const center = await page.locator('#touch-point-center').boundingBox();
+    const cx = center.x + center.width / 2;
+    const cy = center.y + center.height / 2;
+    const frames = [];
+    for (let i = 0; i <= 8; i++) frames.push([[cx + i * 21, cy]]);
+    await fingerDrag(page, frames);
+    await page.locator('#touch-place-confirm').tap();
+    await expect(page.locator('#touch-place')).not.toHaveClass(/on/);
+    expect(await remainingDynamic(page)).toBe(base - 2);
+});
+
+test('placement has explicit confirm and cancel controls', async ({ page }) => {
+    await enterLevel11(page);
+    const base = await remainingDynamic(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
+    await page.touchscreen.tap(p.x, p.y);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+    for (const id of ['#touch-place-cancel', '#touch-place-confirm']) {
+        const box = await page.locator(id).boundingBox();
+        expect(box.height).toBeGreaterThanOrEqual(44);
+        expect(box.x).toBeGreaterThanOrEqual(0);
+        expect(box.x + box.width).toBeLessThanOrEqual(page.viewportSize().width);
+    }
+    await page.locator('#touch-place-cancel').tap();
+    await expect(page.locator('#touch-place')).not.toHaveClass(/on/);
+    expect(await remainingDynamic(page)).toBe(base);
+
+    await page.touchscreen.tap(p.x, p.y);
+    await page.locator('#touch-place-confirm').tap();
+    await expect(page.locator('#touch-place')).not.toHaveClass(/on/);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+});
+
+test('rotating the screen cancels an unfinished placement safely', async ({ page }) => {
+    await enterLevel11(page);
+    const base = await remainingDynamic(page);
+    await page.touchscreen.tap(200, 650);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+    await page.setViewportSize({ width: 915, height: 412 });
+    await expect(page.locator('#touch-place')).not.toHaveClass(/on/);
+    await expect(page.locator('#touch-toast')).toContainText('tap to aim again');
+    expect(await page.locator('#graphics').evaluate((c) => c.style.transform)).toBe('');
+    expect(await remainingDynamic(page)).toBe(base);
+});
+
+test('restart and pause clear an unfinished placement', async ({ page }) => {
+    await enterLevel11(page);
+    await page.touchscreen.tap(200, 650);
+    await page.locator('#touch-restart').tap();
+    await expect(page.locator('body > .prompt-window')).toBeVisible();
+    await page.locator('body > .prompt-window .prompt-positive').tap();
+    await expect(page.locator('#touch-place')).not.toHaveClass(/on/);
+    expect(await page.locator('#graphics').evaluate((c) => c.style.transform)).toBe('');
+
+    await page.touchscreen.tap(200, 650);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+    await page.locator('#touch-pause').tap();
+    await expect(page.locator('#rating-box')).toBeVisible();
+    await expect(page.locator('#touch-place')).not.toHaveClass(/on/);
 });
 
 // The card is 45x2.5 px; pressing 14px above its center is well outside the
@@ -417,6 +477,25 @@ test('long-press near a card picks it up; dragging moves it; release re-places i
     expect(cards[0].x).toBeCloseTo(2.5 + 64 / NSCALE, 1);  // moved with the drag
     expect(cards[0].y).toBeCloseTo(1.5, 1);
     expect(cards[0].a).toBeCloseTo(0, 2);                  // angle preserved
+});
+
+test('dropping a picked-up block onto an obstacle restores it', async ({ page }) => {
+    await enterLevel11(page);
+    const base = await remainingDynamic(page);
+    const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
+    await tapPlace(page, p.x, p.y);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+
+    const s = { x: p.x + 10, y: p.y - 14 };
+    const frames = [[[s.x, s.y]]];
+    for (let i = 1; i <= 8; i++) frames.push([[s.x, s.y + i * 15]]);
+    await fingerDrag(page, frames, 800);     // center ends inside the floor
+    await page.waitForTimeout(800);
+    expect(await remainingDynamic(page)).toBe(base - 1);
+    const cards = await probeCards(page);
+    expect(cards.length).toBe(1);
+    expect(cards[0].x).toBeCloseTo(2.5, 1);
+    expect(cards[0].y).toBeCloseTo(1.5, 1);
 });
 
 test('long-press near a card then trash deletes it (fat bounds, single card)', async ({ page }) => {
@@ -652,7 +731,14 @@ test.describe('landscape', () => {
         expect(fit.attrH).toBe(fit.innerH - TOPBAR);
         const base = await remainingDynamic(page);
         const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
-        await tapPlace(page, p.x, p.y);
+        await page.touchscreen.tap(p.x, p.y);
+        await expect(page.locator('#touch-place')).toHaveClass(/on/);
+        const actions = await page.locator('#touch-place-actions').boundingBox();
+        expect(actions.x).toBeGreaterThanOrEqual(0);
+        expect(actions.x + actions.width).toBeLessThanOrEqual(915);
+        expect(actions.y + actions.height).toBeLessThanOrEqual(412);
+        await page.locator('#touch-place-confirm').tap();
+        await page.waitForTimeout(500);
         expect(await remainingDynamic(page)).toBe(base - 1);
         // pause dialog fits the viewport
         await page.evaluate(() => {
@@ -700,4 +786,25 @@ test('wins level 1-1 with 3 stars via an exact tap placement', async ({ page }) 
     await page.waitForFunction(
         () => JSON.parse(localStorage.getItem('last')).level === 2,
         null, { timeout: 30000 });
+});
+
+test('mobile placement can solve the reverse-gravity level', async ({ page }) => {
+    await page.addInitScript(() => {
+        localStorage.setItem('seen_howto', 'true');
+        localStorage.setItem('runout_occured', 'true');
+        localStorage.setItem('last', JSON.stringify({ chapter: 4, level: 2 }));
+    });
+    await page.goto('/web/cards.html');
+    await expect(page.locator('#continue')).toBeVisible({ timeout: 30000 });
+    await page.locator('#continue').tap();
+    await expect(page.locator('#touch-apply')).toBeVisible();
+    await page.waitForTimeout(1500); // camera settle
+
+    const p = await screenForWorld(page, 4, 2, 2.441, 0.535);
+    await page.touchscreen.tap(p.x, p.y);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+    await page.locator('#touch-place-confirm').tap();
+    await expect(page.locator('.dynamic .remaining')).toHaveText('2 left');
+    await page.locator('#touch-apply').tap();
+    await expect(page.locator('#rating-box')).toBeVisible({ timeout: 20000 });
 });
