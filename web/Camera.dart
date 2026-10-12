@@ -133,6 +133,16 @@ class Camera {
         targetOffsetY = dy;
     }
 
+    // A device resize can leave a long pan animation aimed at the old canvas.
+    // Set both the rendered offset and its animation to the new target.
+    void jumpToTarget() {
+        pxOffsetX = targetOffsetX;
+        pxOffsetY = targetOffsetY;
+        xAnim = new DoubleAnimation(pxOffsetX, pxOffsetX, FRAME_COUNT);
+        yAnim = new DoubleAnimation(pxOffsetY, pxOffsetY, FRAME_COUNT);
+        updateZoom();
+    }
+
     void updateEngine() {
         xAnim.setStart(pxOffsetX);
         xAnim.setEnd(targetOffsetX);
@@ -215,13 +225,25 @@ class Camera {
 
     void checkTarget([bool ignoreXCheck = false, bool ignoreYCheck = false]) {
         if (!ignoreXCheck) {
-            if (mTargetX <= bx1 / GameEngine.NSCALE) mTargetX = bx1 / GameEngine.NSCALE;
-            if (mTargetX + GameEngine.WIDTH >= bx2 / GameEngine.NSCALE) mTargetX = bx2 / GameEngine.NSCALE - GameEngine.WIDTH;
+            double left = bx1 / GameEngine.NSCALE;
+            double right = bx2 / GameEngine.NSCALE;
+            if (GameEngine.WIDTH >= right - left) {
+                mTargetX = (left + right - GameEngine.WIDTH) / 2;
+            } else {
+                if (mTargetX < left) mTargetX = left;
+                if (mTargetX + GameEngine.WIDTH > right) mTargetX = right - GameEngine.WIDTH;
+            }
         }
 
         if (!ignoreYCheck) {
-            if (mTargetY - GameEngine.HEIGHT <= by1 / GameEngine.NSCALE) mTargetY = by1 / GameEngine.NSCALE + GameEngine.HEIGHT;
-            if (mTargetY >= by2 / GameEngine.NSCALE) mTargetY = by2 / GameEngine.NSCALE;
+            double bottom = by1 / GameEngine.NSCALE;
+            double top = by2 / GameEngine.NSCALE;
+            if (GameEngine.HEIGHT >= top - bottom) {
+                mTargetY = (bottom + top + GameEngine.HEIGHT) / 2;
+            } else {
+                if (mTargetY - GameEngine.HEIGHT < bottom) mTargetY = bottom + GameEngine.HEIGHT;
+                if (mTargetY > top) mTargetY = top;
+            }
         }
     }
 }

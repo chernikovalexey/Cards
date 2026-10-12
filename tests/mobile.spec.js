@@ -131,7 +131,7 @@ test('boots responsive: full-viewport canvas, no nudge/rotate buttons', async ({
         };
     });
     expect(fit.attrW).toBe(fit.innerW);            // canvas is device-sized
-    expect(fit.attrH).toBe(fit.innerH - TOPBAR);
+    expect(fit.attrH).toBe(fit.innerH - TOPBAR - 76);
     expect(fit.cssW).toBe(fit.attrW);              // 1:1 css px, no scaling blur
     expect(fit.fakeW).toBe(fit.attrW);             // engine sees the same rect
     expect(fit.fakeTop).toBe(TOPBAR);
@@ -245,6 +245,8 @@ test('selected placement point becomes the rotation pivot', async ({ page }) => 
         after.center.x - before.center.x,
         after.center.y - before.center.y)).toBeGreaterThan(10);
     expect(after.angleSteps).not.toBe(0);
+    const ghostAngle = await page.evaluate(() => TouchBridge.view().ghostAngle);
+    expect(ghostAngle).toBeCloseTo(after.angleSteps * Math.PI / 72, 2);
 });
 
 test('endpoint pivot rotation starts relative to the drag, not absolute pointer angle', async ({ page }) => {
@@ -407,6 +409,19 @@ test('rejected placement stays editable and can be corrected', async ({ page }) 
     expect(await remainingDynamic(page)).toBe(base - 2);
 });
 
+test('error message stays clear of placement actions on a narrow phone', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await enterLevel11(page);
+    const p = await screenForWorld(page, 1, 1, 1.18, 0.59);
+    await page.touchscreen.tap(p.x, p.y);
+    await expect(page.locator('#touch-place')).toHaveClass(/on/);
+    await page.locator('#touch-place-confirm').tap();
+    await expect(page.locator('#touch-toast')).toHaveClass(/on/);
+    const toast = await page.locator('#touch-toast').boundingBox();
+    const actions = await page.locator('#touch-place-actions').boundingBox();
+    expect(toast.y + toast.height).toBeLessThanOrEqual(actions.y - 4);
+});
+
 test('placement has explicit confirm and cancel controls', async ({ page }) => {
     await enterLevel11(page);
     const base = await remainingDynamic(page);
@@ -439,6 +454,24 @@ test('rotating the screen cancels an unfinished placement safely', async ({ page
     await expect(page.locator('#touch-toast')).toContainText('tap to aim again');
     expect(await page.locator('#graphics').evaluate((c) => c.style.transform)).toBe('');
     expect(await remainingDynamic(page)).toBe(base);
+});
+
+test('resizing and centering keep both cubes inside the playable canvas', async ({ page }) => {
+    await enterLevel11(page);
+    for (const size of [{ width: 320, height: 568 }, { width: 568, height: 320 }]) {
+        await page.setViewportSize(size);
+        await expect.poll(() => page.evaluate(() => {
+            const v = TouchBridge.view();
+            const { w, h } = window.__touch.state.layout;
+            return v && [v.from, v.to].every(p =>
+                p.x >= 16 && p.x <= w - 16 && p.y >= 16 && p.y <= h - 16);
+        })).toBe(true);
+        const canvas = await page.locator('#graphics').boundingBox();
+        const blocks = await page.locator('#touch-blocks').boundingBox();
+        expect(canvas.y + canvas.height).toBeLessThanOrEqual(blocks.y);
+    }
+    await page.locator('#touch-center').tap();
+    await expect(page.locator('#touch-toast')).toContainText('View centered');
 });
 
 test('restart and pause clear an unfinished placement', async ({ page }) => {
@@ -616,6 +649,27 @@ test('chapter list: big Menu pill, zoomed cards, no desktop blur bar', async ({ 
     expect(card.x + card.width).toBeLessThanOrEqual(page.viewportSize().width + 1);
 });
 
+test('first-run mobile lesson is readable and immediately dismissible', async ({ page }) => {
+    await page.goto('/web/cards.html');
+    await expect(page.locator('#new-game')).toBeVisible({ timeout: 30000 });
+    await page.locator('#new-game').tap();
+    await page.locator('.chapter[data-id="1"]').tap();
+    await expect(page.locator('#howto')).toBeVisible({ timeout: 30000 });
+    await expect(page.locator('.touch-howto')).toBeVisible();
+    await expect(page.locator('.howto-player-layout')).toBeHidden();
+    await expect(page.locator('.touch-howto')).toContainText('Press and hold');
+    expect(await page.evaluate(() =>
+        Number(getComputedStyle(document.querySelector('#howto')).zIndex)))
+        .toBeGreaterThan(40);
+    const close = await page.locator('.close-howto').boundingBox();
+    expect(close.height).toBeGreaterThanOrEqual(44);
+    expect(close.x).toBeGreaterThanOrEqual(0);
+    expect(close.x + close.width).toBeLessThanOrEqual(page.viewportSize().width);
+    await page.locator('.close-howto').tap();
+    await expect(page.locator('#howto')).not.toBeVisible();
+    expect(await page.evaluate(() => localStorage.getItem('seen_howto'))).toBe('true');
+});
+
 test('in-game top bar: pause button present, all targets finger-sized', async ({ page }) => {
     await enterLevel11(page);
     for (const id of ['#touch-pause', '#touch-restart',
@@ -637,6 +691,7 @@ test('block and wall selectors are both visible on touch', async ({ page }) => {
     const statik = page.locator('#touch-block-static');
     await expect(dynamic).toBeVisible();
     await expect(statik).toBeVisible();
+    await expect(page.locator('#touch-center')).toBeVisible();
     await expect(dynamic).toContainText('Block');
     await expect(statik).toContainText('Wall');
     await expect(dynamic).toHaveClass(/selected/);
@@ -645,6 +700,29 @@ test('block and wall selectors are both visible on touch', async ({ page }) => {
         expect(b.height).toBeGreaterThanOrEqual(MIN_TAP);
         expect(b.width).toBeGreaterThanOrEqual(MIN_TAP);
     }
+});
+
+test.describe('small phone landscape', () => {
+    test.use({ viewport: { width: 568, height: 320 } });
+
+    test('restart prompt fits and pause content can scroll into view', async ({ page }) => {
+        await enterLevel11(page);
+        await page.locator('#touch-restart').tap();
+        const prompt = page.locator('body > .prompt-window');
+        await expect(prompt).toBeVisible();
+        const p = await prompt.boundingBox();
+        expect(p.y).toBeGreaterThanOrEqual(0);
+        expect(p.y + p.height).toBeLessThanOrEqual(320);
+        await prompt.locator('.prompt-negative').tap();
+
+        await page.locator('#touch-pause').tap();
+        await expect(page.locator('#rating-box')).toBeVisible();
+        const top = await page.locator('.attempts-layout').boundingBox();
+        expect(top.y).toBeGreaterThanOrEqual(0);
+        await page.locator('#rating-box').evaluate(el => { el.scrollTop = el.scrollHeight; });
+        const tape = await page.locator('#rating-box .tape').boundingBox();
+        expect(tape.y + tape.height).toBeLessThanOrEqual(320);
+    });
 });
 
 test('pinch zooms the camera without touch zoom buttons', async ({ page }) => {
@@ -728,7 +806,7 @@ test.describe('landscape', () => {
             return { attrW: c.width, attrH: c.height, innerW: innerWidth, innerH: innerHeight };
         });
         expect(fit.attrW).toBe(fit.innerW);
-        expect(fit.attrH).toBe(fit.innerH - TOPBAR);
+        expect(fit.attrH).toBe(fit.innerH - TOPBAR - 72);
         const base = await remainingDynamic(page);
         const p = await screenForWorld(page, 1, 1, 2.5, 1.5);
         await page.touchscreen.tap(p.x, p.y);

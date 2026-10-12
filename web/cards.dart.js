@@ -2224,7 +2224,7 @@
         case "error":
           throw H.wrapException(t1.$index(msg, "msg"));
       }
-    }, null, null, 4, 0, null, 22, 2],
+    }, null, null, 4, 0, null, 23, 2],
     IsolateNatives__log: function(msg) {
       var trace, t1, t2, exception;
       if (init.globalState.isWorker === true) {
@@ -3558,7 +3558,7 @@
           return H._callInIsolate(isolate, new H.invokeClosure_closure3(closure, arg1, arg2, arg3, arg4));
       }
       throw H.wrapException(P.Exception_Exception("Unsupported number of arguments for wrapped closure"));
-    }, null, null, 14, 0, null, 23, 24, 30, 25, 26, 38, 40],
+    }, null, null, 14, 0, null, 24, 25, 31, 26, 27, 39, 41],
     convertDartClosureToJS: function(closure, arity) {
       var $function;
       if (closure == null)
@@ -4890,7 +4890,7 @@
       "^": "Closure:1;$this",
       call$1: [function(each) {
         return this.$this.$index(0, each);
-      }, null, null, 2, 0, null, 41, "call"]
+      }, null, null, 2, 0, null, 42, "call"]
     },
     LinkedHashMapCell: {
       "^": "Object;hashMapCellKey<,hashMapCellValue@,_next<,_previous<"
@@ -4943,7 +4943,7 @@
       }
     },
     initHooks_closure0: {
-      "^": "Closure:30;getUnknownTag",
+      "^": "Closure:52;getUnknownTag",
       call$2: function(o, tag) {
         return this.getUnknownTag(o, tag);
       }
@@ -5731,7 +5731,7 @@
       }, null, null, 2, 0, null, 5, "call"]
     },
     _AsyncRun__initializeScheduleImmediate_closure: {
-      "^": "Closure:37;_box_0,div,span",
+      "^": "Closure:36;_box_0,div,span",
       call$1: function(callback) {
         var t1, t2;
         ++init.globalState.topEventLoop._activeJsAsyncCount;
@@ -6406,7 +6406,7 @@
       }, null, null, 2, 0, null, 4, "call"]
     },
     _Future__chainForeignFuture_closure0: {
-      "^": "Closure:27;target",
+      "^": "Closure:28;target",
       call$2: [function(error, stackTrace) {
         this.target._completeError$2(error, stackTrace);
       }, function(error) {
@@ -7205,7 +7205,7 @@
       }
     },
     _cancelAndErrorClosure_closure: {
-      "^": "Closure:31;subscription,future",
+      "^": "Closure:30;subscription,future",
       call$2: function(error, stackTrace) {
         P._cancelAndError(this.subscription, this.future, error, stackTrace);
       }
@@ -7278,7 +7278,7 @@
       }, 8],
       _handleError$2: [function(error, stackTrace) {
         this._stream._handleError$3(error, stackTrace, this);
-      }, "call$2", "get$_handleError", 4, 0, 36, 6, 7],
+      }, "call$2", "get$_handleError", 4, 0, 35, 6, 7],
       _handleDone$0: [function() {
         this._async$_close$0();
       }, "call$0", "get$_handleDone", 0, 0, 2],
@@ -7510,7 +7510,7 @@
       "^": "Closure:1;$this,f",
       call$1: [function(arg) {
         return this.$this.runUnaryGuarded$2(this.f, arg);
-      }, null, null, 2, 0, null, 27, "call"]
+      }, null, null, 2, 0, null, 28, "call"]
     }
   }], ["dart.collection", "dart:collection",, P, {
     "^": "",
@@ -8787,7 +8787,7 @@
         if (this._processed != null && !this.containsKey$1(0, key))
           return;
         return this._upgrade$0().remove$1(0, key);
-      }, "call$1", "get$remove", 2, 0, 39],
+      }, "call$1", "get$remove", 2, 0, 37],
       forEach$1: function(_, f) {
         var keys, i, key, value;
         if (this._processed == null)
@@ -9173,7 +9173,7 @@
     "^": "",
     Comparable_compare: [function(a, b) {
       return J.compareTo$1$ns(a, b);
-    }, "call$2", "core_Comparable_compare$closure", 4, 0, 49, 28, 29],
+    }, "call$2", "core_Comparable_compare$closure", 4, 0, 49, 29, 30],
     Error_safeToString: function(object) {
       if (typeof object === "number" || typeof object === "boolean" || null == object)
         return J.toString$0$(object);
@@ -9226,7 +9226,7 @@
       return new H.JSSyntaxRegExp(source, H.JSSyntaxRegExp_makeNative(source, false, caseSensitive, false), null, null);
     },
     NoSuchMethodError_toString_closure: {
-      "^": "Closure:43;_box_0,sb",
+      "^": "Closure:39;_box_0,sb",
       call$2: function(key, value) {
         var t1, t2, t3;
         t1 = this.sb;
@@ -10417,7 +10417,7 @@
       },
       remove$1: [function(receiver, tokens) {
         return receiver.remove(tokens);
-      }, "call$1", "get$remove", 2, 0, 34],
+      }, "call$1", "get$remove", 2, 0, 31],
       "%": "DOMTokenList"
     },
     _ChildrenElementList: {
@@ -10825,7 +10825,7 @@
       "%": "XMLHttpRequest"
     },
     HttpRequest_getString_closure: {
-      "^": "Closure:35;",
+      "^": "Closure:34;",
       call$1: function(xhr) {
         return J.get$responseText$x(xhr);
       }
@@ -11753,7 +11753,7 @@
       }
     },
     _MultiElementCssClassSet_remove_closure: {
-      "^": "Closure:47;value",
+      "^": "Closure:43;value",
       call$2: function(changed, e) {
         return J.remove$1$ax(e, this.value) === true || changed === true;
       }
@@ -11959,10 +11959,10 @@
         },
         _Html5NodeValidator__standardAttributeValidator: [function(element, attributeName, value, context) {
           return true;
-        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 26, 9, 12, 4, 15],
+        }, "call$4", "html__Html5NodeValidator__standardAttributeValidator$closure", 8, 0, 27, 9, 12, 4, 15],
         _Html5NodeValidator__uriAttributeValidator: [function(element, attributeName, value, context) {
           return context.get$uriPolicy().allowsUri$1(value);
-        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 26, 9, 12, 4, 15]
+        }, "call$4", "html__Html5NodeValidator__uriAttributeValidator$closure", 8, 0, 27, 9, 12, 4, 15]
       }
     },
     ImmutableListMixin: {
@@ -12011,7 +12011,7 @@
       "^": "Closure:1;tagNameUpper",
       call$1: [function($name) {
         return this.tagNameUpper + "::" + J.toLowerCase$0$s($name);
-      }, null, null, 2, 0, null, 31, "call"]
+      }, null, null, 2, 0, null, 32, "call"]
     },
     NodeValidatorBuilder_allowsElement_closure: {
       "^": "Closure:1;element",
@@ -12130,7 +12130,7 @@
       "^": "Closure:1;",
       call$1: [function(attr) {
         return "TEMPLATE::" + H.S(attr);
-      }, null, null, 2, 0, null, 32, "call"]
+      }, null, null, 2, 0, null, 33, "call"]
     },
     _SvgNodeValidator: {
       "^": "Object;",
@@ -12368,7 +12368,7 @@
       }
     },
     _ValidatingTreeSanitizer_sanitizeTree_walk: {
-      "^": "Closure:52;$this",
+      "^": "Closure:47;$this",
       call$2: function(node, $parent) {
         var child, nextChild, t1, exception, t2, t3;
         t1 = this.$this;
@@ -12593,7 +12593,7 @@
       "^": "Closure:1;",
       call$1: [function(n) {
         return H.interceptedTypeCast(n, "$isElement");
-      }, null, null, 2, 0, null, 33, "call"]
+      }, null, null, 2, 0, null, 34, "call"]
     },
     FilteredElementList_removeRange_closure: {
       "^": "Closure:1;",
@@ -12620,7 +12620,7 @@
       dartArgs = P.List_List$from(J.map$1$ax($arguments, P.js___convertToDart$closure()), true, null);
       t1 = H.Primitives_applyFunctionWithPositionalArguments(callback, dartArgs);
       return P._convertToJS(t1);
-    }, null, null, 8, 0, null, 34, 35, 46, 37],
+    }, null, null, 8, 0, null, 35, 36, 46, 38],
     _defineProperty: function(o, $name, value) {
       var exception;
       try {
@@ -13828,7 +13828,7 @@
             H.throwExpression(t1._addEventError$0());
           t1._sendData$1(null);
         }
-      }, "call$1", "get$_advance", 2, 0, 55, 39],
+      }, "call$1", "get$_advance", 2, 0, 23, 40],
       _doesPropertyNeedUnit$1: function(propertyName) {
         var el, t1;
         el = document.createElement("div");
@@ -17273,7 +17273,7 @@
           t2.set$prev(c.get$edge2());
         bodyB.contactList = c.get$edge2();
         ++this.contactCount;
-      }, "call$2", "get$_addPair", 4, 0, 57],
+      }, "call$2", "get$_addPair", 4, 0, 55],
       destroy$1: function(c) {
         var fixtureA, fixtureB, bodyA, bodyB, t1, type1, type2;
         fixtureA = c.get$fixtureA();
@@ -20332,7 +20332,7 @@
       }
     },
     PrintFormat: {
-      "^": "Object:28;_formatters",
+      "^": "Object:57;_formatters",
       call$2: function(fmt, args) {
         var t1, t2, t3, t4, ret, offset, arg_offset, t5, t6, _parameter, _flags, _width, _precision, _type, _options, t7, t8, _arg, arg_offset0, t9, _arg_str;
         t1 = J.getInterceptor(args);
@@ -21127,45 +21127,89 @@
         t2.debugDraw = t6;
       },
       checkTarget$2: function(ignoreXCheck, ignoreYCheck) {
-        var t1, t2, t3;
-        if (J.$le$n(J.$div$n(this.targetOffsetX, $.GameEngine_scale), J.$div$n(this.bx1, 85)))
-          this.targetOffsetX = J.$mul$ns(J.$div$n(this.bx1, 85), $.GameEngine_scale);
-        t1 = J.$div$n(this.targetOffsetX, $.GameEngine_scale);
-        t2 = $.Input_canvasWidth;
-        t3 = $.GameEngine_scale;
+        var left, right, t1, t2, t3, t4, bottom, $top;
+        left = J.$div$n(this.bx1, 85);
+        right = J.$div$n(this.bx2, 85);
+        t1 = $.Input_canvasWidth;
+        t2 = $.GameEngine_scale;
+        if (typeof t1 !== "number")
+          return t1.$div();
         if (typeof t2 !== "number")
-          return t2.$div();
-        if (typeof t3 !== "number")
-          return H.iae(t3);
-        if (J.$ge$n(J.$add$ns(t1, t2 / t3), J.$div$n(this.bx2, 85))) {
-          t1 = J.$div$n(this.bx2, 85);
+          return H.iae(t2);
+        t3 = J.getInterceptor$n(right);
+        t4 = t3.$sub(right, left);
+        if (typeof t4 !== "number")
+          return H.iae(t4);
+        if (t1 / t2 >= t4) {
+          t1 = J.$add$ns(left, right);
           t2 = $.Input_canvasWidth;
           t3 = $.GameEngine_scale;
           if (typeof t2 !== "number")
             return t2.$div();
           if (typeof t3 !== "number")
             return H.iae(t3);
-          this.targetOffsetX = J.$mul$ns(J.$sub$n(t1, t2 / t3), $.GameEngine_scale);
+          this.targetOffsetX = J.$mul$ns(J.$div$n(J.$sub$n(t1, t2 / t3), 2), $.GameEngine_scale);
+        } else {
+          if (J.$lt$n(J.$div$n(this.targetOffsetX, $.GameEngine_scale), left))
+            this.targetOffsetX = J.$mul$ns(left, $.GameEngine_scale);
+          t1 = J.$div$n(this.targetOffsetX, $.GameEngine_scale);
+          t2 = $.Input_canvasWidth;
+          t4 = $.GameEngine_scale;
+          if (typeof t2 !== "number")
+            return t2.$div();
+          if (typeof t4 !== "number")
+            return H.iae(t4);
+          if (J.$gt$n(J.$add$ns(t1, t2 / t4), right)) {
+            t1 = $.Input_canvasWidth;
+            t2 = $.GameEngine_scale;
+            if (typeof t1 !== "number")
+              return t1.$div();
+            if (typeof t2 !== "number")
+              return H.iae(t2);
+            this.targetOffsetX = J.$mul$ns(t3.$sub(right, t1 / t2), $.GameEngine_scale);
+          }
         }
-        t1 = J.$div$n(J.$negate$n(this.targetOffsetY), $.GameEngine_scale);
-        t2 = $.Input_canvasHeight;
-        t3 = $.GameEngine_scale;
+        bottom = J.$div$n(this.by1, 85);
+        $top = J.$div$n(this.by2, 85);
+        t1 = $.Input_canvasHeight;
+        t2 = $.GameEngine_scale;
+        if (typeof t1 !== "number")
+          return t1.$div();
         if (typeof t2 !== "number")
-          return t2.$div();
-        if (typeof t3 !== "number")
-          return H.iae(t3);
-        if (J.$le$n(J.$sub$n(t1, t2 / t3), J.$div$n(this.by1, 85))) {
-          t1 = J.$div$n(this.by1, 85);
+          return H.iae(t2);
+        t3 = J.getInterceptor$n($top);
+        t4 = t3.$sub($top, bottom);
+        if (typeof t4 !== "number")
+          return H.iae(t4);
+        if (t1 / t2 >= t4) {
+          t1 = J.$add$ns(bottom, $top);
           t2 = $.Input_canvasHeight;
           t3 = $.GameEngine_scale;
           if (typeof t2 !== "number")
             return t2.$div();
           if (typeof t3 !== "number")
             return H.iae(t3);
-          this.targetOffsetY = J.$mul$ns(J.$negate$n(J.$add$ns(t1, t2 / t3)), $.GameEngine_scale);
+          this.targetOffsetY = J.$mul$ns(J.$negate$n(J.$div$n(J.$add$ns(t1, t2 / t3), 2)), $.GameEngine_scale);
+        } else {
+          t1 = J.$div$n(J.$negate$n(this.targetOffsetY), $.GameEngine_scale);
+          t2 = $.Input_canvasHeight;
+          t4 = $.GameEngine_scale;
+          if (typeof t2 !== "number")
+            return t2.$div();
+          if (typeof t4 !== "number")
+            return H.iae(t4);
+          if (J.$lt$n(J.$sub$n(t1, t2 / t4), bottom)) {
+            t1 = $.Input_canvasHeight;
+            t2 = $.GameEngine_scale;
+            if (typeof t1 !== "number")
+              return t1.$div();
+            if (typeof t2 !== "number")
+              return H.iae(t2);
+            this.targetOffsetY = J.$mul$ns(J.$negate$n(J.$add$ns(bottom, t1 / t2)), $.GameEngine_scale);
+          }
+          if (J.$gt$n(J.$div$n(J.$negate$n(this.targetOffsetY), $.GameEngine_scale), $top))
+            this.targetOffsetY = J.$mul$ns(t3.$negate($top), $.GameEngine_scale);
         }
-        if (J.$ge$n(J.$div$n(J.$negate$n(this.targetOffsetY), $.GameEngine_scale), J.$div$n(this.by2, 85)))
-          this.targetOffsetY = J.$mul$ns(J.$negate$n(J.$div$n(this.by2, 85)), $.GameEngine_scale);
       },
       checkTarget$0: function() {
         return this.checkTarget$2(false, false);
@@ -21338,7 +21382,7 @@
       }, null, null, 4, 0, null, 3, 17, "call"]
     },
     ChapterShower_show_closure1: {
-      "^": "Closure:23;",
+      "^": "Closure:24;",
       call$1: [function(canvas) {
         var t1, g, t2;
         t1 = J.getInterceptor$x(canvas);
@@ -23177,7 +23221,7 @@
         }
         P.Timer_Timer(P.Duration$(0, 0, 0, 6500, 0, 0), new X.HintManager_onClick___closure(t2));
         R.PromptWindow_close();
-      }, null, null, 2, 0, null, 42, "call"]
+      }, null, null, 2, 0, null, 43, "call"]
     },
     HintManager_onClick___closure: {
       "^": "Closure:0;$this",
@@ -23334,7 +23378,7 @@
       "^": "Object;code>,down@,clicked@"
     },
     Input_toggle_closure: {
-      "^": "Closure:24;event,down",
+      "^": "Closure:25;event,down",
       call$2: function(key, val) {
         var t1, t2;
         t1 = J.get$code$x(val);
@@ -23347,7 +23391,7 @@
       }
     },
     Input_update_closure: {
-      "^": "Closure:24;",
+      "^": "Closure:25;",
       call$2: function(key, val) {
         val.set$clicked(false);
       }
@@ -24490,7 +24534,7 @@
         t1.frontRewindLevelComplete = Q.Level_Level_onFrontRewindLevelComplete$closure();
         t1.frontRewindLevelFailed = Q.Level_Level_onFrontRewindLevelFailed$closure();
       }
-    }, "call$1", "RatingShower_RatingShower_onTypeItemClick$closure", 2, 0, 8, 43],
+    }, "call$1", "RatingShower_RatingShower_onTypeItemClick$closure", 2, 0, 8, 44],
     RatingShower_hide: [function() {
       $.Input_keyDown = null;
       $.RatingShower_e.isPaused = false;
@@ -24813,7 +24857,7 @@
         t1 = window;
         C.Window_methods._ensureRequestAnimationFrame$0(t1);
         C.Window_methods._requestAnimationFrame$1(t1, W._wrapZone(this.get$step(this)));
-      }, "call$1", "get$step", 2, 0, 41, 44]
+      }, "call$1", "get$step", 2, 0, 41, 45]
     }
   }], ["", "SubLevel.dart",, Z, {
     "^": "",
@@ -25549,14 +25593,14 @@
       }, null, null, 0, 0, null, "call"]
     },
     WebApi_onOrderSuccess_closure: {
-      "^": "Closure:25;callback",
+      "^": "Closure:26;callback",
       call$1: [function(obj) {
         this.callback.call$0();
         H.interceptedTypeCast(J.$index$asx($.$get$context(), "Features"), "$isJsObject").$indexSet(0, "orderListener", null);
       }, null, null, 2, 0, null, 11, "call"]
     },
     WebApi_getUser_closure: {
-      "^": "Closure:25;callback",
+      "^": "Closure:26;callback",
       call$1: [function(obj) {
         this.callback.call$0();
       }, null, null, 2, 0, null, 11, "call"]
@@ -25601,6 +25645,9 @@
       J.$indexSet$ax(t3, "TouchBridge", P.JsObject_JsObject$jsify(P.LinkedHashMap__makeEmpty()));
       J.$indexSet$ax(J.$index$asx(t3, "TouchBridge"), "grabCardAt", new T.main_closure());
       J.$indexSet$ax(J.$index$asx(t3, "TouchBridge"), "snapCardAt", new T.main_closure0());
+      J.$indexSet$ax(J.$index$asx(t3, "TouchBridge"), "centerView", new T.main_closure1());
+      J.$indexSet$ax(J.$index$asx(t3, "TouchBridge"), "setGhostAngle", new T.main_closure2());
+      J.$indexSet$ax(J.$index$asx(t3, "TouchBridge"), "view", new T.main_closure3());
       t4 = $.canvas;
       t4.toString;
       t5 = W.MouseEvent;
@@ -25621,23 +25668,23 @@
       t5 = W.Event;
       W._EventStreamSubscription$(window, "resize", T.cards__updateCanvasPositionAndDimension$closure(), false, t5);
       t1.updatedAttemptsUsed = false;
-      C._BeforeUnloadEventStreamProvider_beforeunload.forTarget$1(window).listen$1(new T.main_closure1(t1));
-      W._EventStreamSubscription$(window, "unload", new T.main_closure2(t1), false, t5);
+      C._BeforeUnloadEventStreamProvider_beforeunload.forTarget$1(window).listen$1(new T.main_closure4(t1));
+      W._EventStreamSubscription$(window, "unload", new T.main_closure5(t1), false, t5);
       shareOffer = t2.querySelector(".share-offer");
-      onLoadedCallback = new T.main_closure3(shareOffer, new T.main_closure4(shareOffer, t2.querySelector(".logo"), t2.querySelector(".instructions")));
+      onLoadedCallback = new T.main_closure6(shareOffer, new T.main_closure7(shareOffer, t2.querySelector(".logo"), t2.querySelector(".instructions")));
       if (J.$index$asx(J.$index$asx(t3, "Features"), "initialized") === true)
         onLoadedCallback.call$0();
       else
         J.$index$asx(t3, "Features").callMethod$2("setOnLoadedCallback", [onLoadedCallback]);
-      J._addEventListener$3$x(t2.querySelector(".friends-invite-more"), "click", new T.main_closure5(), true);
-      J._addEventListener$3$x(t2.querySelector(".close-friends"), "click", new T.main_closure6(), false);
-      J._addEventListener$3$x(t2.querySelector("#invite-friends"), "click", new T.main_closure7(), null);
-      J._addEventListener$3$x(t2.querySelector("#toggle-physics"), "click", new T.main_closure8(), false);
+      J._addEventListener$3$x(t2.querySelector(".friends-invite-more"), "click", new T.main_closure8(), true);
+      J._addEventListener$3$x(t2.querySelector(".close-friends"), "click", new T.main_closure9(), false);
+      J._addEventListener$3$x(t2.querySelector("#invite-friends"), "click", new T.main_closure10(), null);
+      J._addEventListener$3$x(t2.querySelector("#toggle-physics"), "click", new T.main_closure11(), false);
       J._addEventListener$3$x(t2.querySelector("#restart"), "click", T.cards__promptGameRestart$closure(), false);
-      J._addEventListener$3$x(t2.querySelector("#zoom-in"), "click", new T.main_closure9(), null);
-      J._addEventListener$3$x(t2.querySelector("#zoom-out"), "click", new T.main_closure10(), null);
+      J._addEventListener$3$x(t2.querySelector("#zoom-in"), "click", new T.main_closure12(), null);
+      J._addEventListener$3$x(t2.querySelector("#zoom-out"), "click", new T.main_closure13(), null);
       t1 = new W._FrozenElementList(t2.querySelectorAll(".selector"), [null]);
-      t1.forEach$1(t1, new T.main_closure11());
+      t1.forEach$1(t1, new T.main_closure14());
       $.hints = new X.HintManager($.engine, false, false);
       t2 = t2.querySelector("#hint");
       t1 = $.hints;
@@ -25793,9 +25840,87 @@
       "^": "Closure:45;",
       call$5: [function(qx, qy, angle, tol, gap) {
         return $.engine.snapCardAt$5(qx, qy, angle, tol, gap);
-      }, null, null, 10, 0, null, 19, 20, 45, 21, 36, "call"]
+      }, null, null, 10, 0, null, 19, 20, 22, 21, 37, "call"]
     },
     main_closure1: {
+      "^": "Closure:0;",
+      call$0: [function() {
+        var t1, t2;
+        t1 = $.engine;
+        if (t1.ready) {
+          t2 = t1.level;
+          t2 = t2 == null || t2.current == null;
+        } else
+          t2 = true;
+        if (t2)
+          return false;
+        t1.camera.ignoreAutoCheck = false;
+        t1.centerBetweenCubes$1(t1.currentZoom);
+        t1 = $.engine.camera;
+        t2 = t1.targetOffsetX;
+        t1.pxOffsetX = t2;
+        t1.pxOffsetY = t1.targetOffsetY;
+        t1.xAnim = R.DoubleAnimation$(t2, t2, 75);
+        t2 = t1.pxOffsetY;
+        t1.yAnim = R.DoubleAnimation$(t2, t2, 75);
+        t1.updateZoom$0();
+        return true;
+      }, null, null, 0, 0, null, "call"]
+    },
+    main_closure2: {
+      "^": "Closure:23;",
+      call$1: [function(angle) {
+        var t1, t2;
+        t1 = $.engine;
+        if (t1.ready) {
+          t2 = t1.level;
+          t2 = t2 == null || t2.current == null || t1.bcard == null || t1.physicsEnabled;
+        } else
+          t2 = true;
+        if (t2)
+          return false;
+        t1 = t1.bcard;
+        t1.b.setTransform$2(0, t1.pos, J.toDouble$0$n(angle));
+        M.GameWizard_onBlockRotate();
+        return true;
+      }, null, null, 2, 0, null, 22, "call"]
+    },
+    main_closure3: {
+      "^": "Closure:0;",
+      call$0: [function() {
+        var t1, camera, scale, t2, t3, t4, t5;
+        t1 = $.engine;
+        if (!t1.ready || t1.from == null || t1.to == null)
+          return;
+        camera = t1.camera;
+        scale = $.GameEngine_scale;
+        t1 = t1.from.originTransform.position._v2storage;
+        t2 = t1[0];
+        if (typeof scale !== "number")
+          return H.iae(scale);
+        t3 = camera.pxOffsetX;
+        if (typeof t3 !== "number")
+          return H.iae(t3);
+        t1 = t1[1];
+        t4 = camera.pxOffsetY;
+        if (typeof t4 !== "number")
+          return H.iae(t4);
+        t4 = P.LinkedHashMap__makeLiteral(["x", t2 * scale - t3, "y", -t1 * scale - t4]);
+        t1 = $.engine.to.originTransform.position._v2storage;
+        t3 = t1[0];
+        t2 = camera.pxOffsetX;
+        if (typeof t2 !== "number")
+          return H.iae(t2);
+        t1 = t1[1];
+        t5 = camera.pxOffsetY;
+        if (typeof t5 !== "number")
+          return H.iae(t5);
+        t5 = P.LinkedHashMap__makeLiteral(["x", t3 * scale - t2, "y", -t1 * scale - t5]);
+        t1 = $.engine.bcard;
+        return P.JsObject_JsObject$jsify(P.LinkedHashMap__makeLiteral(["from", t4, "to", t5, "ghostAngle", t1 == null ? 0 : t1.b.sweep.angle]));
+      }, null, null, 0, 0, null, "call"]
+    },
+    main_closure4: {
       "^": "Closure:7;_box_0",
       call$1: [function($event) {
         var t1;
@@ -25807,7 +25932,7 @@
         }
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure2: {
+    main_closure5: {
       "^": "Closure:7;_box_0",
       call$1: function($event) {
         var t1 = $.engine.level;
@@ -25817,7 +25942,7 @@
         }
       }
     },
-    main_closure4: {
+    main_closure7: {
       "^": "Closure:0;shareOffer,logo,instructions",
       call$0: [function() {
         L.animate(this.shareOffer, 125, C.Easing_15, null, P.LinkedHashMap__makeLiteral(["top", -75]));
@@ -25825,7 +25950,7 @@
         L.animate(this.instructions, 225, C.Easing_15, null, P.LinkedHashMap__makeLiteral(["margin-bottom", 115]));
       }, null, null, 0, 0, null, "call"]
     },
-    main_closure3: {
+    main_closure6: {
       "^": "Closure:0;shareOffer,slideMenuTop",
       call$0: [function() {
         var storage, t1, t2, fp, in_game, after, before;
@@ -25908,13 +26033,13 @@
         O.ChapterShower_show($.Chapter_chapters);
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure5: {
+    main_closure8: {
       "^": "Closure:1;",
       call$1: [function($event) {
         J.$index$asx($.$get$context(), "Features").callMethod$1("showInviteBox");
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure6: {
+    main_closure9: {
       "^": "Closure:1;",
       call$1: [function($event) {
         var t1 = document;
@@ -25922,7 +26047,7 @@
         L.animate(t1.querySelector(".friends"), 125, C.Easing_13, null, P.LinkedHashMap__makeLiteral(["top", 800, "opacity", 0]));
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure7: {
+    main_closure10: {
       "^": "Closure:1;",
       call$1: [function($event) {
         var t1 = document;
@@ -25964,7 +26089,7 @@
       }, null, null, 4, 0, null, 3, 17, "call"]
     },
     main____closure0: {
-      "^": "Closure:23;",
+      "^": "Closure:24;",
       call$1: [function(canvas) {
         var t1, g, t2;
         t1 = J.getInterceptor$x(canvas);
@@ -25976,7 +26101,7 @@
         t2.fillRect$4(g, 0, 0, t1.get$width(canvas), t1.get$height(canvas));
       }, null, null, 2, 0, null, 18, "call"]
     },
-    main_closure8: {
+    main_closure11: {
       "^": "Closure:1;",
       call$1: [function($event) {
         var t1, attempts, boughtAttempts;
@@ -25995,19 +26120,19 @@
           T.applyPhysicsLabelToButton(null);
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure9: {
+    main_closure12: {
       "^": "Closure:1;",
       call$1: [function($event) {
         return $.engine.zoom$1(0, true);
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure10: {
+    main_closure13: {
       "^": "Closure:1;",
       call$1: [function($event) {
         return $.engine.zoom$1(0, false);
       }, null, null, 2, 0, null, 0, "call"]
     },
-    main_closure11: {
+    main_closure14: {
       "^": "Closure:13;",
       call$1: function(el) {
         J.addEventListener$3$x(el, "click", new T.main__closure(el), false);
@@ -26971,8 +27096,8 @@
   }, "Tooltip_opened"]);
   Isolate = Isolate.$finishIsolateConstructor(Isolate);
   $ = new Isolate();
-  init.metadata = ["event", null, "e", "x", "value", "_", "error", "stackTrace", "data", "element", "o", "obj", "attributeName", "invocation", "object", "context", "str", "y", "canvas", "qx", "qy", "tol", "sender", "closure", "isolate", "arg1", "arg2", "arg", "a", "b", "numberOfArguments", "name", "attr", "n", "callback", "captureThis", "gap", "arguments", "arg3", "highResTime", "arg4", "each", "hints", "evt", "time", "angle", "self"];
-  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, args: [,,]}, {func: 1, ret: P.bool, args: [P.Object]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [W.Element]}, {func: 1, args: [W.Event]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [W.MouseEvent]}, {func: 1, args: [P.String]}, {func: 1, ret: P.String, args: [P.Object]}, {func: 1, args: [P.bool]}, {func: 1, args: [W.DivElement]}, {func: 1, args: [P.Timer]}, {func: 1, v: true, opt: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, args: [P.String,,]}, {func: 1, ret: P.int, args: [P.String]}, {func: 1, ret: P.String, args: [P.int]}, {func: 1, args: [P.String, P.String]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [W.CanvasElement]}, {func: 1, args: [P.String, A.Key]}, {func: 1, args: [P.JsObject]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [,], opt: [,]}, {func: 1, ret: P.String, args: [P.String,,]}, {func: 1, args: [, P.String]}, {func: 1, args: [, P.String]}, {func: 1, args: [, P.StackTrace]}, {func: 1, ret: P.double}, {func: 1, opt: [P.bool]}, {func: 1, v: true, args: [P.String]}, {func: 1, args: [W.HttpRequest]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [,]}, {func: 1, args: [P.Object]}, {func: 1, args: [W.KeyboardEvent]}, {func: 1, v: true, args: [P.num]}, {func: 1, args: [P.int]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, args: [P.num, P.num, P.num]}, {func: 1, args: [P.num, P.num, P.num, P.num, P.num]}, {func: 1, args: [P.List]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.int, args: [P.String], named: {onError: {func: 1, ret: P.int, args: [P.String]}, radix: P.int}}, {func: 1, ret: P.String, args: [W.EventTarget]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, v: true, args: [P.List]}, {func: 1, args: [P.num]}, {func: 1, v: true, args: [W.WheelEvent]}, {func: 1, v: true, args: [V.Fixture, V.Fixture]}, {func: 1, args: [P.Map]}];
+  init.metadata = ["event", null, "e", "x", "value", "_", "error", "stackTrace", "data", "element", "o", "obj", "attributeName", "invocation", "object", "context", "str", "y", "canvas", "qx", "qy", "tol", "angle", "sender", "closure", "isolate", "arg1", "arg2", "arg", "a", "b", "numberOfArguments", "name", "attr", "n", "callback", "captureThis", "gap", "arguments", "arg3", "highResTime", "arg4", "each", "hints", "evt", "time", "self"];
+  init.types = [{func: 1}, {func: 1, args: [,]}, {func: 1, v: true}, {func: 1, args: [,,]}, {func: 1, ret: P.bool, args: [P.Object]}, {func: 1, v: true, args: [P.Object], opt: [P.StackTrace]}, {func: 1, args: [W.Element]}, {func: 1, args: [W.Event]}, {func: 1, v: true, args: [W.Event]}, {func: 1, v: true, args: [W.MouseEvent]}, {func: 1, args: [P.String]}, {func: 1, ret: P.String, args: [P.Object]}, {func: 1, args: [P.bool]}, {func: 1, args: [W.DivElement]}, {func: 1, args: [P.Timer]}, {func: 1, v: true, opt: [W.Event]}, {func: 1, v: true, args: [{func: 1, v: true}]}, {func: 1, v: true, args: [W.KeyboardEvent]}, {func: 1, args: [P.String,,]}, {func: 1, ret: P.int, args: [P.String]}, {func: 1, ret: P.String, args: [P.int]}, {func: 1, args: [P.String, P.String]}, {func: 1, args: [P.CssClassSetImpl]}, {func: 1, args: [P.num]}, {func: 1, args: [W.CanvasElement]}, {func: 1, args: [P.String, A.Key]}, {func: 1, args: [P.JsObject]}, {func: 1, ret: P.bool, args: [W.Element, P.String, P.String, W._Html5NodeValidator]}, {func: 1, args: [,], opt: [,]}, {func: 1, args: [, P.String]}, {func: 1, args: [, P.StackTrace]}, {func: 1, v: true, args: [P.String]}, {func: 1, ret: P.double}, {func: 1, opt: [P.bool]}, {func: 1, args: [W.HttpRequest]}, {func: 1, v: true, args: [, P.StackTrace]}, {func: 1, args: [{func: 1, v: true}]}, {func: 1, args: [P.Object]}, {func: 1, v: true, args: [,]}, {func: 1, args: [P.Symbol0,,]}, {func: 1, args: [W.KeyboardEvent]}, {func: 1, v: true, args: [P.num]}, {func: 1, args: [P.int]}, {func: 1, args: [P.bool, P.CssClassSetImpl]}, {func: 1, args: [P.num, P.num, P.num]}, {func: 1, args: [P.num, P.num, P.num, P.num, P.num]}, {func: 1, args: [P.List]}, {func: 1, v: true, args: [W.Node, W.Node]}, {func: 1, v: true, args: [P.Object]}, {func: 1, ret: P.int, args: [P.Comparable, P.Comparable]}, {func: 1, ret: P.int, args: [P.String], named: {onError: {func: 1, ret: P.int, args: [P.String]}, radix: P.int}}, {func: 1, ret: P.String, args: [W.EventTarget]}, {func: 1, args: [, P.String]}, {func: 1, ret: P.Object, args: [,]}, {func: 1, v: true, args: [P.List]}, {func: 1, v: true, args: [V.Fixture, V.Fixture]}, {func: 1, v: true, args: [W.WheelEvent]}, {func: 1, ret: P.String, args: [P.String,,]}, {func: 1, args: [P.Map]}];
   function convertToFastObject(properties) {
     function MyClass() {
     }

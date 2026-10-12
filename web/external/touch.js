@@ -73,6 +73,7 @@
     // ------------------------------------------------------------------
     // Responsive layout: device-sized canvas below the top bar, dialogs
     // scaled to fit independently (they keep their internal 800x600).
+    var fitVersion = 0;
     function refit() {
         // Resizing changes both the canvas coordinates and the camera bounds.
         // An unfinished ghost no longer points at the same world position, so
@@ -85,7 +86,9 @@
         var st = safeTop();
         TOPBAR = 56 + st;
         var c = canvasEl();
-        var w = vw, h = Math.max(200, vh - TOPBAR);
+        // The selector row occupies its own strip, outside the play surface.
+        var bottomBar = vw > vh && vh <= 500 ? 72 : 76;
+        var w = vw, h = Math.max(1, vh - TOPBAR - bottomBar);
         state.layout = { left: 0, top: TOPBAR, w: w, h: h };
         c.width = w;                       // attribute = world px, 1:1 CSS
         c.height = h;
@@ -98,6 +101,7 @@
         root.setProperty('--dlg-scale', Math.min(vw / 800, vh / 600));
         root.setProperty('--topbar', TOPBAR + 'px');
         root.setProperty('--safe-top', st + 'px');
+        root.setProperty('--touch-bottombar', bottomBar + 'px');
         // Chapter cards keep their internal 240px design and are zoomed to
         // a comfortable finger size (cards.css: .touch-mode .chapter).
         root.setProperty('--chapter-zoom',
@@ -112,6 +116,13 @@
         var ev = new Event('resize');
         ev.__touchRefit = true;
         window.dispatchEvent(ev);
+        // The engine has now read the new canvas dimensions. Recenter after
+        // its resize listener and any pending camera animation have run.
+        var thisFit = ++fitVersion;
+        raf2(function () {
+            if (thisFit === fitVersion && window.TouchBridge &&
+                TouchBridge.centerView) TouchBridge.centerView();
+        });
     }
     window.addEventListener('resize', function (e) {
         if (!e.__touchRefit) refit();
@@ -210,10 +221,14 @@
         var delta = t - state.angleSteps;
         if (delta === 0) return;
         state.angleSteps = t;
+        if (window.TouchBridge && TouchBridge.setGhostAngle &&
+            TouchBridge.setGhostAngle(t * STEP)) return;
         enqueueKey(delta > 0 ? KEY.q : KEY.e, Math.abs(delta));
     }
     function snapAngle() {
         state.angleSteps = 0;
+        if (window.TouchBridge && TouchBridge.setGhostAngle &&
+            TouchBridge.setGhostAngle(0)) return;
         enqueueKey(KEY.c, 1);
     }
 
@@ -308,8 +323,11 @@
     var blocksWrap = el('div', 'touch-blocks');
     var dynamicBtn = el('button', 'touch-block-dynamic', 'touch-btn', '▦ Block');
     var staticBtn = el('button', 'touch-block-static', 'touch-btn', '▤ Wall');
+    var centerBtn = el('button', 'touch-center', 'touch-btn', '⌖');
+    centerBtn.setAttribute('aria-label', 'Center view on cubes');
     blocksWrap.appendChild(dynamicBtn);
     blocksWrap.appendChild(staticBtn);
+    blocksWrap.appendChild(centerBtn);
     top.appendChild(pauseBtn);
     top.appendChild(restartBtn);
     top.appendChild(hintBtn);
@@ -389,6 +407,24 @@
     }
     selectBlock(dynamicBtn, '.selector.dynamic');
     selectBlock(staticBtn, '.selector.static');
+    function centerView() {
+        if (grab || grabPending || (state.placement && state.placement.pending)) return;
+        if (state.placement) closePlacement();
+        if (window.TouchBridge && TouchBridge.centerView && TouchBridge.centerView()) {
+            parkGhost();
+            showNotice('View centered on cubes');
+        }
+    }
+    centerBtn.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        centerView();
+    }, { passive: false });
+    centerBtn.addEventListener('click', centerView);
+    var howtoClose = document.querySelector('.close-howto');
+    if (howtoClose) howtoClose.addEventListener('click', function () {
+        localStorage.setItem('seen_howto', 'true');
+    });
 
     var toastTimer = null;
     function showNotice(msg) {

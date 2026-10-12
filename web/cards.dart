@@ -65,6 +65,32 @@ void main() {
     context['TouchBridge']['grabCardAt'] = (num qx, num qy, num tol) => engine.grabCardAt(qx, qy, tol);
     context['TouchBridge']['snapCardAt'] = (num qx, num qy, num angle, num tol, num gap) =>
         engine.snapCardAt(qx, qy, angle, tol, gap);
+    context['TouchBridge']['centerView'] = () {
+        if (!engine.ready || engine.level == null || engine.level.current == null) return false;
+        engine.camera.ignoreAutoCheck = false;
+        engine.centerBetweenCubes(engine.currentZoom);
+        engine.camera.jumpToTarget();
+        return true;
+    };
+    context['TouchBridge']['setGhostAngle'] = (num angle) {
+        if (!engine.ready || engine.level == null || engine.level.current == null ||
+            engine.bcard == null || engine.physicsEnabled) return false;
+        engine.bcard.b.setTransform(engine.bcard.pos, angle.toDouble());
+        GameWizard.onBlockRotate();
+        return true;
+    };
+    context['TouchBridge']['view'] = () {
+        if (!engine.ready || engine.from == null || engine.to == null) return null;
+        var camera = engine.camera;
+        var scale = GameEngine.scale;
+        return new JsObject.jsify({
+            'from': {'x': engine.from.position.x * scale - camera.pxOffsetX,
+                     'y': -engine.from.position.y * scale - camera.pxOffsetY},
+            'to': {'x': engine.to.position.x * scale - camera.pxOffsetX,
+                   'y': -engine.to.position.y * scale - camera.pxOffsetY},
+            'ghostAngle': engine.bcard == null ? 0 : engine.bcard.b.angle
+        });
+    };
 
     canvas.onMouseMove.listen(Input.onMouseMove);
     canvas.onMouseDown.listen(Input.onMouseDown);
